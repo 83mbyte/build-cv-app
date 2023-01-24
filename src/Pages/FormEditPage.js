@@ -3,18 +3,15 @@ import PersonDetails from '../Sections/PersonDetails';
 import ProfSummary from '../Sections/ProfSummary';
 
 const FormEditPage = ({ state, }) => {
-    ;
-    let path = '';
-
     return (
         <>
             {/* Sections goes here.. */}
 
             {/* 1) Personal Details section */}
-            {/* <PersonDetails title={'Personal Details'} state={state.data.personDetails} user={state.loggedUser} /> */}
+            <PersonDetails title={'Personal Details'} state={state.data.personDetails} user={state.loggedUser} />
 
             {/* 2) Professional Summary section */}
-            <ProfSummary title={'Professional Summary'} />
+            <ProfSummary title={'Professional Summary'} state={state.data.summary} user={state.loggedUser} />
         </>
     );
 };
