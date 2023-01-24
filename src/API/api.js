@@ -13,7 +13,7 @@ export const fetchAPI = {
 
     },
     async putData(user, path, data) {
-        return await fetch(`${this.BASEURL}/prvt/users/${user}/${path}.json`,
+        return await fetch(`${this.BASEURL}/prvt/users/${user}/${path}/value.json`,
             {
                 headers: {
                     'Accept': 'application/json',
