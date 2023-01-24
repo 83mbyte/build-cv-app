@@ -8,6 +8,7 @@ import {
 import './App.css';
 
 import { fetchAPI } from './API/api';
+import FormEditPage from './Pages/FormEditPage';
 
 function App() {
   const [globalState, setGlobalState] = useState(null);
@@ -25,7 +26,7 @@ function App() {
     <>
       {
         globalState
-          ? <p>Loaded State</p>
+          ? <FormEditPage state={globalState} />
           :
           <Center h={'300px'} >
             <Box bg='blue' w={['200px', 'md', 'lg', '2xl']}><Progress isIndeterminate size='xs' /></Box>
