@@ -1,0 +1,14 @@
+html,
+body {
+  /* background-color: rgb(80, 176, 132); */
+  margin: 0;
+  padding: 0;
+}
+.fullHeightCenterXY {
+  background-color: bisque;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  /* flex-direction: column; */
+  /* justify-content: center; */
+}
