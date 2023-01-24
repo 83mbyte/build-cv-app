@@ -12,11 +12,11 @@ import FormEditPage from './Pages/FormEditPage';
 
 function App() {
   const [globalState, setGlobalState] = useState(null);
-
+  const [loggedUser, setLoggedUser] = useState('user_zero')
   const getDataToState = async () => {
-    let data = await fetchAPI.simpleFetchData('user_1');
+    let data = await fetchAPI.simpleFetchData(loggedUser);
     if (data && data !== 'Error -- simpleFetchData from api.js') {
-      setGlobalState(data);
+      setGlobalState({ loggedUser, data });
     }
   }
   useEffect(() => { getDataToState() }, []);

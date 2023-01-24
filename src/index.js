@@ -9,7 +9,8 @@ import * as serviceWorker from './serviceWorker';
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 const activeLabelStyles = {
-  transform: "scale(0.85) translateY(-24px)"
+  transform: "scale(0.85) translateY(-24px)",
+
 };
 
 const theme = extendTheme({
@@ -33,6 +34,7 @@ const theme = extendTheme({
               position: "absolute",
               backgroundColor: "white",
               pointerEvents: "none",
+              color: 'gray.500',
               mx: 3,
               px: 2,
               my: 2,

@@ -1,10 +1,16 @@
 import React, { Fragment } from 'react';
+import PersonDetails from '../Sections/PersonDetails';
+import InputCustom from '../__test_temp/InputCustom';
 
-const FormEditPage = ({ state }) => {
+const FormEditPage = ({ state, }) => {
+    //console.log(state);
+    let path = '';
+
     return (
-        <Fragment>
-            lorem ipsum
-        </Fragment>
+        // Sections goes here..
+        //
+        // 1) Personal Details section
+        <PersonDetails title={'Personal Details'} state={state.data.personDetails} user={state.loggedUser} />
     );
 };
 
