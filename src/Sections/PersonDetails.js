@@ -1,6 +1,6 @@
-import { Box } from '@chakra-ui/react';
+
 import React, { Fragment } from 'react';
-import InputCustom from '../__test_temp/InputCustom';
+import InputCustom from '../FormElements/InputCustom';
 import SectionContainer from './SectionContainer';
 
 const PersonDetails = ({ title, state, user }) => {
