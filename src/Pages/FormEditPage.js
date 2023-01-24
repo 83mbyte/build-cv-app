@@ -7,11 +7,15 @@ const FormEditPage = ({ state, }) => {
     let path = '';
 
     return (
-        // Sections goes here..
-        //
-        // 1) Personal Details section
-        // <PersonDetails title={'Personal Details'} state={state.data.personDetails} user={state.loggedUser} />
-        <ProfSummary title={'Professional Summary'} />
+        <>
+            {/* Sections goes here.. */}
+
+            {/* 1) Personal Details section */}
+            {/* <PersonDetails title={'Personal Details'} state={state.data.personDetails} user={state.loggedUser} /> */}
+
+            {/* 2) Professional Summary section */}
+            <ProfSummary title={'Professional Summary'} />
+        </>
     );
 };
 
