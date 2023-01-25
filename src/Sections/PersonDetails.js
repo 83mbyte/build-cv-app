@@ -1,6 +1,6 @@
 
 import React, { Fragment } from 'react';
-import InputCustom from '../FormElements/InputCustom';
+import InputCustom from '../components/FormElements/InputCustom';
 import SectionContainer from './SectionContainer';
 
 const PersonDetails = ({ title, state, user }) => {

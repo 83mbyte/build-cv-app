@@ -1,6 +1,5 @@
-import { Box, Text } from '@chakra-ui/react';
 import React from 'react';
-import Wysiwyg from '../FormElements/WYSIWYG/Wysiwyg';
+import Wysiwyg from '../components/FormElements/WYSIWYG/Wysiwyg';
 import SectionContainer from './SectionContainer';
 import SectionDescription from './SectionDescription';
 
