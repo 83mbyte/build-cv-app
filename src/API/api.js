@@ -1,5 +1,20 @@
 export const fetchAPI = {
     BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
+    ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
+
+    async fethingSubPath(path, user) {
+        return await fetch(`${this.ROOTUSERURL}/${user}/${path}.json`)
+            .then((resp) => {
+                if (resp && resp.status === 200) {
+                    return resp.json()
+                }
+                else {
+                    return 'Error -- fethingSubPath from api.js'
+                }
+            }).then(response => response)
+
+    },
+
     async simpleFetchData(path) {
         return await fetch(`${this.BASEURL}/prvt/users/${path}.json`)
             .then((resp) => {
