@@ -7,6 +7,7 @@ import SectionContainer from './SectionContainer';
 
 import { fetchPersonDetails } from '../redux/features/personDetails/personDetailsSlice';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
+import { Box } from '@chakra-ui/react';
 
 
 const PersonDetails = ({ title, user }) => {
@@ -14,11 +15,13 @@ const PersonDetails = ({ title, user }) => {
     const dispatch = useDispatch();
     const data = useSelector(state => state.personDetails.data);
     const stateStatus = useSelector(state => state.personDetails.status);
+    const error = useSelector(state => state.personDetails.error)
 
     if (stateStatus === 'loading') {
         content = <SpinnerCustom />
     }
-    else if (stateStatus === 'succeeded') {
+    else if (stateStatus === 'succeeded' && data) {
+
         content = <Fragment>
             {
                 Object.keys(data).reverse().map((item, index) => {
@@ -38,6 +41,12 @@ const PersonDetails = ({ title, user }) => {
                 })
             }
         </Fragment>
+    }
+    else if (stateStatus === 'succeeded' && data === undefined || !data) {
+        content = <Box>Something wrong - missed data.</Box>
+    }
+    else if (stateStatus === 'failed') {
+        content = <Box>{error}</Box>
     }
 
     useEffect(() => {
