@@ -23,7 +23,7 @@ const SectionContainer = ({ children, headingTxt, type, flexDirect = 'row' }) =>
 
     return (
         <Box as='section' px='3' py='3' w='100%' maxW='1024px'  >
-            <Heading as='h3' size={['xs', 'xs', 'md']}>{headingTxt}</Heading>
+            <Heading as='h3' size={['sm', 'sm', 'md']}>{headingTxt}</Heading>
             {
                 switchLayout()
             }
