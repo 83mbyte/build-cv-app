@@ -10,7 +10,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './wysiwyg.css';
 import { fetchAPI } from '../../../API/api';
 
-const Wysiwyg = ({ state, user }) => {
+const Wysiwyg = ({ state, user, handleInputChange }) => {
     const [editorState, setEditorState] = useState(
         () => EditorState.createWithContent(convertFromHTML(state.value))
     );
@@ -26,13 +26,14 @@ const Wysiwyg = ({ state, user }) => {
     }, [editorState]);
 
     const applyChanges = () => {
-        if ((convertedContent && convertedContent !== ' ' && convertedContent !== '') && user && state.path) {
-            fetchAPI.putData(user, state.path, sanitizeMarkup(convertedContent))
-        }
+        // if ((convertedContent && convertedContent !== ' ' && convertedContent !== '') && user && state.path) {
+        //     fetchAPI.putData(user, state.path, sanitizeMarkup(convertedContent))
+        // }
+        handleInputChange(sanitizeMarkup(convertedContent))
     }
 
     return (
-        <Box my='3' w={'100%'} px='3px' minW={'200px'}>
+        <Box my='3' w={'100%'} px='8px' minW={'200px'}>
             <Editor
                 editorState={editorState}
                 onEditorStateChange={setEditorState}
