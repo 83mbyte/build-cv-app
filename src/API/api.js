@@ -15,18 +15,6 @@ export const fetchAPI = {
 
     },
 
-    async simpleFetchData(path) {
-        return await fetch(`${this.BASEURL}/prvt/users/${path}.json`)
-            .then((resp) => {
-                if (resp && resp.status === 200) {
-                    return resp.json()
-                }
-                else {
-                    return 'Error -- simpleFetchData from api.js'
-                }
-            }).then(response => response)
-
-    },
     async putData(user, path, data) {
         return await fetch(`${this.BASEURL}/prvt/users/${user}/${path}/value.json`,
             {
@@ -45,5 +33,19 @@ export const fetchAPI = {
                 return response;
             })
             .catch((error) => alert(`Couldn't fetch verseL ${error}`))
-    }
+    },
+
+    // async simpleFetchData(path) {
+    //     return await fetch(`${this.BASEURL}/prvt/users/${path}.json`)
+    //         .then((resp) => {
+    //             if (resp && resp.status === 200) {
+    //                 return resp.json()
+    //             }
+    //             else {
+    //                 return 'Error -- simpleFetchData from api.js'
+    //             }
+    //         }).then(response => response)
+
+    // },
+
 }
