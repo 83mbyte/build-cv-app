@@ -16,6 +16,9 @@ export const summarySlice = createSlice({
         loadStateFrom: (state, action) => {
             state.data = action.payload
         },
+        summaryStateValueUpdate: (state, action) => {
+            state.data.value = action.payload
+        }
     },
     extraReducers(builder) {
         builder
@@ -30,16 +33,37 @@ export const summarySlice = createSlice({
                 state.status = 'failed'
                 state.error = action.error.message
             })
+            .addCase(putDataSummary.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.error.message
+            })
+            .addCase(putDataSummary.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.data.value = action.payload;
+            })
+
     }
 
 })
 
-export const { loadStateFrom } = summarySlice.actions;
+export const { loadStateFrom, summaryStateValueUpdate } = summarySlice.actions;
 export default summarySlice.reducer;
 
 export const fetchSummary = createAsyncThunk('summary/fetchSummary', async (userName) => {
-    const data = await fetchAPI.fethingSubPath('summary', userName)
-    if (data && data !== 'Error -- fethingSubPath from api.js') {
-        return data
+    const response = await fetchAPI.fethingSubPath('summary', userName)
+    if (response && response !== 'Error -- fethingSubPath from api.js') {
+        return response
     }
-})
+});
+
+export const putDataSummary = createAsyncThunk('summary/putDataSummary', async (data) => {
+
+    const response = await fetchAPI.putData(data.user, data.path, data.value);
+    if (response && response.status == 200) {
+        return data.value
+    }
+});
+
+// export const putDataSummary = createAsyncThunk('summary/putDataSummary', async (userName, path, data) => {
+//     const data = await fetchAPI.putData(userName, path, data);
+// })
