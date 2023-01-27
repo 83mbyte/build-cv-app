@@ -47,7 +47,7 @@ const PersonDetails = ({ title, user }) => {
             }
         </Fragment>
     }
-    else if (stateStatus === 'succeeded' && data === undefined || !data) {
+    else if ((stateStatus === 'succeeded' && data === undefined) || !data) {
         content = <Box>Something wrong - missed data.</Box>
     }
     else if (stateStatus === 'failed') {
@@ -59,7 +59,7 @@ const PersonDetails = ({ title, user }) => {
             // fetch state
             dispatch(fetchPersonDetails(user));
         }
-    }, [stateStatus, dispatch])
+    }, [stateStatus, dispatch, user])
 
     return (
         <SectionContainer type={'grid'} headingTxt={title}>
