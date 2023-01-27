@@ -67,7 +67,7 @@ export const personDetailsSlice = createSlice({
 
             },
         },
-        status: "idle",
+        status: 'idle',
         error: null
 
     },
@@ -104,7 +104,7 @@ export default personDetailsSlice.reducer;
 
 export const fetchPersonDetails = createAsyncThunk('personDetails/fetchPersonDetails', async (userName) => {
     const data = await fetchAPI.fethingSubPath('personDetails', userName)
-    if (data && data !== 'Error -- simpleFetchData from api.js') {
+    if (data && data !== 'Error -- fethingSubPath from api.js') {
         return data
     }
 })
