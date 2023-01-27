@@ -4,9 +4,9 @@ import {
     AccordionItem,
     AccordionButton,
     AccordionPanel,
-    AccordionIcon, Box, SimpleGrid, FormControl, FormLabel, Input, Center, Progress
+    AccordionIcon, Box, SimpleGrid, Center, Progress
 } from '@chakra-ui/react';
-import Wysiwyg from '../FormElements/WYSIWYG/Wysiwyg';
+// import Wysiwyg from '../FormElements/WYSIWYG/Wysiwyg';
 import InputCustom from '../FormElements/InputCustom';
 
 const AccordionContainer = ({ children, state, user }) => {
@@ -22,7 +22,7 @@ const AccordionContainer = ({ children, state, user }) => {
         return res
     }
     return (
-        <Box my='3' w={'100%'} px='3px' minW={'200px'}  >
+        <Box my='3' w={'100%'} px='8px' minW={'200px'}  >
             <Accordion allowToggle allowMultiple={false}  >
                 {
                     !accordionState
@@ -61,13 +61,23 @@ const AccordionContainer = ({ children, state, user }) => {
                                                         let path = pathCustomize(index, accordItem[key].path);
                                                         return (
                                                             <InputCustom
-                                                                key={`_${ind}`}
+                                                                key={`${index}_${ind}`}
                                                                 labelText={accordItem[key].label}
                                                                 defValue={accordItem[key].value}
                                                                 path={path}
                                                                 required={accordItem[key].required}
                                                                 user={user}
                                                             />
+
+
+                                                            // key = {`${ind}_${index}`
+                                                            // }
+                                                            // +defValue = {data[item][i].value}
+                                                            // +required = {data[item][i].required}
+                                                            // +labelText = {data[item][i].label}
+                                                            // +user = {user}
+                                                            // +path = {data[item][i].path}
+                                                            // handleInputChange = {handleInputChange}
                                                             // <Box p={2} key={index}>
                                                             //     <FormControl variant={'floating'} >
 
