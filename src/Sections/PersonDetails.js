@@ -5,7 +5,7 @@ import InputCustom from '../components/FormElements/InputCustom';
 import SectionContainer from './SectionContainer';
 
 
-import { fetchPersonDetails } from '../redux/features/personDetails/personDetailsSlice';
+import { inputUpdate, fetchPersonDetails } from '../redux/features/personDetails/personDetailsSlice';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
 import { Box } from '@chakra-ui/react';
 
@@ -16,6 +16,10 @@ const PersonDetails = ({ title, user }) => {
     const data = useSelector(state => state.personDetails.data);
     const stateStatus = useSelector(state => state.personDetails.status);
     const error = useSelector(state => state.personDetails.error)
+
+    const handleInputChange = (inputRef, inpPath) => {
+        dispatch(inputUpdate({ path: inpPath.split('/').slice(1,), value: inputRef.current.value }));
+    }
 
     if (stateStatus === 'loading') {
         content = <SpinnerCustom />
@@ -31,11 +35,12 @@ const PersonDetails = ({ title, user }) => {
 
                         return <InputCustom
                             key={`${ind}_${index}`}
-                            labelText={data[item][i].label}
                             defValue={data[item][i].value}
-                            path={data[item][i].path}
                             required={data[item][i].required}
+                            labelText={data[item][i].label}
                             user={user}
+                            path={data[item][i].path}
+                            handleInputChange={handleInputChange}
                         />
                     })
                 })

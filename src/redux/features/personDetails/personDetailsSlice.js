@@ -77,6 +77,9 @@ export const personDetailsSlice = createSlice({
         },
         setJobTitle: state => {
             state.data.positions.jobTitle.value = 'Test Set JobTitle'
+        },
+        inputUpdate: (state, action) => {
+            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
         }
     },
     extraReducers(builder) {
@@ -95,7 +98,7 @@ export const personDetailsSlice = createSlice({
     }
 })
 
-export const { setJobTitle, loadStateFrom } = personDetailsSlice.actions;
+export const { setJobTitle, loadStateFrom, inputUpdate } = personDetailsSlice.actions;
 
 export default personDetailsSlice.reducer;
 
