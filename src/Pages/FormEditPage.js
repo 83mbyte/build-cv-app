@@ -12,7 +12,7 @@ const FormEditPage = () => {
             <PersonDetails title={'Personal Details'} user={'user_zero'} />
 
             {/* 2) Professional Summary section */}
-            {/* <ProfSummary title={'Professional Summary'} state={state.data.summary} user={state.loggedUser} /> */}
+            <ProfSummary title={'Professional Summary'} user={'user_zero'} />
             {/* 3) Education section */}
             {/* <Education title={'Education'} user={state.loggedUser} state={state.data.education} /> */}
         </>
