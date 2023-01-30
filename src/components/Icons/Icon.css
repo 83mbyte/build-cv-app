@@ -1,0 +1,15 @@
+.icon {
+  margin: 0;
+  padding: 0;
+}
+svg:hover {
+  fill: #38b2ac;
+}
+
+/* cursors */
+.grab {
+  cursor: grab;
+}
+.pointer {
+  cursor: pointer;
+}
