@@ -1,42 +1,44 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAPI } from "../../../API/api";
 
+const DATA_TEMPLATE_OBJECT = {
+    degree: {
+        label: 'Degree',
+        path: 'education/degree',
+        type: 'text',
+        value: ''
+    },
+    description: {
+        label: '',
+        path: 'education/description',
+        type: 'wysiwyg',
+        value: ''
+    },
+    location: {
+        label: 'Location',
+        path: 'education/location',
+        type: 'text',
+        value: ''
+    },
+    period: {
+        label: 'Start - End date',
+        path: 'education/period',
+        type: 'text',
+        value: 'xxxx - yyyy'
+    },
+    title: {
+        label: 'School',
+        path: 'education/title',
+        type: 'text',
+        value: ''
+    },
+}
+
 export const educationSlice = createSlice({
     name: 'education',
     initialState: {
         data: [
-            {
-                degree: {
-                    label: 'Degree',
-                    path: '',
-                    type: 'text',
-                    value: ''
-                },
-                description: {
-                    label: '',
-                    path: '',
-                    type: 'wysiwyg',
-                    value: ''
-                },
-                location: {
-                    label: 'Location',
-                    path: '',
-                    type: 'text',
-                    value: ''
-                },
-                period: {
-                    label: 'Start - End date',
-                    path: '',
-                    type: 'text',
-                    value: 'xxxx - yyyy'
-                },
-                title: {
-                    label: 'School',
-                    path: '',
-                    type: 'text',
-                    value: ''
-                },
-            }
+            DATA_TEMPLATE_OBJECT
         ],
         status: 'idle',
         buttonStatus: 'disabled',
@@ -49,6 +51,12 @@ export const educationSlice = createSlice({
         educationStateValueUpdate: (state, action) => {
             state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
             state.buttonStatus = 'enabled';
+        },
+        addNewEducationItem: (state) => {
+            state.data.push(DATA_TEMPLATE_OBJECT);
+        },
+        removeEducationItem: (state, action) => {
+            state.data.splice(action.payload, 1);
         }
     },
     extraReducers(builder) {
@@ -80,7 +88,7 @@ export const educationSlice = createSlice({
     }
 })
 
-export const { loadStateFrom, educationStateValueUpdate } = educationSlice.actions;
+export const { loadStateFrom, educationStateValueUpdate, addNewEducationItem, removeEducationItem } = educationSlice.actions;
 export default educationSlice.reducer;
 
 
