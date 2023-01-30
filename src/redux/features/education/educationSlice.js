@@ -39,11 +39,16 @@ export const educationSlice = createSlice({
             }
         ],
         status: 'idle',
+        buttonStatus: 'disabled',
         error: ''
     },
     reducers: {
         loadStateFrom: (state, action) => {
             state.data = action.payload
+        },
+        educationStateValueUpdate: (state, action) => {
+            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
+            state.buttonStatus = 'enabled';
         }
     },
     extraReducers(builder) {
@@ -59,10 +64,23 @@ export const educationSlice = createSlice({
                 state.status = 'failed'
                 state.error = action.error.message
             })
+            .addCase(putDataEducation.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.error.message
+            })
+            .addCase(putDataEducation.fulfilled, (state, action) => {
+                state.status = 'succeeded'
+                state.buttonStatus = 'disabled'
+                // state.error = action.error.message
+            })
+            .addCase(putDataEducation.pending, (state, action) => {
+                state.buttonStatus = 'loading'
+            })
+
     }
 })
 
-export const { loadStateFrom } = educationSlice.actions;
+export const { loadStateFrom, educationStateValueUpdate } = educationSlice.actions;
 export default educationSlice.reducer;
 
 
@@ -73,3 +91,9 @@ export const fetchEducation = createAsyncThunk('education/fetchEducation', async
     }
 })
 
+export const putDataEducation = createAsyncThunk('education/putDataSummary', async (data) => {
+    const response = await fetchAPI.putDataToWholeSection(data.user, data.path, data.value);
+    if (response && response.status == 200) {
+        return data.value
+    }
+});
