@@ -34,6 +34,25 @@ export const fetchAPI = {
             })
             .catch((error) => alert(`Couldn't fetch verseL ${error}`))
     },
+    async putDataToWholeSection(user, path, data) {
+        return await fetch(`${this.BASEURL}/prvt/users/${user}/${path}.json`,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify(data)
+
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+                return response;
+            })
+            .catch((error) => alert(`Couldn't fetch verseL ${error}`))
+    },
 
     // async simpleFetchData(path) {
     //     return await fetch(`${this.BASEURL}/prvt/users/${path}.json`)
