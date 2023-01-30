@@ -14,11 +14,10 @@ const ProfSummary = ({ title, user }) => {
     const stateStatus = useSelector(state => state.summary.status);
     const error = useSelector(state => state.summary.error);
 
-    const handleInputChange = (value) => {
+    const handleEditorChange = ({ path, value }) => {
         //update state with a value
         dispatch(summaryStateValueUpdate(value));
-
-        //saveToServer(user, data.path, value)
+        saveToServer(user, path, value)
     }
     const saveToServer = (user, path, value) => {
         //save on server
@@ -37,7 +36,7 @@ const ProfSummary = ({ title, user }) => {
     }
     else if (stateStatus === 'succeeded' && data) {
         //show WYSIWG editor if OK
-        content = <Wysiwyg state={data} user={user} handleInputChange={handleInputChange} />
+        content = <Wysiwyg state={data} user={user} handleEditorChange={handleEditorChange} path={data.path} />
     }
 
 
