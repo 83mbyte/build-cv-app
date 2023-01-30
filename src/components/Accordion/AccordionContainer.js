@@ -6,12 +6,12 @@ import {
     AccordionPanel,
     AccordionIcon, Box, SimpleGrid, Center, Progress, Button
 } from '@chakra-ui/react';
-// import Wysiwyg from '../FormElements/WYSIWYG/Wysiwyg';
+import Wysiwyg from '../FormElements/WYSIWYG/Wysiwyg';
 import InputCustom from '../FormElements/InputCustom';
 import SpinnerCustom from '../Spinner/SpinnerCustom';
 import SaveButton from '../Buttons/SaveButton';
 
-const AccordionContainer = ({ state, user, handleInputChange, buttonStatus, saveToServer }) => {
+const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange, buttonStatus, saveToServer }) => {
 
 
     const ARRAYSIZE = ['xs', 'md', 'md'];
@@ -25,7 +25,7 @@ const AccordionContainer = ({ state, user, handleInputChange, buttonStatus, save
 
     return (
         <Box my='3' w={'100%'} px='8px' minW={'200px'}  >
-            <Accordion allowToggle allowMultiple={false}  >
+            <Accordion allowToggle allowMultiple={false} >
                 {
                     !state
                         ? <SpinnerCustom />
@@ -76,12 +76,14 @@ const AccordionContainer = ({ state, user, handleInputChange, buttonStatus, save
                                             }
 
                                         </SimpleGrid>
+                                        <Box p={1}>
+
+                                            <Wysiwyg state={state[index].description} user={user} path={pathCustomize(index, state[index].description.path)} handleInputChange={handleEditorChange} />
+                                        </Box>
                                         <Box>
                                             <SaveButton saveToServer={saveToServer} buttonStatus={buttonStatus} />
                                         </Box>
-                                        {/* <Box p={1}>
-                            <Wysiwyg state={state[0].description} user={user} />
-                        </Box> */}
+
                                         {/* education form end */}
 
 
