@@ -4,14 +4,16 @@ import {
     AccordionItem,
     AccordionButton,
     AccordionPanel,
-    AccordionIcon, Box, SimpleGrid, Center, Progress, Button
+    AccordionIcon, Box, SimpleGrid, Center, Progress, Button, Flex, IconButton
 } from '@chakra-ui/react';
 import Wysiwyg from '../FormElements/WYSIWYG/Wysiwyg';
 import InputCustom from '../FormElements/InputCustom';
 import SpinnerCustom from '../Spinner/SpinnerCustom';
 import SaveButton from '../Buttons/SaveButton';
+import { RemoveIcon } from '../Icons/Icon';
+//import { DeleteIcon } from '@chakra-ui/icons';
 
-const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange, buttonStatus, saveToServer }) => {
+const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange, buttonStatus, saveToServer, removeItem }) => {
 
 
     const ARRAYSIZE = ['xs', 'md', 'md'];
@@ -38,14 +40,31 @@ const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange
                                     mb={4}
                                     key={index}
                                 >
-
                                     <h2>
                                         <AccordionButton _hover={{ color: 'teal.400' }} color={'gray.200'}>
                                             <Box flex={'1'} textAlign='left'>
-                                                <Box color={'black'} _hover={{ color: 'inherit' }} fontSize={['sm', 'sm', 'md']}>{accordItem.title.value}</Box>
-                                                <Box fontSize={'xs'} color={'gray.500'}>{accordItem.period.value}</Box>
+                                                <Box color={'black'} _hover={{ color: 'inherit' }} fontSize={['sm', 'sm', 'md']}>
+                                                    {
+                                                        (!accordItem.title.value || accordItem.title.value === '' || accordItem.title.value === undefined)
+                                                            ? `(Not specified)`
+                                                            : accordItem.title.value
+                                                    }
+                                                </Box>
+
+                                                <Box fontSize={'xs'} color={'gray.500'}>
+                                                    {
+                                                        accordItem.period.value !== 'xxxx - yyyy' && accordItem.period.value
+                                                    }
+                                                </Box>
                                             </Box>
-                                            <AccordionIcon />
+                                            <Flex columnGap={'15px'} alignItems={'center'} mr='15px'>
+
+                                                <Box onClick={(e) => removeItem(e, state[index])}>
+                                                    <RemoveIcon />
+                                                </Box>
+                                            </Flex>
+
+                                            <AccordionIcon mx={1} />
                                         </AccordionButton>
                                     </h2>
 
@@ -76,7 +95,7 @@ const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange
                                             }
 
                                         </SimpleGrid>
-                                        <Box p={1}>
+                                        <Box  >
 
                                             <Wysiwyg state={state[index].description} user={user} path={pathCustomize(index, state[index].description.path)} handleInputChange={handleEditorChange} />
                                         </Box>
