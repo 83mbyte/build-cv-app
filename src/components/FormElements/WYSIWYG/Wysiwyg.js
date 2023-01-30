@@ -8,12 +8,12 @@ import DOMPurify from 'dompurify';
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './wysiwyg.css';
-import { fetchAPI } from '../../../API/api';
 
-const Wysiwyg = ({ state, user, handleInputChange }) => {
+const Wysiwyg = ({ state, path, handleEditorChange }) => {
     const [editorState, setEditorState] = useState(
         () => EditorState.createWithContent(convertFromHTML(state.value))
     );
+
     const [convertedContent, setConvertedContent] = useState(null);
 
     const sanitizeMarkup = ((data) => {
@@ -26,10 +26,9 @@ const Wysiwyg = ({ state, user, handleInputChange }) => {
     }, [editorState]);
 
     const applyChanges = () => {
-        // if ((convertedContent && convertedContent !== ' ' && convertedContent !== '') && user && state.path) {
-        //     fetchAPI.putData(user, state.path, sanitizeMarkup(convertedContent))
-        // }
-        handleInputChange(sanitizeMarkup(convertedContent))
+        if ((convertedContent && convertedContent !== ' ' && convertedContent !== '')) {
+            handleEditorChange({ path, value: sanitizeMarkup(convertedContent) })
+        }
     }
 
     return (
