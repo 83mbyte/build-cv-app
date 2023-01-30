@@ -5,8 +5,8 @@ const SpinnerCustom = ({ height = '2rem' }) => {
     return (
 
         <Center bg='transparent' h={height}>
-            <Box bg='blue' w={['200px', 'xs', 'lg', '3xl']}>
-                <Progress isIndeterminate size='xs' />
+            <Box bg='transparent' w={['200px', 'xs', 'lg', '3xl']}>
+                <Progress isIndeterminate size='xs' colorScheme={'teal'} />
             </Box>
         </ Center>
     );
