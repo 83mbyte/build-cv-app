@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Wysiwyg from '../components/FormElements/WYSIWYG/Wysiwyg';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
-import { fetchSummary, putDataSummary, summaryStateValueUpdate } from '../redux/features/summary/summarySlice';
+import { fetchSummary, summaryStateValueUpdate } from '../redux/features/summary/summarySlice';
 import { setIsModifiedTrue } from '../redux/features/utility/utilitySlice';
 import SectionContainer from './SectionContainer';
 import SectionDescription from './SectionDescription';
@@ -18,14 +18,9 @@ const ProfSummary = ({ title, user }) => {
     const handleEditorChange = ({ path, value }) => {
         //update state with a value
         dispatch(summaryStateValueUpdate(value));
-        // saveToServer(user, path, value);
         dispatch(setIsModifiedTrue({ status: true, section: 'summary' }))
     }
-    const saveToServer = (user, path, value) => {
-        //save on server
-        let dataToSave = { user, path, value };
-        dispatch(putDataSummary(dataToSave))
-    }
+
 
     if (stateStatus === 'loading') {
         content = <SpinnerCustom />
@@ -40,8 +35,6 @@ const ProfSummary = ({ title, user }) => {
         //show WYSIWG editor if OK
         content = <Wysiwyg state={data} user={user} handleEditorChange={handleEditorChange} path={data.path} />
     }
-
-
 
     useEffect(() => {
         if (stateStatus === 'idle') {
