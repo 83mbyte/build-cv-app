@@ -2,8 +2,7 @@ import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 import { MdSave } from 'react-icons/md';
 import { useDispatch, useSelector, } from 'react-redux';
-import { fetchAPI } from '../API/api';
-import { setIsModifiedFalse } from '../redux/features/utility/utilitySlice';
+import { setIsModifiedFalse, putDataOnServer } from '../redux/features/utility/utilitySlice';
 
 
 const SaveDataServ = ({ user, sections }) => {
@@ -12,9 +11,8 @@ const SaveDataServ = ({ user, sections }) => {
 
     const clickHandler = () => {
         for (const section of sections) {
-            fetchAPI.putDataToWholeSection(user, section, state[section].data);
+            dispatch(putDataOnServer({ user, path: section, value: state[section].data }))
         }
-        dispatch(setIsModifiedFalse());
     }
     return (
 
@@ -25,8 +23,6 @@ const SaveDataServ = ({ user, sections }) => {
                 {/* <Text marginTop={'1px'}> before you leave the page.</Text> */}
             </Flex >
         </Box >
-
-
     );
 };
 
