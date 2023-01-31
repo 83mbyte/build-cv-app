@@ -20,7 +20,6 @@ const InputCustom = ({ labelText, defValue, path, required = false, user, handle
                     //onBlur={applyChanges}
                     bg="white"
                     placeholder=" "
-                    onFocus={() => console.log('focu')}
                     _focusVisible={{ 'boxShadow': 'none' }}
                 />
                 <FormLabel fontSize={ARRAYSIZE}>{labelText}</FormLabel>
