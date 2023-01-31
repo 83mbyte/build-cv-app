@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Accordion,
     AccordionItem,
@@ -11,7 +11,7 @@ import InputCustom from '../FormElements/InputCustom';
 import SpinnerCustom from '../Spinner/SpinnerCustom';
 import SaveButton from '../Buttons/SaveButton';
 import { RemoveIcon } from '../Icons/Icon';
-//import { DeleteIcon } from '@chakra-ui/icons';
+import ToolTip from '../ToolTip/ToolTip';
 
 const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange, buttonStatus, saveToServer, removeItem }) => {
 
@@ -60,7 +60,9 @@ const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange
                                             <Flex columnGap={'15px'} alignItems={'center'} mr='15px'>
 
                                                 <Box onClick={(e) => removeItem(e, state[index])}>
-                                                    <RemoveIcon />
+                                                    <ToolTip label='remove' type='warning'>
+                                                        <RemoveIcon />
+                                                    </ToolTip>
                                                 </Box>
                                             </Flex>
 
