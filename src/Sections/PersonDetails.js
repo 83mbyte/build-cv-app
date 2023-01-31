@@ -8,6 +8,7 @@ import SectionContainer from './SectionContainer';
 import { inputUpdate, fetchPersonDetails } from '../redux/features/personDetails/personDetailsSlice';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
 import { Box } from '@chakra-ui/react';
+import { setIsModifiedTrue } from '../redux/features/utility/utilitySlice';
 
 
 const PersonDetails = ({ title, user }) => {
@@ -19,6 +20,7 @@ const PersonDetails = ({ title, user }) => {
 
     const handleInputChange = (inputRef, inpPath) => {
         dispatch(inputUpdate({ path: inpPath.split('/').slice(1,), value: inputRef.current.value }));
+        dispatch(setIsModifiedTrue({ status: true, section: 'personDetails' }));
     }
 
     if (stateStatus === 'loading') {
