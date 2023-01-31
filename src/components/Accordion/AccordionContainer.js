@@ -97,7 +97,7 @@ const AccordionContainer = ({ state, user, handleEditorChange, handleInputChange
                                         </SimpleGrid>
                                         <Box  >
 
-                                            <Wysiwyg state={state[index].description} user={user} path={pathCustomize(index, state[index].description.path)} handleInputChange={handleEditorChange} />
+                                            <Wysiwyg state={state[index].description} user={user} path={pathCustomize(index, state[index].description.path)} handleEditorChange={handleEditorChange} />
                                         </Box>
                                         <Box>
                                             <SaveButton saveToServer={saveToServer} buttonStatus={buttonStatus} />
