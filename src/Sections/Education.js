@@ -5,6 +5,7 @@ import AccordionContainer from '../components/Accordion/AccordionContainer';
 import AddOneMoreItem from '../components/Buttons/AddOneMoreItem';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
 import { educationStateValueUpdate, fetchEducation, putDataEducation, addNewEducationItem, removeEducationItem } from '../redux/features/education/educationSlice';
+import { setIsModifiedTrue } from '../redux/features/utility/utilitySlice';
 import SectionContainer from './SectionContainer';
 import SectionDescription from './SectionDescription';
 
@@ -18,10 +19,12 @@ const Education = ({ title, user }) => {
 
     const handleInputChange = (inputRef, inpPath) => {
         dispatch(educationStateValueUpdate({ path: inpPath.split('/').slice(1,), value: inputRef.current.value }));
+        dispatch(setIsModifiedTrue({ status: true, section: 'education' }));
     }
     const handleEditorChange = ({ path, value }) => {
-        console.log('wsss:', value)
+        //console.log('wysiwy: ', value)
         dispatch(educationStateValueUpdate({ path: path.split('/').slice(1,), value }));
+        dispatch(setIsModifiedTrue({ status: true, section: 'education' }));
     }
 
     const handleAddNewItemBtn = () => {
@@ -37,6 +40,7 @@ const Education = ({ title, user }) => {
         e.preventDefault();
         let indexToRemove = data.findIndex((elem) => elem === itemToRemove);
         dispatch(removeEducationItem(indexToRemove));
+        dispatch(setIsModifiedTrue({ status: true, section: 'education' }));
     }
 
     useEffect(() => {
