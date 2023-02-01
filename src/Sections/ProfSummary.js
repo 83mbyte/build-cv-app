@@ -15,7 +15,7 @@ const ProfSummary = ({ title, user }) => {
     const stateStatus = useSelector(state => state.summary.status);
     const error = useSelector(state => state.summary.error);
 
-    const handleEditorChange = ({ path, value }) => {
+    const handleInputChange = (path, value) => {
         //update state with a value
         dispatch(summaryStateValueUpdate(value));
         dispatch(setIsModifiedTrue({ status: true, section: 'summary' }))
@@ -32,8 +32,8 @@ const ProfSummary = ({ title, user }) => {
         content = <Box>{error}</Box>
     }
     else if (stateStatus === 'succeeded' && data) {
-        //show WYSIWG editor if OK
-        content = <Wysiwyg state={data} user={user} handleEditorChange={handleEditorChange} path={data.path} />
+        //show WYSIWG editor if OKstate, path, handleInputChange
+        content = <Wysiwyg state={data} handleInputChange={handleInputChange} path={data.path} />
     }
 
     useEffect(() => {
