@@ -1,18 +1,33 @@
 import { Box } from "@chakra-ui/react";
-import { DeleteIcon } from '@chakra-ui/icons';
+import { IconContext } from "react-icons";
+import { MdDelete, MdExpandMore } from 'react-icons/md'
 import React from "react";
 import './Icon.css';
 
 
-export const RemoveIcon = () => {
+export const RemoveIcon = ({ isExpanded }) => {
     return (
 
-        <Box>
-            <DeleteIcon color='gray.200' _hover={{ 'color': 'red.200' }} />
-        </Box>
+        <IconContext.Provider value={{ className: 'icon red' }} >
+            <Box>
+
+                <MdDelete />
+            </Box >
+        </IconContext.Provider >
     )
 }
 
+export const ExpandIcon = ({ isExpanded }) => {
+
+    return (
+        <IconContext.Provider value={{ className: isExpanded ? 'icon expanded' : 'icon' }} >
+            <Box>
+
+                <MdExpandMore />
+            </Box >
+        </IconContext.Provider >
+    )
+}
 // export const DragIcon = () => {
 //     return (
 //         <div className="icon grab">
