@@ -3,12 +3,14 @@ import educationSliceReducer from "./features/education/educationSlice";
 import personDetailsReducer from "./features/personDetails/personDetailsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
+import websoclinksSliceReducer from "./features/websoclinks/websoclinksSlice";
 
 export default configureStore({
     reducer: {
         personDetails: personDetailsReducer,
         summary: summarySliceReducer,
         education: educationSliceReducer,
+        websoclinks: websoclinksSliceReducer,
         utility: utilitySliceReducer
     },
     // middleware: (getDefaultMiddleware) => getDefaultMiddleware({
