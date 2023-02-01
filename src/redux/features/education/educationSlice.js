@@ -8,9 +8,9 @@ const DATA_TEMPLATE_OBJECT = {
         type: 'text',
         value: ''
     },
-    description: {
+    wysiwyg: {
         label: '',
-        path: 'education/description',
+        path: 'education/wysiwyg',
         type: 'wysiwyg',
         value: ''
     },
@@ -24,7 +24,7 @@ const DATA_TEMPLATE_OBJECT = {
         label: 'Start - End date',
         path: 'education/period',
         type: 'text',
-        value: 'xxxx - yyyy'
+        value: ''
     },
     title: {
         label: 'School',
@@ -41,7 +41,6 @@ export const educationSlice = createSlice({
             DATA_TEMPLATE_OBJECT
         ],
         status: 'idle',
-        buttonStatus: 'disabled',
         error: ''
     },
     reducers: {
@@ -50,13 +49,16 @@ export const educationSlice = createSlice({
         },
         educationStateValueUpdate: (state, action) => {
             state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
-            state.buttonStatus = 'enabled';
+
         },
         addNewEducationItem: (state) => {
-            state.data.push(DATA_TEMPLATE_OBJECT);
+            state.data = [...state.data, DATA_TEMPLATE_OBJECT];
         },
         removeEducationItem: (state, action) => {
             state.data.splice(action.payload, 1);
+            if (state.data.length < 1) {
+                state.data = [DATA_TEMPLATE_OBJECT]
+            }
         }
     },
     extraReducers(builder) {
@@ -66,25 +68,16 @@ export const educationSlice = createSlice({
             })
             .addCase(fetchEducation.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.data = action.payload;
+                if (action.payload) {
+                    state.data = action.payload
+                } else {
+                    state.data = [DATA_TEMPLATE_OBJECT]
+                }
             })
             .addCase(fetchEducation.rejected, (state, action) => {
                 state.status = 'failed'
                 state.error = action.error.message
             })
-            .addCase(putDataEducation.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
-            })
-            .addCase(putDataEducation.fulfilled, (state, action) => {
-                state.status = 'succeeded'
-                state.buttonStatus = 'disabled'
-                // state.error = action.error.message
-            })
-            .addCase(putDataEducation.pending, (state, action) => {
-                state.buttonStatus = 'loading'
-            })
-
     }
 })
 
@@ -99,9 +92,3 @@ export const fetchEducation = createAsyncThunk('education/fetchEducation', async
     }
 })
 
-export const putDataEducation = createAsyncThunk('education/putDataSummary', async (data) => {
-    const response = await fetchAPI.putDataToWholeSection(data.user, data.path, data.value);
-    if (response && response.status == 200) {
-        return data.value
-    }
-});
