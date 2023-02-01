@@ -1,6 +1,7 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import educationSliceReducer from "./features/education/educationSlice";
 import personDetailsReducer from "./features/personDetails/personDetailsSlice";
+import skillsSliceReducer from "./features/skills/skillsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
 import websoclinksSliceReducer from "./features/websoclinks/websoclinksSlice";
@@ -11,6 +12,7 @@ export default configureStore({
         summary: summarySliceReducer,
         education: educationSliceReducer,
         websoclinks: websoclinksSliceReducer,
+        skills: skillsSliceReducer,
         utility: utilitySliceReducer
     },
     // middleware: (getDefaultMiddleware) => getDefaultMiddleware({
