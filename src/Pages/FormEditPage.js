@@ -5,7 +5,7 @@ import SlideBottom from '../components/Slide/SlideBottom';
 import Education from '../Sections/Education';
 import PersonDetails from '../Sections/PersonDetails';
 import ProfSummary from '../Sections/ProfSummary';
-import SaveDataServ from '../Sections/SaveDataServ';
+import SaveDataModal from '../Sections/SaveDataModal';
 import WebSocLinks from '../Sections/WebSocLinks';
 
 const FormEditPage = () => {
@@ -23,7 +23,7 @@ const FormEditPage = () => {
             {/* 3) Education section */}
             <Education title={'Education'} user={'user_hero'} />
             <WebSocLinks title={'Websites & Social Links'} user={'user_hero'} />
-            <SlideBottom show={isModified.status}><SaveDataServ user={'user_hero'} sections={isModified.sections} /></SlideBottom>
+            <SlideBottom show={isModified.status}><SaveDataModal user={'user_hero'} sections={isModified.sections} /></SlideBottom>
 
 
         </>
