@@ -1,8 +1,8 @@
 import { Box, FormControl, FormLabel, Input, FormErrorMessage } from '@chakra-ui/react';
-import React, { useRef, useState } from 'react';
-import { fetchAPI } from '../../API/api';
+import React, { useRef } from 'react';
 
-const InputCustom = ({ labelText, defValue, path, required = false, user, handleInputChange }) => {
+
+const InputCustom = ({ labelText, defValue, path, required = false, handleInputChange }) => {
     const isError = defValue === '';
     const inputRef = useRef(null);
     const ARRAYSIZE = ['xs', 'md', 'md'];
@@ -15,9 +15,8 @@ const InputCustom = ({ labelText, defValue, path, required = false, user, handle
                 <Input
                     size={ARRAYSIZE}
                     value={defValue}
-                    onChange={() => handleInputChange(inputRef, path)}
+                    onChange={() => handleInputChange(path, inputRef.current.value)}
                     ref={inputRef}
-                    //onBlur={applyChanges}
                     bg="white"
                     placeholder=" "
                     _focusVisible={{ 'boxShadow': 'none' }}

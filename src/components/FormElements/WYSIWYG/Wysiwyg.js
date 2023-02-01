@@ -9,7 +9,7 @@ import DOMPurify from 'dompurify';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './wysiwyg.css';
 
-const Wysiwyg = ({ state, path, handleEditorChange }) => {
+const Wysiwyg = ({ state, path, handleInputChange }) => {
     const [editorState, setEditorState] = useState(
         () => EditorState.createWithContent(convertFromHTML(state.value))
     );
@@ -27,7 +27,11 @@ const Wysiwyg = ({ state, path, handleEditorChange }) => {
 
     const applyChanges = () => {
         if ((convertedContent && convertedContent !== ' ' && convertedContent !== '')) {
-            handleEditorChange({ path, value: sanitizeMarkup(convertedContent) })
+            if (convertedContent === '<p></p>') {
+                handleInputChange(path, '')
+            } else {
+                handleInputChange(path, sanitizeMarkup(convertedContent));
+            }
         }
     }
 

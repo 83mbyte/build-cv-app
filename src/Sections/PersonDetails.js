@@ -18,8 +18,8 @@ const PersonDetails = ({ title, user }) => {
     const stateStatus = useSelector(state => state.personDetails.status);
     const error = useSelector(state => state.personDetails.error)
 
-    const handleInputChange = (inputRef, inpPath) => {
-        dispatch(inputUpdate({ path: inpPath.split('/').slice(1,), value: inputRef.current.value }));
+    const handleInputChange = (path, value) => {
+        dispatch(inputUpdate({ path: path.split('/').slice(1,), value: value }));
         dispatch(setIsModifiedTrue({ status: true, section: 'personDetails' }));
     }
 
