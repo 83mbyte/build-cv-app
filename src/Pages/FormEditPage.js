@@ -6,6 +6,7 @@ import Education from '../Sections/Education';
 import PersonDetails from '../Sections/PersonDetails';
 import ProfSummary from '../Sections/ProfSummary';
 import SaveDataServ from '../Sections/SaveDataServ';
+import WebSocLinks from '../Sections/WebSocLinks';
 
 const FormEditPage = () => {
     const isModified = useSelector(state => state.utility.data.isModified);
@@ -15,12 +16,13 @@ const FormEditPage = () => {
             {/* Sections goes here.. */}
 
             {/* 1) Personal Details section */}
-            <PersonDetails title={'Personal Details'} user={'user_zero'} />
+            <PersonDetails title={'Personal Details'} user={'user_hero'} />
 
             {/* 2) Professional Summary section */}
-            <ProfSummary title={'Professional Summary'} user={'user_zero'} />
+            <ProfSummary title={'Professional Summary'} user={'user_hero'} />
             {/* 3) Education section */}
             <Education title={'Education'} user={'user_hero'} />
+            <WebSocLinks title={'Websites & Social Links'} user={'user_hero'} />
             <SlideBottom show={isModified.status}><SaveDataServ user={'user_hero'} sections={isModified.sections} /></SlideBottom>
 
 
