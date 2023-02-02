@@ -2,14 +2,16 @@ import { Box } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AccordionContainer from '../components/Accordion/AccordionContainer';
+import ChooseVariantBtnContainer from '../components/Buttons/ChooseVariantBtnContainer';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
-import { addNewSkillItem, fetchSkills, removeSkillItem } from '../redux/features/skills/skillsSlice';
+import { addNewSkillItem, fetchSkills, removeSkillItem, skillsStateValueUpdate, addNewSkillItemPredefined } from '../redux/features/skills/skillsSlice';
 import SectionContainer from './SectionContainer';
 import SectionDescription from './SectionDescription';
 
 const Skills = ({ title, user }) => {
     const dispatch = useDispatch();
     const data = useSelector(state => state.skills.data);
+    const skillVars = useSelector(state => state.skills.skillVars);
     const stateStatus = useSelector(state => state.skills.status);
     const error = useSelector(state => state.skills.error);
 
@@ -32,7 +34,7 @@ const Skills = ({ title, user }) => {
             inputsOrder={['skill', 'level']}
             removeItemAction={removeSkillItem}
             addNewItemAction={addNewSkillItem}
-        //valueUpdateAction={educationStateValueUpdate}
+            valueUpdateAction={skillsStateValueUpdate}
         />
     }
 
@@ -40,14 +42,19 @@ const Skills = ({ title, user }) => {
         if (stateStatus === 'idle') {
             dispatch(fetchSkills(user))
         }
-    }, [stateStatus, dispatch, user])
+    }, [stateStatus, dispatch, user]);
+
+
+
     return (
         <SectionContainer headingTxt={title} type="flex" flexDirect='column'>
             <SectionDescription value={'Choose 5 of the most important skills to show your talents! Make sure they match the keywords of the job listing if applying via an online system.'} />
+
+            {skillVars && <ChooseVariantBtnContainer variants={skillVars} section={'skills'} addNewItemPredefined={addNewSkillItemPredefined} />}
             {
                 content
             }
-        </SectionContainer>
+        </SectionContainer >
     );
 };
 
