@@ -12,14 +12,16 @@ const DATA_TEMPLATE_OBJECT = {
         label: 'Level',
         path: 'skills/level',
         type: 'slider',
-        value: ''
+        value: '',
+        isDisabled: true
     }
 }
 
 export const skillsSlice = createSlice({
     name: 'skills',
     initialState: {
-        data: [DATA_TEMPLATE_OBJECT],
+        data: [],
+        skillVars: ['Java', 'HTML', 'Python', 'PHP', 'CSS', 'SQL', 'HTML & CSS', 'MySQL', 'jQuery', 'C++', 'HTML', 'JavaScript', 'React', 'Redux', 'React Native', 'Firebase', 'Git', 'SaaS'],
         status: 'idle',
         error: ''
     },
@@ -27,12 +29,26 @@ export const skillsSlice = createSlice({
         addNewSkillItem: (state) => {
             state.data = [...state.data, DATA_TEMPLATE_OBJECT];
         },
+        addNewSkillItemPredefined: (state, action) => {
+            state.data = [...state.data, {
+                ...DATA_TEMPLATE_OBJECT,
+                skill: {
+                    ...DATA_TEMPLATE_OBJECT.skill,
+                    value: action.payload.value
+                }
+            }];
+            state.skillVars.splice(action.payload.index, 1);
+        },
         removeSkillItem: (state, action) => {
             state.data.splice(action.payload, 1);
             if (state.data.length < 1) {
-                state.data = [DATA_TEMPLATE_OBJECT]
+                state.data = []
             }
-        }
+        },
+        skillsStateValueUpdate: (state, action) => {
+            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
+
+        },
     },
     extraReducers(builder) {
         builder
@@ -44,7 +60,7 @@ export const skillsSlice = createSlice({
                 if (action.payload) {
                     state.data = action.payload
                 } else {
-                    state.data = [DATA_TEMPLATE_OBJECT]
+                    state.data = []
                 }
             })
             .addCase(fetchSkills.rejected, (state, action) => {
@@ -53,7 +69,7 @@ export const skillsSlice = createSlice({
             })
     }
 })
-export const { addNewSkillItem, removeSkillItem } = skillsSlice.actions;
+export const { addNewSkillItem, removeSkillItem, skillsStateValueUpdate, addNewSkillItemPredefined } = skillsSlice.actions;
 export default skillsSlice.reducer;
 
 

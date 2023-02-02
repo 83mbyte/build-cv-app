@@ -12,7 +12,7 @@ const DATA_TEMPLATE_OBJECT = {
     link: {
         label: 'Link',
         path: 'websoclinks/link',
-        type: 'text',
+        type: 'url',
         value: ''
     },
 
@@ -24,6 +24,7 @@ export const websoclinksSlice = createSlice({
         data: [
             DATA_TEMPLATE_OBJECT
         ],
+        linkVars: ['Twitter', 'Facebook', 'GitHub', 'LinkedIn'],
         status: 'idle',
         error: ''
     },
@@ -39,13 +40,20 @@ export const websoclinksSlice = createSlice({
         },
         removeWebSocLinksItem: (state, action) => {
             state.data.splice(action.payload, 1);
-            if (state.data.length < 1) {
-                state.data = [DATA_TEMPLATE_OBJECT]
-            }
+
         },
         websoclinksStateValueUpdate: (state, action) => {
             state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
-
+        },
+        addNewWebSocLinksItemPredefined: (state, action) => {
+            state.data = [...state.data, {
+                ...DATA_TEMPLATE_OBJECT,
+                label: {
+                    ...DATA_TEMPLATE_OBJECT.label,
+                    value: action.payload.value
+                }
+            }];
+            state.linkVars.splice(action.payload.index, 1);
         },
     },
     extraReducers(builder) {
@@ -58,7 +66,7 @@ export const websoclinksSlice = createSlice({
                 if (action.payload) {
                     state.data = action.payload
                 } else {
-                    state.data = [DATA_TEMPLATE_OBJECT]
+                    state.data = []
                 }
             })
             .addCase(fetchWebSocLinks.rejected, (state, action) => {
@@ -69,7 +77,7 @@ export const websoclinksSlice = createSlice({
 })
 
 
-export const { loadStateFrom, addNewWebSocLinksItem, removeWebSocLinksItem, websoclinksStateValueUpdate } = websoclinksSlice.actions;
+export const { loadStateFrom, addNewWebSocLinksItem, removeWebSocLinksItem, websoclinksStateValueUpdate, addNewWebSocLinksItemPredefined } = websoclinksSlice.actions;
 export default websoclinksSlice.reducer;
 
 export const fetchWebSocLinks = createAsyncThunk('websoclinks/fetchWebSocLinks', async (userName) => {
