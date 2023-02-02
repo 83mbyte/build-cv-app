@@ -59,6 +59,7 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                     !state
                         ? <SpinnerCustom />
                         : state.map((accordItem, index) => {
+
                             return (
                                 <AccordionItem border={'1px solid'}
                                     borderColor={'gray.200'}
@@ -123,6 +124,7 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                                             path={path}
                                                                             required={accordItem[key].required}
                                                                             handleInputChange={handleInputChange}
+                                                                            disabled={accordItem[key].isDisabled}
                                                                         />
                                                                     )
                                                                 }

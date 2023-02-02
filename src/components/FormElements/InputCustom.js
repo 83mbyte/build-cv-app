@@ -2,7 +2,7 @@ import { Box, FormControl, FormLabel, Input, FormErrorMessage } from '@chakra-ui
 import React, { useRef } from 'react';
 
 
-const InputCustom = ({ labelText, defValue, path, required = false, handleInputChange }) => {
+const InputCustom = ({ labelText, defValue, path, required = false, disabled = false, handleInputChange }) => {
     const isError = defValue === '';
     const inputRef = useRef(null);
     const ARRAYSIZE = ['xs', 'md', 'md'];
@@ -20,6 +20,7 @@ const InputCustom = ({ labelText, defValue, path, required = false, handleInputC
                     bg="white"
                     placeholder=" "
                     _focusVisible={{ 'boxShadow': 'none' }}
+                    disabled={disabled}
                 />
                 <FormLabel fontSize={ARRAYSIZE}>{labelText}</FormLabel>
                 {isError && (
