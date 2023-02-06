@@ -3,8 +3,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AccordionContainer from '../components/Accordion/AccordionContainer';
 import ChooseVariantBtnContainer from '../components/Buttons/ChooseVariantBtnContainer';
+import Switcher from '../components/FormElements/Switcher';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
-import { addNewSkillItem, fetchSkills, removeSkillItem, skillsStateValueUpdate, addNewSkillItemPredefined } from '../redux/features/skills/skillsSlice';
+import { addNewSkillItem, fetchSkills, removeSkillItem, skillsStateValueUpdate, addNewSkillItemPredefined, skillLevelSwitchToggle } from '../redux/features/skills/skillsSlice';
 import SectionContainer from './SectionContainer';
 import SectionDescription from './SectionDescription';
 
@@ -12,6 +13,7 @@ const Skills = ({ title, user }) => {
     const dispatch = useDispatch();
     const data = useSelector(state => state.skills.data);
     const skillVars = useSelector(state => state.skills.skillVars);
+    const isSwitchDisabled = useSelector(state => state.skills.isSwitchDisabled);
     const stateStatus = useSelector(state => state.skills.status);
     const error = useSelector(state => state.skills.error);
 
@@ -35,6 +37,7 @@ const Skills = ({ title, user }) => {
             removeItemAction={removeSkillItem}
             addNewItemAction={addNewSkillItem}
             valueUpdateAction={skillsStateValueUpdate}
+            isSwitchDisabled={isSwitchDisabled}
         />
     }
 
@@ -49,6 +52,16 @@ const Skills = ({ title, user }) => {
     return (
         <SectionContainer headingTxt={title} type="flex" flexDirect='column'>
             <SectionDescription value={'Choose 5 of the most important skills to show your talents! Make sure they match the keywords of the job listing if applying via an online system.'} />
+
+            <Box mt={5} mb={0} w={'100%'} px='10px' minW={'200px'}  >
+                <Switcher
+                    labelText={`Don't show experience level`}
+                    switchId={'skill-level-switch'}
+                    size={'sm'}
+                    isChecked={isSwitchDisabled}
+                    toggleSwitchAction={skillLevelSwitchToggle}
+                />
+            </Box>
 
             {skillVars && <ChooseVariantBtnContainer variants={skillVars} section={'skills'} addNewItemPredefined={addNewSkillItemPredefined} />}
             {

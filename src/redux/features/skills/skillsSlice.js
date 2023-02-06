@@ -12,8 +12,7 @@ const DATA_TEMPLATE_OBJECT = {
         label: 'Level',
         path: 'skills/level',
         type: 'slider',
-        value: '',
-        isDisabled: true
+        value: 'Skillful',
     }
 }
 
@@ -22,6 +21,7 @@ export const skillsSlice = createSlice({
     initialState: {
         data: [],
         skillVars: ['Java', 'HTML', 'Python', 'PHP', 'CSS', 'SQL', 'HTML & CSS', 'MySQL', 'jQuery', 'C++', 'HTML', 'JavaScript', 'React', 'Redux', 'React Native', 'Firebase', 'Git', 'SaaS'],
+        isSwitchDisabled: false,
         status: 'idle',
         error: ''
     },
@@ -47,8 +47,10 @@ export const skillsSlice = createSlice({
         },
         skillsStateValueUpdate: (state, action) => {
             state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
-
         },
+        skillLevelSwitchToggle: (state) => {
+            state.isSwitchDisabled = !state.isSwitchDisabled;
+        }
     },
     extraReducers(builder) {
         builder
@@ -57,8 +59,9 @@ export const skillsSlice = createSlice({
             })
             .addCase(fetchSkills.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload) {
-                    state.data = action.payload
+                if (action.payload.data) {
+                    state.data = action.payload.data;
+                    state.isSwitchDisabled = action.payload.__serv.isSwitchDisabled;
                 } else {
                     state.data = []
                 }
@@ -69,7 +72,7 @@ export const skillsSlice = createSlice({
             })
     }
 })
-export const { addNewSkillItem, removeSkillItem, skillsStateValueUpdate, addNewSkillItemPredefined } = skillsSlice.actions;
+export const { addNewSkillItem, removeSkillItem, skillsStateValueUpdate, addNewSkillItemPredefined, skillLevelSwitchToggle } = skillsSlice.actions;
 export default skillsSlice.reducer;
 
 
