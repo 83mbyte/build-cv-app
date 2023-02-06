@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 
 import React, { useState, useEffect } from 'react';
 import { EditorState } from 'draft-js';
@@ -36,13 +36,16 @@ const Wysiwyg = ({ state, path, handleInputChange }) => {
     }
 
     return (
-        <Box my='3' w={'100%'} px='8px' minW={'200px'}>
+        <Box my={state.label === '' ? '3' : '0'} w={'100%'} px='8px' minW={'200px'}>
+
+            {state.label && <Text color={'gray.500'} px={2} mx={3} mb={'-2px'} fontSize={'xs'} fontWeight={'semibold'}>{state.label}</Text>}
             <Editor
                 editorState={editorState}
                 onEditorStateChange={setEditorState}
                 wrapperClassName="wrapper-class"
                 toolbarClassName="toolbar-class"
                 editorClassName="editor-class"
+                ariaLabel='sssssSSSSS'
                 toolbar={{
                     options: ['inline', 'list', 'history'],
                     separator: '|',
@@ -61,7 +64,7 @@ const Wysiwyg = ({ state, path, handleInputChange }) => {
                 }}
                 onBlur={applyChanges}
             />
-        </Box>
+        </Box >
     );
 };
 
