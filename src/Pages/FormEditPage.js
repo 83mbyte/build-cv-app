@@ -8,6 +8,7 @@ import EmploymentHistory from '../Sections/EmploymentHistory';
 import Languages from '../Sections/Languages';
 import PersonDetails from '../Sections/PersonDetails';
 import ProfSummary from '../Sections/ProfSummary';
+import References from '../Sections/References';
 import SaveDataModal from '../Sections/SaveDataModal';
 import Skills from '../Sections/Skills';
 import WebSocLinks from '../Sections/WebSocLinks';
@@ -43,6 +44,8 @@ const FormEditPage = () => {
             {/* 8) Languages section */}
             <Languages title={'Languages'} user={'user_hero'} />
 
+            {/* 8) References section */}
+            <References title={'References'} user={'user_hero'} />
             {/*   popup/slide_bottom Save button */}
             <SlideBottom show={isModified.status}><SaveDataModal user={'user_hero'} sections={isModified.sections} /></SlideBottom>
 
