@@ -4,6 +4,7 @@ import educationSliceReducer from "./features/education/educationSlice";
 import employmentHistorySliceReducer from "./features/employmentHistory/employmentHistorySlice";
 import languagesSliceReducer from "./features/languages/languagesSlice";
 import personDetailsReducer from "./features/personDetails/personDetailsSlice";
+import referencesSliceReducer from "./features/references/referencesSlice";
 import skillsSliceReducer from "./features/skills/skillsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
@@ -19,6 +20,7 @@ export default configureStore({
         courses: coursesSliceReducer,
         employmentHistory: employmentHistorySliceReducer,
         languages: languagesSliceReducer,
+        references: referencesSliceReducer,
         utility: utilitySliceReducer,
 
     },
