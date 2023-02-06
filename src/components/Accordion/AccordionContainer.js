@@ -15,6 +15,7 @@ import ToolTip from '../ToolTip/ToolTip';
 import { useDispatch } from 'react-redux';
 import { setIsModifiedTrue } from '../../redux/features/utility/utilitySlice';
 import AddOneMoreItem from '../Buttons/AddOneMoreItem';
+import LevelSlider from '../FormElements/LevelSlider';
 
 const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, removeItemAction, addNewItemAction, valueUpdateAction }) => {
 
@@ -110,11 +111,11 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                 </h2>
                                                 <AccordionPanel pb={4}>
 
-                                                    <SimpleGrid columns={[1, 1, 2]}>
+                                                    <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'}>
                                                         {
                                                             inputsOrder &&
                                                             inputsOrder.map((key, ind) => {
-                                                                if (key !== 'wysiwyg') {
+                                                                if (key !== 'wysiwyg' && accordItem[key].type !== 'slider') {
                                                                     let path = pathCustomize(index, accordItem[key].path);
                                                                     return (
                                                                         <InputCustom
@@ -127,6 +128,9 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                                             disabled={accordItem[key].isDisabled}
                                                                         />
                                                                     )
+                                                                } else if (accordItem[key].type === 'slider') {
+                                                                    let path = pathCustomize(index, accordItem[key].path);
+                                                                    return <LevelSlider key={`slider_${ind}`} skillName={accordItem.skill.value} value={accordItem[key].value} path={path} handleInputChange={handleInputChange} />
                                                                 }
                                                                 return null
                                                             })
