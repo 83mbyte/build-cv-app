@@ -17,7 +17,8 @@ import { setIsModifiedTrue } from '../../redux/features/utility/utilitySlice';
 import AddOneMoreItem from '../Buttons/AddOneMoreItem';
 import LevelSlider from '../FormElements/LevelSlider';
 
-const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, removeItemAction, addNewItemAction, valueUpdateAction }) => {
+const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, removeItemAction, addNewItemAction, valueUpdateAction, isSwitchDisabled }) => {
+
 
     const dispatch = useDispatch();
     const capitalizeString = (str) => {
@@ -90,7 +91,7 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                             </Box>
                                                             <Box fontSize={'xs'} color={'gray.500'}>
                                                                 {
-                                                                    !accordItem[inputsOrder[1]].value || accordItem[inputsOrder[1]].value === '' || accordItem[inputsOrder[1]].value === undefined
+                                                                    !accordItem[inputsOrder[1]].value || accordItem[inputsOrder[1]].value === '' || accordItem[inputsOrder[1]].value === undefined || isSwitchDisabled
                                                                         ? null
                                                                         : accordItem[inputsOrder[1]].value
                                                                 }
@@ -130,7 +131,7 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                                     )
                                                                 } else if (accordItem[key].type === 'slider') {
                                                                     let path = pathCustomize(index, accordItem[key].path);
-                                                                    return <LevelSlider key={`slider_${ind}`} skillName={accordItem.skill.value} value={accordItem[key].value} path={path} handleInputChange={handleInputChange} />
+                                                                    return <LevelSlider key={`slider_${ind}`} skillName={accordItem.skill.value} value={accordItem[key].value} path={path} handleInputChange={handleInputChange} isDisabled={isSwitchDisabled} />
                                                                 }
                                                                 return null
                                                             })

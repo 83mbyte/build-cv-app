@@ -10,7 +10,8 @@ import {
 import { MdCode } from 'react-icons/md';
 
 
-const LevelSlider = ({ skillName, value, path, handleInputChange }) => {
+const LevelSlider = ({ skillName, value, path, handleInputChange, isDisabled = 'false' }) => {
+
 
     const [color, setColor] = useState(['orange.300', 'gray.100']);
 
@@ -94,8 +95,8 @@ const LevelSlider = ({ skillName, value, path, handleInputChange }) => {
 
     return (
         <Box px={2} bg='' h={'38px'} display='flex' flexDirection={'column'}>
-            <Text color={'gray.500'} px={2} mx={3} mb={'-2px'}>Level - <Text as='span' color={color[0]}>{value}</Text></Text>
-            <Slider aria-label={`slider-${skillName}`} defaultValue={defValue} min={0} max={100} step={25} onChange={(val) => changeHandler(val)} border={'0px solid teal'} m={0} p={0} display={'flex'} flexDirection={'row'}  >
+            <Text color={'gray.500'} px={2} mx={3} mb={'-2px'}>Level - <Text as='span' color={color[0]}>{value}</Text><Text as='span' color={'gray.500'} fontSize="xs"> {isDisabled && '/disabled/'}</Text></Text>
+            <Slider aria-label={`slider-${skillName}`} defaultValue={defValue} min={0} max={100} step={25} onChange={(val) => changeHandler(val)} border={'0px solid teal'} m={0} p={0} display={'flex'} flexDirection={'row'} isDisabled={isDisabled}  >
 
                 <SliderTrack h="10px" bg={color[1]}>
                     {
