@@ -2,6 +2,7 @@ import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import coursesSliceReducer from "./features/courses/coursesSlice";
 import educationSliceReducer from "./features/education/educationSlice";
 import employmentHistorySliceReducer from "./features/employmentHistory/employmentHistorySlice";
+import languagesSliceReducer from "./features/languages/languagesSlice";
 import personDetailsReducer from "./features/personDetails/personDetailsSlice";
 import skillsSliceReducer from "./features/skills/skillsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
@@ -17,6 +18,7 @@ export default configureStore({
         skills: skillsSliceReducer,
         courses: coursesSliceReducer,
         employmentHistory: employmentHistorySliceReducer,
+        languages: languagesSliceReducer,
         utility: utilitySliceReducer,
 
     },
