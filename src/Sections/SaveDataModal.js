@@ -6,12 +6,18 @@ import { putDataOnServer } from '../redux/features/utility/utilitySlice';
 
 
 const SaveDataModal = ({ user, sections }) => {
+
     const state = useSelector(state => state);
     const dispatch = useDispatch();
 
     const clickHandler = () => {
         for (const section of sections) {
-            dispatch(putDataOnServer({ user, path: section, value: state[section].data }))
+            if (section != 'skills') {
+                dispatch(putDataOnServer({ user, path: section, value: state[section].data }));
+            } else {
+
+                dispatch(putDataOnServer({ user, path: section, value: { data: state[section].data, __serv: { isSwitchDisabled: state[section].isSwitchDisabled } } }));
+            }
         }
     }
     return (
