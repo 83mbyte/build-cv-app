@@ -17,7 +17,20 @@ const SaveDataModal = ({ user, sections }) => {
                 dispatch(putDataOnServer({ user, path: section, value: { data: state[section].data, __serv: { isSwitchDisabled: state[section].isSwitchDisabled } } }));
             } else if (section === 'courses' || section === 'employmentHistory' || section === 'languages') {
                 dispatch(putDataOnServer({ user, path: section, value: { data: state[section].data, __serv: { isSectionVisible: state[section].isSectionVisible } } }));
-            } else {
+            } else if (section === 'references') {
+                dispatch(putDataOnServer({
+                    user,
+                    path: section,
+                    value: {
+                        data: state[section].data,
+                        __serv: {
+                            isSectionVisible: state[section].isSectionVisible,
+                            isSwitchChecked: state[section].isSwitchChecked
+                        }
+                    }
+                }));
+            }
+            else {
                 dispatch(putDataOnServer({ user, path: section, value: state[section].data }));
             }
         }
