@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { setIsModifiedTrue } from '../../redux/features/utility/utilitySlice';
 import AddOneMoreItem from '../Buttons/AddOneMoreItem';
 import LevelSlider from '../FormElements/LevelSlider';
+import SelectCustom from '../FormElements/SelectCustom';
 
 const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, removeItemAction, addNewItemAction, valueUpdateAction, isSwitchDisabled }) => {
 
@@ -116,7 +117,7 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                         {
                                                             inputsOrder &&
                                                             inputsOrder.map((key, ind) => {
-                                                                if (key !== 'wysiwyg' && accordItem[key].type !== 'slider') {
+                                                                if (key !== 'wysiwyg' && accordItem[key].type !== 'slider' && accordItem[key].type !== 'select') {
                                                                     let path = pathCustomize(index, accordItem[key].path);
                                                                     return (
                                                                         <InputCustom
@@ -132,6 +133,15 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                                 } else if (accordItem[key].type === 'slider') {
                                                                     let path = pathCustomize(index, accordItem[key].path);
                                                                     return <LevelSlider key={`slider_${ind}`} skillName={accordItem.skill.value} value={accordItem[key].value} path={path} handleInputChange={handleInputChange} isDisabled={isSwitchDisabled} />
+                                                                } else if (accordItem[key].type === 'select') {
+                                                                    let path = pathCustomize(index, accordItem[key].path);
+                                                                    return <SelectCustom
+                                                                        key={`select_${ind}`}
+                                                                        path={path}
+                                                                        value={accordItem[key].value}
+                                                                        itemsArray={['Select level', 'Native speaker', 'Highly proficient', 'Very good command', 'Good working knowledge', 'Working knowledge', 'C2', 'C1', 'B2', 'B1', 'A2', 'A1']}
+                                                                        handleInputChange={handleInputChange}
+                                                                    />
                                                                 }
                                                                 return null
                                                             })
