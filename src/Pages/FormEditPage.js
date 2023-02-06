@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import SlideBottom from '../components/Slide/SlideBottom';
 import Courses from '../Sections/Courses';
 import Education from '../Sections/Education';
+import EmploymentHistory from '../Sections/EmploymentHistory';
 import PersonDetails from '../Sections/PersonDetails';
 import ProfSummary from '../Sections/ProfSummary';
 import SaveDataModal from '../Sections/SaveDataModal';
@@ -27,6 +28,7 @@ const FormEditPage = () => {
             <WebSocLinks title={'Websites & Social Links'} user={'user_hero'} />
             <Skills title={'Skills'} user={'user_hero'} />
             <Courses title={'Courses'} user={'user_hero'} />
+            <EmploymentHistory title={'Employment History'} user={'user_hero'} />
             <SlideBottom show={isModified.status}><SaveDataModal user={'user_hero'} sections={isModified.sections} /></SlideBottom>
 
 
