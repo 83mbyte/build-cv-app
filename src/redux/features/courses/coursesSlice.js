@@ -34,6 +34,7 @@ export const coursesSlice = createSlice({
     initialState: {
         data: [],
         status: 'idle',
+        isSectionVisible: false,
         error: ''
     },
     reducers: {
@@ -58,10 +59,13 @@ export const coursesSlice = createSlice({
             })
             .addCase(fetchCourses.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload) {
-                    state.data = action.payload;
+                if (action.payload.data) {
+                    state.data = action.payload.data;
+                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
+
                 } else {
-                    state.data = []
+                    state.data = [];
+                    state.isSectionVisible = false;
                 }
             })
             .addCase(fetchCourses.rejected, (state, action) => {
