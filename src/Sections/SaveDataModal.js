@@ -12,11 +12,13 @@ const SaveDataModal = ({ user, sections }) => {
 
     const clickHandler = () => {
         for (const section of sections) {
-            if (section != 'skills') {
-                dispatch(putDataOnServer({ user, path: section, value: state[section].data }));
-            } else {
 
+            if (section === 'skills') {
                 dispatch(putDataOnServer({ user, path: section, value: { data: state[section].data, __serv: { isSwitchDisabled: state[section].isSwitchDisabled } } }));
+            } else if (section === 'courses' || section === 'employmentHistory') {
+                dispatch(putDataOnServer({ user, path: section, value: { data: state[section].data, __serv: { isSectionVisible: state[section].isSectionVisible } } }));
+            } else {
+                dispatch(putDataOnServer({ user, path: section, value: state[section].data }));
             }
         }
     }
