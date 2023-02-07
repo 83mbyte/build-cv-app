@@ -5,6 +5,7 @@ import SlideBottom from '../components/Slide/SlideBottom';
 import Courses from '../Sections/Courses';
 import Education from '../Sections/Education';
 import EmploymentHistory from '../Sections/EmploymentHistory';
+import Hobbies from '../Sections/Hobbies';
 import Languages from '../Sections/Languages';
 import PersonDetails from '../Sections/PersonDetails';
 import ProfSummary from '../Sections/ProfSummary';
@@ -44,8 +45,13 @@ const FormEditPage = () => {
             {/* 8) Languages section */}
             <Languages title={'Languages'} user={'user_hero'} />
 
-            {/* 8) References section */}
+            {/* 9) References section */}
             <References title={'References'} user={'user_hero'} />
+
+            {/* 10) Hobbies section */}
+            <Hobbies title={"Hobbies"} user={'user_hero'} />
+
+
             {/*   popup/slide_bottom Save button */}
             <SlideBottom show={isModified.status}><SaveDataModal user={'user_hero'} sections={isModified.sections} /></SlideBottom>
 
