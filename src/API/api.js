@@ -1,3 +1,5 @@
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, setPersistence, browserSessionPersistence } from "firebase/auth";
+
 export const fetchAPI = {
     BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
     ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
@@ -68,3 +70,31 @@ export const fetchAPI = {
     // },
 
 }
+
+export const authAPI = {
+    login: (auth, email, password) => {
+
+        return signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+            // Signed in 
+
+            if (userCredential.user != null) {
+                const user = userCredential.user;
+                return {
+                    userId: user.uid, email: user.email, accessToken: user.accessToken
+                }
+            }
+            else {
+                return null
+            }
+            // ...
+        }).catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorMessage);
+            return { error: 'error' }
+
+        })
+    },
+}
+
+
