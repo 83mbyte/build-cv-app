@@ -13,6 +13,7 @@
     "dompurify": "^2.4.3",
     "draft-convert": "^2.1.13",
     "draft-js": "^0.11.7",
+    "firebase": "^9.17.1",
     "framer-motion": "^6.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
