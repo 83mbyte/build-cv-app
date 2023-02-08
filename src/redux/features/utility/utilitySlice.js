@@ -1,48 +1,73 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { fetchAPI, authAPI } from "../../../API/api";
 
-const UTILITY_DATA_TEMPLATE = {
-    isModified: {
-        status: false,
-        sections: []
-    }
-}
+
 
 const utilitySlice = createSlice({
     name: 'utility',
     initialState: {
-        data: UTILITY_DATA_TEMPLATE
+
+        isModifiedContent: {
+            status: false,
+            sections: []
+        },
+
+        auth: {
+            data: null,
+            status: '',
+            error: ''
+        }
     },
     reducers: {
 
         setIsModifiedTrue: (state, action) => {
-            if (!state.data.isModified.sections.includes(action.payload.section)) {
-                state.data.isModified.status = true;
-                state.data.isModified.sections = [...state.data.isModified.sections, action.payload.section];
+            if (!state.isModifiedContent.sections.includes(action.payload.section)) {
+                state.isModifiedContent.status = true;
+                state.isModifiedContent.sections = [...state.isModifiedContent.sections, action.payload.section];
             }
         },
         setIsModifiedFalse: (state) => {
-            state.data.isModified.status = false;
-            state.data.isModified.sections = [];
+            state.isModifiedContent.status = false;
+            state.isModifiedContent.sections = [];
+        },
+        clearAuthError: (state) => {
+            state.auth.error = ''
         }
 
     },
     extraReducers(builder) {
         builder
             .addCase(putDataOnServer.fulfilled, (state, action) => {
-                let index = state.data.isModified.sections.indexOf(action.payload);
+                let index = state.isModifiedContent.sections.indexOf(action.payload);
                 if (index !== -1) {
-                    state.data.isModified.sections.splice(index, 1);
-                    if (state.data.isModified.sections.length == 0) {
-                        state.data.isModified.status = false;
+                    state.isModifiedContent.sections.splice(index, 1);
+                    if (state.isModifiedContent.sections.length == 0) {
+                        state.isModifiedContent.status = false;
                     }
                 }
+            })
+            .addCase(authLogin.pending, (state) => {
+                state.auth.status = 'loading'
+            })
+            .addCase(authLogin.fulfilled, (state, action) => {
+                state.auth.status = 'succeeded';
+                if (action.payload && action.payload.userId && action.payload.accessToken) {
+                    state.auth.data = action.payload;
+                } else {
+
+                    state.auth.data = null;
+                    state.auth.error = 'wrong login/password'
+                }
+            })
+            .addCase(authLogin.rejected, (state, action) => {
+                state.auth.status = 'failed'
+                state.auth.error = action.error.message
             })
     }
 
 })
 
-export const { setIsModifiedTrue, setIsModifiedFalse } = utilitySlice.actions;
+export const { setIsModifiedTrue, setIsModifiedFalse, clearAuthError } = utilitySlice.actions;
 export default utilitySlice.reducer;
 
 export const putDataOnServer = createAsyncThunk('utility/putDataOnServer', async (data) => {
@@ -51,3 +76,13 @@ export const putDataOnServer = createAsyncThunk('utility/putDataOnServer', async
         return data.path
     }
 })
+
+export const authLogin = createAsyncThunk('utility/authLogin', async (dataObj) => {
+
+    let loggedUser = await authAPI.login(dataObj.auth, dataObj.email, dataObj.password);
+    if (loggedUser && loggedUser.userId) {
+        return loggedUser
+    } else {
+        return null
+    }
+});
