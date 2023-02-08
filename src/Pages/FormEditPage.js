@@ -15,7 +15,7 @@ import Skills from '../Sections/Skills';
 import WebSocLinks from '../Sections/WebSocLinks';
 
 const FormEditPage = () => {
-    const isModified = useSelector(state => state.utility.data.isModified);
+    const isModified = useSelector(state => state.utility.isModifiedContent);
 
     return (
         <>
