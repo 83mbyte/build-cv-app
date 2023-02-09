@@ -39,8 +39,8 @@ const theme = extendTheme({
               pointerEvents: "none",
               color: 'gray.500',
               mx: 3,
-              px: 2,
-              my: 2,
+              px: [1, 2],
+              my: [1, 2],
               transformOrigin: "left top"
             }
           }
