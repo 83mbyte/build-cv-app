@@ -94,7 +94,7 @@ const Login = () => {
                         error != '' && <Box w={'full'}  >
                             <Alert status='error' fontSize={'sm'} rounded={sizeBreakPoints}>
                                 <AlertIcon />
-                                There was an error processing your request
+                                {error}
                             </Alert>
                         </Box>
                     }
