@@ -9,7 +9,7 @@ const InputCustom = ({ labelText, defValue, path, required = false, disabled = f
 
     return (
 
-        <Box p={2}>
+        <Box p={2} w='full'>
             <FormControl variant={'floating'} isRequired={required} isInvalid={isError && required} >
 
                 <Input
