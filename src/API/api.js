@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, setPersistence, browserSessionPersistence } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, setPersistence, browserSessionPersistence, sendEmailVerification } from "firebase/auth";
 
 export const fetchAPI = {
     BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
@@ -73,28 +73,70 @@ export const fetchAPI = {
 
 export const authAPI = {
     login: (auth, email, password) => {
+        return setPersistence(auth, browserSessionPersistence)
+            .then(() => {
 
-        return signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            // Signed in 
+                return signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+                    // Signed in 
+                    if (userCredential.user != null) {
+                        const user = userCredential.user;
 
-            if (userCredential.user != null) {
-                const user = userCredential.user;
-                return {
-                    userId: user.uid, email: user.email, accessToken: user.accessToken
-                }
-            }
-            else {
-                return null
-            }
-            // ...
-        }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorMessage);
-            return { error: 'error' }
+                        if (user.emailVerified) {
+                            return {
+                                data: { userId: user.uid, email: user.email, accessToken: user.accessToken },
+                                message: 'success'
+                            }
+                        } else {
+                            return { data: null, message: 'not verified' }
+                        }
+                    }
+                    else {
+                        return { data: null, message: 'wrong credentials' }
+                    }
 
-        })
+                }).catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorMessage);
+                    return { data: null, message: 'wrong credentials' }
+
+                })
+            })
     },
+    signup: (auth, email, password) => {
+        //console.log('to signup: ', auth, email, password)
+        return createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+
+                return sendEmailVerification(user)
+                    .then(() => {
+                        // Email verification sent!
+                        // ...
+                        return { message: 'verify' }
+                    });
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                //const errorMessage = error.message;
+                //console.log('ERRRRRR: ', Object.keys(error));
+                let err = error.message.slice(16,);
+                // let err = error.message.split('/')[1].;
+                return { message: err }
+                // if (error.customData._tokenResponse.error.message === 'EMAIL_EXISTS') {
+                //     return { message: 'email is already registered.' }
+                // }
+                // ..
+
+
+
+
+            });
+
+    }
+
 }
 
 
