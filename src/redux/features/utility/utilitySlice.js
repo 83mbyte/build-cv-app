@@ -6,7 +6,6 @@ import { fetchAPI, authAPI } from "../../../API/api";
 const utilitySlice = createSlice({
     name: 'utility',
     initialState: {
-
         isModifiedContent: {
             status: false,
             sections: []
@@ -15,7 +14,8 @@ const utilitySlice = createSlice({
         auth: {
             data: null,
             status: '',
-            error: ''
+            error: '',
+            successMsg: ''
         }
     },
     reducers: {
@@ -31,7 +31,8 @@ const utilitySlice = createSlice({
             state.isModifiedContent.sections = [];
         },
         clearAuthError: (state) => {
-            state.auth.error = ''
+            state.auth.error = '';
+            state.auth.status = '';
         }
 
     },
@@ -47,21 +48,58 @@ const utilitySlice = createSlice({
                 }
             })
             .addCase(authLogin.pending, (state) => {
-                state.auth.status = 'loading'
-            })
-            .addCase(authLogin.fulfilled, (state, action) => {
-                state.auth.status = 'succeeded';
-                if (action.payload && action.payload.userId && action.payload.accessToken) {
-                    state.auth.data = action.payload;
-                } else {
-
-                    state.auth.data = null;
-                    state.auth.error = 'wrong login/password'
-                }
+                state.auth.status = 'loading';
             })
             .addCase(authLogin.rejected, (state, action) => {
                 state.auth.status = 'failed'
-                state.auth.error = action.error.message
+                state.auth.error = action.error.message;
+            })
+            .addCase(authLogin.fulfilled, (state, action) => {
+                state.auth.status = 'succeeded';
+
+                if (action.payload && action.payload.data && action.payload.data.userId && action.payload.data.accessToken) {
+                    state.auth.data = action.payload.data;
+                    state.auth.error = '';
+
+                } else {
+                    state.auth.data = null;
+
+                    switch (action.payload.message) {
+                        case 'not verified':
+                            state.auth.error = 'You need to verify your email address. Please follow a verification link we sent you.';
+                            break;
+                        case 'wrong credentials':
+                            state.auth.error = 'There was an error processing your request. Check your Email/Password.';
+                            break;
+                        default:
+                            state.auth.error = 'There was an error processing your request.';
+                            break;
+                    }
+                }
+            })
+            .addCase(authSignUp.pending, (state) => {
+                state.auth.status = 'loading';
+            })
+            .addCase(authSignUp.rejected, (state, action) => {
+                state.auth.status = 'failed'
+                state.auth.error = action.error.message;
+            })
+            .addCase(authSignUp.fulfilled, (state, action) => {
+                state.auth.status = 'succeeded';
+                if (action.payload) {
+                    switch (action.payload.message) {
+                        case 'verify':
+                            state.auth.error = '';
+                            state.auth.successMsg = 'You need to verify your email address to complete registration. Please follow an activation link we sent you.'
+                            break;
+
+                        default:
+                            state.auth.error = 'We are unable to register your account. Possible reason: ' + action.payload.message;
+                            state.auth.successMsg = '';
+                            break;
+                    }
+                }
+
             })
     }
 
@@ -78,11 +116,19 @@ export const putDataOnServer = createAsyncThunk('utility/putDataOnServer', async
 })
 
 export const authLogin = createAsyncThunk('utility/authLogin', async (dataObj) => {
-
-    let loggedUser = await authAPI.login(dataObj.auth, dataObj.email, dataObj.password);
-    if (loggedUser && loggedUser.userId) {
-        return loggedUser
+    let resp = await authAPI.login(dataObj.auth, dataObj.email, dataObj.password);
+    if (resp) {
+        return resp
     } else {
         return null
     }
 });
+
+export const authSignUp = createAsyncThunk('utility/authSignUp', async (dataObj) => {
+    let resp = await authAPI.signup(dataObj.auth, dataObj.email, dataObj.password);
+    if (resp) {
+        return resp
+    } else {
+        return null
+    }
+})
