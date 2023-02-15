@@ -120,19 +120,8 @@ export const authAPI = {
             })
             .catch((error) => {
                 const errorCode = error.code;
-                //const errorMessage = error.message;
-                //console.log('ERRRRRR: ', Object.keys(error));
                 let err = error.message.slice(16,);
-                // let err = error.message.split('/')[1].;
                 return { message: err }
-                // if (error.customData._tokenResponse.error.message === 'EMAIL_EXISTS') {
-                //     return { message: 'email is already registered.' }
-                // }
-                // ..
-
-
-
-
             });
 
     }
