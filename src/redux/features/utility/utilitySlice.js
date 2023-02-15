@@ -33,6 +33,11 @@ const utilitySlice = createSlice({
         clearAuthError: (state) => {
             state.auth.error = '';
             state.auth.status = '';
+        },
+        addLoggedUser: (state, action) => {
+            state.auth.status = 'succeeded';
+            state.auth.data = action.payload;
+
         }
 
     },
@@ -105,7 +110,7 @@ const utilitySlice = createSlice({
 
 })
 
-export const { setIsModifiedTrue, setIsModifiedFalse, clearAuthError } = utilitySlice.actions;
+export const { setIsModifiedTrue, setIsModifiedFalse, clearAuthError, addLoggedUser } = utilitySlice.actions;
 export default utilitySlice.reducer;
 
 export const putDataOnServer = createAsyncThunk('utility/putDataOnServer', async (data) => {
