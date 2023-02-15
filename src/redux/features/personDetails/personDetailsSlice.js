@@ -5,7 +5,7 @@ export const personDetailsSlice = createSlice({
     name: 'personDetails',
     initialState: {
         data: {
-            positions: {
+            position: {
                 jobTitle: {
                     label: "Wanted Job Title",
                     path: "",
@@ -76,7 +76,7 @@ export const personDetailsSlice = createSlice({
             state.data = action.payload
         },
         setJobTitle: state => {
-            state.data.positions.jobTitle.value = 'Test Set JobTitle'
+            state.data.position.jobTitle.value = 'Test Set JobTitle'
         },
         inputUpdate: (state, action) => {
             state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
