@@ -62,6 +62,7 @@ export const skillsSlice = createSlice({
                 if (action.payload.data) {
                     state.data = action.payload.data;
                     state.isSwitchDisabled = action.payload.__serv.isSwitchDisabled;
+                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
                     state.data = []
                 }
@@ -78,6 +79,7 @@ export default skillsSlice.reducer;
 
 export const fetchSkills = createAsyncThunk('skills/fetchSkills', async (userName) => {
     const response = await fetchAPI.fethingSubPath('skills', userName);
+
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response;
     }
