@@ -1,16 +1,16 @@
-import { Box, Button, Checkbox, Slide, FormControl, FormLabel, Heading, HStack, Input, VStack, Alert, AlertIcon, } from '@chakra-ui/react';
+import { Box, Button, Slide, FormControl, FormLabel, Heading, HStack, Input, VStack, Alert, AlertIcon, Text } from '@chakra-ui/react';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { authLogin, clearAuthError } from '../redux/features/utility/utilitySlice';
 import { auth } from '../__firebase/firebaseConf';
 
 
 const Login = () => {
-
     const [isVisible, setIsVisible] = useState(false);
     const [disabled, setDisabled] = useState(true);
-
+    const navigate = useNavigate();
 
     const emailRef = useRef(null);
     const passRef = useRef(null);
@@ -24,7 +24,7 @@ const Login = () => {
 
     const onChangeHandler = () => {
         if (disabled) setDisabled(false);
-        if (error != '') dispatch(clearAuthError());
+        if (error !== '') dispatch(clearAuthError());
     }
 
     const handleClickLogin = async () => {
@@ -41,11 +41,12 @@ const Login = () => {
         if (!isVisible) {
             setIsVisible(true)
         }
-        return () => {
-            console.log('unmounting')
-            setIsVisible(false)
+        if (status === 'succeeded' && error === '') {
+            navigate("/dashboard")
         }
-    }, [])
+
+    }, [status, error, isVisible, navigate])
+
     return (
         <Slide in={isVisible} direction='top' >
             <Box
@@ -61,20 +62,20 @@ const Login = () => {
                     <VStack spacing={1} w='full' align={['flex-start', 'center']}>
                         <Heading as='h2'>Login</Heading>
                     </VStack>
-
-                    <FormControl  >
-                        <FormLabel fontSize={sizeBreakPoints}>Email address:</FormLabel>
+                    <FormControl variant="floating">
                         <Input
                             _focus={{ borderBottom: '1px solid teal' }}
                             _focusVisible={{ outline: 'none' }}
                             rounded={sizeBreakPoints}
                             size={sizeBreakPoints}
                             ref={emailRef}
+                            placeholder=" "
                         />
+                        <FormLabel fontSize={sizeBreakPoints}>Email address:</FormLabel>
                     </FormControl>
 
-                    <FormControl colorScheme={'teal'} >
-                        <FormLabel fontSize={sizeBreakPoints}>Password:</FormLabel>
+                    <FormControl colorScheme={'teal'} variant="floating">
+
                         <Input
                             _focus={{ borderBottom: '1px solid teal' }}
                             _focusVisible={{ outline: 'none' }}
@@ -83,15 +84,19 @@ const Login = () => {
                             size={sizeBreakPoints}
                             ref={passRef}
                             onChange={onChangeHandler}
+                            placeholder=" "
+
                         />
+                        <FormLabel fontSize={sizeBreakPoints}>Password:</FormLabel>
                     </FormControl>
+
                     {/* <HStack w='full' justify={'space-between'} fontSize={['xs', 'md']} >
                     <Checkbox colorScheme={'teal'} size={sizeBreakPoints}>Remember me?</Checkbox>
                     <Button variant={'link'} colorScheme={'teal'} fontSize={sizeBreakPoints}>Forgot password</Button>
                 </HStack> */}
 
                     {
-                        error != '' && <Box w={'full'}  >
+                        error !== '' && <Box w={'full'}  >
                             <Alert status='error' fontSize={'sm'} rounded={sizeBreakPoints}>
                                 <AlertIcon />
                                 {error}
@@ -101,10 +106,15 @@ const Login = () => {
                     <Button colorScheme={'teal'} w='full' size={sizeBreakPoints} rounded={sizeBreakPoints}
                         onClick={handleClickLogin}
                         isDisabled={disabled}
-                        isLoading={status == 'loading'}
+                        isLoading={status === 'loading'}
                     >
                         Login
                     </Button>
+                    <HStack w='full' justify={'center'} spacing={'1'} fontSize={'xs'} alignItems={'baseline'}>
+                        <Text>Not registered? Click to </Text>
+                        <Button variant={'link'} colorScheme={'teal'} as={RouterLink} to="/signup" fontSize={'xs'} mx={0} px={0} >SignUp</Button>
+                    </HStack>
+
                 </VStack>
             </Box>
         </Slide >

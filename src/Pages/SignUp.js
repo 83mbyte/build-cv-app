@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, Box, Button, Heading, HStack, Slide, Text, VStack } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { Link as RouterLink } from 'react-router-dom';
 import InputCustom from '../components/FormElements/InputCustom';
 import { authSignUp, clearAuthError } from '../redux/features/utility/utilitySlice';
 import { auth } from '../__firebase/firebaseConf';
@@ -105,7 +105,7 @@ const SignUp = () => {
                     </Box>2
                     <HStack spacing={'-1'} fontSize={'xs'} alignItems={'baseline'}>
                         <Text>Already registered? Please login</Text>
-                        <Button variant={'link'} colorScheme={'teal'} fontSize={'xs'} mx={0} px={0} >here</Button>
+                        <Button variant={'link'} colorScheme={'teal'} fontSize={'xs'} mx={0} px={0} as={RouterLink} to="/login" >here</Button>
 
                     </HStack>
                 </VStack>
