@@ -1,5 +1,5 @@
 
-import React, { StrictMode } from 'react';
+import React from 'react';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import * as ReactDOM from 'react-dom/client';
 import App from './App';
@@ -8,12 +8,22 @@ import * as serviceWorker from './serviceWorker';
 import store from './redux/store';
 import { Provider } from 'react-redux';
 
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+import Login from './Pages/Login';
+import ErrorPage from './Pages/ErrorPage';
+import SignUp from './Pages/SignUp';
+import ProtectedWrapper from './Pages/ProtectedWrapper';
+import Welcome from './Pages/Welcome';
+
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
 const activeLabelStyles = {
   transform: "scale(0.85) translateY(-24px)",
-
 };
 
 const theme = extendTheme({
@@ -49,12 +59,33 @@ const theme = extendTheme({
     }
   }
 });
+//console.log(localStorage.getItem('firebase:authUser:AIzaSyBiwGLTM7B9LxKqjPRjiA_CcPTyr8uiFzE:[DEFAULT]'));
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Welcome />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/login",
+    element: <Login />
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
+  },
+  {
+    path: "/dashboard",
+    element: <ProtectedWrapper><App /></ProtectedWrapper>
+  }
+]);
 root.render(
   <ChakraProvider theme={theme}>
     {/* <ColorModeScript /> */}
     <Provider store={store}>
-      <App />
-
+      <RouterProvider router={router} />
     </Provider>
   </ChakraProvider>
 );
