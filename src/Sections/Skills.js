@@ -13,7 +13,7 @@ const Skills = ({ title, user }) => {
     const dispatch = useDispatch();
     const data = useSelector(state => state.skills.data);
     const skillVars = useSelector(state => state.skills.skillVars);
-    const isSwitchDisabled = useSelector(state => state.skills.isSwitchDisabled);
+    const isSwitchChecked = useSelector(state => state.skills.isSwitchChecked);
     const stateStatus = useSelector(state => state.skills.status);
     const error = useSelector(state => state.skills.error);
 
@@ -37,7 +37,7 @@ const Skills = ({ title, user }) => {
             removeItemAction={removeSkillItem}
             addNewItemAction={addNewSkillItem}
             valueUpdateAction={skillsStateValueUpdate}
-            isSwitchDisabled={isSwitchDisabled}
+            isSwitchChecked={isSwitchChecked}
         />
     }
 
@@ -58,7 +58,7 @@ const Skills = ({ title, user }) => {
                     labelText={`Don't show experience level`}
                     switchId={'skill-level-switch'}
                     size={'sm'}
-                    isChecked={isSwitchDisabled}
+                    isChecked={isSwitchChecked}
                     toggleSwitchAction={skillLevelSwitchToggle}
                 />
             </Box>
