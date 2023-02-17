@@ -4,8 +4,10 @@ import { MdPreview, MdSave } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux';
 import AvatarCustom from '../components/Avatar/AvatarCustom';
 import ToolTip from '../components/ToolTip/ToolTip';
-import { putDataOnServer } from '../redux/features/utility/utilitySlice';
+import { authLogout, putDataOnServer } from '../redux/features/utility/utilitySlice';
+import '../App.css';
 
+import { auth } from '../__firebase/firebaseConf';
 
 const HeaderContainer = ({ user }) => {
     const isModified = useSelector(state => state.utility.isModifiedContent);
@@ -14,6 +16,9 @@ const HeaderContainer = ({ user }) => {
 
     const dispatch = useDispatch();
 
+    const logoutUser = () => {
+        dispatch(authLogout(auth))
+    }
     const clickSaveHandler = () => {
         for (const section of isModified.sections) {
 
@@ -25,7 +30,7 @@ const HeaderContainer = ({ user }) => {
                         data: state[section].data,
                         __serv: {
                             isSectionVisible: state[section].isSectionVisible,
-                            isSwitchDisabled: state[section].isSwitchDisabled,
+                            isSwitchChecked: state[section].isSwitchChecked,
                         }
                     }
                 }));
@@ -54,7 +59,16 @@ const HeaderContainer = ({ user }) => {
                 }));
             }
             else {
-                dispatch(putDataOnServer({ user, path: section, value: state[section].data }));
+                dispatch(putDataOnServer({
+                    user, path: section,
+                    value: {
+                        data: state[section].data,
+                        __serv: {
+                            isSectionVisible: state[section].isSectionVisible,
+                        }
+
+                    }
+                }));
             }
         }
 
@@ -77,11 +91,13 @@ const HeaderContainer = ({ user }) => {
                         leftIcon={<MdSave />}
                         isDisabled={!isModified.status}
                         onClick={clickSaveHandler}
+                        className={isModified.status && 'btnPulse'}
+
                     >Save</Button>
                 </ToolTip>
 
             </Box>
-            <AvatarCustom name={(name.firstName.value !== '' || name.lastName.value !== '') ? `${name.firstName.value} ${name.lastName.value}` : ''} />
+            <AvatarCustom name={(name.firstName.value !== '' || name.lastName.value !== '') ? `${name.firstName.value} ${name.lastName.value}` : ''} onClickHandler={logoutUser} />
 
         </HStack >
     );
