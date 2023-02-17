@@ -1,5 +1,7 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, setPersistence, browserSessionPersistence, sendEmailVerification } from "firebase/auth";
 
+import { getDatabase, ref, get, set } from "firebase/database";
+
 export const fetchAPI = {
     BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
     ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
@@ -14,7 +16,6 @@ export const fetchAPI = {
                     return 'Error -- fethingSubPath from api.js'
                 }
             }).then(response => response)
-
     },
 
     async putData(user, path, data) {
@@ -82,6 +83,7 @@ export const authAPI = {
                         const user = userCredential.user;
 
                         if (user.emailVerified) {
+                            dbAPI.checkAndCreateUser(user.uid);
                             return {
                                 data: { userId: user.uid, email: user.email, accessToken: user.accessToken },
                                 message: 'success'
@@ -119,13 +121,106 @@ export const authAPI = {
                 // ...
             })
             .catch((error) => {
-                const errorCode = error.code;
+                //const errorCode = error.code;
                 let err = error.message.slice(16,);
                 return { message: err }
             });
 
-    }
+    },
 
+    logout: (auth) => {
+        return signOut(auth).then(() => {
+            // Sign-out successful.
+            return { message: 'logged out' }
+        }).catch((error) => {
+            // An error happened.
+            return { message: error.message }
+        });
+    }
 }
 
+const dbAPI = {
+
+    checkAndCreateUser: (userId) => {
+        const db = getDatabase();
+        get(ref(db, `prvt/users/${userId}`)).then((snapshot) => {
+
+            if (snapshot.exists()) {
+                // console.log(snapshot.val())
+            } else {
+                console.log('create new user data temaplate');
+                set(ref(db, 'prvt/users/' + userId), {
+                    courses: {
+                        __serv: {
+                            isSectionVisible: false,
+                        },
+                        data: []
+                    },
+                    education: {
+                        __serv: {
+                            isSectionVisible: false,
+                        },
+                        data: []
+                    },
+                    employmentHistory: {
+                        __serv: {
+                            isSectionVisible: false,
+                        },
+                    },
+                    personDetails: {
+
+                        __serv: {
+                            isSectionVisible: true,
+                        },
+                        data: {
+
+                        }
+
+                    },
+                    skills: {
+                        __serv: {
+                            isSectionVisible: false,
+                            isSwitchChecked: false
+                        }
+                    },
+                    summary: {
+                        __serv: {
+                            isSectionVisible: true,
+                        },
+                        data: {
+                            label: '',
+                            path: 'summary',
+                            value: ''
+                        },
+                    },
+                    websoclinks: {
+                        __serv: {
+                            isSectionVisible: false,
+                        },
+                    },
+                    languages: {
+                        __serv: {
+                            isSectionVisible: false,
+                        },
+                    },
+                    references: {
+                        __serv: {
+                            isSectionVisible: false,
+                            isSwitchChecked: false
+                        }
+                    },
+                    hobbies: {
+                        __serv: {
+                            isSectionVisible: false,
+                        }
+                    }
+                });
+
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+
+    }
+}
 
