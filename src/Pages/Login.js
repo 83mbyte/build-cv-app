@@ -17,7 +17,7 @@ const Login = () => {
     const sizeBreakPoints = ['sm', 'md'];
 
     const dispatch = useDispatch();
-
+    const user = useSelector(state => state.utility.auth.data);
     const status = useSelector(state => state.utility.auth.status);
     const error = useSelector(state => state.utility.auth.error);
 
@@ -41,7 +41,7 @@ const Login = () => {
         if (!isVisible) {
             setIsVisible(true)
         }
-        if (status === 'succeeded' && error === '') {
+        if (status === 'succeeded' && error === '' && user && user.userId) {
             navigate("/dashboard")
         }
 
