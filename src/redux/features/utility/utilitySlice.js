@@ -104,6 +104,31 @@ const utilitySlice = createSlice({
                             break;
                     }
                 }
+            })
+
+            .addCase(authLogout.pending, (state) => {
+                state.auth.status = 'loading';
+            })
+            .addCase(authLogout.rejected, (state, action) => {
+                state.auth.status = 'failed'
+                state.auth.error = action.error.message;
+            })
+            .addCase(authLogout.fulfilled, (state, action) => {
+                state.auth.status = 'succeeded';
+                if (action.payload) {
+                    switch (action.payload.message) {
+                        case 'logged out':
+                            state.auth.error = '';
+                            state.auth.successMsg = ''
+                            state.auth.data = null;
+                            break;
+
+                        default:
+                            state.auth.error = 'Logout error. Possible reason: ' + action.payload.message;
+                            state.auth.successMsg = '';
+                            break;
+                    }
+                }
 
             })
     }
@@ -128,6 +153,15 @@ export const authLogin = createAsyncThunk('utility/authLogin', async (dataObj) =
         return null
     }
 });
+
+export const authLogout = createAsyncThunk('utility/authLogout', async (auth) => {
+    let resp = await authAPI.logout(auth);
+    if (resp) {
+        return resp;
+    } else {
+        return null
+    }
+})
 
 export const authSignUp = createAsyncThunk('utility/authSignUp', async (dataObj) => {
     let resp = await authAPI.signup(dataObj.auth, dataObj.email, dataObj.password);

@@ -67,9 +67,12 @@ export const referencesSlice = createSlice({
                     }
                     if (action.payload.__serv) {
                         state.isSwitchChecked = action.payload.__serv.isSwitchChecked;
+                        state.isSectionVisible = action.payload.__serv.isSectionVisible;
                     }
                 } else {
-                    state.data = []
+                    state.data = [];
+                    state.isSwitchChecked = false;
+                    state.isSectionVisible = false;
                 }
             })
             .addCase(fetchReferences.rejected, (state, action) => {

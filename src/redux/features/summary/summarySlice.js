@@ -6,7 +6,7 @@ export const summarySlice = createSlice({
     initialState: {
         data: {
             label: '',
-            path: '',
+            path: 'summary',
             value: ''
         },
         status: 'idle',
@@ -27,7 +27,12 @@ export const summarySlice = createSlice({
             })
             .addCase(fetchSummary.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.data = action.payload;
+                if (action.payload) {
+                    state.data = action.payload.data;
+                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
+                } else {
+                    state.isSectionVisible = false;
+                }
             })
             .addCase(fetchSummary.rejected, (state, action) => {
                 state.status = 'failed'

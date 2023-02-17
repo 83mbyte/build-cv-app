@@ -3,14 +3,14 @@ import { fetchAPI } from "../../../API/api";
 
 const DATA_TEMPLATE_OBJECT = {
     label: '',
-    path: '',
-    value: 'initState'
+    path: 'hobbies',
+    value: ''
 }
 
 export const hobbiesSlice = createSlice({
     name: 'hobbies',
     initialState: {
-        data: {},
+        data: { ...DATA_TEMPLATE_OBJECT },
         status: 'idle',
         error: '',
         isSectionVisible: false
@@ -28,9 +28,15 @@ export const hobbiesSlice = createSlice({
             .addCase(fetchHobbies.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 if (action.payload) {
-                    state.data = action.payload;
+                    if (action.payload.data) {
+                        state.data.value = action.payload.data;
+                    }
+                    if (action.payload.__serv) {
+                        state.isSectionVisible = action.payload.__serv.isSectionVisible;
+                    }
                 } else {
-                    state.data = { ...DATA_TEMPLATE_OBJECT }
+                    state.data = { ...DATA_TEMPLATE_OBJECT };
+                    state.isSectionVisible = false;
                 }
             })
             .addCase(fetchHobbies.rejected, (state, action) => {

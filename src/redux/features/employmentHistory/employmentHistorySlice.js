@@ -65,7 +65,7 @@ export const employmentHistorySlice = createSlice({
             })
             .addCase(fetchEmploymentHistory.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload.data) {
+                if (action.payload && action.payload.data) {
                     state.data = action.payload.data;
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
 

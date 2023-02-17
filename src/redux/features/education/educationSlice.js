@@ -41,7 +41,8 @@ export const educationSlice = createSlice({
             DATA_TEMPLATE_OBJECT
         ],
         status: 'idle',
-        error: ''
+        error: '',
+        isSectionVisible: false
     },
     reducers: {
         loadStateFrom: (state, action) => {
@@ -57,7 +58,7 @@ export const educationSlice = createSlice({
         removeEducationItem: (state, action) => {
             state.data.splice(action.payload, 1);
             if (state.data.length < 1) {
-                state.data = [DATA_TEMPLATE_OBJECT]
+                state.data = []
             }
         }
     },
@@ -68,10 +69,12 @@ export const educationSlice = createSlice({
             })
             .addCase(fetchEducation.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload) {
-                    state.data = action.payload
+                if (action.payload && action.payload.data) {
+                    state.data = action.payload.data;
+                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
-                    state.data = [DATA_TEMPLATE_OBJECT]
+                    state.data = [];
+                    state.isSectionVisible = false;
                 }
             })
             .addCase(fetchEducation.rejected, (state, action) => {

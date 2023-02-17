@@ -59,10 +59,9 @@ export const coursesSlice = createSlice({
             })
             .addCase(fetchCourses.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload.data) {
+                if (action.payload && action.payload.data) {
                     state.data = action.payload.data;
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
-
                 } else {
                     state.data = [];
                     state.isSectionVisible = false;

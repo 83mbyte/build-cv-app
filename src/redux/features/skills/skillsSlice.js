@@ -21,7 +21,8 @@ export const skillsSlice = createSlice({
     initialState: {
         data: [],
         skillVars: ['Java', 'HTML', 'Python', 'PHP', 'CSS', 'SQL', 'HTML & CSS', 'MySQL', 'jQuery', 'C++', 'HTML', 'JavaScript', 'React', 'Redux', 'React Native', 'Firebase', 'Git', 'SaaS'],
-        isSwitchDisabled: false,
+        isSwitchChecked: false,
+        isSectionVisible: false,
         status: 'idle',
         error: ''
     },
@@ -49,7 +50,7 @@ export const skillsSlice = createSlice({
             state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
         },
         skillLevelSwitchToggle: (state) => {
-            state.isSwitchDisabled = !state.isSwitchDisabled;
+            state.isSwitchChecked = !state.isSwitchChecked;
         }
     },
     extraReducers(builder) {
@@ -59,9 +60,9 @@ export const skillsSlice = createSlice({
             })
             .addCase(fetchSkills.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload.data) {
+                if (action.payload && action.payload.data) {
                     state.data = action.payload.data;
-                    state.isSwitchDisabled = action.payload.__serv.isSwitchDisabled;
+                    state.isSwitchChecked = action.payload.__serv.isSwitchChecked;
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
                     state.data = []

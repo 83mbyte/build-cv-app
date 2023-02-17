@@ -8,67 +8,69 @@ export const personDetailsSlice = createSlice({
             position: {
                 jobTitle: {
                     label: "Wanted Job Title",
-                    path: "",
+                    path: "personDetails/position/jobTitle",
                     type: "text",
-                    value: ""
+                    value: "dev slice"
                 }
             },
             name: {
                 firstName: {
                     label: "First Name",
-                    path: "",
-                    required: "true",
+                    path: "personDetails/name/firstName",
+                    required: true,
                     type: "text",
-                    value: "first name"
+                    value: ""
                 },
                 lastName: {
                     label: "Last Name",
-                    path: "",
-                    required: "true",
+                    path: "personDetails/name/lastName",
+                    required: true,
                     type: "text",
-                    value: "last name"
+                    value: "slice"
                 }
             },
             address: {
                 city: {
                     label: "City",
-                    path: "",
+                    path: "personDetails/address/city",
                     type: "text",
-                    value: "your address"
+                    value: ""
                 },
                 country: {
                     label: "Country",
-                    path: "",
+                    path: "personDetails/address/country",
                     type: "text",
-                    value: "your country"
+                    value: ""
                 },
                 street: {
                     label: "Street",
-                    path: "",
+                    path: "personDetails/address/street",
                     type: "text",
-                    value: "your street"
+                    value: ""
                 }
             },
             contacts: {
                 email: {
                     label: "Email",
-                    path: "",
-                    required: "true",
+                    path: "personDetails/contacts/email",
+                    required: true,
                     type: "text",
-                    value: "example@example.com"
+                    value: ""
                 },
                 phone: {
                     label: "Phone",
-                    path: "",
-                    required: "false",
+                    path: "personDetails/contacts/phone",
+                    required: false,
                     type: "text",
-                    value: "+35989878597"
+                    value: ""
                 },
 
             },
         },
+        inputsOrder: ['position', 'name', 'address', 'contacts'],
         status: 'idle',
-        error: null
+        error: null,
+        isSectionVisible: true,
 
     },
     reducers: {
@@ -89,7 +91,13 @@ export const personDetailsSlice = createSlice({
             })
             .addCase(fetchPersonDetails.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.data = action.payload;
+
+                if (action.payload && action.payload.data) {
+                    state.data = action.payload.data;
+                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
+                } else {
+                    state.isSectionVisible = true;
+                }
             })
             .addCase(fetchPersonDetails.rejected, (state, action) => {
                 state.status = 'failed'
@@ -103,7 +111,7 @@ export const { setJobTitle, loadStateFrom, inputUpdate } = personDetailsSlice.ac
 export default personDetailsSlice.reducer;
 
 export const fetchPersonDetails = createAsyncThunk('personDetails/fetchPersonDetails', async (userName) => {
-    const data = await fetchAPI.fethingSubPath('personDetails', userName)
+    const data = await fetchAPI.fethingSubPath('personDetails', userName);
     if (data && data !== 'Error -- fethingSubPath from api.js') {
         return data
     }
