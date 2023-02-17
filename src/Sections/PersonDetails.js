@@ -16,7 +16,8 @@ const PersonDetails = ({ title, user }) => {
     const dispatch = useDispatch();
     const data = useSelector(state => state.personDetails.data);
     const stateStatus = useSelector(state => state.personDetails.status);
-    const error = useSelector(state => state.personDetails.error)
+    const error = useSelector(state => state.personDetails.error);
+    const inputsOrder = useSelector(state => state.personDetails.inputsOrder)
 
     const handleInputChange = (path, value) => {
         dispatch(inputUpdate({ path: path.split('/').slice(1,), value: value }));
@@ -30,8 +31,8 @@ const PersonDetails = ({ title, user }) => {
 
         content = <Fragment>
             {
-                Object.keys(data).reverse().map((item, index) => {
 
+                inputsOrder.map((item, index) => {
 
                     return Object.keys(data[item]).map((i, ind) => {
 
