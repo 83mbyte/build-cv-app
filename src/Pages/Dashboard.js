@@ -14,10 +14,10 @@ const Dashboard = () => {
             {
                 loggedUser
                     ? <>
-                        <HeaderContainer user={'user_hero'} />
+                        <HeaderContainer user={loggedUser.userId} />
                         {/* <HeaderContainer user={'loggedUser.userId'} /> */}
                         <Container as='main' bg={'white'} maxW={'3xl'} p={0}  >
-                            <FormEditPage />
+                            <FormEditPage loggedUser={loggedUser.userId} />
                         </Container>
                     </>
                     : <SpinnerCustom />

@@ -14,9 +14,9 @@ import References from '../Sections/References';
 import Skills from '../Sections/Skills';
 import WebSocLinks from '../Sections/WebSocLinks';
 
-const FormEditPage = () => {
+const FormEditPage = ({ loggedUser }) => {
 
-    let loggedUser = 'user_hero'; //must be replaced to logged user from state..
+    // let loggedUser = 'user_hero'; //must be replaced to logged user from state..
 
     return (
 
