@@ -9,10 +9,11 @@ import '../App.css';
 
 import { auth } from '../__firebase/firebaseConf';
 
-const HeaderContainer = ({ user }) => {
+const HeaderContainer = ({ user, clickPreviewHandler }) => {
     const isModified = useSelector(state => state.utility.isModifiedContent);
     const state = useSelector(state => state)
     const name = useSelector(state => state.personDetails.data.name);
+    const modalOpen = useSelector(state => state.utility.modalWindow.isOpen);
 
     const dispatch = useDispatch();
 
@@ -77,13 +78,17 @@ const HeaderContainer = ({ user }) => {
 
         <HStack spacing={1} bg='gray.100' justify={'flex-end'} p={1} pr={'20px'} boxShadow={'0px 3px 5px 0px rgba(0, 0, 0, 0.25)'} position='fixed' w='full' zIndex={1212} as='header'>
             <Box>
-                <ToolTip label={'preview document'}>
-                    <Button variant={'solid'} colorScheme='teal' size={'xs'} leftIcon={<MdPreview />}>Preview</Button>
+                <ToolTip label={'preview document'} isDisabled={modalOpen}>
+                    <Button variant={'solid'} colorScheme='teal' size={'xs'} leftIcon={<MdPreview />}
+                        onClick={clickPreviewHandler}
+                    >
+                        Preview
+                    </Button>
                 </ToolTip>
             </Box>
             <Box>
 
-                <ToolTip label='save changes'>
+                <ToolTip label='save changes' >
                     <Button
                         variant={'outline'}
                         colorScheme='teal'
