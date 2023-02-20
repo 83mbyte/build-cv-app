@@ -36,7 +36,6 @@ const Dashboard = () => {
         htmlToImage.toPng(data).then((dataUrl) => {
             let img = new Image();
             img.src = dataUrl;
-            console.log('img.src : ', img.src)
             setImgData(img);
             modalToggler();
 
