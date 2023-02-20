@@ -16,6 +16,9 @@ const utilitySlice = createSlice({
             status: '',
             error: '',
             successMsg: ''
+        },
+        modalWindow: {
+            isOpen: false
         }
     },
     reducers: {
@@ -37,6 +40,9 @@ const utilitySlice = createSlice({
         addLoggedUser: (state, action) => {
             state.auth.status = 'succeeded';
             state.auth.data = action.payload;
+        },
+        modalIsOpenToggle: (state) => {
+            state.modalWindow.isOpen = !state.modalWindow.isOpen;
 
         }
 
@@ -135,7 +141,7 @@ const utilitySlice = createSlice({
 
 })
 
-export const { setIsModifiedTrue, setIsModifiedFalse, clearAuthError, addLoggedUser } = utilitySlice.actions;
+export const { setIsModifiedTrue, setIsModifiedFalse, clearAuthError, addLoggedUser, modalIsOpenToggle } = utilitySlice.actions;
 export default utilitySlice.reducer;
 
 export const putDataOnServer = createAsyncThunk('utility/putDataOnServer', async (data) => {
