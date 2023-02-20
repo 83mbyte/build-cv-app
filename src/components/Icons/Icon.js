@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { IconContext } from "react-icons";
-import { MdDelete, MdExpandMore } from 'react-icons/md'
+import { MdDelete, MdExpandMore, MdClose } from 'react-icons/md'
 import React from "react";
 import './Icon.css';
 
@@ -24,6 +24,18 @@ export const ExpandIcon = ({ isExpanded }) => {
             <Box>
 
                 <MdExpandMore />
+            </Box >
+        </IconContext.Provider >
+    )
+}
+
+export const CloseIcon = () => {
+
+    return (
+        <IconContext.Provider value={{ className: 'icon' }} >
+            <Box>
+
+                <MdClose />
             </Box >
         </IconContext.Provider >
     )
