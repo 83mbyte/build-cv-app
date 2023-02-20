@@ -145,10 +145,8 @@ const dbAPI = {
         const db = getDatabase();
         get(ref(db, `prvt/users/${userId}`)).then((snapshot) => {
 
-            if (snapshot.exists()) {
-                // console.log(snapshot.val())
-            } else {
-                console.log('create new user data temaplate');
+            if (!snapshot.exists()) {
+
                 set(ref(db, 'prvt/users/' + userId), {
                     courses: {
                         __serv: {
@@ -215,7 +213,6 @@ const dbAPI = {
                         }
                     }
                 });
-
             }
         }).catch((error) => {
             console.error(error);
