@@ -29,7 +29,7 @@ export const hobbiesSlice = createSlice({
                 state.status = 'succeeded';
                 if (action.payload) {
                     if (action.payload.data) {
-                        state.data.value = action.payload.data;
+                        state.data.value = action.payload.data.value;
                     }
                     if (action.payload.__serv) {
                         state.isSectionVisible = action.payload.__serv.isSectionVisible;
