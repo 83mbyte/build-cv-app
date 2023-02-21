@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { IconContext } from "react-icons";
-import { MdDelete, MdExpandMore, MdClose } from 'react-icons/md'
+import { MdDelete, MdExpandMore, MdClose } from 'react-icons/md';
+import { VscFilePdf } from 'react-icons/vsc';
 import React from "react";
 import './Icon.css';
 
@@ -33,9 +34,21 @@ export const CloseIcon = () => {
 
     return (
         <IconContext.Provider value={{ className: 'icon' }} >
-            <Box>
+            <Box _hover={{ color: 'teal', cursor: 'pointer' }} color={'gray.200'}>
 
                 <MdClose />
+            </Box >
+        </IconContext.Provider >
+    )
+}
+
+export const PdfIcon = () => {
+
+    return (
+        <IconContext.Provider value={{ className: 'icon' }} >
+            <Box _hover={{ color: 'teal', cursor: 'pointer' }} color={'gray.200'} >
+
+                <VscFilePdf />
             </Box >
         </IconContext.Provider >
     )
