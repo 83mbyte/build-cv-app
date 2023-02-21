@@ -56,9 +56,9 @@ const Dashboard = () => {
 
                         </Container>
 
-                        <AnimatePresence initial={false}>
+                        <AnimatePresence exitBeforeEnter={true} >
                             {
-                                isModalOpen && <ModalAnimated key={'modal'} handleClose={modalToggler} imgData={imgData} isOpen={isModalOpen} />
+                                isModalOpen && <ModalAnimated handleClose={modalToggler} imgData={imgData} htmlData={htmlRef.current.children[0].childNodes[0]} />
                             }
                         </AnimatePresence>
                         <Box position={'fixed'} top='0' left={'100%'} w="100%" ref={htmlRef} minW='800px'>
