@@ -8,6 +8,7 @@ import personDetailsReducer from "./features/personDetails/personDetailsSlice";
 import referencesSliceReducer from "./features/references/referencesSlice";
 import skillsSliceReducer from "./features/skills/skillsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
+import templatesSliceReducer from "./features/templates/templatesSlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
 import websoclinksSliceReducer from "./features/websoclinks/websoclinksSlice";
 
@@ -23,7 +24,9 @@ export default configureStore({
         languages: languagesSliceReducer,
         references: referencesSliceReducer,
         hobbies: hobbiesSliceReducer,
+        templates: templatesSliceReducer,
         utility: utilitySliceReducer,
+
 
     },
     // middleware: (getDefaultMiddleware) => getDefaultMiddleware({

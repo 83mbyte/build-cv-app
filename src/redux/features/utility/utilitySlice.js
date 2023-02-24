@@ -53,7 +53,7 @@ const utilitySlice = createSlice({
                 let index = state.isModifiedContent.sections.indexOf(action.payload);
                 if (index !== -1) {
                     state.isModifiedContent.sections.splice(index, 1);
-                    if (state.isModifiedContent.sections.length == 0) {
+                    if (state.isModifiedContent.sections.length === 0) {
                         state.isModifiedContent.status = false;
                     }
                 }

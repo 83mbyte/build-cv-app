@@ -64,7 +64,7 @@ export const fetchSummary = createAsyncThunk('summary/fetchSummary', async (user
 export const putDataSummary = createAsyncThunk('summary/putDataSummary', async (data) => {
 
     const response = await fetchAPI.putData(data.user, data.path, data.value);
-    if (response && response.status == 200) {
+    if (response && response.status === 200) {
         return data.value
     }
 });
