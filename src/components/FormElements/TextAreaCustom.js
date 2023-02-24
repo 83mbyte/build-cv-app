@@ -15,8 +15,8 @@ const TextAreaCustom = ({ data, handleInputChange }) => {
                     ref={inputRef}
                     placeholder=' '
                     value={data.value}
-                    //onChange={() => handleInputChange(sanitizeInput(inputRef.current.value))}
-                    onChange={() => handleInputChange(inputRef.current.value)}
+                    onChange={() => handleInputChange(sanitizeInput(inputRef.current.value))}
+                    //onChange={() => handleInputChange(inputRef.current.value)}
                     _focusVisible={{ 'boxShadow': 'none' }}
                     resize={'none'}
                     size={['xs', 'md', 'md']}
