@@ -4,12 +4,12 @@ import { MdPreview, MdSave } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux';
 import AvatarCustom from '../components/Avatar/AvatarCustom';
 import ToolTip from '../components/ToolTip/ToolTip';
-import { authLogout, putDataOnServer } from '../redux/features/utility/utilitySlice';
+import { authLogout, modalIsOpenToggle, putDataOnServer } from '../redux/features/utility/utilitySlice';
 import '../App.css';
 
 import { auth } from '../__firebase/firebaseConf';
 
-const HeaderContainer = ({ user, clickPreviewHandler }) => {
+const HeaderContainer = ({ user, }) => {
     const isModified = useSelector(state => state.utility.isModifiedContent);
     const state = useSelector(state => state)
     const name = useSelector(state => state.personDetails.data.name);
@@ -73,6 +73,9 @@ const HeaderContainer = ({ user, clickPreviewHandler }) => {
             }
         }
 
+    }
+    const clickPreviewHandler = () => {
+        dispatch(modalIsOpenToggle());
     }
     return (
 
