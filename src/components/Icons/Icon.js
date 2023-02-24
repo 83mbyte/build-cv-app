@@ -2,6 +2,7 @@ import { Box } from "@chakra-ui/react";
 import { IconContext } from "react-icons";
 import { MdDelete, MdExpandMore, MdClose } from 'react-icons/md';
 import { VscFilePdf } from 'react-icons/vsc';
+import { FaPencilAlt } from "react-icons/fa";
 import React from "react";
 import './Icon.css';
 
@@ -53,6 +54,20 @@ export const PdfIcon = () => {
         </IconContext.Provider >
     )
 }
+
+export const PencilIcon = () => {
+
+    return (
+        <IconContext.Provider value={{ className: 'icon' }} >
+            <Box >
+
+                <FaPencilAlt />
+            </Box >
+        </IconContext.Provider >
+    )
+}
+
+
 // export const DragIcon = () => {
 //     return (
 //         <div className="icon grab">
