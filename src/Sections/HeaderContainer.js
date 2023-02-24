@@ -1,4 +1,4 @@
-import { HStack, Box, Button } from '@chakra-ui/react';
+import { HStack, Box, Button, Heading, Container } from '@chakra-ui/react';
 import React from 'react';
 import { MdPreview, MdSave } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { authLogout, modalIsOpenToggle, putDataOnServer } from '../redux/feature
 import '../App.css';
 
 import { auth } from '../__firebase/firebaseConf';
+import { PencilIcon } from '../components/Icons/Icon';
 
 const HeaderContainer = ({ user, }) => {
     const isModified = useSelector(state => state.utility.isModifiedContent);
@@ -78,37 +79,77 @@ const HeaderContainer = ({ user, }) => {
         dispatch(modalIsOpenToggle());
     }
     return (
+        <Box bg='rgb(250,250,250)' p={1} boxShadow={'0px 1px 3px 0px rgba(0, 0, 0, 0.25)'} position='fixed' w='full' zIndex={1212} as='header'>
+            <Container maxW={'3xl'} py={1} px={['10px', '10px', '20px']} bg={'transparent'}>
+                <HStack justify={'space-between'} >
+                    <HStack color={'gray.600'} p={0} spacing={1} align={'flex-end'}>
+                        <PencilIcon />
+                        <Heading fontSize={'sm'} p={0}>IntroduceMe App</Heading>
+                    </HStack>
+                    <HStack spacing={2} p={0}>
+                        <Box>
+                            <ToolTip label={'preview document'} isDisabled={modalOpen}>
+                                <Button variant={'solid'} colorScheme='teal' size={'xs'} leftIcon={<MdPreview />}
+                                    onClick={clickPreviewHandler}
+                                >
+                                    Preview
+                                </Button>
+                            </ToolTip>
+                        </Box>
+                        <Box>
 
-        <HStack spacing={1} bg='gray.100' justify={'flex-end'} p={1} pr={'20px'} boxShadow={'0px 3px 5px 0px rgba(0, 0, 0, 0.25)'} position='fixed' w='full' zIndex={1212} as='header'>
-            <Box>
-                <ToolTip label={'preview document'} isDisabled={modalOpen}>
-                    <Button variant={'solid'} colorScheme='teal' size={'xs'} leftIcon={<MdPreview />}
-                        onClick={clickPreviewHandler}
-                    >
-                        Preview
-                    </Button>
-                </ToolTip>
-            </Box>
-            <Box>
+                            <ToolTip label='save changes' >
+                                <Button
+                                    variant={'outline'}
+                                    colorScheme='teal'
+                                    size={'xs'}
+                                    leftIcon={<MdSave />}
+                                    isDisabled={!isModified.status}
+                                    onClick={clickSaveHandler}
+                                    className={isModified.status && 'btnPulse'}
 
-                <ToolTip label='save changes' >
-                    <Button
-                        variant={'outline'}
-                        colorScheme='teal'
-                        size={'xs'}
-                        leftIcon={<MdSave />}
-                        isDisabled={!isModified.status}
-                        onClick={clickSaveHandler}
-                        className={isModified.status && 'btnPulse'}
+                                >Save</Button>
+                            </ToolTip>
 
-                    >Save</Button>
-                </ToolTip>
+                        </Box>
+                        <AvatarCustom name={(name.firstName.value !== '' || name.lastName.value !== '') ? `${name.firstName.value} ${name.lastName.value}` : ''} onClickHandler={logoutUser} />
+                    </HStack>
+                </HStack>
+            </Container>
+        </Box>
 
-            </Box>
-            <AvatarCustom name={(name.firstName.value !== '' || name.lastName.value !== '') ? `${name.firstName.value} ${name.lastName.value}` : ''} onClickHandler={logoutUser} />
-
-        </HStack >
     );
 };
 
 export default HeaderContainer;
+
+// const def = (<HStack spacing={1} bg='rgb(250,250,250)' justify={'flex-end'} p={1} pr={'20px'} boxShadow={'0px 1px 3px 0px rgba(0, 0, 0, 0.25)'} position='fixed' w='full' zIndex={1212} as='header'>
+//     <Box ><Heading fontSize={'md'}>IntroduceMe App</Heading></Box>
+//     <Box>
+//         <ToolTip label={'preview document'} isDisabled={modalOpen}>
+//             <Button variant={'solid'} colorScheme='teal' size={'xs'} leftIcon={<MdPreview />}
+//                 onClick={clickPreviewHandler}
+//             >
+//                 Preview
+//             </Button>
+//         </ToolTip>
+//     </Box>
+//     <Box>
+
+//         <ToolTip label='save changes' >
+//             <Button
+//                 variant={'outline'}
+//                 colorScheme='teal'
+//                 size={'xs'}
+//                 leftIcon={<MdSave />}
+//                 isDisabled={!isModified.status}
+//                 onClick={clickSaveHandler}
+//                 className={isModified.status && 'btnPulse'}
+
+//             >Save</Button>
+//         </ToolTip>
+
+//     </Box>
+//     <AvatarCustom name={(name.firstName.value !== '' || name.lastName.value !== '') ? `${name.firstName.value} ${name.lastName.value}` : ''} onClickHandler={logoutUser} />
+
+// </HStack >)
