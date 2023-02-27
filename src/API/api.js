@@ -38,7 +38,10 @@ export const fetchAPI = {
             .catch((error) => alert(`Couldn't fetch verseL ${error}`))
     },
     async putDataToWholeSection(user, path, data) {
-        console.log()
+        //TODO check the token experationTime before make a request..
+        //TODO check the token experationTime before make a request..
+        //TODO check the token experationTime before make a request..
+        //TODO check the token experationTime before make a request..
         return await fetch(`${this.ROOTUSERURL}/${user.userId}/${path}.json?auth=${user.accessToken}`,
             {
                 headers: {
@@ -55,7 +58,7 @@ export const fetchAPI = {
                 }
                 return response;
             })
-            .catch((error) => alert(`Couldn't fetch verseL ${error}`))
+            .catch((error) => alert(`Couldn't fetch verseL ${error}. Please try to reload the page.`))
     },
 
 
