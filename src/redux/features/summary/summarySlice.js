@@ -54,8 +54,8 @@ export const summarySlice = createSlice({
 export const { loadStateFrom, summaryStateValueUpdate } = summarySlice.actions;
 export default summarySlice.reducer;
 
-export const fetchSummary = createAsyncThunk('summary/fetchSummary', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('summary', userName)
+export const fetchSummary = createAsyncThunk('summary/fetchSummary', async (user) => {
+    const response = await fetchAPI.fethingSubPath('summary', user)
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response
     }
@@ -69,6 +69,3 @@ export const putDataSummary = createAsyncThunk('summary/putDataSummary', async (
     }
 });
 
-// export const putDataSummary = createAsyncThunk('summary/putDataSummary', async (userName, path, data) => {
-//     const data = await fetchAPI.putData(userName, path, data);
-// })

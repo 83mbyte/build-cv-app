@@ -14,9 +14,8 @@ import References from '../Sections/References';
 import Skills from '../Sections/Skills';
 import WebSocLinks from '../Sections/WebSocLinks';
 
-const FormEditPage = ({ loggedUser }) => {
+const FormEditPage = ({ user }) => {
 
-    // let loggedUser = 'user_hero'; //must be replaced to logged user from state..
 
     return (
 
@@ -24,34 +23,34 @@ const FormEditPage = ({ loggedUser }) => {
             {/* Sections goes here.. */}
 
             {/* 1) Personal Details section */}
-            <PersonDetails title={'Personal Details'} user={loggedUser} />
+            <PersonDetails title={'Personal Details'} user={user} />
 
             {/* 2) Professional Summary section */}
-            <ProfSummary title={'Professional Summary'} user={loggedUser} />
+            <ProfSummary title={'Professional Summary'} user={user} />
 
             {/* 3) Education section */}
-            <Education title={'Education'} user={loggedUser} />
+            <Education title={'Education'} user={user} />
 
             {/* 4) Web & Social Links section */}
-            <WebSocLinks title={'Websites & Social Links'} user={loggedUser} />
+            <WebSocLinks title={'Websites & Social Links'} user={user} />
 
             {/* 5) Skills section */}
-            <Skills title={'Skills'} user={loggedUser} />
+            <Skills title={'Skills'} user={user} />
 
             {/* 6) Courses section */}
-            <Courses title={'Courses'} user={loggedUser} />
+            <Courses title={'Courses'} user={user} />
 
             {/* 7) Employment History section */}
-            <EmploymentHistory title={'Employment History'} user={loggedUser} />
+            <EmploymentHistory title={'Employment History'} user={user} />
 
             {/* 8) Languages section */}
-            <Languages title={'Languages'} user={loggedUser} />
+            <Languages title={'Languages'} user={user} />
 
             {/* 9) References section */}
-            <References title={'References'} user={loggedUser} />
+            <References title={'References'} user={user} />
 
             {/* 10) Hobbies section */}
-            <Hobbies title={"Hobbies"} user={loggedUser} />
+            <Hobbies title={"Hobbies"} user={user} />
 
         </Box>
     );

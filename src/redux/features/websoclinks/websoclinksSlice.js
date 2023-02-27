@@ -83,8 +83,8 @@ export const websoclinksSlice = createSlice({
 export const { loadStateFrom, addNewWebSocLinksItem, removeWebSocLinksItem, websoclinksStateValueUpdate, addNewWebSocLinksItemPredefined } = websoclinksSlice.actions;
 export default websoclinksSlice.reducer;
 
-export const fetchWebSocLinks = createAsyncThunk('websoclinks/fetchWebSocLinks', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('websoclinks', userName)
+export const fetchWebSocLinks = createAsyncThunk('websoclinks/fetchWebSocLinks', async (user) => {
+    const response = await fetchAPI.fethingSubPath('websoclinks', user)
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response
     }

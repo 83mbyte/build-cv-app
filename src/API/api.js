@@ -7,7 +7,7 @@ export const fetchAPI = {
     ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
 
     async fethingSubPath(path, user) {
-        return await fetch(`${this.ROOTUSERURL}/${user}/${path}.json`)
+        return await fetch(`${this.ROOTUSERURL}/${user.userId}/${path}.json?auth=${user.accessToken}`)
             .then((resp) => {
                 if (resp && resp.status === 200) {
                     return resp.json()
@@ -19,7 +19,7 @@ export const fetchAPI = {
     },
 
     async putData(user, path, data) {
-        return await fetch(`${this.BASEURL}/prvt/users/${user}/${path}/value.json`,
+        return await fetch(`${this.BASEURL}/prvt/users/${user.userId}/${path}/value.json?auth=${user.accessToken}`,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -38,7 +38,8 @@ export const fetchAPI = {
             .catch((error) => alert(`Couldn't fetch verseL ${error}`))
     },
     async putDataToWholeSection(user, path, data) {
-        return await fetch(`${this.BASEURL}/prvt/users/${user}/${path}.json`,
+        console.log()
+        return await fetch(`${this.ROOTUSERURL}/${user.userId}/${path}.json?auth=${user.accessToken}`,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -57,18 +58,6 @@ export const fetchAPI = {
             .catch((error) => alert(`Couldn't fetch verseL ${error}`))
     },
 
-    // async simpleFetchData(path) {
-    //     return await fetch(`${this.BASEURL}/prvt/users/${path}.json`)
-    //         .then((resp) => {
-    //             if (resp && resp.status === 200) {
-    //                 return resp.json()
-    //             }
-    //             else {
-    //                 return 'Error -- simpleFetchData from api.js'
-    //             }
-    //         }).then(response => response)
-
-    // },
 
 }
 
@@ -79,7 +68,7 @@ export const authAPI = {
 
                 return signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
                     // Signed in 
-                    if (userCredential.user != null) {
+                    if (userCredential.user !== null) {
                         const user = userCredential.user;
 
                         if (user.emailVerified) {
@@ -97,7 +86,7 @@ export const authAPI = {
                     }
 
                 }).catch((error) => {
-                    const errorCode = error.code;
+
                     const errorMessage = error.message;
                     console.log(errorMessage);
                     return { data: null, message: 'wrong credentials' }
@@ -106,7 +95,6 @@ export const authAPI = {
             })
     },
     signup: (auth, email, password) => {
-        //console.log('to signup: ', auth, email, password)
         return createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in 

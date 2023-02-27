@@ -24,10 +24,10 @@ const Dashboard = () => {
             {
                 loggedUser
                     ? <>
-                        <HeaderContainer user={loggedUser.userId} />
+                        <HeaderContainer user={loggedUser} />
 
                         <Container as='main' bg={'white'} maxW={'2xl'} p={0}  >
-                            <FormEditPage loggedUser={loggedUser.userId} />
+                            <FormEditPage user={loggedUser} />
 
                         </Container>
 

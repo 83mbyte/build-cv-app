@@ -48,8 +48,8 @@ export const hobbiesSlice = createSlice({
 export const { hobbiesStateValueUpdate } = hobbiesSlice.actions;
 export default hobbiesSlice.reducer;
 
-export const fetchHobbies = createAsyncThunk('hobbies/fetchHobbies', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('hobbies', userName)
+export const fetchHobbies = createAsyncThunk('hobbies/fetchHobbies', async (user) => {
+    const response = await fetchAPI.fethingSubPath('hobbies', user)
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response
     }

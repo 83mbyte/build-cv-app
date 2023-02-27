@@ -88,8 +88,8 @@ export const { loadStateFrom, educationStateValueUpdate, addNewEducationItem, re
 export default educationSlice.reducer;
 
 
-export const fetchEducation = createAsyncThunk('education/fetchEducation', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('education', userName)
+export const fetchEducation = createAsyncThunk('education/fetchEducation', async (user) => {
+    const response = await fetchAPI.fethingSubPath('education', user)
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response
     }

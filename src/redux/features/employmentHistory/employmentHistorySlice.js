@@ -86,8 +86,8 @@ export default employmentHistorySlice.reducer;
 export const { addNewEmpHistoryItem, removeEmpHistoryItem, empHistoryStateValueUpdate } = employmentHistorySlice.actions;
 
 
-export const fetchEmploymentHistory = createAsyncThunk('employmentHistory/fetchEmploymentHistory', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('employmentHistory', userName);
+export const fetchEmploymentHistory = createAsyncThunk('employmentHistory/fetchEmploymentHistory', async (user) => {
+    const response = await fetchAPI.fethingSubPath('employmentHistory', user);
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response;
     }

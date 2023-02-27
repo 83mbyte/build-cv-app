@@ -66,8 +66,8 @@ export const languagesSlice = createSlice({
 export default languagesSlice.reducer;
 export const { addNewLanguagesItem, removeLanguagesItem, languagesStateValueUpdate } = languagesSlice.actions;
 
-export const fetchLanguages = createAsyncThunk('languages/fetchLanguages', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('languages', userName);
+export const fetchLanguages = createAsyncThunk('languages/fetchLanguages', async (user) => {
+    const response = await fetchAPI.fethingSubPath('languages', user);
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response;
     }

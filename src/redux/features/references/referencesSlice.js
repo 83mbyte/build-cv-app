@@ -85,8 +85,8 @@ export const referencesSlice = createSlice({
 export default referencesSlice.reducer;
 export const { referenceSwitchToggle, addNewReferencesItem, removeReferencesItem, referencesStateValueUpdate } = referencesSlice.actions;
 
-export const fetchReferences = createAsyncThunk('references/fetchReferences', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('references', userName);
+export const fetchReferences = createAsyncThunk('references/fetchReferences', async (user) => {
+    const response = await fetchAPI.fethingSubPath('references', user);
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response;
     }

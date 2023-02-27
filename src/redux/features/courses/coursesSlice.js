@@ -77,8 +77,8 @@ export const coursesSlice = createSlice({
 export default coursesSlice.reducer;
 export const { addNewCoursesItem, removeCoursesItem, coursesStateValueUpdate } = coursesSlice.actions;
 
-export const fetchCourses = createAsyncThunk('courses/fecthCourses', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('courses', userName);
+export const fetchCourses = createAsyncThunk('courses/fecthCourses', async (user) => {
+    const response = await fetchAPI.fethingSubPath('courses', user);
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response;
     }

@@ -78,8 +78,8 @@ export const { addNewSkillItem, removeSkillItem, skillsStateValueUpdate, addNewS
 export default skillsSlice.reducer;
 
 
-export const fetchSkills = createAsyncThunk('skills/fetchSkills', async (userName) => {
-    const response = await fetchAPI.fethingSubPath('skills', userName);
+export const fetchSkills = createAsyncThunk('skills/fetchSkills', async (user) => {
+    const response = await fetchAPI.fethingSubPath('skills', user);
 
     if (response && response !== 'Error -- fethingSubPath from api.js') {
         return response;

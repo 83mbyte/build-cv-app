@@ -110,8 +110,8 @@ export const { setJobTitle, loadStateFrom, inputUpdate } = personDetailsSlice.ac
 
 export default personDetailsSlice.reducer;
 
-export const fetchPersonDetails = createAsyncThunk('personDetails/fetchPersonDetails', async (userName) => {
-    const data = await fetchAPI.fethingSubPath('personDetails', userName);
+export const fetchPersonDetails = createAsyncThunk('personDetails/fetchPersonDetails', async (user) => {
+    const data = await fetchAPI.fethingSubPath('personDetails', user);
     if (data && data !== 'Error -- fethingSubPath from api.js') {
         return data
     }
