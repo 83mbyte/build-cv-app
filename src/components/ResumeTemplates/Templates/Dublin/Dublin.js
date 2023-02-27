@@ -3,11 +3,11 @@ import React, { forwardRef } from 'react';
 import styles from './Dublin.module.css';
 
 
-const Dublin = ({ data }) => {
+const Dublin = forwardRef(({ data }, ref) => {
     const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }
         = data;
     return (
-        <div className={styles.resumeContainer} name='dublin'  >
+        <div className={styles.resumeContainer} name='dublin' ref={ref}>
             <div className={styles.detailsContainer}>
                 <div className={styles.leftSide}>
                     {/* <!-- Name Section --> */}
@@ -211,6 +211,6 @@ const Dublin = ({ data }) => {
             </div>
         </div>
     )
-}
+})
 
 export default Dublin;

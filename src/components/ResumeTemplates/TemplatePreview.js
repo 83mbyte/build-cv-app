@@ -25,7 +25,7 @@ const TemplatePreview = forwardRef((props, ref) => {
     if (templateName) {
         switch (templateName.toLowerCase()) {
             case 'dublin':
-                return <Dublin data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }} />
+                return <Dublin data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }} ref={ref} />
 
             case 'amsterdam':
                 return <Amsterdam data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }} ref={ref} />

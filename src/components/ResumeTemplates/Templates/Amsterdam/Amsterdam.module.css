@@ -45,12 +45,17 @@ a:hover {
 /* elements */
 .resumeContainer {
   border: 1px solid rgb(163, 163, 163);
-  height: 100%;
-  max-width: 793.706pt;
-  min-height: 97vh;
+  /* width: 21cm; */
+  /* height: 29.7cm; */
+  /* //padding: 2cm; */
+  /* max-width: 793.706pt; */
+  /* min-height: 97vh; */
+  height: 830pt;
+  min-height: 830pt;
   background-image: url('./images/grey_bg.png');
   background-repeat: no-repeat;
   background-size: 35% 100%;
+  box-sizing: border-box;
 }
 
 .headerContainer {

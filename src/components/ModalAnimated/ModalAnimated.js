@@ -61,7 +61,7 @@ const ModalAnimated = ({ handleClose }) => {
             filename: "resume.pdf",
             image: { type: "jpeg", quality: 0.98 },
             html2canvas: { scale: 3 },
-            jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+            jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
         };
         console.log('generating document..')
         html2pdf(htmlRef.current, opt);
