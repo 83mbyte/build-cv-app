@@ -1,6 +1,7 @@
-import { Box, Button, ButtonGroup, Heading, VStack } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, Heading, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import CopyRights from '../components/CopyRights/CopyRights';
 
 const Welcome = () => {
     let AccessAreaButtons;
@@ -31,7 +32,8 @@ const Welcome = () => {
 
     return (
 
-        <VStack h="100vh" minH={'300px'} justifyContent={'center'} >
+        <VStack h="100vh" minH={'300px'} justifyContent={'space-around'}   >
+            <Box></Box>
             <Box w={'full'}
                 p={8}
                 mt={1}
@@ -39,6 +41,7 @@ const Welcome = () => {
                 border={['none', '1px']}
                 borderColor={['', 'gray.300']}
                 borderRadius={10}
+                bg={['', 'white']}
             >
                 <VStack spacing={1} w='full' align={['flex-start', 'center']}>
                     <Heading as='h2'>Welcome To IntroduceMe App</Heading>
@@ -47,6 +50,7 @@ const Welcome = () => {
                     {AccessAreaButtons}
                 </VStack>
             </Box>
+            <CopyRights />
         </VStack>
     );
 };

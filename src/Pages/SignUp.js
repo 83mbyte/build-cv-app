@@ -2,6 +2,7 @@ import { Alert, AlertIcon, Box, Button, Heading, HStack, Slide, Text, VStack } f
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
+import CopyRights from '../components/CopyRights/CopyRights';
 import InputCustom from '../components/FormElements/InputCustom';
 import { authSignUp, clearAuthError } from '../redux/features/utility/utilitySlice';
 import { auth } from '../__firebase/firebaseConf';
@@ -62,13 +63,14 @@ const SignUp = () => {
     return (
         <Slide direction='top' in={isVisible}>
             <Box
-                w={['full', 'lg']}
+                w={['full', 'full', 'lg']}
                 p={[8, 10]}
                 mt={[20, '15vh']}
                 mx={'auto'}
                 border={['none', '1px']}
                 borderColor={['', 'gray.300']}
                 borderRadius={10}
+                bg={['', 'white']}
             >
                 <VStack spacing={[3, 5]} w='full' align={['flex-start', 'center']}>
                     <VStack align={['flex-start', 'center']} w='full'>
@@ -110,6 +112,7 @@ const SignUp = () => {
                     </HStack>
                 </VStack>
             </Box>
+            <CopyRights />
         </Slide>
     );
 };

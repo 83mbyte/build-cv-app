@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 import * as ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -27,6 +27,16 @@ const activeLabelStyles = {
 };
 
 const theme = extendTheme({
+  styles: {
+    global: {
+      ".mainBg": {
+        backgroundImage: 'url("./bg.svg")',
+        backgroundSize: 'cover'
+      }
+    },
+
+  },
+
   components: {
     Form: {
       variants: {
@@ -84,9 +94,12 @@ const router = createBrowserRouter([
 root.render(
   <ChakraProvider theme={theme}>
     {/* <ColorModeScript /> */}
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <Box className='mainBg'>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </Box>
+
   </ChakraProvider>
 );
 
