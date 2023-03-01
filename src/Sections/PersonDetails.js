@@ -9,6 +9,7 @@ import { inputUpdate, fetchPersonDetails } from '../redux/features/personDetails
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
 import { Box } from '@chakra-ui/react';
 import { setIsModifiedTrue } from '../redux/features/utility/utilitySlice';
+import ProfilePhoto from '../components/ProfilePhoto/ProfilePhoto';
 
 
 const PersonDetails = ({ title, user }) => {
@@ -30,6 +31,11 @@ const PersonDetails = ({ title, user }) => {
     else if (stateStatus === 'succeeded' && data) {
 
         content = <Fragment>
+            <Box></Box>
+            <Box display='flex' justifyContent={'flex-end'} px={2}>
+                <ProfilePhoto user={user} />
+            </Box>
+
             {
 
                 inputsOrder.map((item, index) => {

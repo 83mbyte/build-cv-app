@@ -11,6 +11,7 @@ import summarySliceReducer from "./features/summary/summarySlice";
 import templatesSliceReducer from "./features/templates/templatesSlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
 import websoclinksSliceReducer from "./features/websoclinks/websoclinksSlice";
+import imageSliceReducer from "./features/image/imageSlice";
 
 export default configureStore({
     reducer: {
@@ -24,6 +25,7 @@ export default configureStore({
         languages: languagesSliceReducer,
         references: referencesSliceReducer,
         hobbies: hobbiesSliceReducer,
+        image: imageSliceReducer,
         templates: templatesSliceReducer,
         utility: utilitySliceReducer,
 
