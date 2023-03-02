@@ -4,14 +4,25 @@ import styles from './Dublin.module.css';
 
 
 const Dublin = forwardRef(({ data }, ref) => {
-    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }
+    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image }
         = data;
+    const avatar = {
+        backgroundImage: `url(${image})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        borderRadius: '50%'
+    }
     return (
         <div className={styles.resumeContainer} name='dublin' ref={ref}>
             <div className={styles.detailsContainer}>
+
                 <div className={styles.leftSide}>
                     {/* <!-- Name Section --> */}
-                    <div className={styles.sectionContainer}>
+                    <div className={styles.sectionContainer} >
+                        <div className={styles.avatarWrapper}>
+                            {/* <div className={styles.avatar} style={avatar}>s </div> */}
+                            <div className={styles.avatar}><img src={image} alt="avatar" /></div>
+                        </div>
                         <div className={styles.nameContainer}>
                             <div className={`${styles.personName} ${styles.bold}`}>{personDetails.name.firstName.value}<br />{personDetails.name.lastName.value}</div>
 
@@ -24,12 +35,25 @@ const Dublin = forwardRef(({ data }, ref) => {
                     <div className={styles.sectionContainer}>
                         <div className={styles.sectionTitle}>Details</div>
                         <div className={styles.sectionBody}>
-                            <div className={styles.item}>
-                                <div>{personDetails.address.city ? personDetails.address.city.value : 'fuck'}</div>
-                            </div>
-                            <div className={styles.item}><div>{personDetails.address.country && personDetails.address.country.value}</div></div>
-                            <div className={styles.item}><div>{personDetails.contacts.phone && personDetails.contacts.phone.value}</div></div>
-                            <div className={styles.item}><div>{personDetails.contacts.email && personDetails.contacts.email.value}</div></div>
+                            {
+                                personDetails.address.city.value !== '' &&
+                                <div className={styles.item}>
+                                    <div>{personDetails.address.city.value}</div>
+                                </div>
+                            }
+
+                            {
+                                personDetails.address.country.value != '' &&
+                                <div className={styles.item}><div>{personDetails.address.country.value}</div></div>
+                            }
+                            {
+                                personDetails.contacts.phone.value !== '' &&
+                                <div className={styles.item}><div><a href={`tel:${personDetails.contacts.phone.value}`}>{personDetails.contacts.phone.value}</a></div></div>
+                            }
+                            {
+                                personDetails.contacts.email.value !== '' &&
+                                <div className={styles.item}><div><a href={`mailto:${personDetails.contacts.email.value}`}>{personDetails.contacts.email.value}</a></div></div>
+                            }
                         </div>
                     </div>
                     {/* <!-- Details Container end  --> */}
@@ -52,12 +76,12 @@ const Dublin = forwardRef(({ data }, ref) => {
 
                     {/* <!-- Skills --> */}
                     {
-                        (skills.length > 0)
-                        && <div className={styles.sectionContainer}>
+                        (skills.data.length > 0)
+                        && <div className={styles.sectionContainer} id="skills">
                             <div className={styles.sectionTitle}>Skills</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    skills.map((item, index) => {
+                                    skills.data.map((item, index) => {
                                         return <div className={styles.item} key={`skills_${index}`}>
                                             <div>{item.skill.value}</div>
                                         </div>
@@ -71,7 +95,7 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- Languages --> */}
                     {
                         (languages.length > 0)
-                        && <div className={styles.sectionContainer}>
+                        && <div className={styles.sectionContainer} id="lang">
                             <div className={styles.sectionTitle}>Languages</div>
                             <div className={styles.sectionBody}>
                                 {
@@ -89,7 +113,7 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- Hobbies --> */}
                     {
                         (hobbies.value !== '')
-                        && <div className={styles.sectionContainer}>
+                        && <div className={styles.sectionContainer} id="hobbies">
                             <div className={styles.sectionTitle}>Hobbies</div>
                             <div className={styles.sectionBody}>
                                 <div className={styles.item} key={`hobbies `}>
@@ -111,7 +135,6 @@ const Dublin = forwardRef(({ data }, ref) => {
                                 <p className={styles.txt} dangerouslySetInnerHTML={{ __html: summary.value }}>
 
                                 </p>
-
                             </div>
                         </div>
                     </div>
@@ -120,13 +143,13 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- Education --> */}
                     {
                         education.length > 0
-                        && <div className={styles.sectionContainer}>
+                        && <div className={styles.sectionContainer} id="education">
                             <div className={styles.sectionTitle}>Education</div>
                             <div className={styles.sectionBody}>
                                 {
                                     education.map((item, index) => {
                                         return <div className={styles.item} key={`education_${index}`}>
-                                            <div className={styles.bold}>{item.degree.value !== '' && `${item.degree.value}, `}{item.title.value}</div>
+                                            <div className={styles.bold}>{item.degree.value !== '' && `${item.degree.value}'s, `}{item.title.value}{item.location.value !== '' && `, ${item.location.value}`}</div>
                                             <div className={`${styles.infoText} ${styles.upperCase}`}>{item.period.value}</div>
                                         </div>
                                     })
@@ -139,7 +162,7 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- Courses --> */}
                     {
                         courses.length > 0
-                        && <div className={styles.sectionContainer}>
+                        && <div className={styles.sectionContainer} id="courses">
                             <div className={styles.sectionTitle}>Courses</div>
                             <div className={styles.sectionBody}>
                                 {
@@ -163,7 +186,7 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- Employment History --> */}
                     {
                         employmentHistory.length > 0 &&
-                        <div className={styles.sectionContainer}>
+                        <div className={styles.sectionContainer} id="employment">
                             <div className={styles.sectionTitle}>Employment History</div>
                             <div className={styles.sectionBody}>
                                 {
@@ -171,9 +194,11 @@ const Dublin = forwardRef(({ data }, ref) => {
                                         return <div className={styles.item} key={`employmentHistory_${index}`}>
                                             <div className={styles.bold}>{item.title.value}, {item.employer.value}, {item.location.value}</div>
                                             <div className={`${styles.infoText} ${styles.upperCase}`}>{item.period.value}</div>
-                                            <p dangerouslySetInnerHTML={{ __html: item.wysiwyg.value }}>
+                                            {
+                                                item.wysiwyg.value !== '' &&
+                                                <p dangerouslySetInnerHTML={{ __html: item.wysiwyg.value }}>
 
-                                            </p>
+                                                </p>}
                                         </div>
                                     })
                                 }
@@ -186,15 +211,16 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- References  --> */}
                     {
                         references.length > 0 &&
-                        <div className={styles.sectionContainer}>
+                        <div className={styles.sectionContainer} id="references">
                             <div className={styles.sectionTitle}>References</div>
                             <div className={styles.sectionBody}>
                                 {
                                     references.map((item, index) => {
-                                        return <div className={styles.item} key={`employmentHistory_${index}`}>
+                                        return <div className={styles.item} key={`reference_${index}`}>
                                             <div className={styles.bold}>{item.referentName.value} from {item.company.value}</div>
                                             <div>
-                                                {item.phone.value} | {item.email.value}
+
+                                                {item.phone.value !== '' && <a href={`tel:${item.phone.value}`}>{item.phone.value}</a>} | {item.email.value !== '' && <a href={`mailto:${item.email.value}`}>{item.email.value}</a>}
                                             </div>
                                             {/* <div className={`${styles.infoText} ${styles.upperCase}`}>{item.period.value}</div>
                           <p dangerouslySetInnerHTML={{ __html: item.wysiwyg.value }}>
@@ -209,7 +235,7 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- References end --> */}
                 </div>
             </div>
-        </div>
+        </div >
     )
 })
 
