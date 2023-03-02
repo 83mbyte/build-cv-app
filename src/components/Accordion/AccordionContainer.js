@@ -18,7 +18,7 @@ import AddOneMoreItem from '../Buttons/AddOneMoreItem';
 import LevelSlider from '../FormElements/LevelSlider';
 import SelectCustom from '../FormElements/SelectCustom';
 
-const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, removeItemAction, addNewItemAction, valueUpdateAction, isSwitchDisabled }) => {
+const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, removeItemAction, addNewItemAction, valueUpdateAction, isSwitchChecked }) => {
 
 
     const dispatch = useDispatch();
@@ -92,7 +92,7 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                             </Box>
                                                             <Box fontSize={'xs'} color={'gray.500'}>
                                                                 {
-                                                                    !accordItem[inputsOrder[1]].value || accordItem[inputsOrder[1]].value === '' || accordItem[inputsOrder[1]].value === undefined || isSwitchDisabled
+                                                                    !accordItem[inputsOrder[1]].value || accordItem[inputsOrder[1]].value === '' || accordItem[inputsOrder[1]].value === undefined || isSwitchChecked
                                                                         ? null
                                                                         : accordItem[inputsOrder[1]].value
                                                                 }
@@ -132,7 +132,7 @@ const AccordionContainer = ({ state, sectionName, inputsOrder, addOneMoreValue, 
                                                                     )
                                                                 } else if (accordItem[key].type === 'slider') {
                                                                     let path = pathCustomize(index, accordItem[key].path);
-                                                                    return <LevelSlider key={`slider_${ind}`} skillName={accordItem.skill.value} value={accordItem[key].value} path={path} handleInputChange={handleInputChange} isDisabled={isSwitchDisabled} />
+                                                                    return <LevelSlider key={`slider_${ind}`} skillName={accordItem.skill.value} value={accordItem[key].value} path={path} handleInputChange={handleInputChange} isDisabled={isSwitchChecked} />
                                                                 } else if (accordItem[key].type === 'select') {
                                                                     let path = pathCustomize(index, accordItem[key].path);
                                                                     return <SelectCustom
