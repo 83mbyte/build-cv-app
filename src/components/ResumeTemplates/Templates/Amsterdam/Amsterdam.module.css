@@ -52,7 +52,7 @@ a:hover {
   /* min-height: 97vh; */
   /* height: 830pt; */
   min-height: 830pt;
-  height: 100%;
+  /* height: 100%; */
   background-image: url('./images/grey_bg.png');
   background-repeat: no-repeat;
   background-size: 35% 100%;

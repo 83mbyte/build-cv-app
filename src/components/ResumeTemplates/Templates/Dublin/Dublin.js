@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 
 import styles from './Dublin.module.css';
 
@@ -6,12 +6,7 @@ import styles from './Dublin.module.css';
 const Dublin = forwardRef(({ data }, ref) => {
     const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image }
         = data;
-    const avatar = {
-        backgroundImage: `url(${image})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        borderRadius: '50%'
-    }
+
     return (
         <div className={styles.resumeContainer} name='dublin' ref={ref}>
             <div className={styles.detailsContainer}>
@@ -20,8 +15,11 @@ const Dublin = forwardRef(({ data }, ref) => {
                     {/* <!-- Name Section --> */}
                     <div className={styles.sectionContainer} >
                         <div className={styles.avatarWrapper}>
-                            {/* <div className={styles.avatar} style={avatar}>s </div> */}
-                            <div className={styles.avatar}><img src={image} alt="avatar" /></div>
+                            {
+                                image
+                                    ? <div className={styles.avatar}><img src={image} alt="image" /></div>
+                                    : <div className={styles.avatarEmpty}>place<br />photo</div>
+                            }
                         </div>
                         <div className={styles.nameContainer}>
                             <div className={`${styles.personName} ${styles.bold}`}>{personDetails.name.firstName.value}<br />{personDetails.name.lastName.value}</div>

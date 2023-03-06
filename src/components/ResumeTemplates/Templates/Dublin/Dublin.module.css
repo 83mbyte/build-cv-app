@@ -71,14 +71,26 @@ a:hover {
 }
 .avatar {
   display: block;
-  width: 65px;
-  height: 65px;
+  /* background-color: #a2a2a2; */
+  width: 67px;
+  height: 79px;
+  padding: 1px;
+  border: 1px solid #a2a2a2;
 }
 .avatar img {
   display: block;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   width: 65px;
-  height: 65px;
+  height: 75px;
+}
+.avatarEmpty {
+  width: 65px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e2dfdf;
+  border: 1px solid #a2a2a2;
 }
 .nameContainer {
   text-align: center;
