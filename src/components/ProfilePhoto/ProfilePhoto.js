@@ -1,4 +1,4 @@
-import { Box, Button, Image, Skeleton, } from '@chakra-ui/react';
+import { Box, Button, Image, Spinner, } from '@chakra-ui/react';
 import React, { useRef, useEffect } from 'react';
 import { MdOutlineMonochromePhotos } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,18 +58,25 @@ const ProfilePhoto = ({ user }) => {
 
     return (
         <Box >
-            {
-                !data.encoded
-                    ? <>
-                        <input type={'file'} style={{ display: 'none' }} ref={inpRef} onChange={onChangeHandler} accept={'.png, .jpg, .jpeg'} />
-                        <Button size={'xs'} colorScheme='teal' leftIcon={<MdOutlineMonochromePhotos />} onClick={uploadClickHandler}>Upload photo</Button>
-                    </>
-                    : <Box w={'50px'} h={'65px'} onClick={imageOnClickHandler} cursor={'pointer'}    >
 
-                        <ToolTip label='click to delete photo' type={'warning'}  >
-                            <Image src={`${data.encoded}`} alt='user_photo' objectFit='cover' w={'50px'} h={'65px'} fallback={<Skeleton h={'65px'} />} />
-                        </ToolTip>
-                    </Box>
+            {
+                stateStatus !== 'succeeded'
+                    ? <Spinner color='teal' />
+                    : <>
+                        {
+                            !data.encoded
+                                ? <>
+                                    <input type={'file'} style={{ display: 'none' }} ref={inpRef} onChange={onChangeHandler} accept={'.png, .jpg, .jpeg'} />
+                                    <Button size={'xs'} colorScheme='teal' leftIcon={<MdOutlineMonochromePhotos />} onClick={uploadClickHandler}>Upload photo</Button>
+                                </>
+                                : <Box w={'50px'} h={'65px'} onClick={imageOnClickHandler} cursor={'pointer'}    >
+
+                                    <ToolTip label='click to delete photo' type={'warning'}  >
+                                        <Image src={`${data.encoded}`} alt='user_photo' objectFit='cover' w={'50px'} h={'65px'} />
+                                    </ToolTip>
+                                </Box>
+                        }
+                    </>
             }
         </Box>
     );
