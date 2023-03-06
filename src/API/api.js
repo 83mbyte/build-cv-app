@@ -6,6 +6,27 @@ export const fetchAPI = {
     BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
     ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
 
+    async putUserImageData(data, user) {
+        console.log('set data to DB')
+        return await fetch(`${this.BASEURL}/prvt/users/${user.userId}/image/value.json?auth=${user.accessToken}`,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify(data)
+
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+                return response;
+            })
+            .catch((error) => alert(`Couldn't fetch verseL ${error}`))
+    },
+
     async fethingSubPath(path, user) {
         return await fetch(`${this.ROOTUSERURL}/${user.userId}/${path}.json?auth=${user.accessToken}`)
             .then((resp) => {
@@ -202,6 +223,9 @@ const dbAPI = {
                         __serv: {
                             isSectionVisible: false,
                         }
+                    },
+                    image: {
+                        value: ''
                     }
                 });
             }

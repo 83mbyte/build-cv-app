@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { MdOutlineMonochromePhotos } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { deleteImage, getImage, uploadImage } from '../../redux/features/image/imageSlice';
+import { deleteImageData, getImageData, uploadImageData } from '../../redux/features/image/imageSlice';
 
 import ToolTip from '../ToolTip/ToolTip';
 
@@ -22,7 +22,7 @@ const ProfilePhoto = ({ user }) => {
         inpRef.current.click();
     }
     const imageOnClickHandler = async () => {
-        dispatch(deleteImage({ user, ext: data.ext }));
+        dispatch(deleteImageData(user))
     }
     const onChangeHandler = async () => {
         if (inpRef.current.files) {
@@ -34,7 +34,13 @@ const ProfilePhoto = ({ user }) => {
                 case '.jpeg':
                 case '.png':
                     console.log('correct file.');
-                    dispatch(uploadImage({ user, file, fileExt }))
+                    let reader = new FileReader();
+                    reader.addEventListener('loadend', () => {
+                        if (reader.result) {
+                            dispatch(uploadImageData({ imageData: reader.result, user }));
+                        }
+                    })
+                    reader.readAsDataURL(file);
                     break;
                 default:
                     console.log('incorrect file type..')
@@ -46,15 +52,14 @@ const ProfilePhoto = ({ user }) => {
 
     useEffect(() => {
         if (stateStatus === 'idle') {
-            // fetch state
-            dispatch(getImage(user));
+            dispatch(getImageData(user))
         }
     }, [stateStatus, dispatch, user])
 
     return (
         <Box >
             {
-                !data.url
+                !data.encoded
                     ? <>
                         <input type={'file'} style={{ display: 'none' }} ref={inpRef} onChange={onChangeHandler} accept={'.png, .jpg, .jpeg'} />
                         <Button size={'xs'} colorScheme='teal' leftIcon={<MdOutlineMonochromePhotos />} onClick={uploadClickHandler}>Upload photo</Button>
@@ -62,7 +67,7 @@ const ProfilePhoto = ({ user }) => {
                     : <Box w={'50px'} h={'65px'} onClick={imageOnClickHandler} cursor={'pointer'}    >
 
                         <ToolTip label='click to delete photo' type={'warning'}  >
-                            <Image src={`${data.url}`} alt='user_photo' objectFit='cover' w={'50px'} h={'65px'} fallback={<Skeleton h={'65px'} />} />
+                            <Image src={`${data.encoded}`} alt='user_photo' objectFit='cover' w={'50px'} h={'65px'} fallback={<Skeleton h={'65px'} />} />
                         </ToolTip>
                     </Box>
             }

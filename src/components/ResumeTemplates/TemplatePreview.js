@@ -19,7 +19,7 @@ const TemplatePreview = forwardRef((props, ref) => {
     const languages = useSelector(state => state.languages.data);
     const hobbies = useSelector(state => state.hobbies.data);
     const references = useSelector(state => state.references.data);
-    const image = useSelector(state => state.image.data.url);
+    const image = useSelector(state => state.image.data.encoded);
 
     let content;
 

@@ -1,10 +1,12 @@
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { storageAPI } from "../../../API/storageAPI";
+import { fetchAPI } from "../../../API/api";
 
 const DATA_TEMPLATE_OBJECT = {
     ext: '',
     path: 'image',
-    url: ''
+    url: '',
+    encoded: ''
 }
 export const imageSlice = createSlice({
     name: 'image',
@@ -25,51 +27,52 @@ export const imageSlice = createSlice({
     },
     extraReducers(builder) {
         builder
-            .addCase(uploadImage.pending, (state) => {
-                state.status = 'loading'
+            .addCase(uploadImageData.pending, (state) => {
+                state.status = 'pending';
             })
-            .addCase(uploadImage.rejected, (state, action) => {
+            .addCase(uploadImageData.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            .addCase(uploadImage.fulfilled, (state, action) => {
+            .addCase(uploadImageData.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload && (action.payload.ext && action.payload.url)) {
+                if (action.payload && action.payload !== '') {
                     state.data = {
                         ...state.data,
-                        ext: action.payload.ext,
-                        url: action.payload.url
+                        encoded: action.payload
                     }
                 }
             })
-            .addCase(getImage.pending, (state) => {
+            .addCase(getImageData.pending, (state) => {
                 state.status = 'pending';
             })
-            .addCase(getImage.rejected, (state, action) => {
+            .addCase(getImageData.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            .addCase(getImage.fulfilled, (state, action) => {
+            .addCase(getImageData.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload && (action.payload.ext && action.payload.url)) {
+                if (action.payload && action.payload !== '') {
                     state.data = {
                         ...state.data,
-                        ext: action.payload.ext,
-                        url: action.payload.url
+                        encoded: action.payload
                     }
                 }
             })
-            .addCase(deleteImage.pending, (state) => {
+            .addCase(deleteImageData.pending, (state) => {
                 state.status = 'pending';
             })
-            .addCase(deleteImage.rejected, (state, action) => {
+            .addCase(deleteImageData.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            .addCase(deleteImage.fulfilled, (state, action) => {
+            .addCase(deleteImageData.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (action.payload === 'success') {
-                    state.data = { ...DATA_TEMPLATE_OBJECT }
+                if (action.payload === 'image removed') {
+                    state.data = {
+                        ...state.data,
+                        encoded: ''
+                    }
                 }
             })
     }
@@ -80,27 +83,24 @@ export default imageSlice.reducer;
 
 
 //extraReducers funcs
-export const uploadImage = createAsyncThunk('image/uploadImageFile', async (data) => {
-    console.log('start file uploading..');
-    const resp = await storageAPI.uploadImageFile(data.user.userId, data.file, data.fileExt);
+
+export const getImageData = createAsyncThunk('image/getImageData', async (user) => {
+    const resp = await fetchAPI.fethingSubPath('image/value', user);
     if (resp) {
-        console.log('file upload complete.')
         return resp
     }
 })
 
-export const getImage = createAsyncThunk('image/getImageFile', async (user) => {
-    const resp = await storageAPI.getImageFile(user);
-    if (resp) {
-        console.log('got file from storage');
-        return resp
+export const uploadImageData = createAsyncThunk('image/uploadImageData', async ({ imageData, user }) => {
+    const resp = await fetchAPI.putUserImageData(imageData, user);
+    if (resp && resp.status === 200) {
+        return imageData
     }
 })
 
-export const deleteImage = createAsyncThunk('image/deleteImageFile', async ({ user, ext }) => {
-    console.log('delete image');
-    const resp = await storageAPI.deleteImageFile(user, ext);
-    if (resp) {
-        return resp
+export const deleteImageData = createAsyncThunk('image/deleteImageData', async (user) => {
+    const resp = await fetchAPI.putUserImageData('', user);
+    if (resp && resp.status == 200) {
+        return 'image removed'
     }
 })
