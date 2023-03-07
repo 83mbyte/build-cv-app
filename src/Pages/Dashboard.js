@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from '@chakra-ui/react';
+import { Container, Portal, VStack, Box } from '@chakra-ui/react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import SpinnerCustom from '../components/Spinner/SpinnerCustom';
@@ -8,6 +8,7 @@ import FormEditPage from './FormEditPage';
 import ModalAnimated from '../components/ModalAnimated/ModalAnimated';
 import { AnimatePresence } from 'framer-motion';
 import { modalIsOpenToggle } from '../redux/features/utility/utilitySlice';
+import FooterContainer from '../components/Footer/FooterContainer';
 
 const Dashboard = () => {
 
@@ -24,19 +25,33 @@ const Dashboard = () => {
             {
                 loggedUser
                     ? <>
-                        <HeaderContainer user={loggedUser} />
+                        <VStack minH={'100vh'} justifyContent={'space-between'} spacing={0} >
+                            <Box bg='orange' w={'full'}>
+                                <HeaderContainer user={loggedUser} />
+                            </Box>
+                            <Box w={'full'} pt={'55px'}>
+                                <Container as='main' bg={'white'}
+                                    border={['none', '1px']}
+                                    borderColor={['', 'gray.200']}
+                                    borderRadius={10}
+                                    maxW={'2xl'}
+                                    p={0} my={0}
+                                >
+                                    <FormEditPage user={loggedUser} />
+                                </Container>
+                            </Box>
+                            <Box w={'full'} py={1} >
+                                <FooterContainer />
+                            </Box>
+                        </VStack>
+                        <Portal>
+                            <AnimatePresence exitBeforeEnter={true} >
+                                {
+                                    isModalOpen && <ModalAnimated handleClose={modalToggler} />
+                                }
+                            </AnimatePresence>
+                        </Portal>
 
-                        <Container as='main' bg={'white'} maxW={'2xl'} p={0}  >
-                            <FormEditPage user={loggedUser} />
-
-                        </Container>
-
-
-                        <AnimatePresence exitBeforeEnter={true} >
-                            {
-                                isModalOpen && <ModalAnimated handleClose={modalToggler} />
-                            }
-                        </AnimatePresence>
 
                     </>
                     : <SpinnerCustom />

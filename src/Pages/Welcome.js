@@ -1,7 +1,7 @@
-import { Box, Button, ButtonGroup, Heading, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, Heading, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import CopyRights from '../components/CopyRights/CopyRights';
+import FooterContainer from '../components/Footer/FooterContainer';
 
 const Welcome = () => {
     let AccessAreaButtons;
@@ -33,24 +33,26 @@ const Welcome = () => {
     return (
 
         <VStack h="100vh" minH={'300px'} justifyContent={'space-around'}   >
-            <Box></Box>
-            <Box w={'full'}
-                p={8}
-                mt={1}
-                mx={'auto'}
-                border={['none', '1px']}
-                borderColor={['', 'gray.300']}
-                borderRadius={10}
-                bg={['', 'white']}
-            >
-                <VStack spacing={1} w='full' align={['flex-start', 'center']}>
-                    <Heading as='h2'>Welcome To IntroduceMe App</Heading>
-                </VStack>
-                <VStack p={2}>
-                    {AccessAreaButtons}
-                </VStack>
+            <Box flex={1} alignItems="center" display={'flex'}>
+                <Box w={'full'}
+                    p={8}
+                    mt={1}
+                    mx={'auto'}
+                    border={['none', '1px']}
+                    borderColor={['', 'gray.300']}
+                    borderRadius={10}
+                    bg={['', 'white']}
+                >
+                    <VStack spacing={3} w='full' align={['flex-start', 'center']}  >
+                        <Heading as='h2'>Welcome To IntroduceMe App</Heading>
+                        <Box>
+                            {AccessAreaButtons}
+                        </Box>
+                    </VStack>
+                </Box>
             </Box>
-            <CopyRights />
+
+            <Box w={'full'} bg='transparent'><FooterContainer /></Box>
         </VStack>
     );
 };
