@@ -71,7 +71,7 @@ const ModalAnimated = ({ handleClose }) => {
     }
     return (
         <Backdrop>
-            <Box as={motion.div} bg='white' width={'xl'}
+            <Box as={motion.div} bg='white' width={'75%'}
                 onClick={(e) => e.stopPropagation()}
                 p={1}
                 borderRadius={'md'}
@@ -84,7 +84,7 @@ const ModalAnimated = ({ handleClose }) => {
             >
                 <VStack w='full' align={'flex-end'} spacing={0} flex={1} bg='white'>
 
-                    <HStack>
+                    <HStack pb={'2px'}>
                         <Box >
                             <Button size={'xs'} colorScheme={'teal'} variant={'ghost'} onClick={getPdf}>Get PDF</Button>
                         </Box>
@@ -102,12 +102,12 @@ const ModalAnimated = ({ handleClose }) => {
                         <TabPanels display={'flex'} flex={1} py={1} >
 
                             <TabPanel bg='white' w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} >
-                                <Box overflowY='scroll' h="md" >
+                                <Box overflowY='scroll' h="lg" >
                                     <TemplateSelection />
                                 </Box>
                             </TabPanel>
                             <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0}>
-                                <Box overflowY='scroll' h="md">
+                                <Box overflowY='scroll' h="lg">
                                     <TemplatePreview ref={htmlRef} />
                                 </Box>
                             </TabPanel>

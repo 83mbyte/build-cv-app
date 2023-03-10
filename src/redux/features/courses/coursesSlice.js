@@ -64,7 +64,7 @@ export const coursesSlice = createSlice({
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
                     state.data = [];
-                    state.isSectionVisible = false;
+                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 }
             })
             .addCase(fetchCourses.rejected, (state, action) => {

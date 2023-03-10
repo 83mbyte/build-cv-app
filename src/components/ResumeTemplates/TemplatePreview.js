@@ -5,23 +5,22 @@ import { useSelector } from 'react-redux';
 import Dublin from './Templates/Dublin/Dublin';
 import Amsterdam from './Templates/Amsterdam/Amsterdam';
 import SpinnerCustom from '../Spinner/SpinnerCustom';
+import Vivien from './Templates/Vivien/Vivien';
 
 const TemplatePreview = forwardRef((props, ref) => {
 
     const templateName = useSelector(state => state.templates.data.selected);
     const personDetails = useSelector(state => state.personDetails.data);
-    const websoclinks = useSelector(state => state.websoclinks.data);
+    const websoclinks = useSelector(state => state.websoclinks);
     const skills = useSelector(state => state.skills);
-    const summary = useSelector(state => state.summary.data);
-    const education = useSelector(state => state.education.data);
-    const courses = useSelector(state => state.courses.data);
-    const employmentHistory = useSelector(state => state.employmentHistory.data);
-    const languages = useSelector(state => state.languages.data);
-    const hobbies = useSelector(state => state.hobbies.data);
-    const references = useSelector(state => state.references.data);
+    const summary = useSelector(state => state.summary);
+    const education = useSelector(state => state.education);
+    const courses = useSelector(state => state.courses);
+    const employmentHistory = useSelector(state => state.employmentHistory);
+    const languages = useSelector(state => state.languages);
+    const hobbies = useSelector(state => state.hobbies);
+    const references = useSelector(state => state.references);
     const image = useSelector(state => state.image.data.encoded);
-
-    let content;
 
     if (templateName) {
         switch (templateName.toLowerCase()) {
@@ -30,6 +29,8 @@ const TemplatePreview = forwardRef((props, ref) => {
 
             case 'amsterdam':
                 return <Amsterdam data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }} ref={ref} />
+            case 'vivien':
+                return <Vivien data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image }} ref={ref} />
             default:
                 return <Amsterdam />
         }

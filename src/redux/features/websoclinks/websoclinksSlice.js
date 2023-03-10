@@ -27,7 +27,7 @@ export const websoclinksSlice = createSlice({
         linkVars: ['Twitter', 'Facebook', 'GitHub', 'LinkedIn'],
         status: 'idle',
         error: '',
-        isSectionVisible: false
+        isSectionVisible: true
     },
     reducers: {
         loadStateFrom: (state, action) => {
@@ -69,7 +69,7 @@ export const websoclinksSlice = createSlice({
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
                     state.data = [];
-                    state.isSectionVisible = false;
+                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 }
             })
             .addCase(fetchWebSocLinks.rejected, (state, action) => {
