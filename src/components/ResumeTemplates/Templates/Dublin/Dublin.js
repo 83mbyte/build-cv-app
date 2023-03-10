@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef } from 'react';
 
 import styles from './Dublin.module.css';
 
@@ -6,7 +6,7 @@ import styles from './Dublin.module.css';
 const Dublin = forwardRef(({ data }, ref) => {
     const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image }
         = data;
-
+    console.log(hobbies)
     return (
         <div className={styles.resumeContainer} name='dublin' ref={ref}>
             <div className={styles.detailsContainer}>
@@ -17,7 +17,7 @@ const Dublin = forwardRef(({ data }, ref) => {
                         <div className={styles.avatarWrapper}>
                             {
                                 image
-                                    ? <div className={styles.avatar}><img src={image} alt="image" /></div>
+                                    ? <div className={styles.avatar}><img src={image} alt="imageUser" /></div>
                                     : <div className={styles.avatarEmpty}>place<br />photo</div>
                             }
                         </div>
@@ -58,13 +58,18 @@ const Dublin = forwardRef(({ data }, ref) => {
 
                     {/* <!-- Links --> */}
                     {
-                        (websoclinks.length > 0) &&
+                        websoclinks.isSectionVisible &&
                         <div className={styles.sectionContainer}>
                             <div className={styles.sectionTitle}>Links</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    websoclinks.map((item, index) => {
-                                        return <div className={styles.item} key={`links_${index}`}><div><a href={item.link.value}>{item.label.value}</a></div></div>
+                                    websoclinks.data.map((item, index) => {
+                                        return (
+                                            <div className={styles.item} key={`links_${index}`}>
+                                                <div><a href={item.link.value}>{item.label.value}</a>
+                                                </div>
+                                            </div>
+                                        )
                                     })
                                 }
                             </div>
@@ -74,12 +79,13 @@ const Dublin = forwardRef(({ data }, ref) => {
 
                     {/* <!-- Skills --> */}
                     {
-                        (skills.data.length > 0)
+                        skills.isSectionVisible
                         && <div className={styles.sectionContainer} id="skills">
                             <div className={styles.sectionTitle}>Skills</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    skills.data.map((item, index) => {
+                                    skills.data.length > 0
+                                    && skills.data.map((item, index) => {
                                         return <div className={styles.item} key={`skills_${index}`}>
                                             <div>{item.skill.value}</div>
                                         </div>
@@ -92,12 +98,13 @@ const Dublin = forwardRef(({ data }, ref) => {
 
                     {/* <!-- Languages --> */}
                     {
-                        (languages.length > 0)
+                        languages.isSectionVisible
                         && <div className={styles.sectionContainer} id="lang">
                             <div className={styles.sectionTitle}>Languages</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    languages.map((item, index) => {
+                                    languages.data && languages.data.length > 0
+                                    && languages.data.map((item, index) => {
                                         return <div className={styles.item} key={`languages_${index}`}>
                                             <div>{item.language.value}</div>
                                         </div>
@@ -110,13 +117,16 @@ const Dublin = forwardRef(({ data }, ref) => {
 
                     {/* <!-- Hobbies --> */}
                     {
-                        (hobbies.value !== '')
+                        hobbies.isSectionVisible
                         && <div className={styles.sectionContainer} id="hobbies">
                             <div className={styles.sectionTitle}>Hobbies</div>
                             <div className={styles.sectionBody}>
-                                <div className={styles.item} key={`hobbies `}>
-                                    <div>{hobbies.value}</div>
-                                </div>
+                                {
+                                    hobbies.data.value && hobbies.data.value !== ''
+                                    && <div className={styles.item} key={`hobbies `}>
+                                        <div>{hobbies.data.value}</div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     }
@@ -129,23 +139,26 @@ const Dublin = forwardRef(({ data }, ref) => {
                     <div className={styles.sectionContainer}>
                         <div className={styles.sectionTitle}>Details</div>
                         <div className={styles.sectionBody}>
-                            <div className={styles.item}>
-                                <p className={styles.txt} dangerouslySetInnerHTML={{ __html: summary.value }}>
-
-                                </p>
-                            </div>
+                            {
+                                (summary.data.value && summary.data.value !== '')
+                                && <div className={styles.item}>
+                                    <p className={styles.txt} dangerouslySetInnerHTML={{ __html: summary.data.value }}>
+                                    </p>
+                                </div>
+                            }
                         </div>
                     </div>
                     {/* <!-- profile end --> */}
 
                     {/* <!-- Education --> */}
                     {
-                        education.length > 0
+                        education.isSectionVisible
                         && <div className={styles.sectionContainer} id="education">
                             <div className={styles.sectionTitle}>Education</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    education.map((item, index) => {
+                                    education.data && education.data.length > 0
+                                    && education.data.map((item, index) => {
                                         return <div className={styles.item} key={`education_${index}`}>
                                             <div className={styles.bold}>{item.degree.value !== '' && `${item.degree.value}'s, `}{item.title.value}{item.location.value !== '' && `, ${item.location.value}`}</div>
                                             <div className={`${styles.infoText} ${styles.upperCase}`}>{item.period.value}</div>
@@ -159,12 +172,13 @@ const Dublin = forwardRef(({ data }, ref) => {
 
                     {/* <!-- Courses --> */}
                     {
-                        courses.length > 0
+                        courses.isSectionVisible
                         && <div className={styles.sectionContainer} id="courses">
                             <div className={styles.sectionTitle}>Courses</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    courses.map((item, index) => {
+                                    courses.data.length > 0
+                                    && courses.data.map((item, index) => {
                                         return <div className={styles.item} key={`courses_${index}`}>
                                             <div className={styles.bold}>
                                                 {item.course.value}, {item.institution.value}

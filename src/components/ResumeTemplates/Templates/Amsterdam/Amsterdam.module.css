@@ -14,12 +14,12 @@ body {
 }
 
 :root {
-  --title-font: 'Hanken Grotesk', sans-serif;
-  --section-font: 'Roboto', sans-serif;
-  --text-font: 'Noto Sans', sans-serif;
+  --title-font-ams: 'Hanken Grotesk', sans-serif;
+  --section-font-ams: 'Roboto', sans-serif;
+  --text-font-ams: 'Noto Sans', sans-serif;
 
-  --font-bold: 700;
-  --font-normal: 400;
+  --font-bold-ams: 700;
+  --font-normal-ams: 400;
 }
 #buttonContainer {
   position: absolute;
@@ -29,7 +29,7 @@ body {
 
 /* common elements */
 .bold {
-  font-weight: var(--font-bold);
+  font-weight: var(--font-bold-ams);
 }
 .upperCase {
   text-transform: uppercase;
@@ -71,16 +71,16 @@ a:hover {
   justify-content: center;
   flex-direction: column;
   row-gap: 10px;
-  font-family: var(--title-font);
+  font-family: var(--title-font-ams);
 }
 .personName {
   font-size: 20px;
-  font-weight: var(--font-bold);
+  font-weight: var(--font-bold-ams);
   text-transform: uppercase;
 }
 .personJobTitle {
   font-size: 16px;
-  font-weight: var(--font-normal);
+  font-weight: var(--font-normal-ams);
 }
 
 .detailsContainer {
@@ -111,8 +111,8 @@ a:hover {
   margin-bottom: 20px;
 }
 .sectionTitle {
-  font-family: var(--section-font);
-  font-weight: var(--font-bold);
+  font-family: var(--section-font-ams);
+  font-weight: var(--font-bold-ams);
   letter-spacing: 5px;
   text-transform: uppercase;
   font-size: 13px;
@@ -123,15 +123,13 @@ a:hover {
 }
 
 .sectionBody {
-  font-family: var(--title-font);
-
+  font-family: var(--title-font-ams);
   font-size: 13px;
-  /* font-weight: 600; */
 }
 .item {
-  /* background-color: aqua; */
   margin: 0 0 15px 0;
   width: 100%;
+  font-family: var(--text-font-ams);
 
   box-sizing: border-box;
 }
@@ -141,7 +139,6 @@ a:hover {
   justify-content: space-between;
 }
 .firstColumn {
-  /* background-color: antiquewhite; */
   width: 75%;
   box-sizing: border-box;
   display: flex;
