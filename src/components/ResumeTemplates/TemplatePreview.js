@@ -6,6 +6,7 @@ import Dublin from './Templates/Dublin/Dublin';
 import Amsterdam from './Templates/Amsterdam/Amsterdam';
 import SpinnerCustom from '../Spinner/SpinnerCustom';
 import Vivien from './Templates/Vivien/Vivien';
+import Lndn from './Templates/Lndn/Lndn';
 
 const TemplatePreview = forwardRef((props, ref) => {
 
@@ -31,8 +32,10 @@ const TemplatePreview = forwardRef((props, ref) => {
                 return <Amsterdam data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }} ref={ref} />
             case 'vivien':
                 return <Vivien data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image }} ref={ref} />
+            case 'lndn':
+                return <Lndn data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image }} ref={ref} />
             default:
-                return <Amsterdam />
+                return <Amsterdam data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references }} ref={ref} />
         }
     } else {
         return <SpinnerCustom />
@@ -42,3 +45,4 @@ const TemplatePreview = forwardRef((props, ref) => {
 });
 
 export default TemplatePreview;
+

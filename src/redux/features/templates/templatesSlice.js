@@ -17,6 +17,10 @@ const templatesSlice = createSlice({
                 label: 'Vivien',
                 img: 'https://s3.resume.io/cdn-cgi/image/format=auto,fit=scale-down,dpr=1,width=154/uploads/local_template_image/image/406/persistent-resource/vienna-resume-templates.jpg'
             },
+            {
+                label: 'Lndn',
+                img: 'https://s3.resume.io/cdn-cgi/image/format=auto,fit=scale-down,dpr=1,width=154/uploads/local_template_image/image/481/persistent-resource/london-resume-templates.jpg'
+            },
             ]
         },
 
