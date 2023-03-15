@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+import StarRating from '../../../StarRating/StarRating';
 
 import styles from './Dublin.module.css';
 
@@ -88,6 +89,11 @@ const Dublin = forwardRef(({ data }, ref) => {
                                     && skills.data.map((item, index) => {
                                         return <div className={styles.item} key={`skills_${index}`}>
                                             <div>{item.skill.value}</div>
+                                            {
+                                                !skills.isSwitchChecked &&
+                                                <div  ><StarRating level={item.level.value} /></div>
+
+                                            }
                                         </div>
                                     })
                                 }
@@ -107,6 +113,9 @@ const Dublin = forwardRef(({ data }, ref) => {
                                     && languages.data.map((item, index) => {
                                         return <div className={styles.item} key={`languages_${index}`}>
                                             <div>{item.language.value}</div>
+                                            {
+                                                item.level.value !== '' && <div className={styles.infoText}>({item.level.value})</div>
+                                            }
                                         </div>
                                     })
                                 }
@@ -222,24 +231,26 @@ const Dublin = forwardRef(({ data }, ref) => {
 
                     {/* <!-- References  --> */}
                     {
-                        references.length > 0 &&
+                        references.data.length > 0 &&
                         <div className={styles.sectionContainer} id="references">
                             <div className={styles.sectionTitle}>References</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    references.map((item, index) => {
-                                        return <div className={styles.item} key={`reference_${index}`}>
-                                            <div className={styles.bold}>{item.referentName.value} from {item.company.value}</div>
-                                            <div>
+                                    !references.isSwitchChecked
+                                        ? <>
+                                            {
+                                                references.data.map((item, index) => {
+                                                    return <div className={styles.item} key={`reference_${index}`}>
+                                                        <div className={styles.bold}>{item.referentName.value} from {item.company.value}</div>
+                                                        <div>
 
-                                                {item.phone.value !== '' && <a href={`tel:${item.phone.value}`}>{item.phone.value}</a>} | {item.email.value !== '' && <a href={`mailto:${item.email.value}`}>{item.email.value}</a>}
-                                            </div>
-                                            {/* <div className={`${styles.infoText} ${styles.upperCase}`}>{item.period.value}</div>
-                          <p dangerouslySetInnerHTML={{ __html: item.wysiwyg.value }}>
-
-                          </p> */}
-                                        </div>
-                                    })
+                                                            {item.phone.value !== '' && <a href={`tel:${item.phone.value}`}>{item.phone.value}</a>} | {item.email.value !== '' && <a href={`mailto:${item.email.value}`}>{item.email.value}</a>}
+                                                        </div>
+                                                    </div>
+                                                })
+                                            }
+                                        </>
+                                        : 'References available upon request'
                                 }
                             </div>
                         </div>

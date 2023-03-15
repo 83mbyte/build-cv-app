@@ -171,10 +171,17 @@ a:hover {
   width: 95%;
   margin: 0;
 }
+.langLevel {
+  display: flex;
+  padding: 0;
+
+  width: 95%;
+  margin: -10px 0 0 0;
+}
 .levelItem {
   background-color: lightgray;
   flex: 1;
-  height: 3px;
+  height: 4px;
   border: 1px solid gray;
 }
 .levelActive {

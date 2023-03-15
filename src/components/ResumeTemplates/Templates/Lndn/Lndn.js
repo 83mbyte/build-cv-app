@@ -31,7 +31,7 @@ const Lndn = forwardRef(({ data }, ref) => {
             {/* <!-- resume body --> */}
             {/* <!-- Links --> */}
             {
-                websoclinks.isSectionVisible &&
+                websoclinks.isSectionVisible && websoclinks.data.length > 0 &&
                 <div className={styles.sectionContainer} id="links">
                     <div className={styles.sectionBody}>
                         <div className={styles.sectionBodyRow}>
@@ -39,7 +39,17 @@ const Lndn = forwardRef(({ data }, ref) => {
                                 <div className={`${styles.sectionTitle} ${styles.upperCase}`}>Links</div>
                             </div>
                             <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
-                                <div><a href="/">GitHub</a> / <a href="/">GitHub</a></div>
+                                <div>
+                                    {
+                                        websoclinks.data.map((elem, index) => {
+                                            if (index < websoclinks.data.length - 1) {
+                                                return <a href={elem.link.value} target={'_blank'} rel={'noreferrer'} key={`link_${index}`}>{`${elem.label.value},`}</a>
+                                            } else {
+                                                return <a href={elem.link.value} target={'_blank'} rel={'noreferrer'} key={`link_${index}`}>{`${elem.label.value}`}</a>
+                                            }
+                                        })
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,22 +65,42 @@ const Lndn = forwardRef(({ data }, ref) => {
                         <div className={styles.sectionBodyRow}>
                             <div className={`${styles.sectionTitle} ${styles.upperCase}`}>Education</div>
                         </div>
-                        <div className={styles.sectionBodyRow}>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
-                                <div>1989-2000</div>
-                            </div>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
-                                <div className={styles.item}>
-                                    <div className={styles.spaceBetween}>
-                                        <div className={`${styles.itemName} ${styles.bold}`}>SoftWaterUni</div>
-                                        <div className={styles.itemDescr}>Sofia</div>
+                        {
+                            education.data && education.data.length > 0 &&
+                            education.data.map((elem, index) => {
+
+                                return (
+                                    <div className={styles.sectionBodyRow} key={`education_${index}`}>
+                                        <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
+                                            <div>{elem.period.value}</div>
+                                        </div>
+                                        <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
+                                            <div className={styles.item}>
+                                                <div className={styles.spaceBetween}>
+                                                    <div className={`${styles.itemName} ${styles.bold}`}>
+                                                        {
+                                                            elem.degree.value && elem.degree.value !== ''
+                                                                ? <> {`${elem.degree.value}'s degree, ${elem.title.value}`}</>
+                                                                : <> {elem.title.value} </>
+                                                        }
+                                                    </div>
+                                                    {
+                                                        elem.location.value && elem.location.value !== '' &&
+                                                        <div className={styles.itemDescr}>{elem.location.value}</div>
+                                                    }
+                                                </div>
+                                                {
+                                                    elem.wysiwyg.value && elem.wysiwyg.value !== '' &&
+                                                    <div>
+                                                        <p className={styles.itemDescr} dangerouslySetInnerHTML={{ __html: elem.wysiwyg.value }}></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className={styles.itemDescr}>Lorem ipsum aos inczias ai siiw abcu. Fad9 askkna .</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             }
@@ -87,15 +117,20 @@ const Lndn = forwardRef(({ data }, ref) => {
                             </div>
                             <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
                                 <div className={`${styles.sectionBodyRow} ${styles.columnWrap} ${styles.spaceBetween}`}>
-                                    <div className={`${styles.item} ${styles.spaceBetween}`}>
-                                        <div className={`${styles.itemName} ${styles.bold}`}>HTML</div>
-                                        <div className={styles.itemDescr}>Expert Control</div>
-                                    </div>
-                                    <div className={`${styles.item} ${styles.spaceBetween}`}>
-                                        <div className={`${styles.itemName} ${styles.bold}`}>HTML</div>
-                                        <div className={styles.itemDescr}>Expert</div>
-                                    </div>
-
+                                    {
+                                        skills.data && skills.data.length > 0 &&
+                                        skills.data.map((elem, index) => {
+                                            return (
+                                                <div className={`${styles.item} ${styles.spaceBetween}`} key={`skill_${index}`}>
+                                                    <div className={`${styles.itemName} ${styles.bold}`}>{elem.skill.value}</div>
+                                                    {
+                                                        !skills.isSwitchChecked &&
+                                                        <div className={styles.itemDescr}>{elem.level.value}</div>
+                                                    }
+                                                </div>
+                                            )
+                                        })
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -106,32 +141,29 @@ const Lndn = forwardRef(({ data }, ref) => {
 
             {/* <!-- Courses --> */}
             {
-                courses.isSectionVisible &&
+                courses.isSectionVisible && courses.data.length > 0 &&
                 <div className={styles.sectionContainer} id="courses">
                     <div className={styles.sectionBody}>
                         <div className={styles.sectionBodyRow}>
                             <div className={`${styles.sectionTitle} ${styles.upperCase}`}>Courses</div>
                         </div>
-                        <div className={styles.sectionBodyRow}>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
-                                <div>1989-2000</div>
-                            </div>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
-                                <div className={styles.item}><div className={`${styles.itemName} ${styles.bold}`}>SoftWaterUni</div></div>
-                            </div>
-                        </div>
-                        <div className={styles.sectionBodyRow}>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
-                                <div>1989-2000</div>
-                            </div>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
-                                <div className={styles.item}>
-                                    <div className={`${styles.itemName} ${styles.bold}`}>
-                                        JavaScript Advanced, ReCSoft, Amsterdam
+                        {
+                            courses.data.map((elem, index) => {
+                                return (
+                                    <div className={styles.sectionBodyRow} key={`course_${index}`}>
+                                        <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
+                                            <div>{elem.period.value}</div>
+                                        </div>
+                                        <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
+                                            <div className={styles.item}>
+                                                <div className={`${styles.itemName} ${styles.bold}`}>{elem.course.value}{elem.institution.value !== '' && `, ${elem.institution.value}`}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             }
@@ -139,28 +171,42 @@ const Lndn = forwardRef(({ data }, ref) => {
 
             {/* <!-- Employment history --> */}
             {
-                employmentHistory.isSectionVisible &&
+                employmentHistory.isSectionVisible && employmentHistory.data.length > 0 &&
                 <div className={styles.sectionContainer} id="employment">
                     <div className={styles.sectionBody}>
                         <div className={styles.sectionBodyRow}>
                             <div className={`${styles.sectionTitle} ${styles.upperCase}`}>Employment History</div>
                         </div>
-                        <div className={styles.sectionBodyRow}>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
-                                <div>Jan 20 - Feb 21</div>
-                            </div>
-                            <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
-                                <div className={styles.item}>
-                                    <div className={styles.spaceBetween}>
-                                        <div className={`${styles.itemName} ${styles.bold}`}>Developer Alex Soft Ltd</div>
-                                        <div className={styles.itemDescr}>Holland</div>
+                        {
+                            employmentHistory.data.map((elem, index) => {
+                                return (
+                                    <div className={styles.sectionBodyRow} key={`employmentHistory_${index}`}>
+                                        <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
+                                            <div>{elem.period.value}</div>
+                                        </div>
+                                        <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
+                                            <div className={styles.item}>
+                                                <div className={styles.spaceBetween}>
+                                                    <div className={`${styles.itemName} ${styles.bold}`}>
+                                                        {elem.title.value}{elem.employer.value !== '' && `, ${elem.employer.value}`}
+                                                    </div>
+                                                    {
+                                                        elem.location.value && elem.location.value !== '' &&
+                                                        <div className={styles.itemDescr}>{elem.location.value}</div>
+                                                    }
+                                                </div>
+                                                {
+                                                    elem.wysiwyg.value && elem.wysiwyg.value !== '' &&
+                                                    <div>
+                                                        <p className={styles.itemDescr} dangerouslySetInnerHTML={{ __html: elem.wysiwyg.value }}></p>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className={styles.itemDescr}>Lorem ipsum aos inczias ai siiw abcu. Fad9 askkna .</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             }
@@ -178,14 +224,19 @@ const Lndn = forwardRef(({ data }, ref) => {
                             <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
                                 <div className={`${styles.sectionBodyRow} ${styles.columnWrap} ${styles.spaceBetween}`}>
 
-                                    <div className={`${styles.item} ${styles.spaceBetween}`}>
-                                        <div className={`${styles.itemName} ${styles.bold}`}>Russian</div>
-                                        <div className={styles.itemDescr}>Native Speaker</div>
-                                    </div>
-                                    <div className={`${styles.item} ${styles.spaceBetween}`}>
-                                        <div className={`${styles.itemName} ${styles.bold}`}>English</div>
-
-                                    </div>
+                                    {
+                                        languages.data.map((elem, index) => {
+                                            return (
+                                                <div className={`${styles.item} ${styles.spaceBetween}`} key={`language_${index}`}>
+                                                    <div className={`${styles.itemName} ${styles.bold}`}>{elem.language.value}</div>
+                                                    {
+                                                        elem.level.value !== 'Select level' && elem.level.value !== '' &&
+                                                        <div className={styles.itemDescr}>{elem.level.value}</div>
+                                                    }
+                                                </div>
+                                            )
+                                        })
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -204,22 +255,57 @@ const Lndn = forwardRef(({ data }, ref) => {
                                 <div className={`${styles.sectionTitle} ${styles.upperCase}`}>References</div>
                             </div>
                             <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
-                                <div className={styles.item}>
-                                    <div className={`${styles.itemName} ${styles.bold}`}>Alx from Google.com Ltd</div>
-                                    <div className={`${styles.sectionBodyRow} ${styles.alignCenter}`}>
-                                        <div>
-                                            Phone: <a href="/" className={styles.phone}>2324234</a>
-                                        </div>
-                                        <div className={styles.shortSeparator}></div>
-                                        <div>Email: <a href="/">exa@ma.com</a></div>
-                                    </div>
-                                </div>
+                                {
+                                    !references.isSwitchChecked
+                                        ? <>
+                                            {
+                                                references.data.length > 0 &&
+                                                references.data.map((elem, index) => {
+                                                    return <div className={styles.item}>
+                                                        <div className={`${styles.itemName} ${styles.bold}`}>Alx from Google.com Ltd</div>
+                                                        <div className={`${styles.sectionBodyRow} ${styles.alignCenter}`}>
+                                                            <div>
+                                                                Phone: <a href="/" className={styles.phone}>2324234</a>
+                                                            </div>
+                                                            <div className={styles.shortSeparator}></div>
+                                                            <div>Email: <a href="/">exa@ma.com</a></div>
+                                                        </div>
+                                                    </div>
+                                                })
+                                            }
+                                        </>
+                                        : <>
+                                            <div className={styles.item}>
+                                                <div className={styles.itemDescr}>References available upon request</div>
+                                            </div>
+                                        </>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
             }
             {/* <!-- References end --> */}
+
+            {/* Hobbies */}
+            {
+                hobbies.isSectionVisible && hobbies.data.value !== '' &&
+                <div className={styles.sectionContainer} id="hobbies">
+                    <div className={styles.sectionBody}>
+                        <div className={styles.sectionBodyRow}>
+                            <div className={`${styles.sectionBodyColumn} ${styles.column_25}`}>
+                                <div className={`${styles.sectionTitle} ${styles.upperCase}`}>Hobbies</div>
+                            </div>
+                            <div className={`${styles.sectionBodyColumn} ${styles.column_75}`}>
+                                <div>
+                                    {hobbies.data.value}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            {/* Hobbies end */}
 
             {/* <!-- resume body end--> */}
         </div >

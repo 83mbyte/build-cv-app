@@ -1,6 +1,6 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { MdStar } from "react-icons/md";
+// import { MdStar } from "react-icons/md";
 
 const StarRating = ({ level }) => {
     let point;
@@ -30,8 +30,8 @@ const StarRating = ({ level }) => {
             break;
     }
     return (
-        // <span style={{ fontSize: '10px', letterSpacing: '7px' }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(point) }}></span>
-        <span><MdStar /></span>
+        <span style={{ fontSize: '10px', letterSpacing: '7px' }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(point) }}></span>
+        // <span><MdStar /></span>
     );
 };
 

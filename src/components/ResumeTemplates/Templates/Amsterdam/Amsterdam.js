@@ -269,32 +269,36 @@ const Amsterdam = forwardRef(({ data }, ref) => {
                             <div className={styles.sectionTitle}>references</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    references.data && references.data.length > 0 &&
-                                    references.data.map((elem, index) => {
-                                        return (
-                                            <div className={styles.item} key={`reference_${index}`}>
-                                                <div className={styles.itemRow}>
-                                                    <div className={styles.firstColumn}>
-                                                        <div className={styles.bold}>{elem.referentName.value} from {elem.company.value}</div>
-                                                        {
-                                                            elem.email.value !== '' &&
-                                                            <div className={styles.infoText}>
-                                                                email: <a href={`mailto:${elem.email.value}`}>{elem.email.value}</a>
+                                    !references.isSwitchChecked
+                                        ? <>
+                                            {
+                                                references.data && references.data.length > 0 &&
+                                                references.data.map((elem, index) => {
+                                                    return (
+                                                        <div className={styles.item} key={`reference_${index}`}>
+                                                            <div className={styles.itemRow}>
+                                                                <div className={styles.firstColumn}>
+                                                                    <div className={styles.bold}>{elem.referentName.value} from {elem.company.value}</div>
+                                                                    {
+                                                                        elem.email.value !== '' &&
+                                                                        <div className={styles.infoText}>
+                                                                            email: <a href={`mailto:${elem.email.value}`}>{elem.email.value}</a>
+                                                                        </div>
+                                                                    }
+                                                                    {
+                                                                        elem.phone.value !== '' &&
+                                                                        <div className={styles.infoText}>
+                                                                            phone: <a href={`tel:${elem.phone.value}`}>{elem.phone.value}</a>
+                                                                        </div>
+                                                                    }
+                                                                </div>
                                                             </div>
-                                                        }
-                                                        {
-                                                            elem.phone.value !== '' &&
-                                                            <div className={styles.infoText}>
-                                                                phone: <a href={`tel:${elem.phone.value}`}>{elem.phone.value}</a>
-                                                            </div>
-                                                        }
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        )
-                                    })
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </>
+                                        : 'References available upon request'
                                 }
                             </div>
                         </div>

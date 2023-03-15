@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, Fragment } from 'react';
 import styles from './Vivien.module.css';
 
 const Vivien = forwardRef(({ data }, ref) => {
@@ -57,6 +57,12 @@ const Vivien = forwardRef(({ data }, ref) => {
                                         return (
                                             <div className={styles.item} key={`skill_${index}`}>
                                                 <div>{el.skill.value}</div>
+                                                {
+                                                    !skills.isSwitchChecked &&
+                                                    <div className={styles.levelContainer}>
+                                                        <SkillLevels level={el.level.value} />
+                                                    </div>
+                                                }
                                                 {/* <div className={styles.levelContainer}>
                                                     <div className={`${styles.levelItem} ${styles.levelActive}`}></div>
                                                     <div className={`${styles.levelItem} ${styles.levelActive}`}></div>
@@ -85,13 +91,12 @@ const Vivien = forwardRef(({ data }, ref) => {
                                         return (
                                             <div className={styles.item} key={`language_${index}`}>
                                                 <div>{el.language.value}</div>
-                                                {/* <div className={styles.levelContainer}>
-                                                    <div className={`${styles.levelItem} ${styles.levelActive}`}></div>
-                                                    <div className={`${styles.levelItem} ${styles.levelActive}`}></div>
-                                                    <div className={`${styles.levelItem} ${styles.levelActive}`}></div>
-                                                    <div className={`${styles.levelItem} ${styles.levelActive}`}></div>
-                                                    <div className={`${styles.levelItem} ${styles.levelActive}`}></div>
-                                                </div> */}
+                                                <div className={styles.langLevel}>
+                                                    {
+                                                        el.level.value !== '' && el.level.value !== 'Select level' &&
+                                                        <div className={styles.infoText}>{`/${el.level.value}/`}</div>
+                                                    }
+                                                </div>
                                             </div>
                                         )
                                     })
@@ -217,10 +222,10 @@ const Vivien = forwardRef(({ data }, ref) => {
                                                     {
                                                         (el.certificate.value !== '') &&
                                                         <>
-                                                            <div>&nbsp;-&nbsp;</div>
+                                                            <div>,</div>
                                                             <div className={styles.infoText}>
                                                                 <a href={el.certificate.value} target="_blank"
-                                                                    rel="noreferrer" >link to certificate</a>
+                                                                    rel="noreferrer" >Link to certificate</a>
                                                             </div>
                                                         </>
                                                     }
@@ -270,31 +275,40 @@ const Vivien = forwardRef(({ data }, ref) => {
                             <div className={`${styles.sectionTitle} ${styles.bold}`}>References</div>
                             <div className={styles.sectionBody}>
                                 {
-                                    references.data.length > 0 &&
-                                    references.data.map((el, index) => {
-                                        return (
-                                            <div className={styles.item} key={`reference_${index}`}>
-                                                <div>{`${el.referentName.value} from ${el.company.value}`}</div>
-                                                <div className={styles.itemRow}>
-                                                    {
-                                                        el.phone.value !== ''
-                                                        &&
-                                                        <div>
-                                                            <a href={`tel:${el.phone.value}`} className={styles.phone}>{el.phone.value}</a>
+                                    !references.isSwitchChecked
+                                        ?
+                                        <>
+                                            {
+                                                references.data.length > 0 &&
+                                                references.data.map((el, index) => {
+                                                    return (
+                                                        <div className={styles.item} key={`reference_${index}`}>
+                                                            <div>{`${el.referentName.value} from ${el.company.value}`}</div>
+                                                            <div className={styles.itemRow}>
+                                                                {
+                                                                    el.phone.value !== ''
+                                                                    &&
+                                                                    <div>
+                                                                        <a href={`tel:${el.phone.value}`} className={styles.phone}>{el.phone.value}</a>
+                                                                    </div>
+                                                                }
+                                                                {
+                                                                    el.phone.value !== '' && el.email.value !== ''
+                                                                    &&
+                                                                    <div>-</div>
+                                                                }
+                                                                <div>
+                                                                    <a href={`mailto:${el.email.value}`}>{el.email.value}</a>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    }
-                                                    {
-                                                        el.phone.value !== '' && el.email.value !== ''
-                                                        &&
-                                                        <div>-</div>
-                                                    }
-                                                    <div>
-                                                        <a href={`mailto:${el.email.value}`}>{el.email.value}</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    })
+                                                    )
+                                                })
+                                            }
+                                        </>
+                                        : <div className={styles.item}>
+                                            <div className={styles.infoText}>References available upon request</div>
+                                        </div>
                                 }
                             </div>
                         </div>
@@ -310,3 +324,42 @@ const Vivien = forwardRef(({ data }, ref) => {
 });
 
 export default Vivien;
+
+const SkillLevels = ({ level }) => {
+    let val = 3;
+    switch (level) {
+        case 'Novice':
+            val = 1;
+            break;
+        case 'Beginner':
+            val = 2;
+            break;
+        case 'Skillful':
+            val = 3;
+            break;
+        case 'Experienced':
+            val = 4;
+            break;
+        case 'Expert':
+            val = 5;
+            break;
+        default:
+            val = 3;
+    }
+    let arr = [];
+    for (let x = 0; x < val; x++) {
+        arr.push(<div className={`${styles.levelItem}  ${styles.levelActive}`}></div>)
+    }
+    for (let x = 0; x < 5 - val; x++) {
+        arr.push(<div className={`${styles.levelItem}`}></div>)
+    }
+    return (
+        <>
+            {
+                arr.map((item, index) => {
+                    return <Fragment key={index}>{item}</Fragment>
+                })
+            }
+        </>
+    )
+}
