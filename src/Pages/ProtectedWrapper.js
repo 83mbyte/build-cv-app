@@ -10,14 +10,14 @@ const ProtectedWrapper = ({ children }) => {
 
     if (!loggedUser) {
         const currentDate = new Date().getTime();
-        const sessionString = sessionStorage.getItem('firebase:authUser:AIzaSyBiwGLTM7B9LxKqjPRjiA_CcPTyr8uiFzE:[DEFAULT]');
+        const sessionString = sessionStorage.getItem(`firebase:authUser:${process.env.REACT_APP_FIREBASE_WEB_API_KEY}:[DEFAULT]`);
         if (sessionString) {
             const sessionObj = JSON.parse(sessionString);
             if (sessionObj.stsTokenManager.expirationTime > currentDate) {
                 dispatch(addLoggedUser({ userId: sessionObj.uid, accessToken: sessionObj.stsTokenManager.accessToken, email: sessionObj.email }))
 
             } else {
-                sessionStorage.removeItem('firebase:authUser:AIzaSyBiwGLTM7B9LxKqjPRjiA_CcPTyr8uiFzE:[DEFAULT]')
+                sessionStorage.removeItem(`firebase:authUser:${process.env.REACT_APP_FIREBASE_WEB_API_KEY}:[DEFAULT]`)
                 return <Navigate to="/login" />
             }
         } else {

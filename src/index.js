@@ -69,7 +69,6 @@ const theme = extendTheme({
     }
   }
 });
-//console.log(localStorage.getItem('firebase:authUser:AIzaSyBiwGLTM7B9LxKqjPRjiA_CcPTyr8uiFzE:[DEFAULT]'));
 
 
 const router = createBrowserRouter([
