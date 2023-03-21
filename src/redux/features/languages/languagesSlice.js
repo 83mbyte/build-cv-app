@@ -52,7 +52,7 @@ export const languagesSlice = createSlice({
 
                 } else {
                     state.data = [];
-                    state.isSectionVisible = false;
+                    state.isSectionVisible = true;
                 }
             })
             .addCase(fetchLanguages.rejected, (state, action) => {

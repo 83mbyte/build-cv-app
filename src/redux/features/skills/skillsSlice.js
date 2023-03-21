@@ -65,7 +65,8 @@ export const skillsSlice = createSlice({
                     state.isSwitchChecked = action.payload.__serv.isSwitchChecked;
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
-                    state.data = []
+                    state.data = [];
+                    state.isSectionVisible = true;
                 }
             })
             .addCase(fetchSkills.rejected, (state, action) => {

@@ -74,7 +74,7 @@ export const educationSlice = createSlice({
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
                     state.data = [];
-                    state.isSectionVisible = false;
+                    state.isSectionVisible = true;
                 }
             })
             .addCase(fetchEducation.rejected, (state, action) => {

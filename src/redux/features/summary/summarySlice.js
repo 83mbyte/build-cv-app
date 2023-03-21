@@ -31,7 +31,7 @@ export const summarySlice = createSlice({
                     state.data = action.payload.data;
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
-                    state.isSectionVisible = false;
+                    state.isSectionVisible = true;
                 }
             })
             .addCase(fetchSummary.rejected, (state, action) => {

@@ -36,7 +36,7 @@ export const hobbiesSlice = createSlice({
                     }
                 } else {
                     state.data = { ...DATA_TEMPLATE_OBJECT };
-                    state.isSectionVisible = false;
+                    state.isSectionVisible = true;
                 }
             })
             .addCase(fetchHobbies.rejected, (state, action) => {

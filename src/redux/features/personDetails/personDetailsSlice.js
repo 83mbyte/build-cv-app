@@ -10,7 +10,7 @@ export const personDetailsSlice = createSlice({
                     label: "Wanted Job Title",
                     path: "personDetails/position/jobTitle",
                     type: "text",
-                    value: "dev slice"
+                    value: "..."
                 }
             },
             name: {
@@ -26,7 +26,7 @@ export const personDetailsSlice = createSlice({
                     path: "personDetails/name/lastName",
                     required: true,
                     type: "text",
-                    value: "slice"
+                    value: ""
                 }
             },
             address: {

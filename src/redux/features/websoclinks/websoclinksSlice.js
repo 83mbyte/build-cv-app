@@ -69,7 +69,7 @@ export const websoclinksSlice = createSlice({
                     state.isSectionVisible = action.payload.__serv.isSectionVisible;
                 } else {
                     state.data = [];
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
+                    state.isSectionVisible = true;
                 }
             })
             .addCase(fetchWebSocLinks.rejected, (state, action) => {

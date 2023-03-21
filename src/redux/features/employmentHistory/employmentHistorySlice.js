@@ -71,7 +71,7 @@ export const employmentHistorySlice = createSlice({
 
                 } else {
                     state.data = [];
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
+                    state.isSectionVisible = true;
                 }
             })
             .addCase(fetchEmploymentHistory.rejected, (state, action) => {
