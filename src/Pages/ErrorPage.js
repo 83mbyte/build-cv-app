@@ -1,5 +1,5 @@
-import { Box, Heading, Slide, Text, VStack } from "@chakra-ui/react";
-import { useRouteError } from "react-router-dom";
+import { Box, Heading, Slide, Text, VStack, Button } from "@chakra-ui/react";
+import { useRouteError, Link as RouterLink } from "react-router-dom";
 
 export default function ErrorPage() {
     const error = useRouteError();
@@ -28,6 +28,9 @@ export default function ErrorPage() {
                                 {error.error.message}
                             </Text>
                         }
+                        <Box>
+                            <Button variant={'link'} colorScheme={'teal'} fontSize={'xs'} mx={0} px={0} as={RouterLink} to="/" >Back to Index</Button>
+                        </Box>
                     </VStack>
                 </VStack>
             </Box>
