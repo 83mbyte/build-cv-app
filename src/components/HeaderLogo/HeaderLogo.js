@@ -10,7 +10,7 @@ const HeaderLogo = () => {
         <HStack color={'gray.600'} p={0} spacing={1} align={'flex-end'}>
             <PencilIcon />
             <Heading fontSize={'sm'} p={0} className={styles.message} >
-                IntroduceMe <span>App</span>
+                BuildCV <span>App</span>
             </Heading>
         </HStack>
 

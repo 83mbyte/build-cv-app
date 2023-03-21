@@ -16,7 +16,7 @@ const FooterContainer = () => {
                 fontSize={'xs'}
             >
                 <FooterColumn >
-                    <Text>IntroduceMe</Text>
+                    <Text>BuildCV.app</Text>
                 </FooterColumn>
                 <FooterColumn>
                     <Text >&copy; 2023. All rights reserved.</Text>
