@@ -7,7 +7,7 @@ import styles from './Dublin.module.css';
 const Dublin = forwardRef(({ data }, ref) => {
     const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image }
         = data;
-    console.log(hobbies)
+
     return (
         <div className={styles.resumeContainer} name='dublin' ref={ref}>
             <div className={styles.detailsContainer}>
@@ -42,7 +42,7 @@ const Dublin = forwardRef(({ data }, ref) => {
                             }
 
                             {
-                                personDetails.address.country.value != '' &&
+                                personDetails.address.country.value !== '' &&
                                 <div className={styles.item}><div>{personDetails.address.country.value}</div></div>
                             }
                             {
