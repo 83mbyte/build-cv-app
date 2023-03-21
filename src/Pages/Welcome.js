@@ -8,7 +8,7 @@ const Welcome = () => {
     const navigate = useNavigate();
 
     const currentDate = new Date().getTime();
-    const sessionString = sessionStorage.getItem('firebase:authUser:AIzaSyBiwGLTM7B9LxKqjPRjiA_CcPTyr8uiFzE:[DEFAULT]');
+    const sessionString = sessionStorage.getItem('firebase:authUser:AIzaSyCjVszZ0A5IyvG2cmBNX0-uONLzzRYMWLU:[DEFAULT]');
 
     if (sessionString
         &&
@@ -44,7 +44,7 @@ const Welcome = () => {
                     bg={['', 'white']}
                 >
                     <VStack spacing={3} w='full' align={['flex-start', 'center']}  >
-                        <Heading as='h2'>Welcome To IntroduceMe App</Heading>
+                        <Heading as='h2'>Welcome To BuidCV App</Heading>
                         <Box>
                             {AccessAreaButtons}
                         </Box>
