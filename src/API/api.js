@@ -3,11 +3,14 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, se
 import { getDatabase, ref, get, set } from "firebase/database";
 
 export const fetchAPI = {
-    BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
-    ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
+
+    // BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
+    // ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
+    BASEURL: `https://buildcv-app-cd890-default-rtdb.firebaseio.com`,
+    ROOTUSERURL: `https://buildcv-app-cd890-default-rtdb.firebaseio.com/prvt/users`,
 
     async putUserImageData(data, user) {
-        console.log('set data to DB')
+
         return await fetch(`${this.BASEURL}/prvt/users/${user.userId}/image/value.json?auth=${user.accessToken}`,
             {
                 headers: {
@@ -162,19 +165,19 @@ const dbAPI = {
                 set(ref(db, 'prvt/users/' + userId), {
                     courses: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                         },
                         data: []
                     },
                     education: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                         },
                         data: []
                     },
                     employmentHistory: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                         },
                     },
                     personDetails: {
@@ -189,7 +192,7 @@ const dbAPI = {
                     },
                     skills: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                             isSwitchChecked: false
                         }
                     },
@@ -205,23 +208,23 @@ const dbAPI = {
                     },
                     websoclinks: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                         },
                     },
                     languages: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                         },
                     },
                     references: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                             isSwitchChecked: false
                         }
                     },
                     hobbies: {
                         __serv: {
-                            isSectionVisible: false,
+                            isSectionVisible: true,
                         }
                     },
                     image: {
