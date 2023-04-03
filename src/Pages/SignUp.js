@@ -1,135 +1,84 @@
-import { Alert, AlertIcon, Box, Button, Heading, HStack, ScaleFade, VStack, Text } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Box, Button, Heading, HStack, VStack, Text, } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import FooterContainer from '../components/Footer/FooterContainer';
 import InputCustom from '../components/FormElements/InputCustom';
-import { authSignUp, clearAuthError } from '../redux/features/utility/utilitySlice';
-import { auth } from '../__firebase/firebaseConf';
+import { clearAuthError, signUpThunk } from '../redux/features/utility/utilitySlice';
+import AlertScaleFade from '../components/Alert/AlertScaleFade';
+import WhiteboxCenter from '../components/Wrappers/WhiteboxCenter';
+
 
 const SignUp = () => {
-    const [formValue, setFormValue] = useState({ email: '', pass: '', name: '' });
-    const [isVisible, setIsVisible] = useState(false);
-
     const sizeBreakPoints = ['sm', 'md'];
-    const dispatch = useDispatch();
+
+    // Remove data (email,pass) from inputsValue
+    const [inputsValue, setInputsValue] = useState({ firstName: '', lastName: '', email: process.env.REACT_APP_TEMP_EMAIL, pass: process.env.REACT_APP_TEMP_PASS });
+    // Remove data (email,pass) from inputsValue
 
     const status = useSelector(state => state.utility.auth.status);
     const error = useSelector(state => state.utility.auth.error);
     const successMsg = useSelector(state => state.utility.auth.successMsg);
+    const dispatch = useDispatch();
 
-    const handleInputChange = (path, data) => {
+    const clearError = () => {
+        dispatch(clearAuthError());
+    }
+    const applyClickHandler = () => {
+        if (inputsValue.email !== '' && inputsValue.pass !== '') {
+            dispatch(signUpThunk({ email: inputsValue.email, pass: inputsValue.pass, firstName: inputsValue.firstName, lastName: inputsValue.lastName }))
+        } else {
+            console.log('data not provided')
+        }
+    }
+
+    const onChangeInput = (name, value) => {
         if (error !== '' || successMsg !== '') {
-            dispatch(clearAuthError())
+            clearError();
         };
-        setFormValue({
-            ...formValue,
-            [path]: data
+        setInputsValue({
+            ...inputsValue,
+            [name]: value
         });
     }
 
-    const regBtnHandler = async () => {
-
-        if (formValue.email !== '' && formValue.pass !== '' && formValue.pass.length >= 6) {
-
-            dispatch(authSignUp({
-                email: formValue.email,
-                password: formValue.pass,
-                auth
-            }))
-        }
-    }
-    const inputsArr = [
-        {
-            label: 'Full Name',
-            name: 'name',
-        },
-        {
-            label: 'Email',
-            name: 'email',
-        },
-        {
-            label: 'Password',
-            name: 'pass',
-        }
-
-    ]
-
-    useEffect(() => {
-        if (!isVisible) {
-            setIsVisible(true)
-        }
-        return () => {
-            if (isVisible) {
-                setIsVisible(false)
-            }
-        }
-    }, [isVisible]);
     return (
-        <VStack h="100vh" minH={'300px'} justifyContent={'space-between'} >
-            <Box flex={1} alignItems={'center'} display={'flex'} w={'full'} justifyContent={'center'}>
-                <Box w={['full', 'full', 'lg']}>
-                    <ScaleFade in={isVisible}
-                        initialScale={0.5}
-                        reverse={true}
-                    >
-                        <Box
-                            p={[8, 10]}
-                            mx={{ base: '5px', md: 'auto' }}
-                            border={['none', '1px']}
-                            borderColor={['', 'gray.200']}
-                            borderRadius={10}
-                            bg={['', 'white']}
-                            display="flex"
-                            flex={1}
-                        >
-                            <VStack spacing={[3, 5]} w='full' align={['flex-start', 'center']}>
-                                <VStack align={['flex-start', 'center']} w='full'>
-                                    <Heading as='h2' >SignUp</Heading>
-                                </VStack>
+        <WhiteboxCenter >
+            <VStack spacing={[3, 5]} w='full' align={['flex-start', 'center']}>
+                <VStack align={['flex-start', 'center']} w='full'>
+                    <Heading as='h2' >SignUp</Heading>
+                </VStack>
+                <Box w='full'>
 
-                                {
-                                    inputsArr.map((item, index) => {
-                                        return <InputCustom labelText={item.label} defValue={formValue[item.name]} handleInputChange={handleInputChange} key={index} path={item.name} disabled={successMsg !== ''} />
-                                    })
-                                }
-                                {
-                                    (error !== '' || successMsg !== '')
-                                    && <Box w={'full'} p={2}  >
-                                        <Alert status={error !== '' ? 'error' : 'success'} fontSize={'sm'} rounded={sizeBreakPoints} >
-                                            <AlertIcon />
-                                            {error !== '' ? error : successMsg}
-                                        </Alert>
-                                    </Box>
-                                }
+                    <InputCustom labelText='First Name' name={'firstName'} inputValue={inputsValue.firstName} onChangeCallback={onChangeInput} disabled={successMsg !== ''} />
+                    <InputCustom labelText='Last Name' name={'lastName'} inputValue={inputsValue.lastName} onChangeCallback={onChangeInput} disabled={successMsg !== ''} />
 
-                                <Box p={2} w='full'>
-                                    <Button
-                                        w='full'
-                                        colorScheme={'teal'}
-                                        size={sizeBreakPoints}
-                                        rounded={sizeBreakPoints}
-                                        onClick={regBtnHandler}
-                                        isDisabled={formValue.pass.length < 6 || successMsg !== '' || error !== ''}
-                                        isLoading={status === 'loading'}
-                                    >
-                                        Apply
-                                    </Button>
-                                </Box>2
-                                <HStack spacing={'-1'} fontSize={'xs'} alignItems={'baseline'}>
-                                    <Text>Already registered? Please login</Text>
-                                    <Button variant={'link'} colorScheme={'teal'} fontSize={'xs'} mx={0} px={0} as={RouterLink} to="/login" >here</Button>
-                                </HStack>
-                            </VStack>
-                        </Box>
-                    </ScaleFade>
+                    <InputCustom labelText='Email' required={true} name={'email'} inputValue={inputsValue.email} onChangeCallback={onChangeInput} disabled={successMsg !== ''} />
+                    <InputCustom labelText='Password' type={'password'} name={'pass'} required={true} inputValue={inputsValue.pass} onChangeCallback={onChangeInput} errorMessage={'Must be at least 6 characters long.'} disabled={successMsg !== ''} />
                 </Box>
-            </Box>
-            <Box w={'full'}>
-                <FooterContainer />
+                {
+                    (error !== '' || successMsg !== '')
+                    && <AlertScaleFade message={error !== '' ? error : successMsg} type={error !== '' ? 'error' : 'success'} />
+                }
+                <Box p={2} w='full'>
+                    <Button
+                        w={'full'}
+                        colorScheme={'teal'}
+                        size={sizeBreakPoints}
+                        rounded={sizeBreakPoints}
+                        isLoading={status === 'loading'}
+                        onClick={applyClickHandler}
+                        isDisabled={successMsg !== '' || error !== '' || inputsValue.pass.length < 6}
 
-            </Box>
-        </VStack>
+                    >Apply</Button>
+                    <HStack spacing={'-1'} fontSize={'xs'} alignItems={'baseline'} justifyContent={'center'}>
+                        <Text>Already registered? Please login</Text>
+                        {/* <Button variant={'link'} colorScheme={'teal'} fontSize={'xs'} mx={0} px={0} onClick={toLogin} >here</Button> */}
+                        <Button variant={'link'} colorScheme={'teal'} fontSize={'xs'} mx={0} px={0} as={RouterLink} to="/login" onClick={clearError}>here</Button>
+                    </HStack>
+                </Box>
+
+            </VStack>
+        </WhiteboxCenter>
     );
 };
 

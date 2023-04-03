@@ -22,7 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-src/__test_temp
-db.json
-src/__firebase
 .env
+src/_firebase

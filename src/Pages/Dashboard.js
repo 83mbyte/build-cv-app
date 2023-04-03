@@ -1,62 +1,72 @@
-import React from 'react';
-import { Container, Portal, VStack, Box } from '@chakra-ui/react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import SpinnerCustom from '../components/Spinner/SpinnerCustom';
-import HeaderContainer from '../Sections/HeaderContainer';
-import FormEditPage from './FormEditPage';
-import ModalAnimated from '../components/ModalAnimated/ModalAnimated';
-import { AnimatePresence } from 'framer-motion';
-import { modalIsOpenToggle } from '../redux/features/utility/utilitySlice';
-import FooterContainer from '../components/Footer/FooterContainer';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import LayoutDashboard from '../components/Layouts/LayoutDashboard';
+import { Navigate } from 'react-router-dom';
+import PersonDetails from '../components/Sections/PersonDetails';
+import Summary from '../components/Sections/Summary';
+import Education from '../components/Sections/Education';
+import Links from '../components/Sections/Links';
+import Skills from '../components/Sections/Skills';
+import Courses from '../components/Sections/Courses';
+import History from '../components/Sections/History';
+import Languages from '../components/Sections/Languages';
+import References from '../components/Sections/References';
+import Hobbies from '../components/Sections/Hobbies';
+import DividerCustom from '../components/Divider/DividerCustom';
 
 const Dashboard = () => {
-
-    const loggedUser = useSelector(state => state.utility.auth.data);
-    const isModalOpen = useSelector(state => state.utility.modalWindow.isOpen);
-
-    const dispatch = useDispatch();
-    const modalToggler = () => {
-        dispatch(modalIsOpenToggle())
-    }
-
+    const loggedUser = useSelector(state => state.utility.auth.data)
     return (
         <>
             {
                 loggedUser
-                    ? <>
-                        <VStack minH={'100vh'} justifyContent={'space-between'} spacing={0} >
-                            <Box bg='orange' w={'full'}>
-                                <HeaderContainer user={loggedUser} />
-                            </Box>
-                            <Box w={'full'} pt={'55px'}>
-                                <Container as='main' bg={'white'}
-                                    border={['none', '1px']}
-                                    borderColor={['', 'gray.200']}
-                                    borderRadius={10}
-                                    maxW={'2xl'}
-                                    p={0} my={0}
-                                >
-                                    <FormEditPage user={loggedUser} />
-                                </Container>
-                            </Box>
-                            <Box w={'full'} py={1} >
-                                <FooterContainer />
-                            </Box>
-                        </VStack>
-                        <Portal>
-                            <AnimatePresence exitBeforeEnter={true} >
-                                {
-                                    isModalOpen && <ModalAnimated handleClose={modalToggler} />
-                                }
-                            </AnimatePresence>
-                        </Portal>
+                    ?
+                    <LayoutDashboard loggedUser={loggedUser}>
+                        {/* Personal Details section */}
+                        <PersonDetails />
+                        <DividerCustom />
 
+                        {/* Professional Summary section */}
+                        <Summary loggedUser={loggedUser} />
+                        <DividerCustom />
 
-                    </>
-                    : <SpinnerCustom />
+                        {/* Education section */}
+                        <Education loggedUser={loggedUser} />
+                        <DividerCustom />
+
+                        {/* Links */}
+                        <Links loggedUser={loggedUser} />
+                        <DividerCustom />
+
+                        {/* Skills */}
+                        <Skills loggedUser={loggedUser} />
+                        <DividerCustom />
+
+                        {/* Courses */}
+                        <Courses loggedUser={loggedUser} />
+                        <DividerCustom />
+
+                        {/* Employment History */}
+                        <History loggedUser={loggedUser} />
+                        <DividerCustom />
+
+                        {/* Languages */}
+                        <Languages loggedUser={loggedUser} />
+                        <DividerCustom />
+
+                        {/* References */}
+                        <References loggedUser={loggedUser} />
+                        <DividerCustom />
+
+                        {/* Hobbies */}
+                        <Hobbies loggedUser={loggedUser} />
+
+                    </LayoutDashboard>
+                    : <Navigate to={'/login'} />
             }
         </>
+
     );
 };
 

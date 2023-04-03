@@ -1,71 +1,52 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { dbAPI } from "../../../api/api";
 
-export const summarySlice = createSlice({
+const summarySlice = createSlice({
     name: 'summary',
     initialState: {
-        data: {
-            label: '',
-            path: 'summary',
-            value: ''
-        },
+        data: { value: 'initState' },
+        __serv: { isSectionVisible: true },
         status: 'idle',
         error: ''
     },
     reducers: {
-        loadStateFrom: (state, action) => {
-            state.data = action.payload
-        },
-        summaryStateValueUpdate: (state, action) => {
-            state.data.value = action.payload
+        inputSummaryUpdate: (state, action) => {
+            state.data.value = action.payload.value;
         }
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchSummary.pending, (state, action) => {
+            .addCase(getSummary.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchSummary.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+            .addCase(getSummary.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getSummary.fulfilled, (state, action) => {
+
                 if (action.payload) {
-                    state.data = action.payload.data;
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
-                } else {
-                    state.isSectionVisible = true;
+                    state.status = 'ready';
+
+                    if (action.payload.data) {
+                        state.data = action.payload.data;
+                    }
+                    if (action.payload.__serv) {
+                        state.__serv = { ...action.payload.__serv };
+                    }
                 }
             })
-            .addCase(fetchSummary.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
-            })
-            .addCase(putDataSummary.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
-            })
-            .addCase(putDataSummary.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.data.value = action.payload;
-            })
-
     }
-
 })
 
-export const { loadStateFrom, summaryStateValueUpdate } = summarySlice.actions;
 export default summarySlice.reducer;
+export const { inputSummaryUpdate } = summarySlice.actions;
 
-export const fetchSummary = createAsyncThunk('summary/fetchSummary', async (user) => {
-    const response = await fetchAPI.fethingSubPath('summary', user)
-    if (response && response !== 'Error -- fethingSubPath from api.js') {
-        return response
+export const getSummary = createAsyncThunk('summary/getSummary', async (obj) => {
+    let resp = await dbAPI.getSectionData('summary', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
-});
-
-export const putDataSummary = createAsyncThunk('summary/putDataSummary', async (data) => {
-
-    const response = await fetchAPI.putData(data.user, data.path, data.value);
-    if (response && response.status === 200) {
-        return data.value
-    }
-});
-
+})

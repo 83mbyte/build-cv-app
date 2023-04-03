@@ -1,25 +1,38 @@
+import './App.css';
+import Welcome from './pages/Welcome';
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, } from 'react-router-dom';
+import Login from './pages/Login';
 
 import React from 'react';
+import Layout from './components/Layouts/Layout';
+import SignUp from './pages/SignUp';
+import ErrorPage from './pages/ErrorPage';
+import ProtectedWrapper from './components/Wrappers/ProtectedWrapper';
 
-import { useSelector } from 'react-redux';
-import SpinnerCustom from './components/Spinner/SpinnerCustom';
-import Dashboard from './Pages/Dashboard';
+import Dashboard from './pages/Dashboard';
+
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+
+      <Route path='/' element={<Layout />} errorElement={<ErrorPage />}>
+        <Route index element={<Welcome />} />
+        <Route path='login' element={<Login />} />
+        <Route path='signup' element={<SignUp />} />
+      </Route>
+      <Route path='dashboard' element={<ProtectedWrapper />}  >
+        <Route index element={<Dashboard />} />
+      </Route>
+
+    </>
+
+  )
+)
 
 function App() {
-
-  const loggedUser = useSelector(state => state.utility.auth.data);
-
   return (
-
-    <>
-      {
-        loggedUser ?
-          <>
-            <Dashboard />
-          </>
-          : <SpinnerCustom />
-      }
-    </>
+    <RouterProvider router={router} />
   );
 }
 

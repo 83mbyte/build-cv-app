@@ -5,16 +5,14 @@ import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 
 import Backdrop from './Backdrop';
 import { CloseIcon } from '../Icons/Icon';
-import TemplateSelection from '../ResumeTemplates/TemplateSelection';
-import TemplatePreview from '../ResumeTemplates/TemplatePreview';
 
 const animationType = {
     newspaper: {
         hidden: {
-            transform: "scale(0) rotate(720deg)",
+            transform: "scale(0) rotate(290deg)",
             opacity: 0,
             transition: {
-                delay: 0.3,
+                delay: 0,
             },
         },
         visible: {
@@ -24,9 +22,10 @@ const animationType = {
                 duration: 0.5,
             },
         },
+
         exit: {
-            transform: "scale(0) rotate(-720deg)",
-            opacity: 0,
+            transform: "scale(2) rotate(-90deg)",
+            opacity: 1,
             transition: {
                 duration: 0.3,
             },
@@ -49,10 +48,14 @@ const animationType = {
         },
         exit: {
             y: "100vh",
-            opacity: 0,
+            opacity: 0.5,
+            transition: {
+                duration: 1,
+            },
         },
     }
 }
+
 const ModalAnimated = ({ handleClose }) => {
     const htmlRef = useRef(null);
     const getPdf = () => {
@@ -69,9 +72,10 @@ const ModalAnimated = ({ handleClose }) => {
         console.log('generating document..')
         html2pdf(htmlRef.current, opt);
     }
+
     return (
         <Backdrop>
-            <Box as={motion.div} bg='white' width={'75%'}
+            <Box as={motion.div} bg='white' width={['full', '75%']}
                 onClick={(e) => e.stopPropagation()}
                 p={1}
                 borderRadius={'md'}
@@ -83,43 +87,42 @@ const ModalAnimated = ({ handleClose }) => {
                 flexDirection='column'
             >
                 <VStack w='full' align={'flex-end'} spacing={0} flex={1} bg='white'>
-
                     <HStack pb={'2px'}>
-                        <Box >
+                        {/* <Box >
                             <Button size={'xs'} colorScheme={'teal'} variant={'ghost'} onClick={getPdf}>Get PDF</Button>
-                        </Box>
+                        </Box> */}
                         <Box onClick={handleClose}>
                             <CloseIcon />
                         </Box>
                     </HStack>
-
-                    <Tabs isFitted w='full' flex={1} display="flex" flexDirection={'column'} colorScheme={'teal'} isLazy variant='enclosed-colored' size={'sm'} >
-                        <TabList onClick={(e) => e.stopPropagation()}  >
-                            <Tab fontSize={'sm'} >Templates</Tab>
-                            <Tab fontSize={'sm'} >Preview</Tab>
-                        </TabList>
-
-                        <TabPanels display={'flex'} flex={1} py={1} >
-
-                            <TabPanel bg='white' w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} >
-                                <Box overflowY='scroll' h="lg" >
-                                    <TemplateSelection />
-                                </Box>
-                            </TabPanel>
-                            <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0}>
-                                <Box overflowY='scroll' h="lg">
-                                    <TemplatePreview ref={htmlRef} />
-                                </Box>
-                            </TabPanel>
-
-                        </TabPanels>
-                    </Tabs>
-
                 </VStack>
-            </Box>
+                <Tabs isFitted w='full' flex={1} display="flex" flexDirection={'column'} colorScheme={'teal'} isLazy variant='enclosed-colored' size={'sm'} >
+                    <TabList onClick={(e) => e.stopPropagation()}  >
+                        <Tab fontSize={'sm'} >Templates</Tab>
+                        <Tab fontSize={'sm'} >Preview</Tab>
+                    </TabList>
 
+                    <TabPanels display={'flex'} flex={1} py={1} >
+
+                        <TabPanel bg='white' w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} >
+                            <Box overflowY='scroll' h="lg" >
+                                {/* <TemplateSelection /> */}
+                                <Box p={10}>Under construction..</Box>
+                            </Box>
+                        </TabPanel>
+                        <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0}>
+                            <Box overflowY='scroll' h="lg">
+                                <Box p={10}>Under construction..</Box>
+                                {/* <TemplatePreview ref={htmlRef} /> */}
+                            </Box>
+                        </TabPanel>
+
+                    </TabPanels>
+                </Tabs>
+            </Box>
         </Backdrop>
     );
 };
+
 
 export default ModalAnimated;

@@ -1,57 +1,52 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { dbAPI } from "../../../api/api";
 
-const DATA_TEMPLATE_OBJECT = {
-    label: '',
-    path: 'hobbies',
-    value: ''
-}
-
-export const hobbiesSlice = createSlice({
+const hobbiesSlice = createSlice({
     name: 'hobbies',
     initialState: {
-        data: { ...DATA_TEMPLATE_OBJECT },
+        data: { value: '' },
+        __serv: { isSectionVisible: true },
         status: 'idle',
-        error: '',
-        isSectionVisible: false
+        error: ''
     },
     reducers: {
-        hobbiesStateValueUpdate: (state, action) => {
-            state.data.value = action.payload;
+        inputHobbiesUpdate: (state, action) => {
+            state.data.value = action.payload.value;
         }
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchHobbies.pending, (state) => {
-                state.status = 'loading';
+            .addCase(getHobbies.pending, (state) => {
+                state.status = 'loading'
             })
-            .addCase(fetchHobbies.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+            .addCase(getHobbies.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getHobbies.fulfilled, (state, action) => {
+
                 if (action.payload) {
+                    state.status = 'ready';
+
                     if (action.payload.data) {
-                        state.data.value = action.payload.data.value;
+                        state.data = action.payload.data;
                     }
                     if (action.payload.__serv) {
-                        state.isSectionVisible = action.payload.__serv.isSectionVisible;
+                        state.__serv = { ...action.payload.__serv };
                     }
-                } else {
-                    state.data = { ...DATA_TEMPLATE_OBJECT };
-                    state.isSectionVisible = true;
                 }
-            })
-            .addCase(fetchHobbies.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
             })
     }
 })
-export const { hobbiesStateValueUpdate } = hobbiesSlice.actions;
+
 export default hobbiesSlice.reducer;
+export const { inputHobbiesUpdate } = hobbiesSlice.actions;
 
-export const fetchHobbies = createAsyncThunk('hobbies/fetchHobbies', async (user) => {
-    const response = await fetchAPI.fethingSubPath('hobbies', user)
-    if (response && response !== 'Error -- fethingSubPath from api.js') {
-        return response
+export const getHobbies = createAsyncThunk('hobbies/getHobbies', async (obj) => {
+    let resp = await dbAPI.getSectionData('hobbies', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
-});
-
+})

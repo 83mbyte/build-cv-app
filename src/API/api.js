@@ -1,138 +1,38 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, setPersistence, browserSessionPersistence, sendEmailVerification } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, sendEmailVerification, setPersistence, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { app } from "../_firebase/firebase";
 
-import { getDatabase, ref, get, set } from "firebase/database";
-
-export const fetchAPI = {
-
-    // BASEURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com`,
-    // ROOTUSERURL: `https://introduce-1b6f8-default-rtdb.firebaseio.com/prvt/users`,
-    BASEURL: `https://buildcv-app-cd890-default-rtdb.firebaseio.com`,
-    ROOTUSERURL: `https://buildcv-app-cd890-default-rtdb.firebaseio.com/prvt/users`,
-
-    async putUserImageData(data, user) {
-
-        return await fetch(`${this.BASEURL}/prvt/users/${user.userId}/image/value.json?auth=${user.accessToken}`,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT',
-                body: JSON.stringify(data)
-
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-                return response;
-            })
-            .catch((error) => alert(`Couldn't fetch verseL ${error}`))
-    },
-
-    async fethingSubPath(path, user) {
-        return await fetch(`${this.ROOTUSERURL}/${user.userId}/${path}.json?auth=${user.accessToken}`)
-            .then((resp) => {
-                if (resp && resp.status === 200) {
-                    return resp.json()
-                }
-                else {
-                    return 'Error -- fethingSubPath from api.js'
-                }
-            }).then(response => response)
-    },
-
-    async putData(user, path, data) {
-        return await fetch(`${this.BASEURL}/prvt/users/${user.userId}/${path}/value.json?auth=${user.accessToken}`,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT',
-                body: JSON.stringify(data)
-
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-                return response;
-            })
-            .catch((error) => alert(`Couldn't fetch verseL ${error}`))
-    },
-    async putDataToWholeSection(user, path, data) {
-        //TODO check the token experationTime before make a request..
-        //TODO check the token experationTime before make a request..
-        //TODO check the token experationTime before make a request..
-        //TODO check the token experationTime before make a request..
-        return await fetch(`${this.ROOTUSERURL}/${user.userId}/${path}.json?auth=${user.accessToken}`,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT',
-                body: JSON.stringify(data)
-
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-                return response;
-            })
-            .catch((error) => alert(`Couldn't fetch verseL ${error}. Please try to reload the page.`))
-    },
-
-
-}
-
+const URLUSERS = 'https://buildcv-app-cd890-default-rtdb.firebaseio.com/prvt/users';
 export const authAPI = {
-    login: (auth, email, password) => {
-        return setPersistence(auth, browserSessionPersistence)
-            .then(() => {
-
-                return signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-                    // Signed in 
-                    if (userCredential.user !== null) {
-                        const user = userCredential.user;
-
-                        if (user.emailVerified) {
-                            dbAPI.checkAndCreateUser(user.uid);
-                            return {
-                                data: { userId: user.uid, email: user.email, accessToken: user.accessToken },
-                                message: 'success'
-                            }
-                        } else {
-                            return { data: null, message: 'not verified' }
-                        }
-                    }
-                    else {
-                        return { data: null, message: 'wrong credentials' }
-                    }
-
-                }).catch((error) => {
-
-                    const errorMessage = error.message;
-                    console.log(errorMessage);
-                    return { data: null, message: 'wrong credentials' }
-
-                })
-            })
-    },
-    signup: (auth, email, password) => {
+    signUp: (email, password, firstName = '', lastName = '') => {
+        const auth = getAuth(app);
         return createUserWithEmailAndPassword(auth, email, password)
+            // .then((userCredential) => {
+            //     // Signed in 
+            //     const user = userCredential.user;
+
+            //     return sendEmailVerification(user)
+            //         .then(() => {
+            //             // Email verification sent!
+            //             // ...
+            //             return { message: 'verify' }
+            //         });
+            //     // ...
+            // })
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-
-                return sendEmailVerification(user)
+                return updateProfile(auth.currentUser, {
+                    displayName: `${firstName} ${lastName}`, photoURL: ""
+                })
                     .then(() => {
-                        // Email verification sent!
-                        // ...
-                        return { message: 'verify' }
-                    });
+                        return sendEmailVerification(user)
+                            .then(() => {
+                                // Email verification sent!
+                                // ...
+                                return { message: 'verify' }
+                            });
+                    })
+
                 // ...
             })
             .catch((error) => {
@@ -142,100 +42,204 @@ export const authAPI = {
             });
 
     },
+    logIn: (email, password) => {
+        const auth = getAuth(app);
+        return setPersistence(auth, browserSessionPersistence)
+            .then(() => {
+                return signInWithEmailAndPassword(auth, email, password)
+                    .then(async (userCredential) => {
+                        if (userCredential.user) {
+                            const user = userCredential.user;
+                            if (user.emailVerified) {
+                                await dbAPI.checkAndCreate(user.uid, user.displayName, user.email);
+                                //console.log('USER::: ', user)
+                                return {
+                                    data: {
+                                        userId: user.uid,
+                                        email: user.email,
+                                        accessToken: user.accessToken
+                                    },
+                                    message: 'success'
+                                }
+                            } else {
+                                return { data: null, message: 'not verified' }
+                            }
 
-    logout: (auth) => {
-        return signOut(auth).then(() => {
-            // Sign-out successful.
-            return { message: 'logged out' }
-        }).catch((error) => {
-            // An error happened.
-            return { message: error.message }
-        });
+                        } else {
+                            return { data: null, message: 'wrong -- credentials' }
+                        }
+                    }).catch((error) => {
+                        const errorMessage = error.message;
+                        console.log(errorMessage);
+                        return { data: null, message: errorMessage.slice(10,) }
+                    })
+            })
     }
 }
 
-const dbAPI = {
 
-    checkAndCreateUser: (userId) => {
-        const db = getDatabase();
-        get(ref(db, `prvt/users/${userId}`)).then((snapshot) => {
+export const dbAPI = {
 
-            if (!snapshot.exists()) {
+    checkAndCreate: async (id, displayName, email) => {
+        let userNameSplitted = displayName.split(' ')
+        let userTemplate = {
+            personDetails: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: {
+                    firstName: userNameSplitted[0] ? userNameSplitted[0] : '',
+                    lastName: userNameSplitted[1] ? userNameSplitted[1] : '',
+                    email: email,
+                    phone: ''
+                }
+            },
+            summary: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: {
+                    value: ''
+                }
+            },
+            education: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: [{
+                    degree: '',
+                    institution: '',
+                    location: '',
+                    period: '',
+                    comments: '',
+                }]
+            },
+            links: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: [{
+                    label: '',
+                    link: ''
+                }]
+            },
+            skills: {
+                __serv: {
+                    isSectionVisible: true,
+                    isSwitchChecked: false,
+                },
+                data: [{
+                    label: '',
+                    level: ''
+                }]
+            },
+            courses: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: [{
+                    course: '',
+                    institution: '',
+                    period: '',
+                    link: ''
+                }]
+            },
+            history: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: [{
+                    job: '',
+                    employer: '',
+                    period: '',
+                    location: '',
+                    comments: ''
+                }]
+            },
+            languages: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: [{
+                    language: '',
+                    level: '',
+                }]
+            },
+            references: {
+                __serv: {
+                    isSectionVisible: true,
+                    isSwitchChecked: false,
+                },
+                data: [{
+                    name: '',
+                    company: '',
+                    phone: '',
+                    email: ''
+                }]
+            },
+            hobbies: {
+                __serv: {
+                    isSectionVisible: true,
+                },
+                data: {
+                    value: ''
+                }
+            },
+        }
+        let resp = await fetch(`${URLUSERS}/${id}.json`)
+            .then((resp) => {
+                if (resp && resp.status === 200) {
+                    return resp.json();
+                } else {
+                    throw new Error(`HTTP error: ${resp.status}`)
+                }
+            })
+            .catch((error) => (console.log(`Couldn't fetch data.. ${error}`)));
 
-                set(ref(db, 'prvt/users/' + userId), {
-                    courses: {
-                        __serv: {
-                            isSectionVisible: true,
-                        },
-                        data: []
-                    },
-                    education: {
-                        __serv: {
-                            isSectionVisible: true,
-                        },
-                        data: []
-                    },
-                    employmentHistory: {
-                        __serv: {
-                            isSectionVisible: true,
-                        },
-                    },
-                    personDetails: {
+        if (!resp) {
+            return await fetch(`${URLUSERS}/${id}.json`,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userTemplate)
+                })
+        } else {
+            console.log('Done. User exists.')
+        }
+    },
+    getSectionData: async (section, id) => {
+        let resp = await getData(`${URLUSERS}/${id}/${section}.json`);
+        return resp;
+    },
+    putDataToSection: async (user, section, data) => {
+        let resp = await putData(`${URLUSERS}/${user}/${section}.json`, data);
+        return resp;
+    }
 
-                        __serv: {
-                            isSectionVisible: true,
-                        },
-                        data: {
+}
 
-                        }
+const getData = async (url) => {
+    return await fetch(`${url}`)
+        .then((resp) => {
 
-                    },
-                    skills: {
-                        __serv: {
-                            isSectionVisible: true,
-                            isSwitchChecked: false
-                        }
-                    },
-                    summary: {
-                        __serv: {
-                            isSectionVisible: true,
-                        },
-                        data: {
-                            label: '',
-                            path: 'summary',
-                            value: ''
-                        },
-                    },
-                    websoclinks: {
-                        __serv: {
-                            isSectionVisible: true,
-                        },
-                    },
-                    languages: {
-                        __serv: {
-                            isSectionVisible: true,
-                        },
-                    },
-                    references: {
-                        __serv: {
-                            isSectionVisible: true,
-                            isSwitchChecked: false
-                        }
-                    },
-                    hobbies: {
-                        __serv: {
-                            isSectionVisible: true,
-                        }
-                    },
-                    image: {
-                        value: ''
-                    }
-                });
+            if (resp && resp.status === 200) {
+                return resp.json();
+            } else {
+                throw new Error(`HTTP error: ${resp.status}`)
             }
-        }).catch((error) => {
-            console.error(error);
-        });
-
-    }
+        })
+        .catch((error) => (console.log(`Couldn't fetch data.. ${error}`)));
 }
 
+const putData = async (url, data) => {
+    let resp = await fetch(url,
+        {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }
+    )
+    if (resp) {
+        return resp;
+    }
+}

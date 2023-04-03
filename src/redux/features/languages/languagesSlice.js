@@ -1,33 +1,21 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
-
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { dbAPI } from "../../../api/api";
 
 const DATA_TEMPLATE_OBJECT = {
-    language: {
-        label: "Language",
-        path: 'languages/language',
-        type: 'text',
-        value: ''
-    },
-    level: {
-        label: "Level",
-        path: 'languages/level',
-        type: 'select',
-        value: ''
-    }
+    language: '',
+    level: '',
 }
-
-export const languagesSlice = createSlice({
+const languagesSlice = createSlice({
     name: 'languages',
     initialState: {
         data: [],
+        __serv: { isSectionVisible: true, },
         status: 'idle',
-        isSectionVisible: false,
         error: ''
     },
     reducers: {
-        addNewLanguagesItem: (state) => {
-            state.data = [...state.data, DATA_TEMPLATE_OBJECT];
+        inputLanguagesUpdate: (state, action) => {
+            state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
         },
         removeLanguagesItem: (state, action) => {
             state.data.splice(action.payload, 1);
@@ -35,40 +23,45 @@ export const languagesSlice = createSlice({
                 state.data = []
             }
         },
-        languagesStateValueUpdate: (state, action) => {
-            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
+        addLanguagesItem: (state) => {
+            state.data = [...state.data, DATA_TEMPLATE_OBJECT]
         }
+
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchLanguages.pending, (state) => {
+            .addCase(getLanguages.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchLanguages.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                if (action.payload && action.payload.data) {
-                    state.data = action.payload.data;
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
+            .addCase(getLanguages.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getLanguages.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.status = 'ready';
 
-                } else {
-                    state.data = [];
-                    state.isSectionVisible = true;
+                    if (action.payload.data) {
+                        state.data = action.payload.data;
+                    }
+
+                    if (action.payload.__serv) {
+                        state.__serv = { ...action.payload.__serv };
+                    }
                 }
             })
-            .addCase(fetchLanguages.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
-            })
     }
-});
 
+})
 
 export default languagesSlice.reducer;
-export const { addNewLanguagesItem, removeLanguagesItem, languagesStateValueUpdate } = languagesSlice.actions;
+export const { inputLanguagesUpdate, removeLanguagesItem, addLanguagesItem } = languagesSlice.actions;
 
-export const fetchLanguages = createAsyncThunk('languages/fetchLanguages', async (user) => {
-    const response = await fetchAPI.fethingSubPath('languages', user);
-    if (response && response !== 'Error -- fethingSubPath from api.js') {
-        return response;
+export const getLanguages = createAsyncThunk('languages/getLanguages', async (obj) => {
+    let resp = await dbAPI.getSectionData('languages', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
 })

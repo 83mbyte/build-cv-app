@@ -8,13 +8,15 @@ import {
 import React from 'react';
 
 import { ExpandIcon } from '../Icons/Icon';
-const SelectCustom = ({ path, value, itemsArray, handleInputChange }) => {
+
+
+const SelectCustom = ({ value, itemsArray, onChangeCallback }) => {
     const clickHandle = (e, value) => {
         e.preventDefault();
-        handleInputChange(path, value)
+        onChangeCallback(value);
     }
     return (
-        <Menu matchWidth={true} preventOverflow={true} boundary={'scrollParent'}>
+        <Menu matchWidth={true} preventOverflow={true} boundary={'scrollParent'} isLazy={true}>
             {({ isOpen }) => (
                 <>
                     <MenuButton
@@ -32,7 +34,7 @@ const SelectCustom = ({ path, value, itemsArray, handleInputChange }) => {
                     >
                         {value}
                     </MenuButton>
-                    <MenuList>
+                    <MenuList zIndex={100} mb={-4}  >
                         {
                             itemsArray.map((item, index) => {
                                 return <MenuItem fontSize={'xs'} key={index} onClick={(e) => clickHandle(e, item)}> {item}</MenuItem>
@@ -43,8 +45,6 @@ const SelectCustom = ({ path, value, itemsArray, handleInputChange }) => {
             )
             }
         </Menu >
-
-
     );
 };
 

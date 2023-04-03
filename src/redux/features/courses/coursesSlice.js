@@ -1,45 +1,25 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { dbAPI } from "../../../api/api";
 
 const DATA_TEMPLATE_OBJECT = {
-    course: {
-        label: 'Course',
-        path: 'courses/course',
-        type: 'text',
-        value: '',
-        required: true
-    },
-    period: {
-        label: 'Start - End date',
-        path: 'courses/period',
-        type: 'text',
-        value: ''
-    },
-    institution: {
-        label: 'Institution',
-        path: 'courses/institution',
-        type: 'text',
-        value: ''
-    },
-    certificate: {
-        label: 'Link to a certificate',
-        path: 'courses/certificate',
-        type: 'url',
-        value: ''
-    }
+    course: '',
+    institution: '',
+    period: '',
+    link: ''
 }
 
-export const coursesSlice = createSlice({
+
+const coursesSlice = createSlice({
     name: 'courses',
     initialState: {
         data: [],
+        __serv: { isSectionVisible: true },
         status: 'idle',
-        isSectionVisible: false,
         error: ''
     },
     reducers: {
-        addNewCoursesItem: (state) => {
-            state.data = [...state.data, DATA_TEMPLATE_OBJECT];
+        addCoursesItem: (state) => {
+            state.data = [...state.data, DATA_TEMPLATE_OBJECT]
         },
         removeCoursesItem: (state, action) => {
             state.data.splice(action.payload, 1);
@@ -47,39 +27,44 @@ export const coursesSlice = createSlice({
                 state.data = []
             }
         },
-        coursesStateValueUpdate: (state, action) => {
-            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
+        inputCoursesUpdate: (state, action) => {
+            state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
         },
-
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchCourses.pending, (state) => {
+            .addCase(getCourses.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchCourses.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                if (action.payload && action.payload.data) {
-                    state.data = action.payload.data;
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
-                } else {
-                    state.data = [];
-                    state.isSectionVisible = true;
-                }
+            .addCase(getCourses.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
             })
-            .addCase(fetchCourses.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
+            .addCase(getCourses.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.status = 'ready';
+
+                    if (action.payload.data) {
+                        state.data = action.payload.data;
+                    }
+
+                    if (action.payload.__serv) {
+                        state.__serv = { ...action.payload.__serv };
+                    }
+                }
             })
     }
 })
 
-export default coursesSlice.reducer;
-export const { addNewCoursesItem, removeCoursesItem, coursesStateValueUpdate } = coursesSlice.actions;
 
-export const fetchCourses = createAsyncThunk('courses/fecthCourses', async (user) => {
-    const response = await fetchAPI.fethingSubPath('courses', user);
-    if (response && response !== 'Error -- fethingSubPath from api.js') {
-        return response;
+export default coursesSlice.reducer;
+export const { addCoursesItem, removeCoursesItem, inputCoursesUpdate } = coursesSlice.actions;
+
+export const getCourses = createAsyncThunk('courses/getCourses', async (obj) => {
+    let resp = await dbAPI.getSectionData('courses', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
 })

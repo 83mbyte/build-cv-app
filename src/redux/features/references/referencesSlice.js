@@ -1,48 +1,26 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { dbAPI } from "../../../api/api";
 
 const DATA_TEMPLATE_OBJECT = {
-    referentName: {
-        label: `Referent's full name`,
-        path: 'references/referentName',
-        type: 'text',
-        value: '',
-    },
-    company: {
-        label: `Company`,
-        path: 'references/company',
-        type: 'text',
-        value: '',
-    },
-    phone: {
-        label: `Phone`,
-        path: 'references/phone',
-        type: 'text',
-        value: '',
-    },
-    email: {
-        label: `Email`,
-        path: 'references/email',
-        type: 'text',
-        value: '',
-    }
+    name: '',
+    company: '',
+    phone: '',
+    email: ''
 }
-
-export const referencesSlice = createSlice({
+const referencesSlice = createSlice({
     name: 'references',
     initialState: {
         data: [],
+        __serv: { isSectionVisible: true, isSwitchChecked: false },
         status: 'idle',
-        error: '',
-        isSwitchChecked: false,
-        isSectionVisible: false,
+        error: ''
     },
     reducers: {
-        referenceSwitchToggle: (state) => {
-            state.isSwitchChecked = !state.isSwitchChecked;
+        toggleReferencesSwitch: (state) => {
+            state.__serv.isSwitchChecked = !state.__serv.isSwitchChecked;
         },
-        addNewReferencesItem: (state) => {
-            state.data = [DATA_TEMPLATE_OBJECT]
+        addReferencesItem: (state) => {
+            state.data = [...state.data, DATA_TEMPLATE_OBJECT]
         },
         removeReferencesItem: (state, action) => {
             state.data.splice(action.payload, 1);
@@ -50,45 +28,43 @@ export const referencesSlice = createSlice({
                 state.data = []
             }
         },
-        referencesStateValueUpdate: (state, action) => {
-            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
-        }
+        inputReferencesUpdate: (state, action) => {
+            state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
+        },
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchReferences.pending, (state, action) => {
+            .addCase(getReferences.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchReferences.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+            .addCase(getReferences.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getReferences.fulfilled, (state, action) => {
                 if (action.payload) {
+                    state.status = 'ready';
+
                     if (action.payload.data) {
                         state.data = action.payload.data;
                     }
                     if (action.payload.__serv) {
-                        state.isSwitchChecked = action.payload.__serv.isSwitchChecked;
-                        state.isSectionVisible = action.payload.__serv.isSectionVisible;
+                        state.__serv = { ...action.payload.__serv }
+
                     }
-                } else {
-                    state.data = [];
-                    state.isSwitchChecked = false;
-                    state.isSectionVisible = true;
                 }
-            })
-            .addCase(fetchReferences.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
             })
     }
 })
 
 export default referencesSlice.reducer;
-export const { referenceSwitchToggle, addNewReferencesItem, removeReferencesItem, referencesStateValueUpdate } = referencesSlice.actions;
+export const { addReferencesItem, removeReferencesItem, toggleReferencesSwitch, inputReferencesUpdate } = referencesSlice.actions;
 
-export const fetchReferences = createAsyncThunk('references/fetchReferences', async (user) => {
-    const response = await fetchAPI.fethingSubPath('references', user);
-    if (response && response !== 'Error -- fethingSubPath from api.js') {
-        return response;
+export const getReferences = createAsyncThunk('references/getReferences', async (obj) => {
+    let resp = await dbAPI.getSectionData('references', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
 })
-

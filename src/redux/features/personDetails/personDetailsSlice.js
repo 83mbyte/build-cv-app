@@ -1,120 +1,57 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { dbAPI } from "../../../api/api";
 
-export const personDetailsSlice = createSlice({
+const personDetailsSlice = createSlice({
     name: 'personDetails',
     initialState: {
         data: {
-            position: {
-                jobTitle: {
-                    label: "Wanted Job Title",
-                    path: "personDetails/position/jobTitle",
-                    type: "text",
-                    value: "..."
-                }
-            },
-            name: {
-                firstName: {
-                    label: "First Name",
-                    path: "personDetails/name/firstName",
-                    required: true,
-                    type: "text",
-                    value: ""
-                },
-                lastName: {
-                    label: "Last Name",
-                    path: "personDetails/name/lastName",
-                    required: true,
-                    type: "text",
-                    value: ""
-                }
-            },
-            address: {
-                city: {
-                    label: "City",
-                    path: "personDetails/address/city",
-                    type: "text",
-                    value: ""
-                },
-                country: {
-                    label: "Country",
-                    path: "personDetails/address/country",
-                    type: "text",
-                    value: ""
-                },
-                street: {
-                    label: "Street",
-                    path: "personDetails/address/street",
-                    type: "text",
-                    value: ""
-                }
-            },
-            contacts: {
-                email: {
-                    label: "Email",
-                    path: "personDetails/contacts/email",
-                    required: true,
-                    type: "text",
-                    value: ""
-                },
-                phone: {
-                    label: "Phone",
-                    path: "personDetails/contacts/phone",
-                    required: false,
-                    type: "text",
-                    value: ""
-                },
-
-            },
+            firstName: 'First',
+            lastName: 'Last'
         },
-        inputsOrder: ['position', 'name', 'address', 'contacts'],
+        __serv: { isSectionVisible: true },
         status: 'idle',
-        error: null,
-        isSectionVisible: true,
+        error: '',
 
     },
     reducers: {
-        loadStateFrom: (state, action) => {
-            state.data = action.payload
-        },
-        setJobTitle: state => {
-            state.data.position.jobTitle.value = 'Test Set JobTitle'
-        },
         inputUpdate: (state, action) => {
-            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
+            state.data[action.payload.inputName] = action.payload.value;
         }
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchPersonDetails.pending, (state, action) => {
+            .addCase(getPersonDetails.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchPersonDetails.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+            .addCase(getPersonDetails.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getPersonDetails.fulfilled, (state, action) => {
 
-                if (action.payload && action.payload.data) {
-                    state.data = action.payload.data;
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
-                } else {
-                    state.isSectionVisible = true;
+                if (action.payload) {
+                    state.status = 'ready';
+
+                    if (action.payload.data) {
+                        state.data = action.payload.data;
+                    }
+                    if (action.payload.__serv) {
+                        state.__serv = { ...action.payload.__serv };
+                    }
                 }
             })
-            .addCase(fetchPersonDetails.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
-            })
     }
 })
 
-export const { setJobTitle, loadStateFrom, inputUpdate } = personDetailsSlice.actions;
-
+export const { inputUpdate } = personDetailsSlice.actions;
 export default personDetailsSlice.reducer;
 
-export const fetchPersonDetails = createAsyncThunk('personDetails/fetchPersonDetails', async (user) => {
-    const data = await fetchAPI.fethingSubPath('personDetails', user);
-    if (data && data !== 'Error -- fethingSubPath from api.js') {
-        return data
+export const getPersonDetails = createAsyncThunk('personDetails/getPersonDetails', async (obj) => {
+
+    let resp = await dbAPI.getSectionData('personDetails', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
 })
-
-

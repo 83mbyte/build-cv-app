@@ -1,97 +1,70 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { dbAPI } from "../../../api/api";
 
 const DATA_TEMPLATE_OBJECT = {
-    degree: {
-        label: 'Degree',
-        path: 'education/degree',
-        type: 'text',
-        value: ''
-    },
-    wysiwyg: {
-        label: '',
-        path: 'education/wysiwyg',
-        type: 'wysiwyg',
-        value: ''
-    },
-    location: {
-        label: 'Location',
-        path: 'education/location',
-        type: 'text',
-        value: ''
-    },
-    period: {
-        label: 'Start - End date',
-        path: 'education/period',
-        type: 'text',
-        value: ''
-    },
-    title: {
-        label: 'School',
-        path: 'education/title',
-        type: 'text',
-        value: ''
-    },
+    degree: '',
+    institution: '',
+    location: '',
+    period: '',
+    comments: '',
 }
 
-export const educationSlice = createSlice({
+const educationSlice = createSlice({
     name: 'education',
     initialState: {
-        data: [
-            DATA_TEMPLATE_OBJECT
-        ],
+        data: [DATA_TEMPLATE_OBJECT],
+        __serv: { isSectionVisible: true },
         status: 'idle',
-        error: '',
-        isSectionVisible: false
+        error: ''
     },
     reducers: {
-        loadStateFrom: (state, action) => {
-            state.data = action.payload
-        },
-        educationStateValueUpdate: (state, action) => {
-            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
-
-        },
-        addNewEducationItem: (state) => {
-            state.data = [...state.data, DATA_TEMPLATE_OBJECT];
+        inputEducationUpdate: (state, action) => {
+            state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
         },
         removeEducationItem: (state, action) => {
             state.data.splice(action.payload, 1);
             if (state.data.length < 1) {
                 state.data = []
             }
+        },
+        addEducationItem: (state) => {
+            state.data = [...state.data, DATA_TEMPLATE_OBJECT]
         }
+
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchEducation.pending, (state, action) => {
+            .addCase(getEducation.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchEducation.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                if (action.payload && action.payload.data) {
-                    state.data = action.payload.data;
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
-                } else {
-                    state.data = [];
-                    state.isSectionVisible = true;
+            .addCase(getEducation.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getEducation.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.status = 'ready';
+
+                    if (action.payload.data) {
+                        state.data = action.payload.data;
+                    }
+
+                    if (action.payload.__serv) {
+                        state.__serv = { ...action.payload.__serv };
+                    }
                 }
             })
-            .addCase(fetchEducation.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
-            })
     }
 })
 
-export const { loadStateFrom, educationStateValueUpdate, addNewEducationItem, removeEducationItem } = educationSlice.actions;
 export default educationSlice.reducer;
+export const { inputEducationUpdate, removeEducationItem, addEducationItem } = educationSlice.actions;
 
-
-export const fetchEducation = createAsyncThunk('education/fetchEducation', async (user) => {
-    const response = await fetchAPI.fethingSubPath('education', user)
-    if (response && response !== 'Error -- fethingSubPath from api.js') {
-        return response
+export const getEducation = createAsyncThunk('summary/getEducation', async (obj) => {
+    let resp = await dbAPI.getSectionData('education', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
 })
-

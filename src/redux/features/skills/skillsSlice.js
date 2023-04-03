@@ -1,88 +1,72 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAPI } from "../../../API/api";
+import { dbAPI } from "../../../api/api";
 
 const DATA_TEMPLATE_OBJECT = {
-    skill: {
-        label: 'Skill',
-        path: 'skills/skill',
-        type: 'text',
-        value: ''
-    },
-    level: {
-        label: 'Level',
-        path: 'skills/level',
-        type: 'slider',
-        value: 'Skillful',
-    }
+    label: '',
+    level: 3
 }
 
-export const skillsSlice = createSlice({
+const skillsSlice = createSlice({
     name: 'skills',
     initialState: {
-        data: [],
-        skillVars: ['Java', 'HTML', 'Python', 'PHP', 'CSS', 'SQL', 'HTML & CSS', 'MySQL', 'jQuery', 'C++', 'HTML', 'JavaScript', 'React', 'Redux', 'React Native', 'Firebase', 'Git', 'SaaS'],
-        isSwitchChecked: false,
-        isSectionVisible: false,
+        data: [DATA_TEMPLATE_OBJECT],
+        __serv: { isSectionVisible: true, isSwitchChecked: false },
         status: 'idle',
         error: ''
     },
     reducers: {
-        addNewSkillItem: (state) => {
-            state.data = [...state.data, DATA_TEMPLATE_OBJECT];
+        inputSkillsUpdate: (state, action) => {
+            state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
         },
-        addNewSkillItemPredefined: (state, action) => {
-            state.data = [...state.data, {
-                ...DATA_TEMPLATE_OBJECT,
-                skill: {
-                    ...DATA_TEMPLATE_OBJECT.skill,
-                    value: action.payload.value
-                }
-            }];
-            state.skillVars.splice(action.payload.index, 1);
-        },
-        removeSkillItem: (state, action) => {
+        removeSkillsItem: (state, action) => {
             state.data.splice(action.payload, 1);
             if (state.data.length < 1) {
                 state.data = []
             }
         },
-        skillsStateValueUpdate: (state, action) => {
-            state.data[action.payload.path[0]][action.payload.path[1]].value = action.payload.value;
+        addSkillsItem: (state, action) => {
+            if (!action.payload) {
+                state.data = [...state.data, DATA_TEMPLATE_OBJECT]
+            } else {
+                state.data = [...state.data, { label: action.payload.label, level: action.payload.level }]
+            }
         },
-        skillLevelSwitchToggle: (state) => {
-            state.isSwitchChecked = !state.isSwitchChecked;
+        toggleSkillsSwitch: (state) => {
+            state.__serv.isSwitchChecked = !state.__serv.isSwitchChecked;
         }
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchSkills.pending, (state, action) => {
+            .addCase(getSkills.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(fetchSkills.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                if (action.payload && action.payload.data) {
-                    state.data = action.payload.data;
-                    state.isSwitchChecked = action.payload.__serv.isSwitchChecked;
-                    state.isSectionVisible = action.payload.__serv.isSectionVisible;
-                } else {
-                    state.data = [];
-                    state.isSectionVisible = true;
-                }
+            .addCase(getSkills.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
             })
-            .addCase(fetchSkills.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message
+            .addCase(getSkills.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.status = 'ready';
+
+                    if (action.payload.data) {
+                        state.data = action.payload.data;
+                    }
+                    if (action.payload.__serv) {
+                        state.__serv = { ...action.payload.__serv };
+                    }
+                }
             })
     }
 })
-export const { addNewSkillItem, removeSkillItem, skillsStateValueUpdate, addNewSkillItemPredefined, skillLevelSwitchToggle } = skillsSlice.actions;
+
 export default skillsSlice.reducer;
+export const { removeSkillsItem, inputSkillsUpdate, addSkillsItem, toggleSkillsSwitch } = skillsSlice.actions;
 
-
-export const fetchSkills = createAsyncThunk('skills/fetchSkills', async (user) => {
-    const response = await fetchAPI.fethingSubPath('skills', user);
-
-    if (response && response !== 'Error -- fethingSubPath from api.js') {
-        return response;
+export const getSkills = createAsyncThunk('skills/getSkills', async (obj) => {
+    let resp = await dbAPI.getSectionData('skills', obj.userId);
+    if (resp) {
+        return resp;
+    } else {
+        return null
     }
 })

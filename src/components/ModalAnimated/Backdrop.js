@@ -6,7 +6,7 @@ import styles from './ModalAnimated.module.css';
 const Backdrop = ({ children, onClick }) => {
     return (
         <motion.div
-            onClick={onClick}
+            // onClick={onClick}
             className={styles.backdrop}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

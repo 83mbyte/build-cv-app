@@ -1,18 +1,14 @@
-import { Avatar, AvatarBadge, Box } from '@chakra-ui/react';
 import React from 'react';
-import ToolTip from '../ToolTip/ToolTip';
+import { Box, Avatar, AvatarBadge } from '@chakra-ui/react';
 
-const AvatarCustom = ({ name, onClickHandler }) => {
-
+const AvatarCustom = ({ name }) => {
     return (
-
-        <Box onClick={onClickHandler} >
-            <ToolTip label={`logged as ${name}`}>
-                <Avatar size={'xs'} mx={0} name={name} bg={'purple.300'}>
-                    <AvatarBadge boxSize='0.9em' bg='teal.500' />
-                </Avatar>
-            </ToolTip>
+        <Box>
+            <Avatar size={'xs'} mx={0} name={name} bg={'purple.300'}>
+                <AvatarBadge boxSize='1em' bg='teal.500' />
+            </Avatar>
         </Box>
+
     );
 };
 

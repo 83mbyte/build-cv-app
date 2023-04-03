@@ -1,5 +1,5 @@
-import { Box, Tooltip } from '@chakra-ui/react';
 import React, { forwardRef } from 'react';
+import { Box, Tooltip } from '@chakra-ui/react';
 
 const ToolTip = ({ children, label, type = 'default', isDisabled }) => {
     const colors = {
@@ -20,3 +20,4 @@ const TooltipItem = forwardRef(({ children, ...rest }, ref) => (
         {children}
     </Box>
 ))
+

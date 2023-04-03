@@ -37,7 +37,7 @@ export default FooterContainer;
 
 const FooterColumn = ({ children }) => {
     return (
-        <Box color={'gray.400'}>
+        <Box color={'gray.400'} >
             {children}
         </Box>
     )
