@@ -56,8 +56,8 @@ const Login_beta = () => {
 
 
         <WhiteboxCenter>
-            <VStack spacing={[3, 5]} align='flex-start' w='md'>
-                <VStack spacing={1} w='full' align={['flex-start', 'center']}>
+            <VStack spacing={[3, 5]} w='full' align={['flex-start', 'center']}>
+                <VStack align={['flex-start', 'center']} w='full'>
                     <Heading as='h2'>Login</Heading>
                 </VStack>
                 <Box w='full'>

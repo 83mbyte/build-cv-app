@@ -17,11 +17,12 @@ const theme = extendTheme({
   styles: {
     global: {
       ".mainBg": {
-        // backgroundImage: 'url("./bg_1.jpg")',
+        //backgroundImage: 'url("./bg_1.jpg")',
 
         backgroundImage: 'url("./bg.svg")',
         backgroundSize: 'contain',
         minHeight: '100vh',
+        height: '100%'
       }
     },
 
