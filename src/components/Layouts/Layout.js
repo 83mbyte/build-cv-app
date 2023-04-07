@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 import FooterContainer from '../Footer/FooterContainer';
 const Layout = () => {
     return (
-        <VStack h="100vh" minH={'300px'} justifyContent={'space-around'}  >
+        <VStack minH={'100vh'} justifyContent={'space-around'}>
 
             <Box flex={1} alignItems="center" justifyContent={'center'} display={'flex'} w={'full'} >
                 {<Outlet />}
