@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, Box, Heading } from '@chakra-ui/react';
+import { Accordion, AccordionItem, AccordionButton, AccordionPanel, Box, Heading } from '@chakra-ui/react';
 import React from 'react';
 import { motion } from "framer-motion";
 
