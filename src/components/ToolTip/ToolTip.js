@@ -7,7 +7,7 @@ const ToolTip = ({ children, label, type = 'default', isDisabled }) => {
         warning: 'red',
     }
     return (
-        <Tooltip label={label} hasArrow bg={`${colors[type]}.600`} placement='top-end' closeOnClick={true} isDisabled={isDisabled} >
+        <Tooltip label={label} hasArrow bg={`${colors[type]}.600`} closeOnClick={true} placement='top-end' isDisabled={isDisabled} aria-label={label} >
             <TooltipItem>{children}</TooltipItem>
         </Tooltip>
     );
