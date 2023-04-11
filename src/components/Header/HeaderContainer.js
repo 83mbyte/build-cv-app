@@ -1,17 +1,26 @@
-import { Box, Button, Container, Flex, HStack } from '@chakra-ui/react';
+import {
+    Box, Button, Container, Flex, HStack, IconButton
+} from '@chakra-ui/react';
 import React from 'react';
-import { MdPreview, MdSave } from 'react-icons/md'
+
+import { MdPreview, MdSave, MdMoreHoriz } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { modalIsOpenToggle, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
+import { drawerIsOpenToggle, modalIsOpenToggle, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
+
 import ToolTip from '../Tooltip/Tooltip';
 import HeaderLogo from './HeaderLogo';
 import AvatarCustom from '../Avatar/AvatarCustom';
+import DrawerContainer from '../Drawer/DrawerContainer';
+
 
 const HeaderContainer = ({ loggedUser }) => {
+
     const modalOpen = useSelector(state => state.utility.modalWindow.isOpen);
     const dispatch = useDispatch();
     const state = useSelector(state => state);
     const isModifiedContent = useSelector(state => state.utility.isModifiedContent);
+    const isDrawerOpen = useSelector(state => state.utility.drawer.isOpen);
+
 
     const saveAllChanges = () => {
         for (const section of isModifiedContent.sections) {
@@ -35,6 +44,9 @@ const HeaderContainer = ({ loggedUser }) => {
 
     const saveClickHandler = () => {
         saveAllChanges();
+    }
+    const drawerToggler = () => {
+        dispatch(drawerIsOpenToggle())
     }
 
     return (
@@ -70,6 +82,21 @@ const HeaderContainer = ({ loggedUser }) => {
 
                                 >Save</Button>
                             </ToolTip>
+                        </Box>
+
+                        <Box>
+                            <ToolTip label='open menu'>
+                                <IconButton
+                                    colorScheme='teal'
+                                    icon={<MdMoreHoriz />}
+                                    size={'xs'}
+                                    variant={'outline'}
+                                    aria-label='show menu'
+                                    onClick={drawerToggler}
+                                    fontSize={'16px'}
+                                />
+                            </ToolTip>
+                            <DrawerContainer isOpenProp={isDrawerOpen} onCloseHandler={drawerToggler} />
                         </Box>
                         <Box>
                             <AvatarCustom name={''} />
