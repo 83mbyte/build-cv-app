@@ -31,6 +31,9 @@ const referencesSlice = createSlice({
         inputReferencesUpdate: (state, action) => {
             state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
         },
+        referencesVisibleToggler: (state) => {
+            state.__serv.isSectionVisible = !state.__serv.isSectionVisible;
+        }
     },
     extraReducers(builder) {
         builder
@@ -58,7 +61,7 @@ const referencesSlice = createSlice({
 })
 
 export default referencesSlice.reducer;
-export const { addReferencesItem, removeReferencesItem, toggleReferencesSwitch, inputReferencesUpdate } = referencesSlice.actions;
+export const { addReferencesItem, removeReferencesItem, toggleReferencesSwitch, inputReferencesUpdate, referencesVisibleToggler } = referencesSlice.actions;
 
 export const getReferences = createAsyncThunk('references/getReferences', async (obj) => {
     let resp = await dbAPI.getSectionData('references', obj.userId);
