@@ -7,6 +7,7 @@ import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice'
 import InputCustom from '../FormElements/InputCustom';
 import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
 import SectionWrapper from '../Wrappers/SectionWrapper';
+import ProfilePhoto from '../ProfilePhoto/ProfilePhoto';
 
 const PersonDetails = () => {
     const dispatch = useDispatch();
@@ -24,6 +25,10 @@ const PersonDetails = () => {
         content =
             isSectionVisible &&
             <SectionWrapper sectionTitle={'Personal Details'} type={'grid'}>
+                <Box></Box>
+                <Box display='flex' justifyContent={'flex-end'} px={2}>
+                    <ProfilePhoto user={user} />
+                </Box>
                 <Box><InputCustom labelText='Job Title' name={'jobTitle'} inputValue={data.jobTitle} onChangeCallback={onChangeHandler} /></Box>
                 <Box><InputCustom labelText='Email' required name={'email'} inputValue={data.email} onChangeCallback={onChangeHandler} /></Box>
                 <Box>

@@ -83,6 +83,7 @@ export const dbAPI = {
     checkAndCreate: async (id, displayName, email) => {
         let userNameSplitted = displayName.split(' ')
         let userTemplate = {
+            image: { value: '' },
             personDetails: {
                 __serv: {
                     isSectionVisible: true,
@@ -214,7 +215,13 @@ export const dbAPI = {
     putDataToSection: async (user, section, data) => {
         let resp = await putData(`${URLUSERS}/${user}/${section}.json`, data);
         return resp;
-    }
+    },
+
+    putUserImageData: async (user, data) => {
+        console.log('set data to DB')
+        let resp = await putData(`${URLUSERS}/${user}/image/value.json`, data);
+        return resp;
+    },
 
 }
 

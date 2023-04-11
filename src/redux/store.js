@@ -10,6 +10,7 @@ import referencesSliceReducer from "./features/references/referencesSlice";
 import skillsSliceReducer from "./features/skills/skillsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
+import userImageSliceReducer from "./features/userImage/userImageSlice";
 
 export default configureStore({
     reducer: {
@@ -23,6 +24,7 @@ export default configureStore({
         history: historySliceReducer,
         languages: languagesSliceReducer,
         references: referencesSliceReducer,
-        hobbies: hobbiesSliceReducer
+        hobbies: hobbiesSliceReducer,
+        image: userImageSliceReducer,
     }
 })
