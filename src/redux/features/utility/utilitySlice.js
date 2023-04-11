@@ -13,6 +13,9 @@ const utilitySlice = createSlice({
         modalWindow: {
             isOpen: false
         },
+        drawer: {
+            isOpen: false
+        },
         isModifiedContent: {
             status: false,
             sections: []
@@ -30,6 +33,9 @@ const utilitySlice = createSlice({
         },
         modalIsOpenToggle: (state) => {
             state.modalWindow.isOpen = !state.modalWindow.isOpen;
+        },
+        drawerIsOpenToggle: (state) => {
+            state.drawer.isOpen = !state.drawer.isOpen;
         },
         setIsModifiedContent: (state, action) => {
             state.isModifiedContent.status = action.payload.status;
@@ -106,10 +112,35 @@ const utilitySlice = createSlice({
                     }
                 }
             })
+
+            .addCase(authLogout.pending, (state) => {
+                state.auth.status = 'loading';
+            })
+            .addCase(authLogout.rejected, (state, action) => {
+                state.auth.status = 'failed'
+                state.auth.error = action.error.message;
+            })
+            .addCase(authLogout.fulfilled, (state, action) => {
+                state.auth.status = 'ready';
+                if (action.payload) {
+                    switch (action.payload.message) {
+                        case 'logged out':
+                            state.auth.error = '';
+                            state.auth.successMsg = ''
+                            state.auth.data = null;
+                            break;
+
+                        default:
+                            state.auth.error = 'Logout error. Possible reason: ' + action.payload.message;
+                            state.auth.successMsg = '';
+                            break;
+                    }
+                }
+            })
     }
 })
 
-export const { clearAuthError, addLoggedUser, modalIsOpenToggle, setIsModifiedContent } = utilitySlice.actions;
+export const { clearAuthError, addLoggedUser, modalIsOpenToggle, drawerIsOpenToggle, setIsModifiedContent } = utilitySlice.actions;
 
 export default utilitySlice.reducer;
 
@@ -124,6 +155,15 @@ export const signUpThunk = createAsyncThunk('utilitySlice/signUpUser', async (da
 
 export const logInThunk = createAsyncThunk('utility/logInThunk', async (dataObj) => {
     let resp = await authAPI.logIn(dataObj.email, dataObj.pass);
+    if (resp) {
+        return resp;
+    } else {
+        return null
+    }
+})
+
+export const authLogout = createAsyncThunk('utility/authLogout', async () => {
+    let resp = await authAPI.logOut();
     if (resp) {
         return resp;
     } else {
