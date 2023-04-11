@@ -1,4 +1,4 @@
-import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, sendEmailVerification, setPersistence, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, signOut, getAuth, sendEmailVerification, setPersistence, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { app } from "../_firebase/firebase";
 
 const URLUSERS = 'https://buildcv-app-cd890-default-rtdb.firebaseio.com/prvt/users';
@@ -6,18 +6,6 @@ export const authAPI = {
     signUp: (email, password, firstName = '', lastName = '') => {
         const auth = getAuth(app);
         return createUserWithEmailAndPassword(auth, email, password)
-            // .then((userCredential) => {
-            //     // Signed in 
-            //     const user = userCredential.user;
-
-            //     return sendEmailVerification(user)
-            //         .then(() => {
-            //             // Email verification sent!
-            //             // ...
-            //             return { message: 'verify' }
-            //         });
-            //     // ...
-            // })
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
@@ -74,6 +62,16 @@ export const authAPI = {
                         return { data: null, message: errorMessage.slice(10,) }
                     })
             })
+    },
+    logOut: () => {
+        const auth = getAuth(app);
+        return signOut(auth).then(() => {
+            // Sign-out successful.
+            return { message: 'logged out' }
+        }).catch((error) => {
+            // An error happened.
+            return { message: error.message }
+        });
     }
 }
 
@@ -136,7 +134,7 @@ export const dbAPI = {
             },
             courses: {
                 __serv: {
-                    isSectionVisible: true,
+                    isSectionVisible: false,
                 },
                 data: [{
                     course: '',
@@ -159,7 +157,7 @@ export const dbAPI = {
             },
             languages: {
                 __serv: {
-                    isSectionVisible: true,
+                    isSectionVisible: false,
                 },
                 data: [{
                     language: '',
@@ -168,7 +166,7 @@ export const dbAPI = {
             },
             references: {
                 __serv: {
-                    isSectionVisible: true,
+                    isSectionVisible: false,
                     isSwitchChecked: false,
                 },
                 data: [{
@@ -180,7 +178,7 @@ export const dbAPI = {
             },
             hobbies: {
                 __serv: {
-                    isSectionVisible: true,
+                    isSectionVisible: false,
                 },
                 data: {
                     value: ''
