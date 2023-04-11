@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from "framer-motion";
 
 import WelcomeWrapper from '../Wrappers/WelcomeWrapper';
-import ToolTip from '../Tooltip/Tooltip';
+import ToolTip from '../Tooltip/ToolTip';
 import { ExpandIcon } from '../Icons/Icon';
 
 const WelcomeFAQ = () => {

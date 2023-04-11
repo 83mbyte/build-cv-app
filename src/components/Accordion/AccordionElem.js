@@ -5,7 +5,7 @@ import {
     AccordionPanel,
     Box, Flex,
 } from '@chakra-ui/react';
-import ToolTip from '../Tooltip/Tooltip';
+import ToolTip from '../Tooltip/ToolTip';
 import { ExpandIcon, RemoveIcon } from '../Icons/Icon';
 
 const AccordionElem = ({ index, title, descr = null, removeItem, children }) => {

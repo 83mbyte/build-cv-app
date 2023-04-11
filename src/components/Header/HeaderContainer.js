@@ -7,7 +7,7 @@ import { MdPreview, MdSave, MdMoreHoriz } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { drawerIsOpenToggle, modalIsOpenToggle, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
 
-import ToolTip from '../Tooltip/Tooltip';
+import ToolTip from '../Tooltip/ToolTip';
 import HeaderLogo from './HeaderLogo';
 import AvatarCustom from '../Avatar/AvatarCustom';
 import DrawerContainer from '../Drawer/DrawerContainer';

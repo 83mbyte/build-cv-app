@@ -5,7 +5,7 @@ import { Box, Button, Image, Skeleton } from '@chakra-ui/react';
 import { MdOutlineMonochromePhotos } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteImageData, getUserImage, uploadImageData } from '../../redux/features/userImage/userImageSlice';
-import ToolTip from '../Tooltip/Tooltip';
+import ToolTip from '../Tooltip/ToolTip';
 
 const ProfilePhoto = ({ user }) => {
 
