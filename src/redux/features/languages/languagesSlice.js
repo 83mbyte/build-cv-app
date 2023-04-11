@@ -25,6 +25,9 @@ const languagesSlice = createSlice({
         },
         addLanguagesItem: (state) => {
             state.data = [...state.data, DATA_TEMPLATE_OBJECT]
+        },
+        languagesVisibleToggler: (state) => {
+            state.__serv.isSectionVisible = !state.__serv.isSectionVisible;
         }
 
     },
@@ -55,7 +58,7 @@ const languagesSlice = createSlice({
 })
 
 export default languagesSlice.reducer;
-export const { inputLanguagesUpdate, removeLanguagesItem, addLanguagesItem } = languagesSlice.actions;
+export const { inputLanguagesUpdate, removeLanguagesItem, addLanguagesItem, languagesVisibleToggler } = languagesSlice.actions;
 
 export const getLanguages = createAsyncThunk('languages/getLanguages', async (obj) => {
     let resp = await dbAPI.getSectionData('languages', obj.userId);
