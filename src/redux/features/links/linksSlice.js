@@ -9,7 +9,7 @@ const DATA_TEMPLATE_OBJECT = {
 const linksSlice = createSlice({
     name: 'links',
     initialState: {
-        data: [DATA_TEMPLATE_OBJECT],
+        data: [],
         __serv: { isSectionVisible: true },
         status: 'idle',
         error: ''

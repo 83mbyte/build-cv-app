@@ -9,7 +9,7 @@ const DATA_TEMPLATE_OBJECT = {
 const skillsSlice = createSlice({
     name: 'skills',
     initialState: {
-        data: [DATA_TEMPLATE_OBJECT],
+        data: [],
         __serv: { isSectionVisible: true, isSwitchChecked: false },
         status: 'idle',
         error: ''

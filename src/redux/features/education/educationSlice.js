@@ -12,7 +12,7 @@ const DATA_TEMPLATE_OBJECT = {
 const educationSlice = createSlice({
     name: 'education',
     initialState: {
-        data: [DATA_TEMPLATE_OBJECT],
+        data: [],
         __serv: { isSectionVisible: true },
         status: 'idle',
         error: ''

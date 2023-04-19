@@ -11,7 +11,7 @@ const referencesSlice = createSlice({
     name: 'references',
     initialState: {
         data: [],
-        __serv: { isSectionVisible: true, isSwitchChecked: false },
+        __serv: { isSectionVisible: false, isSwitchChecked: false },
         status: 'idle',
         error: ''
     },

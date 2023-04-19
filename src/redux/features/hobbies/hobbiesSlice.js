@@ -5,7 +5,7 @@ const hobbiesSlice = createSlice({
     name: 'hobbies',
     initialState: {
         data: { value: '' },
-        __serv: { isSectionVisible: true },
+        __serv: { isSectionVisible: false },
         status: 'idle',
         error: ''
     },

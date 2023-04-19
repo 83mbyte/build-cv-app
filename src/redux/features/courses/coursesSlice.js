@@ -13,7 +13,7 @@ const coursesSlice = createSlice({
     name: 'courses',
     initialState: {
         data: [],
-        __serv: { isSectionVisible: true },
+        __serv: { isSectionVisible: false },
         status: 'idle',
         error: ''
     },
