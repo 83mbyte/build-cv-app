@@ -46,7 +46,8 @@ const HeaderContainer = ({ loggedUser }) => {
         saveAllChanges();
     }
     const drawerToggler = () => {
-        dispatch(drawerIsOpenToggle())
+        dispatch(drawerIsOpenToggle());
+        saveAllChanges();
     }
 
     return (
