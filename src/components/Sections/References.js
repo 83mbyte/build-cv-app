@@ -76,14 +76,17 @@ export default References;
 const ReferecesForm = ({ data, addItem, isSwitchChecked, toggleSwitch, removeItem, onChangeHandler, hidingClickHandler }) => {
     return (
         <SectionWrapper sectionTitle={'References'} flexDirect='column' isHiding={true} hidingClickHandler={hidingClickHandler}>
-            <Box my={2} mb={5} w={'100%'} px='0' minW={'200px'}  >
-                <SwitchCustom
-                    size={'sm'}
-                    labelText={`I'd like to hide references and make them available only upon request`}
-                    isChecked={isSwitchChecked}
-                    toggleSwitch={toggleSwitch}
-                />
-            </Box>
+            {
+                data.length > 0 &&
+                <Box my={2} mb={5} w={'100%'} px='0' minW={'200px'}  >
+                    <SwitchCustom
+                        size={'sm'}
+                        labelText={`I'd like to hide references and make them available only upon request`}
+                        isChecked={isSwitchChecked}
+                        toggleSwitch={toggleSwitch}
+                    />
+                </Box>
+            }
             <Accordion allowToggle allowMultiple={false}>
                 {
                     data.map((elem, index) => {

@@ -102,14 +102,17 @@ const Skills = ({ loggedUser }) => {
                     predefined.length > 0 &&
                     <ProposedItems sectionName={'skills'} predefined={predefined} onClickCallback={addItem} />
                 }
-                <Box my={2} mb={5} w={'100%'} px='0' minW={'200px'}  >
-                    <SwitchCustom
-                        size={'sm'}
-                        labelText={`Don't show experience level.`}
-                        isChecked={isSwitchChecked}
-                        toggleSwitch={toggleSwitch}
-                    />
-                </Box>
+                {
+                    data.length > 0 &&
+                    <Box my={2} mb={5} w={'100%'} px='0' minW={'200px'}  >
+                        <SwitchCustom
+                            size={'sm'}
+                            labelText={`Don't show experience level.`}
+                            isChecked={isSwitchChecked}
+                            toggleSwitch={toggleSwitch}
+                        />
+                    </Box>
+                }
                 <Accordion allowToggle allowMultiple={false}>
                     {
                         data.map((elem, index) => {
