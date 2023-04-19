@@ -92,7 +92,11 @@ const LanguagesForm = ({ data, removeItem, addItem, onChangeHandler, hidingClick
                 }
             </Accordion>
             <Box>
-                <AddMoreItemBtn itemType='language' onClickCallback={addItem} />
+                {
+                    data.length > 0
+                        ? <AddMoreItemBtn itemType={'language'} onClickCallback={addItem} oneMore />
+                        : <AddMoreItemBtn itemType={'language'} onClickCallback={addItem} />
+                }
             </Box>
         </SectionWrapper>
     )

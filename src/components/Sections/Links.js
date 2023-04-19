@@ -92,7 +92,11 @@ const Links = ({ loggedUser }) => {
                         })
                     }
                     <Box>
-                        <AddMoreItemBtn itemType={'link'} onClickCallback={addItem} />
+                        {
+                            data.length > 0
+                                ? <AddMoreItemBtn itemType={'link'} onClickCallback={addItem} oneMore />
+                                : <AddMoreItemBtn itemType={'link'} onClickCallback={addItem} />
+                        }
                     </Box>
                 </Accordion>
             </SectionWrapper >

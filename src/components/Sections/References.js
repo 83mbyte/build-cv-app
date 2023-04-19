@@ -103,7 +103,11 @@ const ReferecesForm = ({ data, addItem, isSwitchChecked, toggleSwitch, removeIte
                 }
             </Accordion>
             <Box>
-                <AddMoreItemBtn itemType='reference' onClickCallback={addItem} />
+                {
+                    data.length > 0
+                        ? <AddMoreItemBtn itemType={'reference'} onClickCallback={addItem} oneMore />
+                        : <AddMoreItemBtn itemType={'reference'} onClickCallback={addItem} />
+                }
             </Box>
 
 

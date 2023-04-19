@@ -89,7 +89,11 @@ const CoursesForm = ({ data, addItem, removeItem, onChangeHandler, hidingClickHa
                     })
                 }
                 <Box>
-                    <AddMoreItemBtn itemType={'course'} onClickCallback={addItem} />
+                    {
+                        data.length > 0
+                            ? <AddMoreItemBtn itemType={'course'} onClickCallback={addItem} oneMore />
+                            : <AddMoreItemBtn itemType={'course'} onClickCallback={addItem} />
+                    }
                 </Box>
             </Accordion>
         </SectionWrapper>

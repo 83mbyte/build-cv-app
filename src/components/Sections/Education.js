@@ -94,7 +94,11 @@ const EducationForm = ({ data, removeItem, addItem, onChangeHandler }) => {
                 }
 
                 <Box>
-                    <AddMoreItemBtn itemType={'education'} onClickCallback={addItem} />
+                    {
+                        data.length > 0
+                            ? <AddMoreItemBtn itemType={'education'} onClickCallback={addItem} oneMore />
+                            : <AddMoreItemBtn itemType={'education'} onClickCallback={addItem} />
+                    }
                 </Box>
             </Accordion>
         </SectionWrapper>

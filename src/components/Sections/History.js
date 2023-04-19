@@ -92,7 +92,11 @@ const HistoryForm = ({ data, addItem, removeItem, onChangeHandler }) => {
                 }
             </Accordion>
             <Box>
-                <AddMoreItemBtn itemType='employment' onClickCallback={addItem} />
+                {
+                    data.length > 0
+                        ? <AddMoreItemBtn itemType={'employment'} onClickCallback={addItem} oneMore />
+                        : <AddMoreItemBtn itemType={'employment'} onClickCallback={addItem} />
+                }
             </Box>
         </SectionWrapper>
     )

@@ -146,7 +146,11 @@ const Skills = ({ loggedUser }) => {
                     }
                 </Accordion>
                 <Box>
-                    <AddMoreItemBtn itemType={'skill'} onClickCallback={addItem} />
+                    {
+                        data.length > 0
+                            ? <AddMoreItemBtn itemType={'skill'} onClickCallback={addItem} oneMore />
+                            : <AddMoreItemBtn itemType={'skill'} onClickCallback={addItem} />
+                    }
                 </Box>
             </SectionWrapper>
     }

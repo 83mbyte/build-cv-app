@@ -1,7 +1,7 @@
 import { Box, Button } from '@chakra-ui/react';
 import React from 'react';
 
-const AddMoreItemBtn = ({ itemType = '', onClickCallback }) => {
+const AddMoreItemBtn = ({ itemType = '', oneMore = false, onClickCallback }) => {
     return (
         <Box>
             <Button
@@ -9,7 +9,7 @@ const AddMoreItemBtn = ({ itemType = '', onClickCallback }) => {
                 colorScheme={'teal'}
                 onClick={() => onClickCallback()}
             >
-                + Add one more {itemType}
+                + Add {oneMore && `one more`} {itemType}
             </Button>
         </Box>
     );
