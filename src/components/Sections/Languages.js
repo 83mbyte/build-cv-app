@@ -1,7 +1,7 @@
 import { Accordion, Box, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addLanguagesItem, getLanguages, inputLanguagesUpdate, removeLanguagesItem } from '../../redux/features/languages/languagesSlice';
+import { addLanguagesItem, getLanguages, inputLanguagesUpdate, languagesVisibleToggler, removeLanguagesItem } from '../../redux/features/languages/languagesSlice';
 import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
 import AccordionElem from '../Accordion/AccordionElem';
 import AddMoreItemBtn from '../AddMoreItemBtn/AddMoreItemBtn';
@@ -34,6 +34,11 @@ const Languages = ({ loggedUser }) => {
         dispatch(setIsModifiedContent({ status: true, section: 'languages' }));
     }
 
+    const hidingClickHandler = () => {
+        dispatch(languagesVisibleToggler());
+        dispatch(setIsModifiedContent({ status: true, section: 'languages' }));
+    }
+
     if (status === 'loading') {
         content = <LoadingSectionSkeleton rowsNumber={0} textArea={true} />
     }
@@ -46,8 +51,7 @@ const Languages = ({ loggedUser }) => {
     }
     else if (status === 'ready' && data) {
         content = isSectionVisible &&
-            <LanguagesForm data={data} removeItem={removeItem} addItem={addItem} onChangeHandler={onChangeHandler} />
-        // <EducationForm data={data} onChangeHandler={onChangeHandler} removeItem={removeItem} addItem={addItem} />
+            <LanguagesForm data={data} removeItem={removeItem} addItem={addItem} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
     }
 
     useEffect(() => {
@@ -65,13 +69,13 @@ const Languages = ({ loggedUser }) => {
 
 export default Languages;
 
-const LanguagesForm = ({ data, removeItem, addItem, onChangeHandler }) => {
+const LanguagesForm = ({ data, removeItem, addItem, onChangeHandler, hidingClickHandler }) => {
 
     const itemsArray = ['Native speaker', 'Highly proficient', 'Very good command', 'Good working knowledge', 'Working knowledge', 'C2', 'C1', 'B2', 'B1', 'A2', 'A1'];
 
 
     return (
-        <SectionWrapper sectionTitle={'Languages'} flexDirect='column'>
+        <SectionWrapper sectionTitle={'Languages'} flexDirect='column' isHiding={true} hidingClickHandler={hidingClickHandler}>
             <Accordion allowToggle allowMultiple={false}>
                 {
                     data.map((elem, index) => {

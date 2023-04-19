@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Accordion, Box, SimpleGrid } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addReferencesItem, getReferences, inputReferencesUpdate, removeReferencesItem, toggleReferencesSwitch } from '../../redux/features/references/referencesSlice';
+import { addReferencesItem, getReferences, inputReferencesUpdate, referencesVisibleToggler, removeReferencesItem, toggleReferencesSwitch } from '../../redux/features/references/referencesSlice';
 import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
 
 import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
@@ -40,6 +40,10 @@ const References = ({ loggedUser }) => {
         dispatch(inputReferencesUpdate({ arrayIndex: index, inputName: name, value: value }));
         dispatch(setIsModifiedContent({ status: true, section: 'references' }));
     }
+    const hidingClickHandler = () => {
+        dispatch(referencesVisibleToggler());
+        dispatch(setIsModifiedContent({ status: true, section: 'references' }));
+    }
 
     if (status === 'loading') {
         content = <LoadingSectionSkeleton rowsNumber={0} textArea={true} />
@@ -52,7 +56,7 @@ const References = ({ loggedUser }) => {
     }
     else if (status === 'ready' && data) {
         content = isSectionVisible &&
-            <ReferecesForm data={data} isSwitchChecked={isSwitchChecked} addItem={addItem} removeItem={removeItem} toggleSwitch={toggleSwitch} onChangeHandler={onChangeHandler} />
+            <ReferecesForm data={data} isSwitchChecked={isSwitchChecked} addItem={addItem} removeItem={removeItem} toggleSwitch={toggleSwitch} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
     }
 
     useEffect(() => {
@@ -69,9 +73,9 @@ const References = ({ loggedUser }) => {
 
 export default References;
 
-const ReferecesForm = ({ data, addItem, isSwitchChecked, toggleSwitch, removeItem, onChangeHandler }) => {
+const ReferecesForm = ({ data, addItem, isSwitchChecked, toggleSwitch, removeItem, onChangeHandler, hidingClickHandler }) => {
     return (
-        <SectionWrapper sectionTitle={'References'} flexDirect='column'>
+        <SectionWrapper sectionTitle={'References'} flexDirect='column' isHiding={true} hidingClickHandler={hidingClickHandler}>
             <Box my={2} mb={5} w={'100%'} px='0' minW={'200px'}  >
                 <SwitchCustom
                     size={'sm'}

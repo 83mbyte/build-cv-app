@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
-import { getHobbies, inputHobbiesUpdate } from '../../redux/features/hobbies/hobbiesSlice';
+import { getHobbies, hobbiesVisibleToggler, inputHobbiesUpdate } from '../../redux/features/hobbies/hobbiesSlice';
 import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
 import SectionWrapper from '../Wrappers/SectionWrapper';
 import SectionDescription from './SectionDescription';
@@ -23,6 +23,11 @@ const Hobbies = ({ loggedUser }) => {
         dispatch(inputHobbiesUpdate({ value: data }));
     }
 
+    const hidingClickHandler = () => {
+        dispatch(hobbiesVisibleToggler());
+        dispatch(setIsModifiedContent({ status: true, section: 'hobbies' }));
+    }
+
     if (status === 'loading') {
         content = <LoadingSectionSkeleton rowsNumber={0} textArea={true} />
     }
@@ -35,7 +40,7 @@ const Hobbies = ({ loggedUser }) => {
     }
     else if (status === 'ready' && data) {
         content = isSectionVisible &&
-            <SectionWrapper sectionTitle={'Hobbies'} flexDirect={'column'} >
+            <SectionWrapper sectionTitle={'Hobbies'} flexDirect={'column'} isHiding={true} hidingClickHandler={hidingClickHandler}>
                 <SectionDescription value={'What do you like?'} />
                 <TextEditor state={data} onChangeCallback={onChangeHandler} />
             </SectionWrapper>

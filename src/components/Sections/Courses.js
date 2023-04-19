@@ -4,7 +4,7 @@ import { Accordion, Box, SimpleGrid, } from '@chakra-ui/react';
 import SectionWrapper from '../Wrappers/SectionWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
-import { addCoursesItem, getCourses, inputCoursesUpdate, removeCoursesItem } from '../../redux/features/courses/coursesSlice';
+import { addCoursesItem, coursesVisibleToggler, getCourses, inputCoursesUpdate, removeCoursesItem } from '../../redux/features/courses/coursesSlice';
 import AccordionElem from '../Accordion/AccordionElem';
 import AddMoreItemBtn from '../AddMoreItemBtn/AddMoreItemBtn';
 import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
@@ -33,6 +33,10 @@ const Courses = ({ loggedUser }) => {
         dispatch(inputCoursesUpdate({ arrayIndex: index, inputName: name, value: value }));
         dispatch(setIsModifiedContent({ status: true, section: 'courses' }));
     }
+    const hidingClickHandler = () => {
+        dispatch(coursesVisibleToggler());
+        dispatch(setIsModifiedContent({ status: true, section: 'courses' }));
+    }
 
 
     if (status === 'loading') {
@@ -46,7 +50,7 @@ const Courses = ({ loggedUser }) => {
     }
     else if (status === 'ready' && data) {
         content = isSectionVisible &&
-            <CoursesForm data={data} addItem={addItem} removeItem={removeItem} onChangeHandler={onChangeHandler} />
+            <CoursesForm data={data} addItem={addItem} removeItem={removeItem} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
     }
 
     useEffect(() => {
@@ -63,9 +67,9 @@ const Courses = ({ loggedUser }) => {
 
 export default Courses;
 
-const CoursesForm = ({ data, addItem, removeItem, onChangeHandler }) => {
+const CoursesForm = ({ data, addItem, removeItem, onChangeHandler, hidingClickHandler }) => {
     return (
-        <SectionWrapper sectionTitle={'Courses'} flexDirect='column'>
+        <SectionWrapper sectionTitle={'Courses'} flexDirect='column' isHiding={true} hidingClickHandler={hidingClickHandler} >
 
             <Accordion allowToggle allowMultiple={false}>
 
