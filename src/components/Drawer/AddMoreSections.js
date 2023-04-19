@@ -7,7 +7,7 @@ import { languagesVisibleToggler } from '../../redux/features/languages/language
 import { hobbiesVisibleToggler } from '../../redux/features/hobbies/hobbiesSlice';
 import { referencesVisibleToggler } from '../../redux/features/references/referencesSlice';
 
-import { IoSchool, IoLanguage, IoPeople, IoColorPalette } from "react-icons/io5";
+import { IoSchool, IoLanguage, IoPeople, IoColorPalette, IoCheckmarkDone } from "react-icons/io5";
 
 const AddMoreSections = () => {
     const dispatch = useDispatch();
@@ -46,14 +46,14 @@ const AddMoreSections = () => {
             <Heading as={'h5'} size={'xs'} mb={2}>Add more sections</Heading>
             <Wrap px={2}>
                 <WrapItem>
-                    <Button ref={coursesRef} isDisabled={coursesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} onClick={() => onClickBtnHandler(coursesRef.current.innerText)} leftIcon={<IoSchool />}
+                    <Button ref={coursesRef} isDisabled={coursesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} onClick={() => onClickBtnHandler(coursesRef.current.innerText)} leftIcon={coursesDisabled ? <IoCheckmarkDone /> : <IoSchool />}
                     >Courses</Button>
                 </WrapItem>
                 <WrapItem>
-                    <Button ref={hobbiesRef} isDisabled={hobbiesDisable} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoColorPalette />} onClick={() => onClickBtnHandler(hobbiesRef.current.innerText)} >Hobbies</Button>
+                    <Button ref={hobbiesRef} isDisabled={hobbiesDisable} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={hobbiesDisable ? <IoCheckmarkDone /> : <IoColorPalette />} onClick={() => onClickBtnHandler(hobbiesRef.current.innerText)} >Hobbies</Button>
                 </WrapItem>
-                <WrapItem><Button ref={languagesRef} isDisabled={languagesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoLanguage />} onClick={() => onClickBtnHandler(languagesRef.current.innerText)}>Languages</Button></WrapItem>
-                <WrapItem><Button ref={referencesRef} isDisabled={referencesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoPeople />} onClick={() => onClickBtnHandler(referencesRef.current.innerText)}>References</Button></WrapItem>
+                <WrapItem><Button ref={languagesRef} isDisabled={languagesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={languagesDisabled ? <IoCheckmarkDone /> : <IoLanguage />} onClick={() => onClickBtnHandler(languagesRef.current.innerText)}>Languages</Button></WrapItem>
+                <WrapItem><Button ref={referencesRef} isDisabled={referencesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={referencesDisabled ? <IoCheckmarkDone /> : <IoPeople />} onClick={() => onClickBtnHandler(referencesRef.current.innerText)}>References</Button></WrapItem>
             </Wrap>
         </>
     )
