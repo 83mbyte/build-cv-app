@@ -8,6 +8,7 @@ import { hobbiesVisibleToggler } from '../../redux/features/hobbies/hobbiesSlice
 import { referencesVisibleToggler } from '../../redux/features/references/referencesSlice';
 
 import { IoSchool, IoLanguage, IoPeople, IoColorPalette, IoCheckmarkDone } from "react-icons/io5";
+import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
 
 const AddMoreSections = () => {
     const dispatch = useDispatch();
@@ -24,16 +25,20 @@ const AddMoreSections = () => {
     const onClickBtnHandler = (elem) => {
         switch (elem) {
             case 'Courses':
-                dispatch(coursesVisibleToggler())
+                dispatch(coursesVisibleToggler());
+                dispatch(setIsModifiedContent({ status: true, section: 'courses' }));
                 break;
             case 'Hobbies':
                 dispatch(hobbiesVisibleToggler());
+                dispatch(setIsModifiedContent({ status: true, section: 'hobbies' }));
                 break;
             case 'Languages':
                 dispatch(languagesVisibleToggler());
+                dispatch(setIsModifiedContent({ status: true, section: 'languages' }));
                 break;
             case 'References':
-                dispatch(referencesVisibleToggler())
+                dispatch(referencesVisibleToggler());
+                dispatch(setIsModifiedContent({ status: true, section: 'references' }));
                 break;
             default:
                 break;
