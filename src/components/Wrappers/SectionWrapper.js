@@ -29,7 +29,7 @@ const SectionWrapper = ({ sectionTitle, type = 'flex', flexDirect = 'row', isHid
                 <Heading as='h3' size={['sm', 'md', 'md']} pb={0}>{sectionTitle}</Heading>
                 {
                     isHiding &&
-                    <Box  >
+                    <Box onClick={hidingClickHandler}>
                         <ToolTip label={'hide section'}>
                             <HideIcon />
                         </ToolTip>
