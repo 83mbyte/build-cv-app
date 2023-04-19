@@ -1,7 +1,9 @@
-import { Box, Heading, Flex, SimpleGrid, } from "@chakra-ui/react";
+import { Box, Heading, Flex, SimpleGrid, HStack } from "@chakra-ui/react";
 import React from "react";
+import ToolTip from "../Tooltip/ToolTip";
+import { HideIcon } from "../Icons/Icon";
 
-const SectionWrapper = ({ sectionTitle, type = 'flex', flexDirect = 'row', children }) => {
+const SectionWrapper = ({ sectionTitle, type = 'flex', flexDirect = 'row', isHiding = false, hidingClickHandler, children }) => {
     const switchLayout = () => {
         switch (type) {
             case 'grid':
@@ -23,7 +25,17 @@ const SectionWrapper = ({ sectionTitle, type = 'flex', flexDirect = 'row', child
 
     return (
         <Box as='section' p={5} w='100%'>
-            <Heading as='h3' size={['sm', 'md', 'md']} pb={0}>{sectionTitle}</Heading>
+            <HStack spacing={2} >
+                <Heading as='h3' size={['sm', 'md', 'md']} pb={0}>{sectionTitle}</Heading>
+                {
+                    isHiding &&
+                    <Box  >
+                        <ToolTip label={'hide section'}>
+                            <HideIcon />
+                        </ToolTip>
+                    </Box>
+                }
+            </HStack>
             {
                 switchLayout()
             }
