@@ -45,8 +45,8 @@ const skillsSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(getSkills.fulfilled, (state, action) => {
+                state.status = 'ready';
                 if (action.payload) {
-                    state.status = 'ready';
 
                     if (action.payload.data) {
                         state.data = action.payload.data;
