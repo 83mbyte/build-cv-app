@@ -19,9 +19,18 @@ const utilitySlice = createSlice({
         isModifiedContent: {
             status: false,
             sections: []
+        },
+        additionalSections: {
+            data: [],
+            status: 'idle',
+            error: ''
         }
     },
     reducers: {
+        additionalSectionAdd: (state, action) => {
+            state.additionalSections.data = [...state.additionalSections.data, action.payload];
+        },
+
         clearAuthError: (state) => {
             state.auth.error = '';
             state.auth.status = '';
@@ -137,10 +146,42 @@ const utilitySlice = createSlice({
                     }
                 }
             })
+
+            .addCase(putAdditionalSectionsOnServerThunk.pending, (state) => {
+                state.additionalSections.status = 'loading';
+            })
+            .addCase(putAdditionalSectionsOnServerThunk.rejected, (state, action) => {
+                state.additionalSections.status = 'failed';
+                if (action?.error?.message) {
+                    state.additionalSections.error = action.error.message;
+                }
+            })
+            .addCase(putAdditionalSectionsOnServerThunk.fulfilled, (state, action) => {
+                state.additionalSections.status = 'ready';
+                if (action.payload !== null) {
+                    state.additionalSections.data = action.payload;
+                }
+            })
+
+            .addCase(getAdditionalSections.pending, (state) => {
+                state.additionalSections.status = 'loading';
+            })
+            .addCase(getAdditionalSections.rejected, (state, action) => {
+                state.additionalSections.status = 'failed';
+                if (action?.error?.message) {
+                    state.additionalSections.error = action.error.message;
+                }
+            })
+            .addCase(getAdditionalSections.fulfilled, (state, action) => {
+                state.additionalSections.status = 'ready';
+                if (action.payload !== null) {
+                    state.additionalSections.data = action.payload;
+                }
+            })
     }
 })
 
-export const { clearAuthError, addLoggedUser, modalIsOpenToggle, drawerIsOpenToggle, setIsModifiedContent } = utilitySlice.actions;
+export const { clearAuthError, addLoggedUser, modalIsOpenToggle, drawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, } = utilitySlice.actions;
 
 export default utilitySlice.reducer;
 
@@ -176,6 +217,26 @@ export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', 
 
     if (resp.ok && resp.status === 200) {
         return dataObj.section
+    } else {
+        return null
+    }
+})
+
+export const putAdditionalSectionsOnServerThunk = createAsyncThunk('utility/putAdditionalSectionsOnServerThunk', async (dataObj) => {
+    let resp = await dbAPI.putDataToSection(dataObj.user, 'utility/additionalSections/data', dataObj.data);
+
+    if (resp.ok && resp.status === 200) {
+        return dataObj.data
+    } else {
+        return null
+    }
+})
+
+export const getAdditionalSections = createAsyncThunk('hobbies/getAdditionalSections', async (obj) => {
+    let resp = await dbAPI.getSectionData('utility/additionalSections/data', obj.userId);
+
+    if (resp) {
+        return resp;
     } else {
         return null
     }
