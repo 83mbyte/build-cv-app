@@ -105,81 +105,50 @@ export const dbAPI = {
                 __serv: {
                     isSectionVisible: true,
                 },
-                data: [{
-                    degree: '',
-                    institution: '',
-                    location: '',
-                    period: '',
-                    comments: '',
-                }]
+                data: []
             },
             links: {
                 __serv: {
                     isSectionVisible: true,
                 },
-                data: [{
-                    label: '',
-                    link: ''
-                }]
+                data: []
             },
             skills: {
                 __serv: {
                     isSectionVisible: true,
                     isSwitchChecked: false,
                 },
-                data: [{
-                    label: '',
-                    level: ''
-                }]
+                data: []
             },
             courses: {
-                __serv: {
-                    isSectionVisible: false,
-                },
-                data: [{
-                    course: '',
-                    institution: '',
-                    period: '',
-                    link: ''
-                }]
+                // __serv: {
+                //     isSectionVisible: false,
+                // },
+                data: []
             },
             history: {
                 __serv: {
                     isSectionVisible: true,
                 },
-                data: [{
-                    job: '',
-                    employer: '',
-                    period: '',
-                    location: '',
-                    comments: ''
-                }]
+                data: []
             },
             languages: {
-                __serv: {
-                    isSectionVisible: false,
-                },
-                data: [{
-                    language: '',
-                    level: '',
-                }]
+                // __serv: {
+                //     isSectionVisible: false,
+                // },
+                data: []
             },
             references: {
                 __serv: {
-                    isSectionVisible: false,
+                    //isSectionVisible: false,
                     isSwitchChecked: false,
                 },
-                data: [{
-                    name: '',
-                    company: '',
-                    phone: '',
-                    email: ''
-                }]
+                data: []
             },
             hobbies: {
-                __serv: {
-                    isSectionVisible: false,
-                },
+                // __serv: {
+                //     isSectionVisible: false,
+                // },
                 data: {
                     value: ''
                 }
