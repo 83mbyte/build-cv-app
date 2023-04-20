@@ -1,8 +1,8 @@
 import { Accordion, Box, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addLanguagesItem, getLanguages, inputLanguagesUpdate, languagesVisibleToggler, removeLanguagesItem } from '../../redux/features/languages/languagesSlice';
-import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
+import { addLanguagesItem, getLanguages, inputLanguagesUpdate, removeLanguagesItem } from '../../redux/features/languages/languagesSlice';
+import { putAdditionalSectionsOnServerThunk, setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
 import AccordionElem from '../Accordion/AccordionElem';
 import AddMoreItemBtn from '../AddMoreItemBtn/AddMoreItemBtn';
 import InputCustom from '../FormElements/InputCustom';
@@ -17,7 +17,8 @@ const Languages = ({ loggedUser }) => {
     const data = useSelector(state => state.languages.data);
     const status = useSelector(state => state.languages.status);
     const error = useSelector(state => state.languages.error);
-    const isSectionVisible = useSelector(state => state.languages.__serv.isSectionVisible);
+    const additionalSections = useSelector(state => state.utility.additionalSections.data);
+
 
     const removeItem = (e, itemToRemove) => {
         e.preventDefault();
@@ -35,8 +36,13 @@ const Languages = ({ loggedUser }) => {
     }
 
     const hidingClickHandler = () => {
-        dispatch(languagesVisibleToggler());
-        dispatch(setIsModifiedContent({ status: true, section: 'languages' }));
+        let index = additionalSections.indexOf('languages');
+        let tmp = [...additionalSections];
+        tmp.splice(index, 1);
+        dispatch(putAdditionalSectionsOnServerThunk({
+            user: loggedUser.userId,
+            data: tmp
+        }))
     }
 
     if (status === 'loading') {
@@ -50,8 +56,7 @@ const Languages = ({ loggedUser }) => {
         content = <Box>{error}</Box>
     }
     else if (status === 'ready' && data) {
-        content = isSectionVisible &&
-            <LanguagesForm data={data} removeItem={removeItem} addItem={addItem} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
+        content = <LanguagesForm data={data} removeItem={removeItem} addItem={addItem} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
     }
 
     useEffect(() => {
@@ -72,7 +77,6 @@ export default Languages;
 const LanguagesForm = ({ data, removeItem, addItem, onChangeHandler, hidingClickHandler }) => {
 
     const itemsArray = ['Native speaker', 'Highly proficient', 'Very good command', 'Good working knowledge', 'Working knowledge', 'C2', 'C1', 'B2', 'B1', 'A2', 'A1'];
-
 
     return (
         <SectionWrapper sectionTitle={'Languages'} flexDirect='column' isHiding={true} hidingClickHandler={hidingClickHandler}>

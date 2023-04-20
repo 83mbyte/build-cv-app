@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 import { Accordion, Box, SimpleGrid } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addReferencesItem, getReferences, inputReferencesUpdate, referencesVisibleToggler, removeReferencesItem, toggleReferencesSwitch } from '../../redux/features/references/referencesSlice';
-import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
+import { addReferencesItem, getReferences, inputReferencesUpdate, removeReferencesItem, toggleReferencesSwitch } from '../../redux/features/references/referencesSlice';
+import { putAdditionalSectionsOnServerThunk, setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
 
 import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
 import SectionWrapper from '../Wrappers/SectionWrapper';
@@ -20,8 +20,8 @@ const References = ({ loggedUser }) => {
     const data = useSelector(state => state.references.data);
     const status = useSelector(state => state.references.status);
     const error = useSelector(state => state.references.error);
-    const isSectionVisible = useSelector(state => state.references.__serv.isSectionVisible);
     const isSwitchChecked = useSelector(state => state.references.__serv.isSwitchChecked);
+    const additionalSections = useSelector(state => state.utility.additionalSections.data);
 
     const addItem = () => {
         dispatch(addReferencesItem());
@@ -41,8 +41,13 @@ const References = ({ loggedUser }) => {
         dispatch(setIsModifiedContent({ status: true, section: 'references' }));
     }
     const hidingClickHandler = () => {
-        dispatch(referencesVisibleToggler());
-        dispatch(setIsModifiedContent({ status: true, section: 'references' }));
+        let index = additionalSections.indexOf('references');
+        let tmp = [...additionalSections];
+        tmp.splice(index, 1);
+        dispatch(putAdditionalSectionsOnServerThunk({
+            user: loggedUser.userId,
+            data: tmp
+        }))
     }
 
     if (status === 'loading') {
@@ -55,8 +60,7 @@ const References = ({ loggedUser }) => {
         content = <Box>{error}</Box>
     }
     else if (status === 'ready' && data) {
-        content = isSectionVisible &&
-            <ReferecesForm data={data} isSwitchChecked={isSwitchChecked} addItem={addItem} removeItem={removeItem} toggleSwitch={toggleSwitch} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
+        content = <ReferecesForm data={data} isSwitchChecked={isSwitchChecked} addItem={addItem} removeItem={removeItem} toggleSwitch={toggleSwitch} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
     }
 
     useEffect(() => {

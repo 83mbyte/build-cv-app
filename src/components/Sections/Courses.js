@@ -4,10 +4,10 @@ import { Accordion, Box, SimpleGrid, } from '@chakra-ui/react';
 import SectionWrapper from '../Wrappers/SectionWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
-import { addCoursesItem, coursesVisibleToggler, getCourses, inputCoursesUpdate, removeCoursesItem } from '../../redux/features/courses/coursesSlice';
+import { addCoursesItem, getCourses, inputCoursesUpdate, removeCoursesItem } from '../../redux/features/courses/coursesSlice';
 import AccordionElem from '../Accordion/AccordionElem';
 import AddMoreItemBtn from '../AddMoreItemBtn/AddMoreItemBtn';
-import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
+import { putAdditionalSectionsOnServerThunk, setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
 import InputCustom from '../FormElements/InputCustom';
 
 
@@ -18,7 +18,7 @@ const Courses = ({ loggedUser }) => {
     const data = useSelector(state => state.courses.data);
     const status = useSelector(state => state.courses.status);
     const error = useSelector(state => state.courses.error);
-    const isSectionVisible = useSelector(state => state.courses.__serv.isSectionVisible);
+    const additionalSections = useSelector(state => state.utility.additionalSections.data);
 
     const addItem = () => {
         dispatch(addCoursesItem())
@@ -34,8 +34,13 @@ const Courses = ({ loggedUser }) => {
         dispatch(setIsModifiedContent({ status: true, section: 'courses' }));
     }
     const hidingClickHandler = () => {
-        dispatch(coursesVisibleToggler());
-        dispatch(setIsModifiedContent({ status: true, section: 'courses' }));
+        let index = additionalSections.indexOf('courses');
+        let tmp = [...additionalSections];
+        tmp.splice(index, 1);
+        dispatch(putAdditionalSectionsOnServerThunk({
+            user: loggedUser.userId,
+            data: tmp
+        }))
     }
 
 
@@ -49,8 +54,7 @@ const Courses = ({ loggedUser }) => {
         content = <Box>{error}</Box>
     }
     else if (status === 'ready' && data) {
-        content = isSectionVisible &&
-            <CoursesForm data={data} addItem={addItem} removeItem={removeItem} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
+        content = <CoursesForm data={data} addItem={addItem} removeItem={removeItem} onChangeHandler={onChangeHandler} hidingClickHandler={hidingClickHandler} />
     }
 
     useEffect(() => {

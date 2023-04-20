@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 import { Box } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
-import { getHobbies, hobbiesVisibleToggler, inputHobbiesUpdate } from '../../redux/features/hobbies/hobbiesSlice';
+import { putAdditionalSectionsOnServerThunk, setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
+import { getHobbies, inputHobbiesUpdate } from '../../redux/features/hobbies/hobbiesSlice';
 import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
 import SectionWrapper from '../Wrappers/SectionWrapper';
 import SectionDescription from './SectionDescription';
@@ -16,7 +16,7 @@ const Hobbies = ({ loggedUser }) => {
     const data = useSelector(state => state.hobbies.data);
     const status = useSelector(state => state.hobbies.status);
     const error = useSelector(state => state.hobbies.error);
-    const isSectionVisible = useSelector(state => state.hobbies.__serv.isSectionVisible);
+    const additionalSections = useSelector(state => state.utility.additionalSections.data);
 
     const onChangeHandler = (data) => {
         dispatch(setIsModifiedContent({ status: true, section: 'hobbies' }));
@@ -24,8 +24,13 @@ const Hobbies = ({ loggedUser }) => {
     }
 
     const hidingClickHandler = () => {
-        dispatch(hobbiesVisibleToggler());
-        dispatch(setIsModifiedContent({ status: true, section: 'hobbies' }));
+        let index = additionalSections.indexOf('hobbies');
+        let tmp = [...additionalSections];
+        tmp.splice(index, 1);
+        dispatch(putAdditionalSectionsOnServerThunk({
+            user: loggedUser.userId,
+            data: tmp
+        }))
     }
 
     if (status === 'loading') {
@@ -39,11 +44,10 @@ const Hobbies = ({ loggedUser }) => {
         content = <Box>{error}</Box>
     }
     else if (status === 'ready' && data) {
-        content = isSectionVisible &&
-            <SectionWrapper sectionTitle={'Hobbies'} flexDirect={'column'} isHiding={true} hidingClickHandler={hidingClickHandler}>
-                <SectionDescription value={'What do you like?'} />
-                <TextEditor state={data} onChangeCallback={onChangeHandler} />
-            </SectionWrapper>
+        content = <SectionWrapper sectionTitle={'Hobbies'} flexDirect={'column'} isHiding={true} hidingClickHandler={hidingClickHandler}>
+            <SectionDescription value={'What do you like?'} />
+            <TextEditor state={data} onChangeCallback={onChangeHandler} />
+        </SectionWrapper>
     }
 
     useEffect(() => {
