@@ -2,20 +2,16 @@ import { Button, Heading, Wrap, WrapItem } from '@chakra-ui/react';
 import React, { useRef } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { coursesVisibleToggler } from '../../redux/features/courses/coursesSlice';
-import { languagesVisibleToggler } from '../../redux/features/languages/languagesSlice';
-import { hobbiesVisibleToggler } from '../../redux/features/hobbies/hobbiesSlice';
-import { referencesVisibleToggler } from '../../redux/features/references/referencesSlice';
 
 import { IoSchool, IoLanguage, IoPeople, IoColorPalette, IoCheckmarkDone } from "react-icons/io5";
-import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
+import { additionalSectionAdd } from '../../redux/features/utility/utilitySlice';
 
 const AddMoreSections = () => {
     const dispatch = useDispatch();
-    const hobbiesDisable = useSelector(state => state.hobbies.__serv.isSectionVisible);
-    const languagesDisabled = useSelector(state => state.languages.__serv.isSectionVisible);
-    const coursesDisabled = useSelector(state => state.courses.__serv.isSectionVisible);
-    const referencesDisabled = useSelector(state => state.references.__serv.isSectionVisible);
+    const hobbiesDisable = useSelector(state => state.utility.additionalSections.data.includes('hobbies'));
+    const languagesDisabled = useSelector(state => state.utility.additionalSections.data.includes('languages'));
+    const coursesDisabled = useSelector(state => state.utility.additionalSections.data.includes('courses'));
+    const referencesDisabled = useSelector(state => state.utility.additionalSections.data.includes('references'));
 
     const coursesRef = useRef(null);
     const hobbiesRef = useRef(null);
@@ -25,20 +21,16 @@ const AddMoreSections = () => {
     const onClickBtnHandler = (elem) => {
         switch (elem) {
             case 'Courses':
-                dispatch(coursesVisibleToggler());
-                dispatch(setIsModifiedContent({ status: true, section: 'courses' }));
+                dispatch(additionalSectionAdd('courses'));
                 break;
             case 'Hobbies':
-                dispatch(hobbiesVisibleToggler());
-                dispatch(setIsModifiedContent({ status: true, section: 'hobbies' }));
+                dispatch(additionalSectionAdd('hobbies'));
                 break;
             case 'Languages':
-                dispatch(languagesVisibleToggler());
-                dispatch(setIsModifiedContent({ status: true, section: 'languages' }));
+                dispatch(additionalSectionAdd('languages'));
                 break;
             case 'References':
-                dispatch(referencesVisibleToggler());
-                dispatch(setIsModifiedContent({ status: true, section: 'references' }));
+                dispatch(additionalSectionAdd('references'));
                 break;
             default:
                 break;
