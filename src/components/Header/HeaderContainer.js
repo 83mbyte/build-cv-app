@@ -5,7 +5,7 @@ import React from 'react';
 
 import { MdPreview, MdSave, MdMoreHoriz } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { drawerIsOpenToggle, modalIsOpenToggle, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
+import { drawerIsOpenToggle, modalIsOpenToggle, putAdditionalSectionsOnServerThunk, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
 
 import ToolTip from '../Tooltip/ToolTip';
 import HeaderLogo from './HeaderLogo';
@@ -20,6 +20,7 @@ const HeaderContainer = ({ loggedUser }) => {
     const state = useSelector(state => state);
     const isModifiedContent = useSelector(state => state.utility.isModifiedContent);
     const isDrawerOpen = useSelector(state => state.utility.drawer.isOpen);
+    const additionalSections = useSelector(state => state.utility.additionalSections.data);
 
 
     const saveAllChanges = () => {
@@ -48,6 +49,12 @@ const HeaderContainer = ({ loggedUser }) => {
     const drawerToggler = () => {
         dispatch(drawerIsOpenToggle());
         saveAllChanges();
+        if (isDrawerOpen) {
+            dispatch(putAdditionalSectionsOnServerThunk({
+                user: loggedUser.userId,
+                data: additionalSections
+            }))
+        }
     }
 
     return (
