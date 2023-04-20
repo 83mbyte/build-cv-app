@@ -5,7 +5,6 @@ const hobbiesSlice = createSlice({
     name: 'hobbies',
     initialState: {
         data: { value: '' },
-        __serv: { isSectionVisible: false },
         status: 'idle',
         error: ''
     },
@@ -13,9 +12,7 @@ const hobbiesSlice = createSlice({
         inputHobbiesUpdate: (state, action) => {
             state.data.value = action.payload.value;
         },
-        hobbiesVisibleToggler: (state) => {
-            state.__serv.isSectionVisible = !state.__serv.isSectionVisible;
-        }
+
     },
     extraReducers(builder) {
         builder
@@ -27,15 +24,11 @@ const hobbiesSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(getHobbies.fulfilled, (state, action) => {
-
+                state.status = 'ready';
                 if (action.payload) {
-                    state.status = 'ready';
 
                     if (action.payload.data) {
                         state.data = action.payload.data;
-                    }
-                    if (action.payload.__serv) {
-                        state.__serv = { ...action.payload.__serv };
                     }
                 }
             })
@@ -43,7 +36,7 @@ const hobbiesSlice = createSlice({
 })
 
 export default hobbiesSlice.reducer;
-export const { inputHobbiesUpdate, hobbiesVisibleToggler } = hobbiesSlice.actions;
+export const { inputHobbiesUpdate } = hobbiesSlice.actions;
 
 export const getHobbies = createAsyncThunk('hobbies/getHobbies', async (obj) => {
     let resp = await dbAPI.getSectionData('hobbies', obj.userId);

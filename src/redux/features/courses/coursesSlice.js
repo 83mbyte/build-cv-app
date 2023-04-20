@@ -5,7 +5,7 @@ const DATA_TEMPLATE_OBJECT = {
     course: '',
     institution: '',
     period: '',
-    link: ''
+    cert: ''
 }
 
 
@@ -13,7 +13,6 @@ const coursesSlice = createSlice({
     name: 'courses',
     initialState: {
         data: [],
-        __serv: { isSectionVisible: false },
         status: 'idle',
         error: ''
     },
@@ -30,9 +29,7 @@ const coursesSlice = createSlice({
         inputCoursesUpdate: (state, action) => {
             state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
         },
-        coursesVisibleToggler: (state) => {
-            state.__serv.isSectionVisible = !state.__serv.isSectionVisible;
-        }
+
     },
     extraReducers(builder) {
         builder
@@ -44,15 +41,10 @@ const coursesSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(getCourses.fulfilled, (state, action) => {
+                state.status = 'ready';
                 if (action.payload) {
-                    state.status = 'ready';
-
                     if (action.payload.data) {
                         state.data = action.payload.data;
-                    }
-
-                    if (action.payload.__serv) {
-                        state.__serv = { ...action.payload.__serv };
                     }
                 }
             })
@@ -61,7 +53,7 @@ const coursesSlice = createSlice({
 
 
 export default coursesSlice.reducer;
-export const { addCoursesItem, removeCoursesItem, inputCoursesUpdate, coursesVisibleToggler } = coursesSlice.actions;
+export const { addCoursesItem, removeCoursesItem, inputCoursesUpdate } = coursesSlice.actions;
 
 export const getCourses = createAsyncThunk('courses/getCourses', async (obj) => {
     let resp = await dbAPI.getSectionData('courses', obj.userId);

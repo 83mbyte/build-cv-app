@@ -9,7 +9,6 @@ const languagesSlice = createSlice({
     name: 'languages',
     initialState: {
         data: [],
-        __serv: { isSectionVisible: false },
         status: 'idle',
         error: ''
     },
@@ -25,12 +24,9 @@ const languagesSlice = createSlice({
         },
         addLanguagesItem: (state) => {
             state.data = [...state.data, DATA_TEMPLATE_OBJECT]
-        },
-        languagesVisibleToggler: (state) => {
-            state.__serv.isSectionVisible = !state.__serv.isSectionVisible;
         }
-
     },
+
     extraReducers(builder) {
         builder
             .addCase(getLanguages.pending, (state) => {
@@ -41,15 +37,10 @@ const languagesSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(getLanguages.fulfilled, (state, action) => {
+                state.status = 'ready';
                 if (action.payload) {
-                    state.status = 'ready';
-
                     if (action.payload.data) {
                         state.data = action.payload.data;
-                    }
-
-                    if (action.payload.__serv) {
-                        state.__serv = { ...action.payload.__serv };
                     }
                 }
             })
@@ -58,7 +49,7 @@ const languagesSlice = createSlice({
 })
 
 export default languagesSlice.reducer;
-export const { inputLanguagesUpdate, removeLanguagesItem, addLanguagesItem, languagesVisibleToggler } = languagesSlice.actions;
+export const { inputLanguagesUpdate, removeLanguagesItem, addLanguagesItem } = languagesSlice.actions;
 
 export const getLanguages = createAsyncThunk('languages/getLanguages', async (obj) => {
     let resp = await dbAPI.getSectionData('languages', obj.userId);
