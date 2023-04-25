@@ -213,7 +213,7 @@ export const authLogout = createAsyncThunk('utility/authLogout', async () => {
 })
 
 export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', async (dataObj) => {
-    let resp = await dbAPI.putDataToSection(dataObj.user, dataObj.section, dataObj.data);
+    let resp = await dbAPI.putDataToSection(dataObj.user, dataObj.section, dataObj.token, dataObj.data);
 
     if (resp.ok && resp.status === 200) {
         return dataObj.section
@@ -223,7 +223,7 @@ export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', 
 })
 
 export const putAdditionalSectionsOnServerThunk = createAsyncThunk('utility/putAdditionalSectionsOnServerThunk', async (dataObj) => {
-    let resp = await dbAPI.putDataToSection(dataObj.user, 'utility/additionalSections/data', dataObj.data);
+    let resp = await dbAPI.putDataToSection(dataObj.user, 'utility/additionalSections/data', dataObj.token, dataObj.data,);
 
     if (resp.ok && resp.status === 200) {
         return dataObj.data
@@ -233,7 +233,7 @@ export const putAdditionalSectionsOnServerThunk = createAsyncThunk('utility/putA
 })
 
 export const getAdditionalSections = createAsyncThunk('hobbies/getAdditionalSections', async (obj) => {
-    let resp = await dbAPI.getSectionData('utility/additionalSections/data', obj.userId);
+    let resp = await dbAPI.getSectionData('utility/additionalSections/data', obj.userId, obj.accessToken);
 
     if (resp) {
         return resp;

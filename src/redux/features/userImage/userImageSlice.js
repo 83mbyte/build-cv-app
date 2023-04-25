@@ -61,21 +61,21 @@ const userImageSlice = createSlice({
 export default userImageSlice.reducer;
 
 export const uploadImageData = createAsyncThunk('userImage/uploadImageData', async ({ user, imageData }) => {
-    const resp = await dbAPI.putUserImageData(user.userId, imageData)
+    const resp = await dbAPI.putUserImageData(user.userId, user.accessToken, imageData)
     if (resp && resp.status === 200) {
         return imageData
     }
 })
 
 export const deleteImageData = createAsyncThunk('userImage/deleteImageData', async ({ user }) => {
-    const resp = await dbAPI.putUserImageData(user.userId, '')
+    const resp = await dbAPI.putUserImageData(user.userId, user.accessToken, '')
     if (resp && resp.status === 200) {
         return 'image removed'
     }
 })
 
 export const getUserImage = createAsyncThunk('userImage/getUserImage', async (obj) => {
-    let resp = await dbAPI.getSectionData('image', obj.userId);
+    let resp = await dbAPI.getSectionData('image', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {
