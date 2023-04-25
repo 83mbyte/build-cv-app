@@ -39,7 +39,7 @@ export default hobbiesSlice.reducer;
 export const { inputHobbiesUpdate } = hobbiesSlice.actions;
 
 export const getHobbies = createAsyncThunk('hobbies/getHobbies', async (obj) => {
-    let resp = await dbAPI.getSectionData('hobbies', obj.userId);
+    let resp = await dbAPI.getSectionData('hobbies', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

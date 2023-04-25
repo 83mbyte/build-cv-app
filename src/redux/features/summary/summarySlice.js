@@ -43,7 +43,7 @@ export default summarySlice.reducer;
 export const { inputSummaryUpdate } = summarySlice.actions;
 
 export const getSummary = createAsyncThunk('summary/getSummary', async (obj) => {
-    let resp = await dbAPI.getSectionData('summary', obj.userId);
+    let resp = await dbAPI.getSectionData('summary', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

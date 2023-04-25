@@ -48,7 +48,7 @@ export default personDetailsSlice.reducer;
 
 export const getPersonDetails = createAsyncThunk('personDetails/getPersonDetails', async (obj) => {
 
-    let resp = await dbAPI.getSectionData('personDetails', obj.userId);
+    let resp = await dbAPI.getSectionData('personDetails', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

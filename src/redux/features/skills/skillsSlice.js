@@ -63,7 +63,7 @@ export default skillsSlice.reducer;
 export const { removeSkillsItem, inputSkillsUpdate, addSkillsItem, toggleSkillsSwitch } = skillsSlice.actions;
 
 export const getSkills = createAsyncThunk('skills/getSkills', async (obj) => {
-    let resp = await dbAPI.getSectionData('skills', obj.userId);
+    let resp = await dbAPI.getSectionData('skills', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

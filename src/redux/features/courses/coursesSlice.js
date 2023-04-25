@@ -56,7 +56,7 @@ export default coursesSlice.reducer;
 export const { addCoursesItem, removeCoursesItem, inputCoursesUpdate } = coursesSlice.actions;
 
 export const getCourses = createAsyncThunk('courses/getCourses', async (obj) => {
-    let resp = await dbAPI.getSectionData('courses', obj.userId);
+    let resp = await dbAPI.getSectionData('courses', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

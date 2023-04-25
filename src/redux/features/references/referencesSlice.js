@@ -59,7 +59,7 @@ export default referencesSlice.reducer;
 export const { addReferencesItem, removeReferencesItem, toggleReferencesSwitch, inputReferencesUpdate } = referencesSlice.actions;
 
 export const getReferences = createAsyncThunk('references/getReferences', async (obj) => {
-    let resp = await dbAPI.getSectionData('references', obj.userId);
+    let resp = await dbAPI.getSectionData('references', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

@@ -61,7 +61,7 @@ export default educationSlice.reducer;
 export const { inputEducationUpdate, removeEducationItem, addEducationItem } = educationSlice.actions;
 
 export const getEducation = createAsyncThunk('summary/getEducation', async (obj) => {
-    let resp = await dbAPI.getSectionData('education', obj.userId);
+    let resp = await dbAPI.getSectionData('education', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

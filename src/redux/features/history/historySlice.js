@@ -60,7 +60,7 @@ export const { addHistoryItem, removeHistoryItem, inputHistoryUpdate } = history
 
 
 export const getHistory = createAsyncThunk('history/getHistory', async (obj) => {
-    let resp = await dbAPI.getSectionData('history', obj.userId);
+    let resp = await dbAPI.getSectionData('history', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

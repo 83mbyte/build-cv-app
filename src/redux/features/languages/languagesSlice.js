@@ -52,7 +52,7 @@ export default languagesSlice.reducer;
 export const { inputLanguagesUpdate, removeLanguagesItem, addLanguagesItem } = languagesSlice.actions;
 
 export const getLanguages = createAsyncThunk('languages/getLanguages', async (obj) => {
-    let resp = await dbAPI.getSectionData('languages', obj.userId);
+    let resp = await dbAPI.getSectionData('languages', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {

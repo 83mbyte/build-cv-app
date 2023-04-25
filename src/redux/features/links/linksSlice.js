@@ -62,7 +62,7 @@ export default linksSlice.reducer;
 export const { inputLinksUpdate, removeLinksItem, addLinksItem } = linksSlice.actions;
 
 export const getLinks = createAsyncThunk('links/getLinks', async (obj) => {
-    let resp = await dbAPI.getSectionData('links', obj.userId);
+    let resp = await dbAPI.getSectionData('links', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
     } else {
