@@ -41,6 +41,7 @@ const Languages = ({ loggedUser }) => {
         tmp.splice(index, 1);
         dispatch(putAdditionalSectionsOnServerThunk({
             user: loggedUser.userId,
+            token: loggedUser.accessToken,
             data: tmp
         }))
     }

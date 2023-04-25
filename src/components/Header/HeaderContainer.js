@@ -28,6 +28,7 @@ const HeaderContainer = ({ loggedUser }) => {
             dispatch(putDataOnServerThunk(
                 {
                     user: loggedUser.userId,
+                    token: loggedUser.accessToken,
                     section,
                     data: {
                         __serv: { ...state[section].__serv },
@@ -52,6 +53,7 @@ const HeaderContainer = ({ loggedUser }) => {
         if (isDrawerOpen) {
             dispatch(putAdditionalSectionsOnServerThunk({
                 user: loggedUser.userId,
+                token: loggedUser.accessToken,
                 data: additionalSections
             }))
         }
