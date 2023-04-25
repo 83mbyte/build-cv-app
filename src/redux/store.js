@@ -11,6 +11,7 @@ import skillsSliceReducer from "./features/skills/skillsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
 import userImageSliceReducer from "./features/userImage/userImageSlice";
+import templatesSliceReducer from "./features/templates/templatesSlice";
 
 export default configureStore({
     reducer: {
@@ -26,5 +27,6 @@ export default configureStore({
         references: referencesSliceReducer,
         hobbies: hobbiesSliceReducer,
         image: userImageSliceReducer,
+        templates: templatesSliceReducer,
     }
 })
