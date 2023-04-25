@@ -39,7 +39,7 @@ export const authAPI = {
                         if (userCredential.user) {
                             const user = userCredential.user;
                             if (user.emailVerified) {
-                                await dbAPI.checkAndCreate(user.uid, user.displayName, user.email);
+                                await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
                                 //console.log('USER::: ', user)
                                 return {
                                     data: {
@@ -78,7 +78,7 @@ export const authAPI = {
 
 export const dbAPI = {
 
-    checkAndCreate: async (id, displayName, email) => {
+    checkAndCreate: async (id, token, displayName, email) => {
         let userNameSplitted = displayName.split(' ')
         let userTemplate = {
             image: { value: '' },
@@ -154,7 +154,7 @@ export const dbAPI = {
                 }
             },
         }
-        let resp = await fetch(`${URLUSERS}/${id}.json`)
+        let resp = await fetch(`${URLUSERS}/${id}.json?auth=${token}`)
             .then((resp) => {
                 if (resp && resp.status === 200) {
                     return resp.json();
@@ -165,7 +165,7 @@ export const dbAPI = {
             .catch((error) => (console.log(`Couldn't fetch data.. ${error}`)));
 
         if (!resp) {
-            return await fetch(`${URLUSERS}/${id}.json`,
+            return await fetch(`${URLUSERS}/${id}.json?auth=${token}`,
                 {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -175,18 +175,18 @@ export const dbAPI = {
             console.log('Done. User exists.')
         }
     },
-    getSectionData: async (section, id) => {
-        let resp = await getData(`${URLUSERS}/${id}/${section}.json`);
+    getSectionData: async (section, id, token) => {
+        let resp = await getData(`${URLUSERS}/${id}/${section}.json?auth=${token}`);
         return resp;
     },
-    putDataToSection: async (user, section, data) => {
-        let resp = await putData(`${URLUSERS}/${user}/${section}.json`, data);
+    putDataToSection: async (user, section, token, data) => {
+        let resp = await putData(`${URLUSERS}/${user}/${section}.json?auth=${token}`, data);
         return resp;
     },
 
-    putUserImageData: async (user, data) => {
+    putUserImageData: async (user, token, data) => {
         console.log('set data to DB')
-        let resp = await putData(`${URLUSERS}/${user}/image/value.json`, data);
+        let resp = await putData(`${URLUSERS}/${user}/image/value.json?auth=${token}`, data);
         return resp;
     },
 
