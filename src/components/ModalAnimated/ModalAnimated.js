@@ -5,6 +5,7 @@ import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 
 import Backdrop from './Backdrop';
 import { CloseIcon } from '../Icons/Icon';
+import TemplateSelection from '../ResumeTemplate/TemplateSelection';
 
 const animationType = {
     newspaper: {
@@ -106,8 +107,7 @@ const ModalAnimated = ({ handleClose }) => {
 
                         <TabPanel bg='white' w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} >
                             <Box overflowY='scroll' h="lg" >
-                                {/* <TemplateSelection /> */}
-                                <Box p={10}>Under construction..</Box>
+                                <TemplateSelection />
                             </Box>
                         </TabPanel>
                         <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0}>
