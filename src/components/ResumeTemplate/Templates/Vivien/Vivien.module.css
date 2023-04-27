@@ -1,0 +1,388 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Barlow:500&display=swap');
+
+:root {
+  --title-font-vivien: 'Barlow', sans-serif;
+  --section-font-vivien: 'Roboto Mono', sans-serif;
+  --text-font-vivien: sans-serif;
+
+  --font-bold-vivien: 700;
+  --font-normal-vivien: 400;
+
+  --font-size-xl-vivien: 32px;
+  --font-size-lg-vivien: 22px;
+  --font-size-md-vivien: 16px;
+  --font-size-sm-vivien: 12px;
+
+  --font-size-xl-vivien-media900: 28px;
+  --font-size-lg-vivien-media900: 18px;
+  --font-size-md-vivien-media900: 14px;
+  --font-size-sm-vivien-media900: 11px;
+
+  --font-size-xl-vivien-media450: 24px;
+  --font-size-lg-vivien-media450: 14px;
+  --font-size-md-vivien-media450: 12px;
+  --font-size-sm-vivien-media450: 10px;
+
+  --font-size-xl-vivien-media320: 18px;
+  --font-size-lg-vivien-media320: 12px;
+  --font-size-md-vivien-media320: 11px;
+  --font-size-sm-vivien-media320: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: white;
+  height: 100%;
+  margin: 0;
+  padding: 5px;
+  cursor: default;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+
+  font-size: var(--font-size-md-vivien);
+  /* line-height: 24px; */
+  display: block;
+}
+
+/* common elements */
+.bold {
+  font-weight: var(--font-bold-vivien);
+}
+.infoText {
+  /* color: rgb(165, 165, 165); */
+  font-size: var(--font-size-sm-vivien);
+}
+.upperCase {
+  text-transform: uppercase;
+}
+a {
+  text-decoration: underline;
+}
+a:hover {
+  text-decoration: underline;
+}
+.phone {
+  text-decoration: none;
+}
+
+/* elements */
+.resumeContainer {
+  border: 1px solid rgb(163, 163, 163);
+  background-color: white;
+  max-width: 793.706pt;
+  min-height: 830pt;
+  padding: 35px 65px;
+}
+
+.headerContainer {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  min-height: 205px;
+  background-color: rgb(68, 255, 171);
+}
+.headerPhoto {
+  width: 30%;
+}
+.headerPhoto img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: fill; */
+}
+.headerDetails {
+  width: 70%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 25px 50px;
+  font-family: var(--title-font-vivien);
+}
+.person {
+  font-family: var(--title-font-vivien);
+}
+.personName {
+  font-size: var(--font-size-xl-vivien);
+}
+.personJobTitle {
+  font-size: 16px;
+}
+
+.contact {
+  font-size: 16px;
+}
+.contactAddress {
+}
+.contactPhoneEmail {
+  display: flex;
+  flex-direction: row;
+}
+
+.detailsContainer {
+  display: flex;
+}
+
+.leftSide,
+.rightSide {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+}
+.leftSide {
+  /* flex: 0.3; */
+  width: 30%;
+}
+
+.rightSide {
+  width: 70%;
+  padding: 0 5px 0 25px;
+}
+
+.sectionContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 25px;
+}
+.sectionTitle {
+  font-size: var(--font-size-lg-vivien);
+  font-family: var(--section-font-vivien);
+}
+.sectionBody {
+  width: 100%;
+  margin: 15px 0 0 0;
+  font-family: var(--text-font-vivien);
+}
+.item {
+  font-size: var(--font-size-md-vivien);
+  margin: 0 0 15px 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 7px;
+}
+.itemRow {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  align-items: center;
+}
+.levelContainer {
+  display: flex;
+  justify-content: space-around;
+  column-gap: 3px;
+  width: 80%;
+  margin: 0;
+}
+.langLevel {
+  display: flex;
+  padding: 0;
+
+  width: 95%;
+  margin: -10px 0 0 0;
+}
+.levelItem {
+  background-color: #e2e8f0;
+  flex: 1;
+  height: 3px;
+}
+.levelActive {
+  background-color: #a0aec0;
+}
+
+@media (max-width: 900px) {
+  .resumeContainer {
+    background-color: white;
+    /* min-height: 830pt; */
+    /* min-height: auto;  check if auto is correct size */
+    padding: 2% 2%;
+  }
+
+  .headerContainer {
+    min-height: 145px;
+  }
+
+  .headerDetails {
+    padding: 15px 25px;
+    font-family: var(--title-font-vivien);
+  }
+  .person {
+    font-family: var(--title-font-vivien);
+  }
+  .personName {
+    font-size: var(--font-size-xl-vivien-media900);
+  }
+  .personJobTitle {
+    font-size: var(--font-size-md-vivien-media900);
+  }
+
+  .contact {
+    font-size: var(--font-size-md-vivien-media900);
+  }
+
+  .rightSide {
+    padding: 0 5px 0 15px;
+  }
+
+  .sectionContainer {
+    margin-top: 20px;
+  }
+  .sectionTitle {
+    font-size: var(--font-size-lg-vivien-media900);
+    font-family: var(--section-font-vivien);
+  }
+  .sectionBody {
+    margin: 5px 0 0 0;
+  }
+  .item {
+    font-size: var(--font-size-md-vivien-media900);
+    margin: 0 0 10px 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+  }
+  .itemRow {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
+  }
+  .levelContainer {
+    column-gap: 3px;
+    width: 75%;
+  }
+}
+
+@media (max-width: 450px) {
+  .resumeContainer {
+    background-color: white;
+    /* min-height: 830pt; */
+    /* min-height: auto;  check if auto is correct size */
+    padding: 2% 2%;
+  }
+
+  .headerContainer {
+    min-height: 135px;
+  }
+
+  .headerDetails {
+    padding: 12px 20px;
+    font-family: var(--title-font-vivien);
+  }
+  .person {
+    font-family: var(--title-font-vivien);
+  }
+  .personName {
+    font-size: var(--font-size-xl-vivien-media450);
+  }
+  .personJobTitle {
+    font-size: var(--font-size-md-vivien-media450);
+  }
+
+  .contact {
+    font-size: var(--font-size-md-vivien-media450);
+  }
+
+  .rightSide {
+    padding: 0 3px 0 10px;
+  }
+
+  .sectionContainer {
+    margin-top: 10px;
+  }
+  .sectionTitle {
+    font-size: var(--font-size-lg-vivien-media450);
+    font-family: var(--section-font-vivien);
+  }
+  .sectionBody {
+    margin: 5px 0 0 0;
+  }
+  .item {
+    font-size: var(--font-size-md-vivien-media450);
+    margin: 0 0 7px 0;
+    row-gap: 3px;
+  }
+  .itemRow {
+    display: flex;
+    flex-direction: row;
+    column-gap: 8px;
+    align-items: center;
+  }
+  .levelContainer {
+    column-gap: 2px;
+    width: 65%;
+  }
+}
+
+@media (max-width: 320px) {
+  .resumeContainer {
+    background-color: rgb(255, 255, 255);
+    /* min-height: 830pt; */
+    /* min-height: auto;  check if auto is correct size */
+    padding: 2% 2%;
+  }
+
+  .headerContainer {
+    min-height: 120px;
+  }
+
+  .headerDetails {
+    padding: 8px 10px;
+    font-family: var(--title-font-vivien);
+  }
+  .person {
+    font-family: var(--title-font-vivien);
+  }
+  .personName {
+    font-size: var(--font-size-xl-vivien-media320);
+  }
+  .personJobTitle {
+    font-size: var(--font-size-md-vivien-media320);
+  }
+
+  .contact {
+    font-size: var(--font-size-md-vivien-media320);
+  }
+
+  .rightSide {
+    padding: 0 3px 0 5px;
+  }
+
+  .sectionContainer {
+    margin-top: 10px;
+  }
+  .sectionTitle {
+    font-size: var(--font-size-lg-vivien-media320);
+    font-family: var(--section-font-vivien);
+  }
+  .sectionBody {
+    margin: 5px 0 0 0;
+  }
+  .item {
+    font-size: var(--font-size-md-vivien-media320);
+    margin: 0 0 5px 0;
+    row-gap: 2px;
+  }
+  .itemRow {
+    display: flex;
+    flex-direction: row;
+    column-gap: 6px;
+    align-items: center;
+  }
+  .levelContainer {
+    column-gap: 2px;
+    width: 50%;
+  }
+}
