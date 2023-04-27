@@ -6,6 +6,7 @@ import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 import Backdrop from './Backdrop';
 import { CloseIcon } from '../Icons/Icon';
 import TemplateSelection from '../ResumeTemplate/TemplateSelection';
+import TemplatePreview from '../ResumeTemplate/TemplatePreview';
 
 const animationType = {
     newspaper: {
@@ -85,9 +86,9 @@ const ModalAnimated = ({ handleClose }) => {
                 animate="visible"
                 exit="exit"
                 display={'flex'}
-                flexDirection='column'
+                flexDirection={'column'}
             >
-                <VStack w='full' align={'flex-end'} spacing={0} flex={1} bg='white'>
+                <VStack w='full' align={'flex-end'} spacing={0}  >
                     <HStack pb={'2px'}>
                         {/* <Box >
                             <Button size={'xs'} colorScheme={'teal'} variant={'ghost'} onClick={getPdf}>Get PDF</Button>
@@ -97,8 +98,8 @@ const ModalAnimated = ({ handleClose }) => {
                         </Box>
                     </HStack>
                 </VStack>
-                <Tabs isFitted w='full' flex={1} display="flex" flexDirection={'column'} colorScheme={'teal'} isLazy variant='enclosed-colored' size={'sm'} >
-                    <TabList onClick={(e) => e.stopPropagation()}  >
+                <Tabs isFitted w='full' flex={1} display="flex" flexDirection={'column'} colorScheme={'teal'} isLazy variant='enclosed-colored' size={'sm'}  >
+                    <TabList onClick={(e) => e.stopPropagation()} >
                         <Tab fontSize={'sm'} >Templates</Tab>
                         <Tab fontSize={'sm'} >Preview</Tab>
                     </TabList>
@@ -106,14 +107,13 @@ const ModalAnimated = ({ handleClose }) => {
                     <TabPanels display={'flex'} flex={1} py={1} >
 
                         <TabPanel bg='white' w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} >
-                            <Box overflowY='scroll' h="lg" >
+                            <Box overflowY='scroll' h={'md'}>
                                 <TemplateSelection />
                             </Box>
                         </TabPanel>
                         <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0}>
-                            <Box overflowY='scroll' h="lg">
-                                <Box p={10}>Under construction..</Box>
-                                {/* <TemplatePreview ref={htmlRef} /> */}
+                            <Box overflowY='scroll' h={'lg'}>
+                                <TemplatePreview ref={htmlRef} />
                             </Box>
                         </TabPanel>
 
