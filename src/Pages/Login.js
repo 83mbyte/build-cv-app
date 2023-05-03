@@ -12,7 +12,8 @@ import { clearAuthError, logInThunk } from '../redux/features/utility/utilitySli
 const Login_beta = () => {
     // Remove data (email,pass) from inputsValue
     // Remove data (email,pass) from inputsValue
-    const [inputsValue, setInputsValue] = useState({ email: process.env.REACT_APP_TEMP_EMAIL, pass: process.env.REACT_APP_TEMP_PASS });
+    const [inputsValue, setInputsValue] = useState({ email: '', pass: '' });
+    // const [inputsValue, setInputsValue] = useState({ email: process.env.REACT_APP_TEMP_EMAIL, pass: process.env.REACT_APP_TEMP_PASS });
     // Remove data (email,pass) from inputsValue
     // Remove data (email,pass) from inputsValue
 

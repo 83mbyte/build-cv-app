@@ -12,7 +12,8 @@ const SignUp = () => {
     const sizeBreakPoints = ['sm', 'md'];
 
     // Remove data (email,pass) from inputsValue
-    const [inputsValue, setInputsValue] = useState({ firstName: '', lastName: '', email: process.env.REACT_APP_TEMP_EMAIL, pass: process.env.REACT_APP_TEMP_PASS });
+    const [inputsValue, setInputsValue] = useState({ firstName: '', lastName: '', email: '', pass: '' });
+    // const [inputsValue, setInputsValue] = useState({ firstName: '', lastName: '', email: process.env.REACT_APP_TEMP_EMAIL, pass: process.env.REACT_APP_TEMP_PASS });
     // Remove data (email,pass) from inputsValue
 
     const status = useSelector(state => state.utility.auth.status);
