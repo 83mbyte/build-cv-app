@@ -56,6 +56,26 @@ const animationType = {
                 duration: 1,
             },
         },
+    },
+    fade: {
+        hidden: {
+            y: "50vh",
+            opacity: 0,
+        },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                duration: 0.7,
+            },
+        },
+        exit: {
+            y: "100vh",
+            opacity: 0.5,
+            transition: {
+                duration: 1,
+            },
+        },
     }
 }
 
@@ -82,7 +102,7 @@ const ModalAnimated = ({ handleClose }) => {
                 onClick={(e) => e.stopPropagation()}
                 p={1}
                 borderRadius={'md'}
-                variants={animationType.dropIn}
+                variants={animationType.fade}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
