@@ -1,12 +1,13 @@
 import React, { useRef } from 'react';
-import { Box, HStack, Tabs, TabList, TabPanels, Tab, TabPanel, VStack, Button } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { Box, HStack, Tabs, TabList, TabPanels, Tab, TabPanel, VStack } from '@chakra-ui/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 
 import Backdrop from './Backdrop';
 import { CloseIcon } from '../Icons/Icon';
 import TemplateSelection from '../ResumeTemplate/TemplateSelection';
 import TemplatePreview from '../ResumeTemplate/TemplatePreview';
+import PdfBtn from '../PdfBtn/PdfBtn';
 
 const animationType = {
     newspaper: {
@@ -81,7 +82,7 @@ const ModalAnimated = ({ handleClose }) => {
                 onClick={(e) => e.stopPropagation()}
                 p={1}
                 borderRadius={'md'}
-                variants={animationType.newspaper}
+                variants={animationType.dropIn}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
@@ -113,6 +114,9 @@ const ModalAnimated = ({ handleClose }) => {
                         </TabPanel>
                         <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0}>
                             <Box overflowY='scroll' h={'lg'}>
+                                <AnimatePresence mode={'wait'}>
+                                    <PdfBtn onClickAction={getPdf} />
+                                </AnimatePresence>
                                 <TemplatePreview ref={htmlRef} />
                             </Box>
                         </TabPanel>
