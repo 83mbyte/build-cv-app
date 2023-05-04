@@ -10,14 +10,15 @@ const animationType = {
             transform: "scale(0) rotate(720deg)",
             opacity: 0,
             transition: {
-                delay: 0.3,
+                // delay: 5,
             },
         },
         visible: {
             transform: " scale(1) rotate(0deg)",
             opacity: 1,
             transition: {
-                duration: 0.5,
+                duration: 2,
+                delay: 1,
             },
         },
         exit: {
