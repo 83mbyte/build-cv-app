@@ -63,7 +63,7 @@ const Login_beta = () => {
                 </VStack>
                 <Box w='full'>
                     <InputCustom labelText='Email' required name={'email'} inputValue={inputsValue['email']} onChangeCallback={onChangeInput} />
-                    <InputCustom labelText='Password' name={'pass'} type={'password'} inputValue={inputsValue['pass']} onChangeCallback={onChangeInput} errorMessage={'Must be at least 8 characters long.'} required />
+                    <InputCustom labelText='Password' name={'pass'} type={'password'} inputValue={inputsValue['pass']} onChangeCallback={onChangeInput} errorMessage={'Must be at least 6 characters long.'} required />
                 </Box>
                 {
                     (error !== '' || successMsg !== '')

@@ -10,7 +10,7 @@ const WelcomeFAQ = () => {
     const faqData = [
         { q: `How can I customize my resume?`, a: `Our resume templates are designed to adapt to your content and look great across all of our designs.` },
         { q: `How do I change my resume template or design?`, a: `Buildcv.app offers several different design themes/templates. All of our themes work with your resume content so you do not have to worry about changing your content to fit each design. Once you create your resume you can change the design or template in a snap.` },
-        { q: `How do I preview mu resume?`, a: `As you start adding content to your resume, you can preview your document in the template anytime on the preview window. Your edits are reflected in the preview in real-time.` }
+        { q: `How do I preview my resume?`, a: `As you start adding content to your resume, you can preview your document in the template anytime on the preview window. Your edits are reflected in the preview in real-time.` }
     ];
     const container = {
         hidden: { opacity: 0 },
