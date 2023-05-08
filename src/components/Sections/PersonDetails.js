@@ -39,6 +39,7 @@ const PersonDetails = () => {
                 <Box><InputCustom labelText='Street' name={'street'} inputValue={data.street} onChangeCallback={onChangeHandler} /></Box>
                 <Box><InputCustom labelText='City' name={'city'} inputValue={data.city} onChangeCallback={onChangeHandler} /></Box>
                 <Box><InputCustom labelText='Country' name={'country'} inputValue={data.country} onChangeCallback={onChangeHandler} /></Box>
+                <Box><InputCustom labelText='Age' name={'age'} inputValue={data.age} onChangeCallback={onChangeHandler} type={'number'} /></Box>
             </SectionWrapper>
 
     }
