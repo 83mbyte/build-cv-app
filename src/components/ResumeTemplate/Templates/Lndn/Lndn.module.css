@@ -186,8 +186,7 @@ body {
   align-items: baseline;
 }
 .skillsColumn {
-  /* width: 50%; */
-  min-width: 46%;
+  min-width: 45%;
 }
 /* ----------------------------------------------- */
 
@@ -278,7 +277,7 @@ body {
     column-gap: 5px;
   }
   .skillsColumn {
-    min-width: 46%;
+    min-width: 45%;
   }
 }
 
