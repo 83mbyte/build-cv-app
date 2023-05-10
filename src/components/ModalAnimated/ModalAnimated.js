@@ -108,6 +108,7 @@ const ModalAnimated = ({ handleClose }) => {
                 exit="exit"
                 display={'flex'}
                 flexDirection={'column'}
+                h={'95%'}
             >
                 <VStack w='full' align={'flex-end'} spacing={0}  >
                     <HStack pb={'2px'}>
@@ -127,13 +128,13 @@ const ModalAnimated = ({ handleClose }) => {
 
                     <TabPanels display={'flex'} flex={1} py={1} >
 
-                        <TabPanel bg='white' w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} >
-                            <Box overflowY='scroll' h={'md'}>
+                        <TabPanel bg='white' w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} overflowY={'scroll'}>
+                            <Box h={1}>
                                 <TemplateSelection />
                             </Box>
                         </TabPanel>
-                        <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0}>
-                            <Box overflowY='scroll' h={'lg'}>
+                        <TabPanel w="full" onClick={(e) => e.stopPropagation()} p={0} m={0} overflowY={'scroll'}>
+                            <Box h={1}>
                                 <AnimatePresence mode={'wait'}>
                                     <PdfBtn onClickAction={getPdf} />
                                 </AnimatePresence>
