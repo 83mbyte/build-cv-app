@@ -27,6 +27,11 @@ const templatesSlice = createSlice({
                     label: 'Lndn',
                     img: 'https://s3.resume.io/cdn-cgi/image/format=auto,fit=scale-down,dpr=1,width=154/uploads/local_template_image/image/481/persistent-resource/london-resume-templates.jpg'
                 },
+                {
+                    label: 'Sloo',
+                    img: 'https://s3.resume.io/cdn-cgi/image/format=auto,fit=scale-down,dpr=1,width=154/uploads/local_template_image/image/142/persistent-resource/oslo-resume-templates.jpg'
+                },
+
             ]
         },
 
