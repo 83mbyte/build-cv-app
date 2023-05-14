@@ -19,8 +19,8 @@ const StarRating = ({ level, type, customSize = null }) => {
         itemFilled = '&#9673;';
     }
     else {
-        itemEmpty = '&#9733;';
-        itemFilled = '&#9734;';
+        itemEmpty = '&#9734;';
+        itemFilled = '&#9733;';
     }
 
     point = itemFilled.repeat(level) + itemEmpty.repeat(5 - level)
