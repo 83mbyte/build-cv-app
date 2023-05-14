@@ -83,12 +83,12 @@ const ModalAnimated = ({ handleClose }) => {
     const htmlRef = useRef(null);
     const getPdf = () => {
         let opt = {
-            margin: [15, 1],
+            margin: [5, 2, 10, 2],
             pagebreak: {
                 avoid: ['#details', '#links', '#skills', '#lang', '#hobbies', '#profile', '#education', '#courses', '#employment', '#references']
             },
             filename: "resume.pdf",
-            image: { type: "jpeg", quality: 0.98 },
+            image: { type: "jpeg", quality: 0.95 },
             html2canvas: { scale: 3 },
             jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
         };
