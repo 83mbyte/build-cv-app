@@ -73,7 +73,7 @@ export const authAPI = {
             return { message: error.message }
         });
     },
-    logInGoogle: async (initial) => {
+    signInGoogle: async (initial) => {
         const auth = getAuth(app);
 
         if (initial === true) {
