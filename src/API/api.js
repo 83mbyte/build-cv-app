@@ -1,4 +1,4 @@
-import { browserSessionPersistence, createUserWithEmailAndPassword, signOut, getAuth, sendEmailVerification, setPersistence, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, signOut, getAuth, sendEmailVerification, setPersistence, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { app } from "../_firebase/firebase";
 
 const URLUSERS = 'https://buildcv-app-cd890-default-rtdb.firebaseio.com/prvt/users';
@@ -40,7 +40,7 @@ export const authAPI = {
                             const user = userCredential.user;
                             if (user.emailVerified) {
                                 await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
-                                //console.log('USER::: ', user)
+
                                 return {
                                     data: {
                                         userId: user.uid,
@@ -72,7 +72,46 @@ export const authAPI = {
             // An error happened.
             return { message: error.message }
         });
-    }
+    },
+    logInGoogle: async (initial) => {
+        const auth = getAuth(app);
+
+        if (initial === true) {
+            const provider = new GoogleAuthProvider();
+            await signInWithRedirect(auth, provider);
+        }
+        else {
+            return setPersistence(auth, browserSessionPersistence)
+                .then(async () => {
+                    return await getRedirectResult(auth)
+                        .then(async (result) => {
+                            if (result) {
+                                const user = result.user;
+                                await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
+                                return {
+                                    data: {
+                                        userId: user.uid,
+                                        email: user.email,
+                                        accessToken: user.accessToken
+                                    },
+                                    message: 'success'
+                                }
+                            }
+                        })
+                        .catch((error) => {
+                            // Handle Errors here.
+                            const errorMessage = error.message;
+
+                            if (errorMessage) {
+                                return { data: null, message: errorMessage }
+                            }
+                            else {
+                                return { data: null, message: 'unknown error..' }
+                            }
+                        });
+                })
+        }
+    },
 }
 
 
@@ -121,9 +160,6 @@ export const dbAPI = {
                 data: []
             },
             courses: {
-                // __serv: {
-                //     isSectionVisible: false,
-                // },
                 data: []
             },
             history: {
@@ -133,22 +169,15 @@ export const dbAPI = {
                 data: []
             },
             languages: {
-                // __serv: {
-                //     isSectionVisible: false,
-                // },
                 data: []
             },
             references: {
                 __serv: {
-                    //isSectionVisible: false,
                     isSwitchChecked: false,
                 },
                 data: []
             },
             hobbies: {
-                // __serv: {
-                //     isSectionVisible: false,
-                // },
                 data: {
                     value: ''
                 }
