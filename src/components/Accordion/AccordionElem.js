@@ -30,7 +30,7 @@ const AccordionElem = ({ index, title, descr = null, removeItem, children }) => 
                         <h2>
                             <AccordionButton
                                 _hover={{ color: 'teal.500' }}
-                                color={isExpanded ? 'teal.500' : 'gray.200'}
+                                color={isExpanded ? 'teal.500' : 'gray.400'}
                             >
                                 <Box textAlign={'left'} flex={1}>
                                     <Box
