@@ -11,10 +11,11 @@ const WelcomeTopElement = () => {
     let AccessAreaButtons;
     const currentDate = new Date().getTime();
     const sessionString = sessionStorage.getItem(`firebase:authUser:${apiKey}:[DEFAULT]`);
+    const localStorageString = localStorage.getItem(`firebase:authUser:${apiKey}:[DEFAULT]`);
 
-    if (sessionString
+    if ((sessionString
         &&
-        JSON.parse(sessionString).stsTokenManager.expirationTime > currentDate) {
+        JSON.parse(sessionString).stsTokenManager.expirationTime > currentDate) || (localStorageString && JSON.parse(localStorageString).stsTokenManager.expirationTime > currentDate)) {
         AccessAreaButtons = <Box>
             <Button
                 variant={'outline'}

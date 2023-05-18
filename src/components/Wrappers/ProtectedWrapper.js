@@ -11,17 +11,26 @@ const ProtectedWrapper = () => {
         const apiKey = process.env.REACT_APP_API_KEY;
         const currentDate = new Date().getTime();
         const sessionString = sessionStorage.getItem(`firebase:authUser:${apiKey}:[DEFAULT]`);
+        const localStorageString = localStorage.getItem(`firebase:authUser:${apiKey}:[DEFAULT]`);
 
-        if (sessionString) {
-            const sessionObj = JSON.parse(sessionString);
+        const analyzeData = (string, storageLocation) => {
+            const sessionObj = JSON.parse(string);
             if (sessionObj.stsTokenManager.expirationTime > currentDate) {
                 dispatch(addLoggedUser({ userId: sessionObj.uid, accessToken: sessionObj.stsTokenManager.accessToken, email: sessionObj.email }))
 
             } else {
-                sessionStorage.removeItem(`firebase:authUser:${apiKey}:[DEFAULT]`)
+                storageLocation.removeItem(`firebase:authUser:${apiKey}:[DEFAULT]`)
                 return <Navigate to="/login" />
             }
-        } else {
+        }
+
+        if (sessionString) {
+            analyzeData(sessionString, sessionStorage);
+
+        } else if (localStorageString) {
+            analyzeData(localStorageString, localStorage)
+        }
+        else {
             return <Navigate to="/login" />
         }
 
