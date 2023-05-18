@@ -178,6 +178,37 @@ const utilitySlice = createSlice({
                     state.additionalSections.data = action.payload;
                 }
             })
+
+            .addCase(signInGoogleThunk.pending, (state) => {
+                state.auth.status = 'loading';
+            })
+            .addCase(signInGoogleThunk.rejected, (state, action) => {
+                state.auth.status = 'failed';
+                state.auth.error = action.error.message;
+            })
+            .addCase(signInGoogleThunk.fulfilled, (state, action) => {
+                state.auth.status = 'ready';
+                if (action?.payload) {
+                    if (action.payload.data) {
+                        state.auth.data = action.payload.data;
+                        state.auth.error = '';
+                    } else {
+                        state.auth.data = null;
+                        switch (action.payload.message) {
+                            case 'not verified':
+                                state.auth.error = 'You need to verify your email address. Please follow a verification link we sent you.';
+                                break;
+                            case 'wrong credentials':
+                                state.auth.error = 'There was an error processing your request. Check your Email/Password.';
+                                break;
+                            default:
+                                state.auth.error = action.payload.message;
+                                break;
+                        }
+                    }
+
+                }
+            })
     }
 })
 
@@ -202,6 +233,17 @@ export const logInThunk = createAsyncThunk('utility/logInThunk', async (dataObj)
         return null
     }
 })
+
+export const signInGoogleThunk = createAsyncThunk('utility/signInGoogleThunk', async (initial = true) => {
+    let resp = await authAPI.signInGoogle(initial);
+    if (resp) {
+        return resp;
+    } else {
+        return null
+    }
+})
+
+
 
 export const authLogout = createAsyncThunk('utility/authLogout', async () => {
     let resp = await authAPI.logOut();
