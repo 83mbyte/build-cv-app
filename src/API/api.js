@@ -204,10 +204,12 @@ export const dbAPI = {
             console.log('Done. User exists.')
         }
     },
+
     getSectionData: async (section, id, token) => {
         let resp = await getData(`${URLUSERS}/${id}/${section}.json?auth=${token}`);
         return resp;
     },
+
     putDataToSection: async (user, section, token, data) => {
         let resp = await putData(`${URLUSERS}/${user}/${section}.json?auth=${token}`, data);
         return resp;
