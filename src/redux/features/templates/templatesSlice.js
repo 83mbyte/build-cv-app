@@ -31,6 +31,10 @@ const templatesSlice = createSlice({
                     label: 'Sloo',
                     img: 'https://s3.resume.io/cdn-cgi/image/format=auto,fit=scale-down,dpr=1,width=154/uploads/local_template_image/image/142/persistent-resource/oslo-resume-templates.jpg'
                 },
+                {
+                    label: 'Mdriad',
+                    img: 'https://s3.resume.io/cdn-cgi/image/format=auto,fit=scale-down,dpr=1,width=154/uploads/local_template_image/image/149/persistent-resource/madrid-resume-templates.jpg'
+                },
 
             ]
         },

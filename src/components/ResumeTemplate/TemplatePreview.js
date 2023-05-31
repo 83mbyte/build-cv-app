@@ -5,6 +5,7 @@ const Amsterdam = lazy(() => import('./Templates/Amsterdam/Amsterdam'));
 const Vivien = lazy(() => import('./Templates/Vivien/Vivien'));
 const Lndn = lazy(() => import('./Templates/Lndn/Lndn'));
 const Sloo = lazy(() => import('./Templates/Sloo/Sloo'));
+const Mdriad = lazy(() => import('./Templates/Mdriad/Mdriad'));
 
 const TemplatePreview = forwardRef((props, ref) => {
     const templateName = useSelector(state => state.templates.data.selected);
@@ -41,6 +42,10 @@ const TemplatePreview = forwardRef((props, ref) => {
             case 'sloo':
                 return <Suspense>
                     <Sloo data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections }} ref={ref} />
+                </Suspense>
+            case 'mdriad':
+                return <Suspense>
+                    <Mdriad data={{ personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections }} ref={ref} />
                 </Suspense>
 
             default:
