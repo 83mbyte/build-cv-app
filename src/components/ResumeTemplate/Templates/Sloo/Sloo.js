@@ -117,7 +117,7 @@ const Sloo = forwardRef(({ data }, ref) => {
 
                                 return (
                                     <div key={`link_${index}`}>
-                                        <a href={elem.link} className={styles.lnk} target={'_blank'} rel={'noreferrer'} key={`link_${index}`}>{elem.label}</a>
+                                        <a href={elem.link} className={styles.lnk} target={'_blank'} rel={'noreferrer'}>{elem.label}</a>
                                     </div>
                                 )
                             })
@@ -182,7 +182,7 @@ const Sloo = forwardRef(({ data }, ref) => {
                 {/* Languages */}
                 {
                     additionalSections.indexOf('languages') !== -1 &&
-                    <SectionContainer id={'land'} title={'Languages'}>
+                    <SectionContainer id={'lang'} title={'Languages'}>
                         <div className={`${styles.row} ${styles.wrapSpaceBetween}`}>
                             {
                                 languages.data.length > 0 && languages.data.map((elem, index) => {
@@ -215,7 +215,7 @@ const Sloo = forwardRef(({ data }, ref) => {
                                         references.data.length > 0 &&
                                         references.data.map((elem, index) => {
                                             return (
-                                                <div key={`course_${index}`} className={styles.sectionItem}>
+                                                <div key={`reference_${index}`} className={styles.sectionItem}>
                                                     <div  >
                                                         {
                                                             elem.name !== '' ? <span className={styles.bold}>{elem.name}</span> : `Referent's name (not specified)`
