@@ -35,6 +35,10 @@ const templatesSlice = createSlice({
                     label: 'Mdriad',
                     img: 'https://s3.resume.io/cdn-cgi/image/format=auto,fit=scale-down,dpr=1,width=154/uploads/local_template_image/image/149/persistent-resource/madrid-resume-templates.jpg'
                 },
+                {
+                    label: 'AbabMin',
+                    img: 'https://marketplace.canva.com/EAFFp1ENXUk/2/0/283w/canva-abu-abu-minimalist-resume-SqB-VxgkFqo.jpg'
+                },
 
             ]
         },

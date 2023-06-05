@@ -26,7 +26,7 @@ const TemplateSelection = () => {
     }
     return (
         <>
-            <Wrap justify={'space-around'} my={1} name='testName'  >
+            <Wrap justify={'space-around'} my={1} name='testName' spacingX={[10, 20]} >
                 {
                     templatesVars.map((item, index) => {
                         return (
@@ -44,7 +44,7 @@ const TemplateSelection = () => {
                                 <VStack spacing={0} >
                                     <Box>{item.label}</Box>
                                     <Box>
-                                        <img src={item.img} alt={item.label} />
+                                        <img src={item.img} alt={item.label} width={'154px'} height={'217px'} />
                                     </Box>
                                 </VStack>
                             </WrapItem>
