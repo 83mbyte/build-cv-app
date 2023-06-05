@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 
 
 import { Provider } from 'react-redux';
