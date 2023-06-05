@@ -151,7 +151,7 @@ const Mdriad = forwardRef(({ data }, ref) => {
                 }
                 {/* Courses end */}
 
-                {/* Skills */}
+                {/* languages */}
                 {
                     additionalSections.indexOf('languages') !== -1 &&
                     <SectionContainer id={'lang'} title={'Languages'}>
@@ -170,7 +170,7 @@ const Mdriad = forwardRef(({ data }, ref) => {
                         </div>
                     </SectionContainer>
                 }
-                {/* Skills end */}
+                {/* languages end */}
 
                 {/* Links */}
                 <SectionContainer id={'links'} title={'Links'}>
