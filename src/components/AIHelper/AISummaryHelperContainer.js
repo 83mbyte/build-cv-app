@@ -20,8 +20,7 @@ const AISummaryHelperContainer = ({ data, callback }) => {
         try {
             setLoading(true);
 
-            const response = await fetch('https://buildcv.app/summaryCreate', options);
-            // const response = await fetch('http://127.0.0.1:5001/buildcv-app-cd890/us-central1/summaryCreate', options);
+            const response = await fetch(`${process.env.REACT_APP_DOMAIN}/summaryCreate`, options);
             const data = await response.json();
             callback(data.content);
 
