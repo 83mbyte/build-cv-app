@@ -25,6 +25,12 @@ const TextEditor = ({ state, onChangeCallback }) => {
         setConvertedContent(html);
     }, [editorState]);
 
+    useEffect(() => {
+        if (state.value) {
+            setEditorState(EditorState.createWithContent(convertFromHTML(state.value)))
+        }
+    }, [state.value])
+
     const applyChanges = () => {
         if ((convertedContent && convertedContent !== ' ' && convertedContent !== '')) {
             if (convertedContent === '<p></p>') {
