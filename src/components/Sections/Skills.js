@@ -12,27 +12,42 @@ import ProposedItems from '../ProposedItems/ProposedItems';
 import SwitchCustom from '../Switch/SwitchCustom';
 import SectionWrapper from '../Wrappers/SectionWrapper';
 import SectionDescription from './SectionDescription';
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
-// TODO   check save link but not LEVEL
 const Skills = ({ loggedUser }) => {
-    const predefined = [
-        { "label": "React", "level": 3 },
-        { "label": "Python", "level": 3 },
-        { "label": "C++", "level": 3 },
-        { "label": "Java", "level": 3 },
-        { "label": "JavaScript", "level": 3 },
-        { "label": "QA", "level": 3 },
-        { "label": "Docker", "level": 3 },
-        { "label": "CSS", "level": 3 },
-    ]
+    // const predefined = [
+    //     { "label": "React", "level": 3 },
+    //     { "label": "Python", "level": 3 },
+    //     { "label": "C++", "level": 3 },
+    //     { "label": "Java", "level": 3 },
+    //     { "label": "JavaScript", "level": 3 },
+    //     { "label": "QA", "level": 3 },
+    //     { "label": "Docker", "level": 3 },
+    //     { "label": "CSS", "level": 3 },
+    // ]
+    const skillsDefaults = {
+        frontend: [
+            "HTML/CSS", "JavaScript", "jQuery", "React", "AngularJS", "Vue.js", "Bootstrap", "Chakra-UI", "Material-UI", "Tailwind CSS", "SASS/LESS", "Responsive", "AJAX", "JSON", "RESTful API", "Git/Github", "Task runners", "Testing frameworks", "Build tools"
+        ],
+        backend: [
+            "Java", "Python", "Ruby", "PHP", "Node.js", "MySQL", "PostgreSQL", "MongoDB", "Oracle", "REST", "SOAP", "WSDL", "XML-RPC", "Django", "Flask", "Spring", "Ruby on Rails", "AWS", "GCP", "MS Azure", "Git", "Docker", "Kubernetes"
+        ],
+        programmer: [
+            "C++", "Java", "Python", "C#", "C", "Assembly", "Kotlin", "JavaScript", "PHP", "Go", "Swift", "Matlab", "Agile", "Scrum", "Waterfall", "Data structures", "Algorithms", "Patterns", "Regex", "SQL", "NoSQL", "CL tools", "Git", "OOP", "Debugging", "AWS", "GCP", "MS Azure",
+        ]
+        ,
+        devops: [
+            "Terraform", "CloudFormation", "Ansible ", "Chef 3", "AWS", "GCP", "MS Azure", "Python", "Ruby", "Bash", "Git", "Jenkins", "Travis CI", "CircleCI 7", "Docker", "Kubernetes", "Nagios", "Prometheus", "ELK stack", "Kanban", "Scrum", "Debugging"
+        ],
+        qa: [
+            "Java", "Python", "JavaScript", "SQL", "Selenium", "WebDriver", "SonarQube", "JIRA", "TestLink", "QTP", "Scrum", "Manual testing", "Automated testing",
+        ],
+        cybersec: [
+            "Argus", "Nagios", "Nmap", "Docker", "Bash", "JavaScript", "Python", "Tor", "KeePass", "VeraCrypt", "Burp Suite", "Nikto", "SQLMap", "Metasploit", "Kali Linux", "Netsparker", "Wireshark", "Snort", "Security Onion", "Tcpdump"
+        ]
+    }
+    const predefined = skillsDefaults.frontend.map(item => {
+        return { label: item, level: 3 }
+    })
+
 
     let content;
 
