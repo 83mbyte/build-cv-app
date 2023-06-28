@@ -27,3 +27,6 @@ src/_firebase
 .firebaserc
 firebase.json
 .firebase/
+functions/keys.js
+firebase-debug.log
+ui-debug.log
