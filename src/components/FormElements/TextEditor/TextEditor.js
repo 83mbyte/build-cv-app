@@ -9,7 +9,7 @@ import * as DOMPurify from 'dompurify';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './TextEditor.css';
 
-const TextEditor = ({ state, onChangeCallback }) => {
+const TextEditor = ({ state, onChangeCallback, heightSize = null }) => {
     const [editorState, setEditorState] = useState(
         () => EditorState.createWithContent(convertFromHTML(state.value))
     );
@@ -50,7 +50,7 @@ const TextEditor = ({ state, onChangeCallback }) => {
                 onEditorStateChange={setEditorState}
                 wrapperClassName="wrapper-class"
                 toolbarClassName="toolbar-class"
-                editorClassName="editor-class"
+                editorClassName={heightSize ? 'editor-class coverLetter' : 'editor-class'}
                 ariaLabel='textEditorLabel'
                 toolbar={{
                     options: ['inline', 'list', 'history'],

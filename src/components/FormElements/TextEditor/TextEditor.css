@@ -30,3 +30,7 @@
   padding: 0 1rem;
   margin: 0 0;
 }
+.coverLetter {
+  height: 50vh;
+  min-height: 200px;
+}
