@@ -15,6 +15,7 @@ import { authLogout } from '../../redux/features/utility/utilitySlice';
 
 import AddMoreSections from './AddMoreSections';
 import { CloseIcon } from '../Icons/Icon';
+import CoverLetterSection from './CoverLetterSection/CoverLetterSection';
 
 const DrawerContainer = ({ isOpenProp, onCloseHandler }) => {
     const dispatch = useDispatch();
@@ -48,6 +49,12 @@ const DrawerContainer = ({ isOpenProp, onCloseHandler }) => {
                         <Box borderBottomWidth='1px' px={6} py={3}>
 
                             <AddMoreSections />
+                        </Box>
+                    </DrawerBody>
+                    <DrawerBody borderBottomWidth='1px' p={0}>
+                        <Box borderBottomWidth='1px' px={6} py={3}>
+
+                            <CoverLetterSection />
                         </Box>
                     </DrawerBody>
 
