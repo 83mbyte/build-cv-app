@@ -91,7 +91,7 @@ const NameForm = React.forwardRef((props, ref) => {
     return (
         <VStack my={1}>
             <TextInput label='First Name' name={'firstName'} id={'firstName'} ref={ref.firstNameRef} onBlur={() => checkEmpty(ref.firstNameRef.current.value, ref.lastNameRef.current.value)} />
-            <TextInput label='Last Name' name={'lastName'} id={'lastName'} ref={ref.lastNameRef} onBlur={() => checkEmpty(ref.firstNameRef.current.value, ref.lastNameRef.current.value)} />/>
+            <TextInput label='Last Name' name={'lastName'} id={'lastName'} ref={ref.lastNameRef} onBlur={() => checkEmpty(ref.firstNameRef.current.value, ref.lastNameRef.current.value)} />
 
             <ButtonGroup display='flex' justifyContent='flex-end' colorScheme='teal'>
                 <Button variant='outline' onClick={props.onClose}>
