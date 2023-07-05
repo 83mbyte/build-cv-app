@@ -29,7 +29,7 @@ const CoverLetterSection = () => {
                 <WrapItem>
                     <Button ref={createRef} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoDocumentTextOutline />} onClick={() => onClickBtnHandler('Create')}>Create/Edit</Button>
                 </WrapItem>
-                <WrapItem><Button ref={generateRef} size={'sm'} isDisabled colorScheme={'teal'} variant={'outline'} leftIcon={<IoBulbOutline />} onClick={() => onClickBtnHandler('Generate')}>Generate</Button></WrapItem>
+                <WrapItem><Button ref={generateRef} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoBulbOutline />} onClick={() => onClickBtnHandler('Generate')}>Generate</Button></WrapItem>
 
             </Wrap>
             <DrawerCoverLetterContainer isOpen={isOpen} setIsOpen={setIsOpen} />
