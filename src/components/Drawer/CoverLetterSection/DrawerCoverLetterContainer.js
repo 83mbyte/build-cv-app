@@ -13,6 +13,7 @@ import { getCoverLetter, inputCoverUpdate } from '../../../redux/features/coverL
 import { setIsModifiedContent } from '../../../redux/features/utility/utilitySlice';
 
 const CreateCover = lazy(() => import('./CreateCover'));
+const GenerateCover = lazy(() => import('./GenerateCover'))
 
 const DrawerCoverLetterContainer = ({ isOpen, setIsOpen }) => {
     const loggedUser = useSelector(state => state.utility.auth.data);
@@ -58,13 +59,22 @@ const DrawerCoverLetterContainer = ({ isOpen, setIsOpen }) => {
                             maxW={'2xl'}
                             p={0} my={0}
                             mx={'auto'}
+                            minH={'50vh'}
+                            alignItems={'center'}
+                            justifyContent={'center'}
+                            display={'flex'}
+                            flexDirection={'column'}
                         >
                             {
                                 isOpen.type === 'Create'
                                     ? <Suspense>
                                         <CreateCover state={{ data, status, error }} onChangeHandler={onChangeHandler} />
                                     </Suspense>
-                                    : <GenerateCover />
+
+                                    : <Suspense>
+                                        <GenerateCover resultObj={{ state: { data, status, error }, onChangeHandler }} />
+                                    </Suspense>
+
                             }
                         </Container>
                     </Flex>
@@ -78,8 +88,3 @@ export default DrawerCoverLetterContainer;
 
 
 
-const GenerateCover = () => {
-    return (
-        <Box>Generate</Box>
-    )
-}
