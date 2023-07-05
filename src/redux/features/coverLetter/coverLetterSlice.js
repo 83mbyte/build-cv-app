@@ -4,7 +4,12 @@ import { dbAPI } from "../../../api/api";
 const coverLetterSlice = createSlice({
     name: 'coverLetter',
     initialState: {
-        data: { value: 'initState CoverLetter' },
+        data: {
+            value: 'initState CoverLetter',
+            jobTitle: '',
+            company: '',
+            hiringManager: ''
+        },
         __serv: { isSectionVisible: true },
         status: 'idle',
         error: ''
@@ -12,6 +17,9 @@ const coverLetterSlice = createSlice({
     reducers: {
         inputCoverUpdate: (state, action) => {
             state.data.value = action.payload.value;
+        },
+        inputQuizUpdate: (state, action) => {
+            state.data[action.payload.name] = action.payload.value
         }
     },
     extraReducers(builder) {
@@ -29,7 +37,7 @@ const coverLetterSlice = createSlice({
                     state.status = 'ready';
 
                     if (action.payload.data) {
-                        state.data = action.payload.data;
+                        state.data.value = action.payload.data.value
                     }
                     if (action.payload.__serv) {
                         state.__serv = { ...action.payload.__serv };
@@ -40,7 +48,7 @@ const coverLetterSlice = createSlice({
 })
 
 export default coverLetterSlice.reducer;
-export const { inputCoverUpdate } = coverLetterSlice.actions;
+export const { inputCoverUpdate, inputQuizUpdate } = coverLetterSlice.actions;
 
 export const getCoverLetter = createAsyncThunk('coverLetter/getCoverLetter', async (obj) => {
     let resp = await dbAPI.getSectionData('cover', obj.userId, obj.accessToken);
