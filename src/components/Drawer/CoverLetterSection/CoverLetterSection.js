@@ -27,7 +27,7 @@ const CoverLetterSection = () => {
             <Heading as={'h5'} size={'xs'} mb={2}>Create a cover letter</Heading>
             <Wrap px={2}>
                 <WrapItem>
-                    <Button ref={createRef} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoDocumentTextOutline />} onClick={() => onClickBtnHandler('Create')}>Create/Edit</Button>
+                    <Button ref={createRef} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoDocumentTextOutline />} onClick={() => onClickBtnHandler('Create')}>New / Edit</Button>
                 </WrapItem>
                 <WrapItem><Button ref={generateRef} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={<IoBulbOutline />} onClick={() => onClickBtnHandler('Generate')}>Generate</Button></WrapItem>
 
