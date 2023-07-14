@@ -1,7 +1,8 @@
 import { browserSessionPersistence, createUserWithEmailAndPassword, signOut, getAuth, sendEmailVerification, setPersistence, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { app } from "../_firebase/firebase";
 
-const URLUSERS = 'https://buildcv-app-cd890-default-rtdb.firebaseio.com/prvt/users';
+const URLUSERS = process.env.REACT_APP_URLUSERS;
+
 export const authAPI = {
     signUp: (email, password, firstName = '', lastName = '') => {
         const auth = getAuth(app);
@@ -112,6 +113,36 @@ export const authAPI = {
                 })
         }
     },
+}
+
+export const funcAPI = {
+    requestAI: async (endPoint, query) => {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: query
+            })
+        }
+        try {
+
+            const resp = await fetch(`${process.env.REACT_APP_DOMAIN}/${endPoint}`, options);
+            if (resp) {
+                let content = await resp.json();
+                let res = { status: resp.status, content: content.content }
+
+                return res;
+            } else {
+                throw new Error(`HTTP error: ${resp.status}`)
+            }
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
 }
 
 
