@@ -21,11 +21,9 @@ const AISummaryHelperContainer = ({ data, callback }) => {
         try {
             setLoading(true);
 
-            const response = await fetch(`${process.env.REACT_APP_DOMAIN}/summaryCreate`, options);
+
             let data = await funcAPI.requestAI('summaryCreate', query);
-            // const response = await fetch(`${process.env.REACT_APP_DOMAIN}/summaryCreate`, options);
-            // const data = await response.json();
-            // callback(data.content);
+
             if (data && data.status === 200 && (data.content && data.content !== '')) {
                 callback(data.content);
             }
