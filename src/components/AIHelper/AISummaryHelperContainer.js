@@ -1,6 +1,7 @@
 import { Box, HStack, Text, Button } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import ToolTip from '../Tooltip/ToolTip';
+import { funcAPI } from '../../api/api';
 
 const AISummaryHelperContainer = ({ data, callback }) => {
 
@@ -21,9 +22,13 @@ const AISummaryHelperContainer = ({ data, callback }) => {
             setLoading(true);
 
             const response = await fetch(`${process.env.REACT_APP_DOMAIN}/summaryCreate`, options);
-            const data = await response.json();
-            callback(data.content);
-
+            let data = await funcAPI.requestAI('summaryCreate', query);
+            // const response = await fetch(`${process.env.REACT_APP_DOMAIN}/summaryCreate`, options);
+            // const data = await response.json();
+            // callback(data.content);
+            if (data && data.status === 200 && (data.content && data.content !== '')) {
+                callback(data.content);
+            }
             setLoading(true);
 
         } catch (error) {
