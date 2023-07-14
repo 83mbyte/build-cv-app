@@ -13,7 +13,7 @@ import { getCoverLetter, inputCoverUpdate } from '../../../redux/features/coverL
 import { setIsModifiedContent } from '../../../redux/features/utility/utilitySlice';
 
 const CreateCover = lazy(() => import('./CreateCover'));
-const GenerateCover = lazy(() => import('./GenerateCover'))
+const GenerateCoverContainer = lazy(() => import('./GenerateCover/GenerateCoverContainer'))
 
 const DrawerCoverLetterContainer = ({ isOpen, setIsOpen }) => {
     const loggedUser = useSelector(state => state.utility.auth.data);
@@ -48,8 +48,8 @@ const DrawerCoverLetterContainer = ({ isOpen, setIsOpen }) => {
                         </Box>
                     </HStack>
                 </DrawerHeader>
-                <DrawerBody className='mainBg' >
-                    <Flex bg='transparent' flexDirection={'column'} alignItems={'center'} justifyContent={'center'} w='full' h={'90%'}>
+                <DrawerBody className='mainBg'  >
+                    <Flex bg='transparent' flexDirection={'column'} alignItems={'center'} justifyContent={'center'} w='full' h={'90%'} p={0}>
                         <Container
                             as='div'
                             bg={'white'}
@@ -57,13 +57,15 @@ const DrawerCoverLetterContainer = ({ isOpen, setIsOpen }) => {
                             borderColor={'gray.200'}
                             borderRadius={10}
                             maxW={'2xl'}
-                            p={0} my={0}
-                            mx={'auto'}
+                            p={0}
+                            m={0}
+                            // mx={'auto'}
                             minH={'50vh'}
                             alignItems={'center'}
                             justifyContent={'center'}
                             display={'flex'}
                             flexDirection={'column'}
+                            overflowY={'scroll'}
                         >
                             {
                                 isOpen.type === 'Create'
@@ -72,7 +74,7 @@ const DrawerCoverLetterContainer = ({ isOpen, setIsOpen }) => {
                                     </Suspense>
 
                                     : <Suspense>
-                                        <GenerateCover resultObj={{ state: { data, status, error }, onChangeHandler }} />
+                                        <GenerateCoverContainer setIsOpenDrawer={setIsOpen} />
                                     </Suspense>
 
                             }
