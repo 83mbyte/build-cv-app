@@ -24,7 +24,7 @@ const SectionWrapper = ({ sectionTitle, type = 'flex', flexDirect = 'row', isHid
     }
 
     return (
-        <Box as='section' p={5} w='100%'>
+        <Box as='section' p={[2, 5]} w='100%' bg='white' overflow={'auto'} h="100%">
             <HStack spacing={2} >
                 <Heading as='h3' size={['sm', 'md', 'md']} pb={0}>{sectionTitle}</Heading>
                 {
