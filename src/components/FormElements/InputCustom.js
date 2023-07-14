@@ -4,6 +4,8 @@ import {
     Box, FormControl, FormLabel, Input, FormErrorMessage,
 } from '@chakra-ui/react';
 
+import * as DOMPurify from 'dompurify';
+
 const InputCustom = ({ name, onChangeCallback, inputValue = '', labelText = '', required = false, disabled = false, type = 'text', errorMessage = `Can't be empty.` }) => {
 
     const inputRef = useRef(null);
@@ -56,7 +58,7 @@ const InputCustom = ({ name, onChangeCallback, inputValue = '', labelText = '', 
                         ref={inputRef}
                         onChange={() => {
                             checkRequired(inputRef.current.value)
-                            onChangeCallback(name, inputRef.current.value)
+                            onChangeCallback(name, DOMPurify.sanitize(inputRef.current.value))
                         }
                         }
                         onBlur={() => checkRequired(inputRef.current.value)}
