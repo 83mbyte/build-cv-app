@@ -8,19 +8,9 @@ const AISummaryHelperContainer = ({ data, callback }) => {
     const [loading, setLoading] = useState(false);
 
     const generateData = async (query, tokens = 200) => {
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                content: query
-            })
-        }
 
         try {
             setLoading(true);
-
 
             let data = await funcAPI.requestAI('summaryCreate', query);
 
