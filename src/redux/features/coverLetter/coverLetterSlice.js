@@ -10,7 +10,11 @@ const coverLetterSlice = createSlice({
             company: '',
             hiringManager: ''
         },
-        __serv: { isSectionVisible: true },
+        __serv: {
+            isSectionVisible: true,
+            btnLoading: false,
+            btnDisabled: false,
+        },
         status: 'idle',
         error: ''
     },
@@ -20,7 +24,10 @@ const coverLetterSlice = createSlice({
         },
         inputQuizUpdate: (state, action) => {
             state.data[action.payload.name] = action.payload.value
-        }
+        },
+        toggleBtnLoadingStatus: (state) => {
+            state.__serv.btnLoading = !state.__serv.btnLoading;
+        },
     },
     extraReducers(builder) {
         builder
@@ -48,7 +55,7 @@ const coverLetterSlice = createSlice({
 })
 
 export default coverLetterSlice.reducer;
-export const { inputCoverUpdate, inputQuizUpdate } = coverLetterSlice.actions;
+export const { inputCoverUpdate, inputQuizUpdate, toggleBtnLoadingStatus } = coverLetterSlice.actions;
 
 export const getCoverLetter = createAsyncThunk('coverLetter/getCoverLetter', async (obj) => {
     let resp = await dbAPI.getSectionData('cover', obj.userId, obj.accessToken);
