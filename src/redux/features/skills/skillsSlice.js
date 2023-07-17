@@ -10,7 +10,13 @@ const skillsSlice = createSlice({
     name: 'skills',
     initialState: {
         data: [],
-        __serv: { isSectionVisible: true, isSwitchChecked: false },
+        __serv: {
+            isSectionVisible: true,
+            isSwitchChecked: false,
+            predefined: {
+                testRole: [],
+            }
+        },
         status: 'idle',
         error: ''
     },
@@ -33,6 +39,15 @@ const skillsSlice = createSlice({
         },
         toggleSkillsSwitch: (state) => {
             state.__serv.isSwitchChecked = !state.__serv.isSwitchChecked;
+        },
+        generateSkills: (state, action) => {
+            state.__serv = {
+                ...state.__serv,
+                predefined: {
+                    ...state.__serv.predefined,
+                    [action.payload.role.toLowerCase().replace(/\s/g, '')]: [...action.payload.value]
+                }
+            }
         }
     },
     extraReducers(builder) {
@@ -60,7 +75,7 @@ const skillsSlice = createSlice({
 })
 
 export default skillsSlice.reducer;
-export const { removeSkillsItem, inputSkillsUpdate, addSkillsItem, toggleSkillsSwitch } = skillsSlice.actions;
+export const { removeSkillsItem, inputSkillsUpdate, addSkillsItem, toggleSkillsSwitch, generateSkills } = skillsSlice.actions;
 
 export const getSkills = createAsyncThunk('skills/getSkills', async (obj) => {
     let resp = await dbAPI.getSectionData('skills', obj.userId, obj.accessToken);
@@ -69,4 +84,4 @@ export const getSkills = createAsyncThunk('skills/getSkills', async (obj) => {
     } else {
         return null
     }
-})
+});
