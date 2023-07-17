@@ -2,10 +2,10 @@ import { Box, VStack } from '@chakra-ui/react';
 import React from 'react';
 
 
-const WelcomeWrapper = ({ children }) => {
+const WelcomeWrapper = ({ bgColor = 'white', children }) => {
     return (
         <Box
-            bg='white'
+            bg={bgColor}
             w='full'
             py={10}
             px={1}
