@@ -1,11 +1,11 @@
 import { Box } from '@chakra-ui/react';
 import React from 'react';
 
-const WelcomeBlockImage = () => {
+const WelcomeBlockImage = ({ imgName }) => {
     return (
 
         <Box
-            bg='white'
+            bg='transparent'
             w='full'
             py={'0'}
             px={0}
@@ -19,7 +19,8 @@ const WelcomeBlockImage = () => {
             backgroundRepeat={'no-repeat'}
             backgroundPosition={'bottom'}
             backgroundSize={'contain'}
-            backgroundImage={`url(/welcome1.jpg)`}
+            // backgroundImage={`url(/welcome1.jpg)`}
+            backgroundImage={`url(/${imgName})`}
 
         >
         </Box>
