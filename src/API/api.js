@@ -127,6 +127,8 @@ export const funcAPI = {
             })
         }
         try {
+            // fetching in developer mode  
+            // const resp = await fetch(`${process.env.REACT_APP_DEV_FUNC_CALL}/${endPoint}`, options);
 
             const resp = await fetch(`${process.env.REACT_APP_DOMAIN}/${endPoint}`, options);
             if (resp) {
@@ -213,6 +215,18 @@ export const dbAPI = {
                     value: ''
                 }
             },
+            cover: {
+                __serv: {
+                    isSectionVisible: true,
+                    btnLoading: false
+                },
+                data: {
+                    company: '',
+                    hiringManager: '',
+                    jobTitle: '',
+                    value: ''
+                }
+            }
         }
         let resp = await fetch(`${URLUSERS}/${id}.json?auth=${token}`)
             .then((resp) => {
