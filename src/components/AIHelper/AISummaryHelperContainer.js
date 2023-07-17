@@ -7,7 +7,7 @@ const AISummaryHelperContainer = ({ data, callback }) => {
 
     const [loading, setLoading] = useState(false);
 
-    const generateData = async (query, tokens = 200) => {
+    const generateData = async (query) => {
 
         try {
             setLoading(true);
