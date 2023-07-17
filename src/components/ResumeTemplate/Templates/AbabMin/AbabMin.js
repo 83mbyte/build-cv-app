@@ -215,7 +215,7 @@ const AbabMin = forwardRef(({ data }, ref) => {
                                         references.data.length > 0 &&
                                         references.data.map((elem, index) => {
                                             return (
-                                                <div className={`${styling.sectionItem} `}>
+                                                <div className={`${styling.sectionItem} `} key={`reference_${index}`}>
                                                     <div className={`${styling.row} ${styling.spaceBetween}`}>
                                                         <div className={`${styling.sectionItemTitle}`}>
                                                             <div className={`${styling.bold}`}>{elem.name}</div>
