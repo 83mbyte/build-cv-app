@@ -19,6 +19,9 @@ body {
 .italic {
   font-style: italic;
 }
+.bold {
+  font-weight: bold;
+}
 
 @keyframes pulse {
   0% {
