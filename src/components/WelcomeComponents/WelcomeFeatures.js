@@ -3,15 +3,16 @@ import React from 'react';
 import WelcomeWrapper from '../Wrappers/WelcomeWrapper';
 import { IconContext } from "react-icons";
 import { motion } from "framer-motion";
-import { GiPencilRuler, GiPodiumWinner } from "react-icons/gi";
+import { GiPencilRuler, GiPodiumWinner, GiSandsOfTime } from "react-icons/gi";
 
 const WelcomeFeatures = () => {
     const data = [
         { heading: 'Create a resume to achieve your career goal.', text: 'Use our resume maker with its advanced creation tools to tell a professional story that engages recruiters.', icon: <GiPodiumWinner /> },
-        { heading: 'Resume creating made easy.', text: 'Just fill in your details, choose a CV template. Export to PDF or generate a link to your resume.', icon: <GiPencilRuler /> }
+        { heading: 'Resume creating made easy.', text: 'Just fill in your details, choose a CV template. Export to PDF or generate a link to your resume.', icon: <GiPencilRuler /> },
+        { heading: 'Save your time', text: 'With our AI resume builder, you can save valuable time and effort.', icon: <GiSandsOfTime /> }
     ];
     return (
-        <WelcomeWrapper>
+        <WelcomeWrapper >
 
             <Box bg='' mx={'auto'} w={'full'} display={'flex'}  >
                 <Heading as='h2' textAlign={'center'} size={['xl', 'xl']}>
