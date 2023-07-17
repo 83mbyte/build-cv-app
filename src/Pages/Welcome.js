@@ -4,6 +4,7 @@ import React from 'react';
 import WelcomeTopElement from '../components/WelcomeComponents/WelcomeTopElement';
 import WelcomeFeatures from '../components/WelcomeComponents/WelcomeFeatures';
 import WelcomeFAQ from '../components/WelcomeComponents/WelcomeFAQ';
+import WelcomeCover from '../components/WelcomeComponents/WelcomeCover';
 
 const Welcome = () => {
 
@@ -13,6 +14,7 @@ const Welcome = () => {
         <VStack w={'full'} spacing={0} borderColor={'gray.300'}  >
             <WelcomeTopElement />
             <WelcomeFeatures />
+            <WelcomeCover />
             <WelcomeFAQ />
         </VStack >
 
