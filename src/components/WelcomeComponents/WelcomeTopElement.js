@@ -68,7 +68,7 @@ const WelcomeTopElement = () => {
                 </Box>
             </VStack>
 
-            <WelcomeBlockImage />
+            <WelcomeBlockImage imgName={'welcome1.jpg'} />
         </Box >
 
     );
