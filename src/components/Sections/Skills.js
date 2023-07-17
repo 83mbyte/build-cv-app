@@ -1,7 +1,7 @@
 import { Accordion, Box, SimpleGrid, } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSkillsItem, getSkills, inputSkillsUpdate, removeSkillsItem, toggleSkillsSwitch } from '../../redux/features/skills/skillsSlice';
+import { addSkillsItem, getSkills, inputSkillsUpdate, removeSkillsItem, toggleSkillsSwitch, generateSkills } from '../../redux/features/skills/skillsSlice';
 import { setIsModifiedContent } from '../../redux/features/utility/utilitySlice';
 import AccordionElem from '../Accordion/AccordionElem';
 import AddMoreItemBtn from '../AddMoreItemBtn/AddMoreItemBtn';
@@ -12,52 +12,19 @@ import ProposedItems from '../ProposedItems/ProposedItems';
 import SwitchCustom from '../Switch/SwitchCustom';
 import SectionWrapper from '../Wrappers/SectionWrapper';
 import SectionDescription from './SectionDescription';
+import GenerateProposals from '../ProposedItems/GenerateProposals';
 const Skills = ({ loggedUser }) => {
-    // const predefined = [
-    //     { "label": "React", "level": 3 },
-    //     { "label": "Python", "level": 3 },
-    //     { "label": "C++", "level": 3 },
-    //     { "label": "Java", "level": 3 },
-    //     { "label": "JavaScript", "level": 3 },
-    //     { "label": "QA", "level": 3 },
-    //     { "label": "Docker", "level": 3 },
-    //     { "label": "CSS", "level": 3 },
-    // ]
-    const skillsDefaults = {
-        frontend: [
-            "HTML/CSS", "JavaScript", "jQuery", "React", "AngularJS", "Vue.js", "Bootstrap", "Chakra-UI", "Material-UI", "Tailwind CSS", "SASS/LESS", "Responsive", "AJAX", "JSON", "RESTful API", "Git/Github", "Task runners", "Testing frameworks", "Build tools"
-        ],
-        backend: [
-            "Java", "Python", "Ruby", "PHP", "Node.js", "MySQL", "PostgreSQL", "MongoDB", "Oracle", "REST", "SOAP", "WSDL", "XML-RPC", "Django", "Flask", "Spring", "Ruby on Rails", "AWS", "GCP", "MS Azure", "Git", "Docker", "Kubernetes"
-        ],
-        programmer: [
-            "C++", "Java", "Python", "C#", "C", "Assembly", "Kotlin", "JavaScript", "PHP", "Go", "Swift", "Matlab", "Agile", "Scrum", "Waterfall", "Data structures", "Algorithms", "Patterns", "Regex", "SQL", "NoSQL", "CL tools", "Git", "OOP", "Debugging", "AWS", "GCP", "MS Azure",
-        ]
-        ,
-        devops: [
-            "Terraform", "CloudFormation", "Ansible ", "Chef 3", "AWS", "GCP", "MS Azure", "Python", "Ruby", "Bash", "Git", "Jenkins", "Travis CI", "CircleCI 7", "Docker", "Kubernetes", "Nagios", "Prometheus", "ELK stack", "Kanban", "Scrum", "Debugging"
-        ],
-        qa: [
-            "Java", "Python", "JavaScript", "SQL", "Selenium", "WebDriver", "SonarQube", "JIRA", "TestLink", "QTP", "Scrum", "Manual testing", "Automated testing",
-        ],
-        cybersec: [
-            "Argus", "Nagios", "Nmap", "Docker", "Bash", "JavaScript", "Python", "Tor", "KeePass", "VeraCrypt", "Burp Suite", "Nikto", "SQLMap", "Metasploit", "Kali Linux", "Netsparker", "Wireshark", "Snort", "Security Onion", "Tcpdump"
-        ]
-    }
-    const predefined = skillsDefaults.frontend.map(item => {
-        return { label: item, level: 3 }
-    })
-
 
     let content;
 
     const dispatch = useDispatch();
-
+    const jobTitle = useSelector(state => state.personDetails.data.jobTitle || null);
     const data = useSelector(state => state.skills.data);
     const status = useSelector(state => state.skills.status);
     const error = useSelector(state => state.skills.error);
     const isSectionVisible = useSelector(state => state.skills.__serv.isSectionVisible);
     const isSwitchChecked = useSelector(state => state.skills.__serv.isSwitchChecked);
+    const predefined = useSelector(state => state.skills.__serv.predefined || null);
 
     const removeItem = (e, itemToRemove) => {
         e.preventDefault();
@@ -99,6 +66,15 @@ const Skills = ({ loggedUser }) => {
         dispatch(setIsModifiedContent({ status: true, section: 'skills' }));
     }
 
+    const onClickGenerateSkill = (data) => {
+        let editedArray = data.map(item => {
+            return item.replace(/"/g, '')
+        })
+
+        dispatch(generateSkills({ role: jobTitle, value: editedArray }));
+        dispatch(setIsModifiedContent({ status: true, section: 'skills' }));
+    }
+
     if (status === 'loading') {
         content = <LoadingSectionSkeleton rowsNumber={0} textArea={true} />
     }
@@ -109,13 +85,25 @@ const Skills = ({ loggedUser }) => {
         content = <Box>{error}</Box>
     }
     else if (status === 'ready' && data) {
+
+        let predefinedRole = jobTitle.toLowerCase().replace(/\s/g, '');
+
         content = isSectionVisible &&
             <SectionWrapper sectionTitle={'Skills'} flexDirect='column'>
                 <SectionDescription value={'Provide 5 of the most important skills to show your talents! Make sure they match the keywords of the job listing if applying via an online system.'} />
 
+                {/* button generate start*/}
+                {(!predefined || predefined[predefinedRole] === undefined) &&
+                    <GenerateProposals jobTitle={jobTitle} onClickCallback={onClickGenerateSkill} />}
+                {/* button generate end */}
+
                 {
-                    predefined.length > 0 &&
-                    <ProposedItems sectionName={'skills'} predefined={predefined} onClickCallback={addItem} />
+                    predefined && predefined[predefinedRole] !== undefined && predefined[predefinedRole].length > 0 &&
+                    <ProposedItems sectionName={'skills'} predefined={
+                        predefined[predefinedRole].map((item) => {
+                            return { label: item, level: 3 }
+                        })
+                    } onClickCallback={addItem} />
                 }
                 {
                     data.length > 0 &&
