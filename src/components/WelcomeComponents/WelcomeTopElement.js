@@ -49,7 +49,7 @@ const WelcomeTopElement = () => {
             flexDirection={'column'}
         >
             <VStack bg={''} w={['full', 'xl', '2xl']} mx={'auto'} spacing={'3'} >
-                <Text textAlign={'center'} fontSize={['sm', 'lg']}>Build Resume Online</Text>
+                <Text textAlign={'center'} fontSize={['sm', 'lg']}>AI-powered Resume Builder</Text>
                 <Box as={motion.div}
                     initial={{ y: -50, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1, transition: { delay: 0.3, duration: 0.8 } }}
