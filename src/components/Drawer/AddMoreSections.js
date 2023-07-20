@@ -40,7 +40,7 @@ const AddMoreSections = () => {
     return (
 
         <>
-            <Heading as={'h5'} size={'xs'} mb={2}>Add more sections</Heading>
+            <Heading as={'h5'} size={'xs'} mb={2}>Add Resume Sections</Heading>
             <Wrap px={2}>
                 <WrapItem>
                     <Button ref={coursesRef} isDisabled={coursesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} onClick={() => onClickBtnHandler(coursesRef.current.innerText)} leftIcon={coursesDisabled ? <IoCheckmarkDone /> : <IoSchool />}

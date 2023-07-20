@@ -25,7 +25,7 @@ const CoverLetterSection = () => {
     return (
 
         <>
-            <Heading as={'h5'} size={'xs'} mb={2}>Create a cover letter</Heading>
+            <Heading as={'h5'} size={'xs'} mb={2}>Cover Letter</Heading>
             <Wrap px={2}>
                 <WrapItem>
                     <ToolTip label='create new or edit your cover letter'>
