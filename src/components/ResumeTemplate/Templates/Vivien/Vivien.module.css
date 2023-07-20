@@ -33,6 +33,7 @@
 
 * {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 html,
@@ -80,9 +81,10 @@ a:hover {
 .resumeContainer {
   border: 1px solid rgb(163, 163, 163);
   background-color: white;
-  max-width: 793.706pt;
   min-height: 830pt;
-  padding: 35px 65px;
+  max-width: 594pt;
+  width: 594pt !important;
+  padding: 25px 35px;
 }
 
 .headerContainer {
@@ -200,189 +202,4 @@ a:hover {
 }
 .levelActive {
   background-color: #a0aec0;
-}
-
-@media (max-width: 900px) {
-  .resumeContainer {
-    background-color: white;
-    /* min-height: 830pt; */
-    /* min-height: auto;  check if auto is correct size */
-    padding: 2% 2%;
-  }
-
-  .headerContainer {
-    min-height: 145px;
-  }
-
-  .headerDetails {
-    padding: 15px 25px;
-    font-family: var(--title-font-vivien);
-  }
-  .person {
-    font-family: var(--title-font-vivien);
-  }
-  .personName {
-    font-size: var(--font-size-xl-vivien-media900);
-  }
-  .personJobTitle {
-    font-size: var(--font-size-md-vivien-media900);
-  }
-
-  .contact {
-    font-size: var(--font-size-md-vivien-media900);
-  }
-
-  .rightSide {
-    padding: 0 5px 0 15px;
-  }
-
-  .sectionContainer {
-    margin-top: 20px;
-  }
-  .sectionTitle {
-    font-size: var(--font-size-lg-vivien-media900);
-    font-family: var(--section-font-vivien);
-  }
-  .sectionBody {
-    margin: 5px 0 0 0;
-  }
-  .item {
-    font-size: var(--font-size-md-vivien-media900);
-    margin: 0 0 10px 0;
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
-  }
-  .itemRow {
-    display: flex;
-    flex-direction: row;
-    column-gap: 10px;
-    align-items: center;
-  }
-  .levelContainer {
-    column-gap: 3px;
-    width: 75%;
-  }
-}
-
-@media (max-width: 450px) {
-  .resumeContainer {
-    background-color: white;
-    /* min-height: 830pt; */
-    /* min-height: auto;  check if auto is correct size */
-    padding: 2% 2%;
-  }
-
-  .headerContainer {
-    min-height: 135px;
-  }
-
-  .headerDetails {
-    padding: 12px 20px;
-    font-family: var(--title-font-vivien);
-  }
-  .person {
-    font-family: var(--title-font-vivien);
-  }
-  .personName {
-    font-size: var(--font-size-xl-vivien-media450);
-  }
-  .personJobTitle {
-    font-size: var(--font-size-md-vivien-media450);
-  }
-
-  .contact {
-    font-size: var(--font-size-md-vivien-media450);
-  }
-
-  .rightSide {
-    padding: 0 3px 0 10px;
-  }
-
-  .sectionContainer {
-    margin-top: 10px;
-  }
-  .sectionTitle {
-    font-size: var(--font-size-lg-vivien-media450);
-    font-family: var(--section-font-vivien);
-  }
-  .sectionBody {
-    margin: 5px 0 0 0;
-  }
-  .item {
-    font-size: var(--font-size-md-vivien-media450);
-    margin: 0 0 7px 0;
-    row-gap: 3px;
-  }
-  .itemRow {
-    display: flex;
-    flex-direction: row;
-    column-gap: 8px;
-    align-items: center;
-  }
-  .levelContainer {
-    column-gap: 2px;
-    width: 65%;
-  }
-}
-
-@media (max-width: 320px) {
-  .resumeContainer {
-    background-color: rgb(255, 255, 255);
-    /* min-height: 830pt; */
-    /* min-height: auto;  check if auto is correct size */
-    padding: 2% 2%;
-  }
-
-  .headerContainer {
-    min-height: 120px;
-  }
-
-  .headerDetails {
-    padding: 8px 10px;
-    font-family: var(--title-font-vivien);
-  }
-  .person {
-    font-family: var(--title-font-vivien);
-  }
-  .personName {
-    font-size: var(--font-size-xl-vivien-media320);
-  }
-  .personJobTitle {
-    font-size: var(--font-size-md-vivien-media320);
-  }
-
-  .contact {
-    font-size: var(--font-size-md-vivien-media320);
-  }
-
-  .rightSide {
-    padding: 0 3px 0 5px;
-  }
-
-  .sectionContainer {
-    margin-top: 10px;
-  }
-  .sectionTitle {
-    font-size: var(--font-size-lg-vivien-media320);
-    font-family: var(--section-font-vivien);
-  }
-  .sectionBody {
-    margin: 5px 0 0 0;
-  }
-  .item {
-    font-size: var(--font-size-md-vivien-media320);
-    margin: 0 0 5px 0;
-    row-gap: 2px;
-  }
-  .itemRow {
-    display: flex;
-    flex-direction: row;
-    column-gap: 6px;
-    align-items: center;
-  }
-  .levelContainer {
-    column-gap: 2px;
-    width: 50%;
-  }
 }

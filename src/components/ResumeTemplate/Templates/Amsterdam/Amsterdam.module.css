@@ -11,6 +11,7 @@ body {
 }
 * {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 :root {
@@ -72,6 +73,8 @@ a:hover {
   /* min-height: 97vh; */
   /* height: 830pt; */
   min-height: 830pt;
+  max-width: 594pt;
+  width: 594pt !important;
   /* height: 100%; */
   background-image: url('./images/grey_bg.png');
   background-repeat: no-repeat;
@@ -177,156 +180,4 @@ a:hover {
 }
 .item p {
   margin: 0 0;
-}
-@media (max-width: 900px) {
-  .resumeContainer {
-    min-height: auto;
-  }
-  .headerContainer {
-    padding: 20px 15px;
-    margin: 10px auto;
-    width: 50%;
-    row-gap: 5px;
-    font-family: var(--title-font-ams);
-  }
-
-  .personName {
-    font-size: var(--font-size-xl-ams-media900);
-    font-weight: var(--font-bold-ams);
-    text-transform: uppercase;
-  }
-  .personJobTitle {
-    font-size: var(--font-size-lg-ams-media900);
-    font-weight: var(--font-normal-ams);
-  }
-
-  .detailsContainer {
-    margin-top: 15px;
-  }
-
-  .leftSide,
-  .rightSide {
-    padding: 3px 10px;
-  }
-
-  .sectionContainer {
-    margin-bottom: 10px;
-  }
-  .sectionTitle {
-    font-family: var(--section-font-ams);
-    font-weight: var(--font-bold-ams);
-    letter-spacing: 3px;
-    font-size: var(--font-size-md-ams-media900);
-    padding-bottom: 3px;
-    margin: 0 0 5px 0;
-  }
-  .sectionBody {
-    font-size: var(--font-size-md-ams-media900);
-  }
-  .item {
-    margin: 0 0 10px 0;
-  }
-  .infoText {
-    font-size: var(--font-size-sm-ams-media900);
-  }
-}
-
-@media (max-width: 450px) {
-  .resumeContainer {
-    min-height: auto;
-  }
-  .headerContainer {
-    padding: 8px 10px;
-    margin: 10px auto;
-    width: 50%;
-    row-gap: 2px;
-    font-family: var(--title-font-ams);
-  }
-
-  .personName {
-    font-size: var(--font-size-xl-ams-media450);
-    font-weight: var(--font-bold-ams);
-    text-transform: uppercase;
-  }
-  .personJobTitle {
-    font-size: var(--font-size-lg-ams-media450);
-    font-weight: var(--font-normal-ams);
-  }
-
-  .detailsContainer {
-    margin-top: 10px;
-  }
-
-  .leftSide,
-  .rightSide {
-    padding: 3px 5px;
-  }
-
-  .sectionContainer {
-    margin-bottom: 7px;
-  }
-  .sectionTitle {
-    font-family: var(--section-font-ams);
-    font-weight: var(--font-bold-ams);
-    letter-spacing: 2px;
-    font-size: var(--font-size-md-ams-media450);
-    padding-bottom: 1px;
-    margin: 0 0 3px 0;
-  }
-
-  .sectionBody {
-    font-size: var(--font-size-md-ams-media450);
-  }
-  .item {
-    margin: 0 0 8px 0;
-  }
-  .infoText {
-    font-size: var(--font-size-sm-ams-media450);
-  }
-}
-
-@media (max-width: 320px) {
-  .resumeContainer {
-    min-height: auto;
-  }
-  .headerContainer {
-    padding: 5px 8px;
-    margin: 5px auto;
-    width: 50%;
-    row-gap: 2px;
-    font-family: var(--title-font-ams);
-  }
-
-  .personName {
-    font-size: var(--font-size-xl-ams-media320);
-    font-weight: var(--font-bold-ams);
-    text-transform: uppercase;
-  }
-  .personJobTitle {
-    font-size: var(--font-size-lg-ams-media320);
-    font-weight: var(--font-normal-ams);
-  }
-
-  .detailsContainer {
-    margin-top: 8px;
-  }
-  .leftSide,
-  .rightSide {
-    padding: 2px 3px;
-  }
-  .sectionContainer {
-    margin-bottom: 7px;
-  }
-  .sectionTitle {
-    font-size: var(--font-size-md-ams-media320);
-  }
-  .sectionBody {
-    font-size: var(--font-size-md-ams-media320);
-  }
-  .item {
-    margin: 0 0 7px 0;
-  }
-  .infoText {
-    font-size: var(--font-size-sm-ams-media320);
-  }
 }
