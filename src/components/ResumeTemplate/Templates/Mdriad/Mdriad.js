@@ -1,8 +1,8 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import styling from './Mdriad.module.css';
 const Mdriad = forwardRef(({ data }, ref) => {
-    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections }
+    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections, setIsLoadedTemplateStatus }
         = data;
 
     const removeEmptyData = (dataArray) => {
@@ -12,6 +12,12 @@ const Mdriad = forwardRef(({ data }, ref) => {
     const sanitizeData = (data) => {
         return DOMPurify.sanitize(data)
     }
+    useEffect(() => {
+        setIsLoadedTemplateStatus(true);
+        return () => {
+            setIsLoadedTemplateStatus(false);
+        }
+    }, []);
 
     return (
         <div className={styling.resumeContainer} name={'mdriad'} ref={ref}>

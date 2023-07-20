@@ -1,11 +1,18 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 
 import styles from './Sloo.module.css';
 import StarRating from '../../../StarRating/StarRating';
 
 const Sloo = forwardRef(({ data }, ref) => {
-    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections }
+    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections, setIsLoadedTemplateStatus }
         = data;
+
+    useEffect(() => {
+        setIsLoadedTemplateStatus(true);
+        return () => {
+            setIsLoadedTemplateStatus(false);
+        }
+    }, []);
 
     return (
         <div className={styles.resumeContainer} name="sloo" ref={ref}>

@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import styling from './AbabMin.module.css';
 
@@ -6,7 +6,7 @@ import styling from './AbabMin.module.css';
 import StarRating from '../../../StarRating/StarRating';
 
 const AbabMin = forwardRef(({ data }, ref) => {
-    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, additionalSections }
+    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, additionalSections, setIsLoadedTemplateStatus }
         = data;
 
     const removeEmptyData = (dataArray) => {
@@ -16,6 +16,13 @@ const AbabMin = forwardRef(({ data }, ref) => {
     const sanitizeData = (data) => {
         return DOMPurify.sanitize(data)
     }
+
+    useEffect(() => {
+        setIsLoadedTemplateStatus(true);
+        return () => {
+            setIsLoadedTemplateStatus(false);
+        }
+    }, []);
 
     return (
         <div className={styling.resumeContainer} name={'ababmin'} ref={ref}>

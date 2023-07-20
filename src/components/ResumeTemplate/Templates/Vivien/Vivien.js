@@ -1,9 +1,18 @@
-import React, { forwardRef, Fragment } from 'react';
+import React, { forwardRef, Fragment, useEffect } from 'react';
 import styles from './Vivien.module.css';
 
 const Vivien = forwardRef(({ data }, ref) => {
-    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections }
+    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections, setIsLoadedTemplateStatus }
         = data;
+
+    useEffect(() => {
+
+        setIsLoadedTemplateStatus(true);
+        return () => {
+            setIsLoadedTemplateStatus(false);
+        }
+    }, []);
+
 
     return (
         <div className={styles.resumeContainer} name="vivien" ref={ref}>

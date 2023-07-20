@@ -1,11 +1,18 @@
-import React, { Fragment, forwardRef } from 'react';
+import React, { Fragment, forwardRef, useEffect } from 'react';
 
 import styles from './Lndn.module.css';
 import StarRating from '../../../StarRating/StarRating';
 
 const Lndn = forwardRef(({ data }, ref) => {
-    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections }
+    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, image, additionalSections, setIsLoadedTemplateStatus }
         = data;
+
+    useEffect(() => {
+        setIsLoadedTemplateStatus(true);
+        return () => {
+            setIsLoadedTemplateStatus(false);
+        }
+    }, []);
 
     return (
         <div className={styles.resumeContainer} name="lndn" ref={ref}>

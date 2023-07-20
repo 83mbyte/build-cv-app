@@ -1,11 +1,19 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import StarRating from '../../../StarRating/StarRating';
 import styles from './Amsterdam.module.css';
 
 
 const Amsterdam = forwardRef(({ data }, ref) => {
-    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, additionalSections }
+
+    const { personDetails, websoclinks, skills, summary, education, courses, employmentHistory, languages, hobbies, references, additionalSections, setIsLoadedTemplateStatus }
         = data;
+
+    useEffect(() => {
+        setIsLoadedTemplateStatus(true);
+        return () => {
+            setIsLoadedTemplateStatus(false);
+        }
+    }, []);
 
     return (
 
