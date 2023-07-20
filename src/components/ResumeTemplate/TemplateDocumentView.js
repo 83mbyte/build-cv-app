@@ -96,6 +96,7 @@ const TemplateDocumentView = () => {
             setCanvasImg(null);
             setIsReadyToPdf(false);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTemplateLoaded, templateName, htmlRef])
 
     return (
