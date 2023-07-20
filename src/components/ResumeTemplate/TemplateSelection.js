@@ -16,7 +16,7 @@ const TemplateSelection = () => {
     }
 
     return (
-        <Stack direction={['row', 'column']} spacing={5} overflow={'skroll'} wrap={'nowrap'} h={['100%']} alignItems={'center'} >
+        <Stack direction={['row', 'column']} spacing={5} overflow={'scroll'} wrap={'nowrap'} h={['100%']} alignItems={'center'} >
             {
                 templatesVars.map((item) => {
                     return (
