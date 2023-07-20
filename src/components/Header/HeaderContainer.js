@@ -1,25 +1,27 @@
 import {
     Box, Button, Container, Flex, HStack, IconButton
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 
 import { MdPreview, MdSave, MdMoreHoriz } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { drawerIsOpenToggle, modalIsOpenToggle, putAdditionalSectionsOnServerThunk, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
+import { drawerIsOpenToggle, previewDrawerIsOpenToggle, putAdditionalSectionsOnServerThunk, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
 
 import ToolTip from '../Tooltip/ToolTip';
 import HeaderLogo from './HeaderLogo';
 import AvatarCustom from '../Avatar/AvatarCustom';
-import DrawerContainer from '../Drawer/DrawerContainer';
+
+const PreviewDrawer = lazy(() => import('../Drawer/PreviewDrawer/PreviewDrawer'))
+const DrawerContainer = lazy(() => import('../Drawer/DrawerContainer'))
 
 
 const HeaderContainer = ({ loggedUser }) => {
 
-    const modalOpen = useSelector(state => state.utility.modalWindow.isOpen);
     const dispatch = useDispatch();
     const state = useSelector(state => state);
     const isModifiedContent = useSelector(state => state.utility.isModifiedContent);
     const isDrawerOpen = useSelector(state => state.utility.drawer.isOpen);
+    const isPreviewDrawerOpen = useSelector(state => state.utility.previewDrawer.isOpen);
     const additionalSections = useSelector(state => state.utility.additionalSections.data);
 
 
@@ -39,8 +41,9 @@ const HeaderContainer = ({ loggedUser }) => {
         }
     }
 
-    const previewClickHandler = () => {
-        dispatch(modalIsOpenToggle());
+
+    const previewDrawerToggle = () => {
+        dispatch(previewDrawerIsOpenToggle());
         saveAllChanges();
     }
 
@@ -65,18 +68,23 @@ const HeaderContainer = ({ loggedUser }) => {
                 <HStack justify={'space-between'} align='center'>
                     <HeaderLogo />
                     <HStack spacing={2} p={0}>
+
+
                         <Box>
-                            <ToolTip label={'preview document'} isDisabled={modalOpen}>
+                            <ToolTip label={'preview document'} isDisabled={isPreviewDrawerOpen}>
                                 <Button
                                     variant={'solid'}
                                     colorScheme='teal'
                                     size={'xs'}
                                     leftIcon={<MdPreview />}
-                                    onClick={previewClickHandler}
+                                    onClick={previewDrawerToggle}
                                 >
                                     Preview
                                 </Button>
                             </ToolTip>
+                            <Suspense>
+                                <PreviewDrawer isOpenProp={isPreviewDrawerOpen} onCloseHandler={previewDrawerToggle} />
+                            </Suspense>
                         </Box>
 
                         <Box>
@@ -106,7 +114,9 @@ const HeaderContainer = ({ loggedUser }) => {
                                     fontSize={'16px'}
                                 />
                             </ToolTip>
-                            <DrawerContainer isOpenProp={isDrawerOpen} onCloseHandler={drawerToggler} />
+                            <Suspense>
+                                <DrawerContainer isOpenProp={isDrawerOpen} onCloseHandler={drawerToggler} />
+                            </Suspense>
                         </Box>
                         <Box>
                             <AvatarCustom name={''} />
