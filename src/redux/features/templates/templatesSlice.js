@@ -40,17 +40,22 @@ const templatesSlice = createSlice({
                     img: 'https://marketplace.canva.com/EAFFp1ENXUk/2/0/283w/canva-abu-abu-minimalist-resume-SqB-VxgkFqo.jpg'
                 },
 
-            ]
+            ],
+            isTemplateLoaded: false
         },
 
     },
     reducers: {
         setSelectedTemplate: (state, action) => {
+
             state.data.selected = action.payload;
+        },
+        setIsTemplateLoaded: (state, action) => {
+            state.data.isTemplateLoaded = action.payload;
         }
     }
 })
 
 
 export default templatesSlice.reducer;
-export const { setSelectedTemplate } = templatesSlice.actions;
+export const { setSelectedTemplate, setIsTemplateLoaded } = templatesSlice.actions;
