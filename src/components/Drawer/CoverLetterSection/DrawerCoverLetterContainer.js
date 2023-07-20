@@ -38,7 +38,7 @@ const DrawerCoverLetterContainer = ({ isOpen, setIsOpen }) => {
         <Drawer onClose={() => setIsOpen({ visible: false, type: null })} isOpen={isOpen.visible} size={'full'} placement='left'>
             <DrawerOverlay />
             <DrawerContent>
-                <DrawerHeader borderBottomWidth='1px'>
+                <DrawerHeader borderBottomWidth='1px' py={[2, 4]}>
                     <HStack>
                         <Box bg='' onClick={() => setIsOpen({ visible: false, type: null })} >
                             <BackIcon />
