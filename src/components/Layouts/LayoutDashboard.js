@@ -1,23 +1,11 @@
 
-import { Box, VStack, Portal, Container } from '@chakra-ui/react';
+import { Box, VStack, Container } from '@chakra-ui/react';
 import React from 'react';
-import { AnimatePresence } from 'framer-motion';
 import FooterContainer from '../Footer/FooterContainer';
 import HeaderContainer from '../Header/HeaderContainer';
-import ModalAnimated from '../ModalAnimated/ModalAnimated';
-import { useDispatch, useSelector } from 'react-redux';
-import { modalIsOpenToggle } from '../../redux/features/utility/utilitySlice';
 import CircularProgressCentered from '../Progress/CircularProgressCentered';
 
-
-
 const LayoutDashboard = ({ loggedUser, children }) => {
-    const isModalOpen = useSelector(state => state.utility.modalWindow.isOpen);
-
-    const dispatch = useDispatch();
-    const modalToggler = () => {
-        dispatch(modalIsOpenToggle())
-    }
 
     return (
 
@@ -45,13 +33,7 @@ const LayoutDashboard = ({ loggedUser, children }) => {
                 </Box>
             </VStack>
 
-            <Portal>
 
-                <AnimatePresence mode={'wait'}>
-                    {isModalOpen && <ModalAnimated handleClose={modalToggler} key="modal" />}
-                </AnimatePresence>
-
-            </Portal>
         </>
     );
 };
