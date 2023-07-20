@@ -10,10 +10,10 @@ const utilitySlice = createSlice({
             error: '',
             successMsg: ''
         },
-        modalWindow: {
+        drawer: {
             isOpen: false
         },
-        drawer: {
+        previewDrawer: {
             isOpen: false
         },
         isModifiedContent: {
@@ -40,11 +40,11 @@ const utilitySlice = createSlice({
             state.auth.status = 'ready';
             state.auth.data = action.payload;
         },
-        modalIsOpenToggle: (state) => {
-            state.modalWindow.isOpen = !state.modalWindow.isOpen;
-        },
         drawerIsOpenToggle: (state) => {
             state.drawer.isOpen = !state.drawer.isOpen;
+        },
+        previewDrawerIsOpenToggle: (state) => {
+            state.previewDrawer.isOpen = !state.previewDrawer.isOpen;
         },
         setIsModifiedContent: (state, action) => {
             state.isModifiedContent.status = action.payload.status;
@@ -212,7 +212,7 @@ const utilitySlice = createSlice({
     }
 })
 
-export const { clearAuthError, addLoggedUser, modalIsOpenToggle, drawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, } = utilitySlice.actions;
+export const { clearAuthError, addLoggedUser, drawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, previewDrawerIsOpenToggle } = utilitySlice.actions;
 
 export default utilitySlice.reducer;
 
