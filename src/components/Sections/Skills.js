@@ -86,7 +86,7 @@ const Skills = ({ loggedUser }) => {
     }
     else if (status === 'ready' && data) {
 
-        let predefinedRole = jobTitle.toLowerCase().replace(/\s/g, '');
+        let predefinedRole = jobTitle ? jobTitle.toLowerCase().replace(/\s/g, '') : null;
 
         content = isSectionVisible &&
             <SectionWrapper sectionTitle={'Skills'} flexDirect='column'>
