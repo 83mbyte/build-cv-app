@@ -3,7 +3,7 @@
   overflow: hidden;
   display: flex;
   align-items: center;
-  animation: openclose 5s linear;
+  /* animation: openclose 5s linear; */
   white-space: nowrap;
   padding: 0;
   height: auto;
@@ -13,7 +13,7 @@
   text-indent: 5px;
 }
 
-@keyframes openclose {
+/* @keyframes openclose {
   0% {
     top: 0;
     width: 0;
@@ -23,4 +23,4 @@
     top: 0;
     width: 100%;
   }
-}
+} */
