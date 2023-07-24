@@ -11,6 +11,8 @@ import ToolTip from '../Tooltip/ToolTip';
 import HeaderLogo from './HeaderLogo';
 import AvatarCustom from '../Avatar/AvatarCustom';
 
+import store from '../../redux/store';
+
 const PreviewDrawer = lazy(() => import('../Drawer/PreviewDrawer/PreviewDrawer'))
 const DrawerContainer = lazy(() => import('../Drawer/DrawerContainer'))
 
@@ -18,7 +20,6 @@ const DrawerContainer = lazy(() => import('../Drawer/DrawerContainer'))
 const HeaderContainer = ({ loggedUser }) => {
 
     const dispatch = useDispatch();
-    const state = useSelector(state => state);
     const isModifiedContent = useSelector(state => state.utility.isModifiedContent);
     const isDrawerOpen = useSelector(state => state.utility.drawer.isOpen);
     const isPreviewDrawerOpen = useSelector(state => state.utility.previewDrawer.isOpen);
@@ -26,6 +27,7 @@ const HeaderContainer = ({ loggedUser }) => {
 
 
     const saveAllChanges = () => {
+        let state = store.getState();
         for (const section of isModifiedContent.sections) {
             dispatch(putDataOnServerThunk(
                 {
