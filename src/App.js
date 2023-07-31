@@ -10,6 +10,7 @@ import ErrorPage from './pages/ErrorPage';
 import ProtectedWrapper from './components/Wrappers/ProtectedWrapper';
 
 import Dashboard from './pages/Dashboard';
+import Preview from './pages/Preview';
 
 
 const router = createBrowserRouter(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path='dashboard' element={<ProtectedWrapper />}  >
         <Route index element={<Dashboard />} />
+        <Route path='preview' element={<Preview />} />
       </Route>
 
     </>
