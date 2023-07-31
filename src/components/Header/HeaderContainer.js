@@ -3,9 +3,10 @@ import {
 } from '@chakra-ui/react';
 import React, { Suspense, lazy } from 'react';
 
+import { Link as RouterLink } from 'react-router-dom';
 import { MdPreview, MdSave, MdMoreHoriz } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { drawerIsOpenToggle, previewDrawerIsOpenToggle, putAdditionalSectionsOnServerThunk, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
+import { drawerIsOpenToggle, putAdditionalSectionsOnServerThunk, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
 
 import ToolTip from '../Tooltip/ToolTip';
 import HeaderLogo from './HeaderLogo';
@@ -13,7 +14,6 @@ import AvatarCustom from '../Avatar/AvatarCustom';
 
 import store from '../../redux/store';
 
-const PreviewDrawer = lazy(() => import('../Drawer/PreviewDrawer/PreviewDrawer'))
 const DrawerContainer = lazy(() => import('../Drawer/DrawerContainer'))
 
 
@@ -43,12 +43,6 @@ const HeaderContainer = ({ loggedUser }) => {
         }
     }
 
-
-    const previewDrawerToggle = () => {
-        dispatch(previewDrawerIsOpenToggle());
-        saveAllChanges();
-    }
-
     const saveClickHandler = () => {
         saveAllChanges();
     }
@@ -74,19 +68,18 @@ const HeaderContainer = ({ loggedUser }) => {
 
                         <Box>
                             <ToolTip label={'preview document'} isDisabled={isPreviewDrawerOpen}>
+
                                 <Button
                                     variant={'solid'}
-                                    colorScheme='teal'
+                                    colorScheme={'teal'}
+                                    as={RouterLink}
+                                    to="/dashboard/preview"
                                     size={'xs'}
                                     leftIcon={<MdPreview />}
-                                    onClick={previewDrawerToggle}
-                                >
-                                    Preview
-                                </Button>
+                                    onClick={saveAllChanges}
+                                >Preview</Button>
                             </ToolTip>
-                            <Suspense>
-                                <PreviewDrawer isOpenProp={isPreviewDrawerOpen} onCloseHandler={previewDrawerToggle} />
-                            </Suspense>
+
                         </Box>
 
                         <Box>
