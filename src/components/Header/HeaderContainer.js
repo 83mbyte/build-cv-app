@@ -4,7 +4,7 @@ import {
 import React, { Suspense, lazy } from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
-import { MdPreview, MdSave, MdMoreHoriz } from 'react-icons/md';
+import { MdPreview, MdSave, MdMenu } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { drawerIsOpenToggle, putAdditionalSectionsOnServerThunk, putDataOnServerThunk } from '../../redux/features/utility/utilitySlice';
 
@@ -101,7 +101,7 @@ const HeaderContainer = ({ loggedUser }) => {
                             <ToolTip label='open menu'>
                                 <IconButton
                                     colorScheme='teal'
-                                    icon={<MdMoreHoriz />}
+                                    icon={<MdMenu />}
                                     size={'xs'}
                                     variant={'outline'}
                                     aria-label='show menu'
