@@ -14,7 +14,8 @@ const utilitySlice = createSlice({
             isOpen: false
         },
         previewDrawer: {
-            isOpen: false
+            isOpen: false,
+            status: 'idle'
         },
         isModifiedContent: {
             status: false,
@@ -45,7 +46,14 @@ const utilitySlice = createSlice({
         },
         previewDrawerIsOpenToggle: (state) => {
             state.previewDrawer.isOpen = !state.previewDrawer.isOpen;
+
         },
+        setPreviewDrawerStatus: (state, action) => {
+            if (action.payload !== null && action.payload !== undefined) {
+                state.previewDrawer.status = action.payload;
+            }
+        },
+
         setIsModifiedContent: (state, action) => {
             state.isModifiedContent.status = action.payload.status;
             if (!state.isModifiedContent.sections.includes(action.payload.section)) {
@@ -212,7 +220,7 @@ const utilitySlice = createSlice({
     }
 })
 
-export const { clearAuthError, addLoggedUser, drawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, previewDrawerIsOpenToggle } = utilitySlice.actions;
+export const { clearAuthError, addLoggedUser, drawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, previewDrawerIsOpenToggle, setPreviewDrawerStatus } = utilitySlice.actions;
 
 export default utilitySlice.reducer;
 
