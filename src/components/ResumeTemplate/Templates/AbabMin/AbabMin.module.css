@@ -138,7 +138,7 @@ a.lnk:hover {
 .headerContainer {
   display: flex;
   flex-direction: row;
-  height: 20vh;
+  /* height: 20vh; */
 }
 
 .headerContainer > div {
@@ -149,6 +149,7 @@ a.lnk:hover {
   justify-content: center;
 }
 .headerFirstColored {
+  min-height: 100px;
   height: 80%;
   display: flex;
   background-color: var(--color-dark);
