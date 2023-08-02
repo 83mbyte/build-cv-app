@@ -1,5 +1,6 @@
 
 import React, { Fragment, lazy, Suspense, useEffect } from 'react';
+import { useInView } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import LayoutDashboard from '../components/Layouts/LayoutDashboard';
 import { Navigate } from 'react-router-dom';
@@ -21,6 +22,8 @@ const Dashboard = () => {
     const additionalSections = useSelector(state => state.utility.additionalSections);
     const dispatch = useDispatch();
 
+    const [loadedPersonDetailsSection, setLoadedPersonDetailsSection] = React.useState(false);
+
     const sectionsToShow = {
         hobbies: <Hobbies loggedUser={loggedUser} key={'section_hobbies'} />,
         courses: <Courses loggedUser={loggedUser} key={'section_curses'} />,
@@ -41,43 +44,62 @@ const Dashboard = () => {
                     ?
                     <LayoutDashboard loggedUser={loggedUser}>
                         {/* Personal Details section */}
-                        <PersonDetails />
-
-
-                        {/* Professional Summary section */}
-                        <Summary loggedUser={loggedUser} />
-
-
-                        {/* Education section */}
-                        <Education loggedUser={loggedUser} />
-
-
-                        {/* Links */}
-                        <Links loggedUser={loggedUser} />
-
-
-                        {/* Skills */}
-                        <Skills loggedUser={loggedUser} />
-
-
-                        {/* Employment History */}
-                        <History loggedUser={loggedUser} />
-
+                        <PersonDetails setLoadedPersonDetailsSection={setLoadedPersonDetailsSection} loadedPersonDetailsSection={loadedPersonDetailsSection} />
 
                         {
-                            additionalSections.data
-                            && additionalSections.data.map((item, index) => {
+                            !loadedPersonDetailsSection
+                                ? <div>
+                                    {/* Just one empty div */}
+                                </div>
+                                : <>
 
-                                return (
-                                    // Additional sections  
-                                    <Fragment key={index}>
-                                        <Suspense >
-                                            {sectionsToShow[item]}
-                                        </Suspense>
-                                    </Fragment>
-                                )
-                            })
+                                    {/* Professional Summary section */}
+                                    <LoadingInViewSection>
+                                        <Summary loggedUser={loggedUser} />
+                                    </LoadingInViewSection>
+
+
+                                    {/* Education section */}
+                                    <LoadingInViewSection>
+                                        <Education loggedUser={loggedUser} />
+                                    </LoadingInViewSection>
+
+
+                                    {/* Links */}
+                                    <LoadingInViewSection>
+                                        <Links loggedUser={loggedUser} />
+                                    </LoadingInViewSection>
+
+
+                                    {/* Skills */}
+                                    <LoadingInViewSection>
+                                        <Skills loggedUser={loggedUser} />
+                                    </LoadingInViewSection>
+
+
+                                    {/* Employment History */}
+                                    <LoadingInViewSection>
+                                        <History loggedUser={loggedUser} />
+                                    </LoadingInViewSection>
+
+
+                                    {
+                                        additionalSections.data
+                                        && additionalSections.data.map((item, index) => {
+
+                                            return (
+                                                // Additional sections  
+                                                <Fragment key={index}>
+                                                    <Suspense >
+                                                        {sectionsToShow[item]}
+                                                    </Suspense>
+                                                </Fragment>
+                                            )
+                                        })
+                                    }
+                                </>
                         }
+
 
                     </LayoutDashboard >
                     : <Navigate to={'/login'} />
@@ -88,3 +110,17 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
+const LoadingInViewSection = ({ children }) => {
+    const ref = React.useRef(null);
+    const isInView = useInView(ref, { once: true });
+
+    return (
+        <div ref={ref} style={{ margin: 0, padding: 0 }}>
+            {
+                isInView ? children : <div style={{ height: '100vh', backgroundColor: '' }}>&nbsp;</div>
+            }
+        </div>
+    )
+}
