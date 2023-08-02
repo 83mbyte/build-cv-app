@@ -16,13 +16,13 @@ const WelcomeFAQ = () => {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
-            transition: { delay: 0.3, delayChildren: 0.9, staggerChildren: 0.8, staggerDirection: -1, duration: 0.8 }
+            transition: { delay: 0.3, delayChildren: 0.4, duration: 0.8 }
         }
     }
 
     const itemMotion = {
-        hidden: { opacity: 0, y: 100 },
-        show: { opacity: 1, y: 0 }
+        hidden: { opacity: 0, x: 0 },
+        show: { opacity: 1, x: 0 }
     }
     return (
         <WelcomeWrapper >
