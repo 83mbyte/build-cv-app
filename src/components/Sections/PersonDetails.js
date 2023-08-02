@@ -9,7 +9,7 @@ import LoadingSectionSkeleton from '../Progress/LoadingSectionSkeleton';
 import SectionWrapper from '../Wrappers/SectionWrapper';
 import ProfilePhoto from '../ProfilePhoto/ProfilePhoto';
 
-const PersonDetails = () => {
+const PersonDetails = ({ setLoadedPersonDetailsSection, loadedPersonDetailsSection }) => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.utility.auth.data);
     const data = useSelector(state => state.personDetails.data);
@@ -25,7 +25,7 @@ const PersonDetails = () => {
         content =
             isSectionVisible &&
             <SectionWrapper sectionTitle={'Personal Details'} type={'grid'}>
-                <Box></Box>
+                <Box h={!loadedPersonDetailsSection && '100vh'}></Box>
                 <Box display='flex' justifyContent={'flex-end'} px={2}>
                     <ProfilePhoto user={user} />
                 </Box>
@@ -47,11 +47,15 @@ const PersonDetails = () => {
         content = <Box p={'10px'}>Something wrong. {error}</Box>
     }
     else {
-        content = <LoadingSectionSkeleton rowsNumber={4} />
+        content = <Box h={'95vh'} bg={'transparent'} py={2}><LoadingSectionSkeleton rowsNumber={4} /></Box>
     }
     useEffect(() => {
+
         if (status === 'idle') {
             dispatch(getPersonDetails(user));
+        }
+        if (status === 'ready') {
+            setLoadedPersonDetailsSection(true)
         }
     }, [status, user, dispatch])
     return (
