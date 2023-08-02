@@ -25,7 +25,7 @@ const PersonDetails = ({ setLoadedPersonDetailsSection, loadedPersonDetailsSecti
         content =
             isSectionVisible &&
             <SectionWrapper sectionTitle={'Personal Details'} type={'grid'}>
-                <Box h={!loadedPersonDetailsSection && '100vh'}></Box>
+                <Box h={!loadedPersonDetailsSection ? '100vh' : ''}></Box>
                 <Box display='flex' justifyContent={'flex-end'} px={2}>
                     <ProfilePhoto user={user} />
                 </Box>
@@ -49,15 +49,16 @@ const PersonDetails = ({ setLoadedPersonDetailsSection, loadedPersonDetailsSecti
     else {
         content = <Box h={'95vh'} bg={'transparent'} py={2}><LoadingSectionSkeleton rowsNumber={4} /></Box>
     }
+
     useEffect(() => {
 
         if (status === 'idle') {
             dispatch(getPersonDetails(user));
         }
         if (status === 'ready') {
-            setLoadedPersonDetailsSection(true)
+            setLoadedPersonDetailsSection(true);
         }
-    }, [status, user, dispatch])
+    }, [status, user, dispatch, setLoadedPersonDetailsSection])
     return (
         <>
             {content}
