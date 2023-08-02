@@ -10,7 +10,8 @@ const WelcomeBlockImage = ({ imgName }) => {
             py={'0'}
             px={0}
             h={'250px'}
-            borderBottomWidth={'1px'}
+            mb={-10}
+            borderBottomWidth={'0px'}
             borderColor={'gray.300'}
             borderLeft={'none'}
             borderRight={'none'}
@@ -19,9 +20,7 @@ const WelcomeBlockImage = ({ imgName }) => {
             backgroundRepeat={'no-repeat'}
             backgroundPosition={'bottom'}
             backgroundSize={'contain'}
-            // backgroundImage={`url(/welcome1.jpg)`}
             backgroundImage={`url(/${imgName})`}
-
         >
         </Box>
     );
