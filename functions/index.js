@@ -6,7 +6,6 @@
  *
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
-
 const { onRequest } = require("firebase-functions/v2/https");
 const { setGlobalOptions } = require("firebase-functions/v2");
 const { PRIVATE } = require("./keys");   // source for your API keys, Domains, etc.
@@ -15,7 +14,10 @@ setGlobalOptions({ maxInstances: 10 });
 
 exports.summaryCreate = onRequest(
 
-    { cors: [PRIVATE.URLS.domain,] }, //put your domain(s) in case of need  
+    {
+        cors: [PRIVATE.URLS.domain], //put your domain(s) in case of need 
+        secrets: ['AIKEY']
+    },
 
     //{ cors: true },  // If your function should be openly available, for example if it's serving a public API or website, set the cors policy to true.
     async (req, resp) => {
@@ -25,7 +27,9 @@ exports.summaryCreate = onRequest(
         else {
 
             if (req.body) {
-                createRequest(req, resp, tokens = 150);
+                let apiKey = process.env.AIKEY;
+
+                createRequest(req, resp, apiKey, variant = null, tokens = 200);
             }
             else {
                 resp.status(400).json({ error: 'Bad request.' });
@@ -35,45 +39,51 @@ exports.summaryCreate = onRequest(
 )
 
 exports.coverLetterCreate = onRequest(
-    { cors: [PRIVATE.URLS.domain] },
+    {
+        cors: [PRIVATE.URLS.domain],
+        secrets: ['AIKEY']
+    },
     //{ cors: true },
     async (req, resp) => {
         if (req.method !== 'POST') {
-            resp.status(400).json({ error: 'Bad request.' });
+            resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
         } else {
 
             if (req.body) {
-                createRequest(req, resp, variant = 'professional', tokens = 350)
+                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'professional', tokens = 350)
             } else {
-                resp.status(400).json({ error: 'Bad request.' });
+                resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
             }
         }
     }
 )
 
 exports.generateSkills = onRequest(
-    { cors: [PRIVATE.URLS.domain] },
+    {
+        cors: [PRIVATE.URLS.domain],
+        secrets: ['AIKEY']
+    },
     //{ cors: true },
     async (req, resp) => {
 
         if (req.method !== 'POST') {
-            resp.status(400).json({ error: 'Bad request.' });
+            resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
         } else {
 
             if (req.body) {
-                createRequest(req, resp, variant = 'adviser', tokens = 50)
+                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'adviser', tokens = 50)
             } else {
-                resp.status(400).json({ error: 'Bad request.' });
+                resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
             }
         }
     }
 )
 
 
+const createRequest = async (req, resp, apiKey = null, variant = null, tokens = 200) => {
+    //const API_KEY = PRIVATE.KEYS.openai; //put YOUR openai KEY to make calls to https://api.openai.com //
 
-
-const createRequest = async (req, resp, variant = null, tokens = 200) => {
-    const API_KEY = PRIVATE.KEYS.openai; //put YOUR openai KEY to make calls to https://api.openai.com //
+    const API_KEY = apiKey;
     const body = req.body.content;
     let messsagesArray = null;
 
@@ -92,7 +102,6 @@ const createRequest = async (req, resp, variant = null, tokens = 200) => {
         messsagesArray = [{ role: 'user', content: body }];
     }
 
-    console.log('mess:::', messsagesArray)
 
     const options = {
         method: 'POST',
@@ -108,18 +117,26 @@ const createRequest = async (req, resp, variant = null, tokens = 200) => {
     }
 
     try {
+        //resp.status(200).send(JSON.stringify({ content: apiKey }));
+
         // resp.status(200).send({ content: `"ABC"|"123"|"M93"` })   // just temporal data .... 
 
-        const response = await fetch(PRIVATE.URLS.openai, options);
-        const data = await response.json();
-
-        if (data) {
-            resp.status(200).json({ content: data.choices[0].message.content });
+        if (!API_KEY) {
+            throw new Error('Warning! No KEY provided.')
         } else {
-            resp.status(200).json({ content: 'Unexpected error.' });
+            const response = await fetch(PRIVATE.URLS.openai, options);
+            const data = await response.json();
+
+            if (data) {
+                resp.status(200).send(JSON.stringify({ content: data.choices[0].message.content }));
+            } else {
+                resp.status(200).send(JSON.stringify({ content: 'Unexpected error.' }));
+            }
         }
 
+
     } catch (error) {
-        resp.status(500).json({ content: 'Internal server error.' });
+        resp.status(500).send(JSON.stringify({ content: 'Internal server error.' }));
     }
+
 }
