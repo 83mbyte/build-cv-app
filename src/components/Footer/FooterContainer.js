@@ -19,7 +19,7 @@ const FooterContainer = () => {
                     <Text>BuildCV.app</Text>
                 </FooterColumn>
                 <FooterColumn>
-                    <Text >&copy; 2023. All rights reserved.</Text>
+                    <Text >&copy; {`${new Date().getFullYear()}. All rights reserved.`}</Text>
                 </FooterColumn>
                 <FooterColumn >
                     <HStack spacing={{ base: 2, md: 1 }}>

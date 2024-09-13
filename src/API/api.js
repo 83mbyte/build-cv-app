@@ -130,18 +130,19 @@ export const funcAPI = {
             // fetching in developer mode  
             // const resp = await fetch(`${process.env.REACT_APP_DEV_FUNC_CALL}/${endPoint}`, options);
 
+            // production
             const resp = await fetch(`${process.env.REACT_APP_DOMAIN}/${endPoint}`, options);
+
             if (resp) {
                 let content = await resp.json();
-                let res = { status: resp.status, content: content.content }
+                return { status: resp.status, content: content.content }
 
-                return res;
             } else {
                 throw new Error(`HTTP error: ${resp.status}`)
             }
 
         } catch (error) {
-            console.error(error)
+            console.error(':: ', error)
         }
 
     }

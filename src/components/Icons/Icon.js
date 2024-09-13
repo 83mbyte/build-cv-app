@@ -30,11 +30,11 @@ export const CloseIcon = () => {
     )
 }
 
-export const BackIcon = () => {
+export const BackIcon = ({ color = 'teal' }) => {
 
     return (
         <IconContext.Provider value={{ className: `${styles.icon}` }} >
-            <Box _hover={{ color: 'teal', cursor: 'pointer' }} color={'gray.400'} height={['18px', '24px']} w={['18px', '24px']} p={0}>
+            <Box _hover={{ color: color, cursor: 'pointer' }} color={'gray.400'} height={['18px', '24px']} w={['18px', '24px']} p={0}>
                 <MdArrowBack />
             </Box >
         </IconContext.Provider >

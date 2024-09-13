@@ -29,7 +29,7 @@ exports.summaryCreate = onRequest(
             if (req.body) {
                 let apiKey = process.env.AIKEY;
 
-                createRequest(req, resp, apiKey, variant = null, tokens = 200);
+                createRequest(req, resp, apiKey, variant = null, tokens = 1000);
             }
             else {
                 resp.status(400).json({ error: 'Bad request.' });
@@ -50,7 +50,7 @@ exports.coverLetterCreate = onRequest(
         } else {
 
             if (req.body) {
-                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'professional', tokens = 350)
+                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'professional', tokens = 1000)
             } else {
                 resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
             }
@@ -71,7 +71,27 @@ exports.generateSkills = onRequest(
         } else {
 
             if (req.body) {
-                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'adviser', tokens = 50)
+                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'adviser', tokens = 1000)
+            } else {
+                resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
+            }
+        }
+    }
+)
+
+exports.adviserChat = onRequest(
+    {
+        cors: [PRIVATE.URLS.domain],
+        secrets: ['AIKEY']
+    },
+    async (req, resp) => {
+        // resp.set('Access-Control-Allow-Origin', '*');
+        if (req.method !== 'POST') {
+            resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
+        } else {
+
+            if (req.body) {
+                adviserRequest(req, resp, process.env.AIKEY, 1500)
             } else {
                 resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
             }
@@ -80,26 +100,26 @@ exports.generateSkills = onRequest(
 )
 
 
-const createRequest = async (req, resp, apiKey = null, variant = null, tokens = 200) => {
+const createRequest = async (req, resp, apiKey = null, variant = null, tokens = 1000) => {
     //const API_KEY = PRIVATE.KEYS.openai; //put YOUR openai KEY to make calls to https://api.openai.com //
 
     const API_KEY = apiKey;
     const body = req.body.content;
-    let messsagesArray = null;
+    let messagesArray = null;
 
     if (variant === 'aggression') {
-        messsagesArray = [{ ...PRIVATE.PROMPTS.aggression }, { role: 'user', content: body }];
+        messagesArray = [{ ...PRIVATE.PROMPTS.aggression }, { role: 'user', content: body }];
     }
     else if (variant === 'humor') {
-        messsagesArray = [{ ...PRIVATE.PROMPTS.humor }, { role: 'user', content: body }]
+        messagesArray = [{ ...PRIVATE.PROMPTS.humor }, { role: 'user', content: body }]
     }
     else if (variant === 'professional') {
-        messsagesArray = [{ ...PRIVATE.PROMPTS.professional }, { role: 'user', content: body }]
+        messagesArray = [{ ...PRIVATE.PROMPTS.professional }, { role: 'user', content: body }]
     } else if (variant === 'adviser' && (body && body !== '')) {
-        messsagesArray = [{ ...PRIVATE.PROMPTS.adviser(body) }]
+        messagesArray = [{ ...PRIVATE.PROMPTS.adviser(body) }]
     }
     else {
-        messsagesArray = [{ role: 'user', content: body }];
+        messagesArray = [{ role: 'user', content: body }];
     }
 
 
@@ -110,33 +130,64 @@ const createRequest = async (req, resp, apiKey = null, variant = null, tokens = 
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            model: 'gpt-3.5-turbo',
-            messages: messsagesArray,
+            model: 'gpt-4o-mini',
+            messages: messagesArray,
             max_tokens: tokens
         })
     }
+    sendRequestToAI(resp, API_KEY, options);
+}
+
+const adviserRequest = async (req, resp, apiKey, tokens = 1000,) => {
+
+
+    const API_KEY = apiKey;
+    let messagesArray = req.body.content;
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: messagesArray,
+            max_tokens: tokens,
+            temperature: 1
+        })
+    }
+    sendRequestToAI(resp, API_KEY, options);
+}
+
+const sendRequestToAI = async (resp, API_KEY, options) => {
 
     try {
-        //resp.status(200).send(JSON.stringify({ content: apiKey }));
-
+        // dev mode
         // resp.status(200).send({ content: `"ABC"|"123"|"M93"` })   // just temporal data .... 
+        //
 
+        //Production mode
         if (!API_KEY) {
             throw new Error('Warning! No KEY provided.')
         } else {
             const response = await fetch(PRIVATE.URLS.openai, options);
-            const data = await response.json();
+            if (response.status === 200) {
+                const data = await response.json();
 
-            if (data) {
-                resp.status(200).send(JSON.stringify({ content: data.choices[0].message.content }));
+                if (data.choices.length > 0) {
+                    resp.status(200).send(JSON.stringify({ content: data.choices[0].message.content }));
+                } else {
+                    resp.status(200).send(JSON.stringify({ content: 'Unexpected error.' }));
+                }
             } else {
-                resp.status(200).send(JSON.stringify({ content: 'Unexpected error.' }));
+                resp.status(200).send(JSON.stringify({ content: `response = ${response.status} ` }));
             }
         }
+        //
 
 
     } catch (error) {
-        resp.status(500).send(JSON.stringify({ content: 'Internal server error.' }));
+        resp.status(500).send(JSON.stringify({ content: `Internal server error - ${error}; ` }));
     }
-
 }
