@@ -1,17 +1,22 @@
-'use client';
+'use client'
 
 import { motion } from 'framer-motion';
 import { uid } from 'uid/single';
 import { animationVariants } from './animationVariants';
 
-const AnimationWrapper = ({ width = 'auto', variant = 'opacity', whileInView = false, showOnce = false, children }) => {
+const keyId = uid();
+
+const AnimationWrapper = ({ width = 'auto', variant = 'opacity', whileInView = false, showOnce = false, custom = null, children }) => {
+
     return (
         <motion.div
-            key={uid()}
+            key={keyId}
             variants={animationVariants[variant]}
             initial={'initial'}
+            custom={custom}
             animate={whileInView ? null : 'animate'}
             whileInView={whileInView ? 'animate' : null}
+            exit={'exit'}
             viewport={{ once: showOnce, }}
             style={{ width: width }}
         >

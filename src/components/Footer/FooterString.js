@@ -1,10 +1,9 @@
 import { Text, Box } from '@chakra-ui/react';
-import React from 'react';
 
-const FooterString = () => {
+const FooterString = ({ color = 'lightgrey' }) => {
     return (
 
-        <Box><Text fontSize={'xs'} color={'lightgrey'}>&copy; {`${new Date().getFullYear()}. All rights reserved.`}</Text></Box>
+        <Box><Text fontSize={'xs'} color={color}>&copy; {`${new Date().getFullYear()}. All rights reserved.`}</Text></Box>
     );
 };
 

@@ -11,7 +11,7 @@ const IndexCoverElement = () => {
             <Text textAlign={'center'} fontSize={['sm', 'lg']}>{indexData?.cover?.topheading || `Lorem ipsum dolor sit.`}</Text>
             <Box mx={'auto'} w={'full'} >
 
-                <AnimationWrapper variant={'slideUp'} showOnce={false} whileInView={true} >
+                <AnimationWrapper variant={'slideUp'} showOnce={true} whileInView={true} >
                     <Heading as='h2' textAlign={'center'} bg='' size={['xl', 'xl']} mx={'auto'} >
                         {
                             indexData?.cover?.heading || `Lorem ipsum dolor, sit amet consectetur adipisicing elit!`

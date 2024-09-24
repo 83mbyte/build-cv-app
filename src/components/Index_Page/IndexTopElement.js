@@ -1,5 +1,5 @@
 import { Box, Text, Heading, Highlight, ButtonGroup, Button } from '@chakra-ui/react';
-import React from 'react';
+
 import Link from 'next/link';
 
 import IndexSectionsWrapper from './IndexSectionsWrapper';
@@ -51,8 +51,6 @@ const IndexTopElement = () => {
             </Box>
 
         </IndexSectionsWrapper>
-
-
     );
 };
 
@@ -62,8 +60,8 @@ const IndexTopElementButtons = () => {
 
     return (
         <ButtonGroup colorScheme={'teal'} spacing={4} size={'md'}>
-            <Button variant={'outline'} as={Link} href='/' >Login</Button>
-            <Button variant={'solid'}>Register</Button>
+            <Button variant={'outline'} as={Link} href='/auth?page=login'>Login</Button>
+            <Button variant={'solid'} as={Link} href='/auth?page=signup'>Register</Button>
         </ButtonGroup >
     )
 }

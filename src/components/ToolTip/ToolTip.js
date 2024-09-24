@@ -16,9 +16,11 @@ const ToolTip = ({ children, label, type = 'default', isDisabled }) => {
 
 export default ToolTip;
 
-const TooltipItem = forwardRef(({ children, ...rest }, ref) => (
-    <Box ref={ref} {...rest} >
-        {children}
-    </Box>
-))
+const TooltipItem = forwardRef(function TooltipItemRef({ children, ...rest }, ref) {
+    return (
+        <Box ref={ref} {...rest} >
+            {children}
+        </Box >
+    )
+})
 
