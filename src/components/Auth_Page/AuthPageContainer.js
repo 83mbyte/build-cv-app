@@ -5,10 +5,17 @@ import { AnimatePresence } from "framer-motion";
 import { useSearchParams } from 'next/navigation';
 import { useMemo, useEffect, useState } from 'react';
 
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuthError } from "@/redux/features/auth/authSlice";
+
 import AuthLoginForm from "./AuthLoginForm";
 import AuthSignupForm from "./AuthSignupForm";
 
 const AuthPageContainer = () => {
+    const dispatch = useDispatch();
+    const error = useSelector(state => state.auth.auth.error);
+    const successMsg = useSelector(state => state.auth.auth.successMsg);
+
     const [isVisible, setIsVisible] = useState({ status: false, form: null });
 
     const paramsOriginal = useSearchParams();
@@ -25,11 +32,16 @@ const AuthPageContainer = () => {
     };
 
     const changeForm = async (form) => {
+
         if (params.has('page')) {
             params.delete('page');
             history.replaceState(null, "", "auth");
+
         }
         runExitAnimation().then(resp => {
+            if (error !== '' || successMsg !== '') {
+                dispatch(clearAuthError())
+            }
             if (resp == 'Success') {
                 setIsVisible({ status: true, form: form })
             }

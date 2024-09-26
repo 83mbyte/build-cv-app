@@ -1,6 +1,10 @@
 import { Box, Button, VStack, HStack, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setAuthFormError, signInThunk } from '@/redux/features/auth/authSlice';
 
 import InputCustom from '../FormItems/InputCustom';
 import AlternativeSignInForm from '../FormItems/AlternativeSignInForm';
@@ -11,19 +15,65 @@ import FormAuthContainer from '../FormItems/FormAuthContainer';
 import { FcGoogle } from 'react-icons/fc';
 
 const sizeBreakPoints = ['sm', 'md'];
+const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
 
 const AuthLoginForm = ({ changeForm }) => {
-    const [show, setShow] = useState(false);
+    const formRef = useRef(null);
+    const router = useRouter();
+
+    const dispatch = useDispatch();
+    const data = useSelector(state => state.auth.auth.data);
+    const status = useSelector(state => state.auth.auth.status);
+    const error = useSelector(state => state.auth.auth.error);
+    const successMsg = useSelector(state => state.auth.auth.successMsg);
+
+    const formSubmit = (e) => {
+        e.preventDefault();
+
+        let formData = new FormData(formRef.current);
+        let email = formData.get('email');
+        let password = formData.get('password');
+
+        try {
+
+            if (email && password) {
+                if (!email.match(emailPattern)) {
+                    dispatch(setAuthFormError({ message: `Invalid email address` }));
+                }
+
+                else {
+                    dispatch(signInThunk({ email, password }))
+                    formRef.current.email.value = '';
+                    formRef.current.password.value = '';
+                }
+
+            } else {
+                throw new Error('email/password is not provided');
+
+            }
+        } catch (error) {
+            dispatch(setAuthFormError({ message: error.message }));
+        }
+    }
+
+    useEffect(() => {
+        if (data) {
+
+            if (data?.accessToken && data?.userId) {
+                router.push('/dashboard')
+            }
+        }
+    }, [data])
 
     return (
 
 
         <FormAuthContainer title={'Sign In'}>
-            <form>
+            <form ref={formRef} onSubmit={formSubmit}>
                 <VStack w='full' bg='' mb={2} spacing={4} >
 
                     <InputCustom name='email' labelText='Email' required />
-                    <InputCustom name='pass' labelText='Password' type='password' required errorMessage='Must be at least 6 characters long.' />
+                    <InputCustom name='password' labelText='Password' type='password' required errorMessage='Must be at least 6 characters long.' />
 
                     {/* Error/Success message alert will be there */}
                     <Box
@@ -36,7 +86,7 @@ const AuthLoginForm = ({ changeForm }) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                             backgroundColor: '',
-                            height: show ? '50px' : 0,
+                            height: (error !== '' || successMsg !== '') ? '50px' : 0,
                             maxHeight: '70px',
                             width: '100%',
                             padding: 0,
@@ -45,8 +95,8 @@ const AuthLoginForm = ({ changeForm }) => {
                     >
                         <AnimatePresence mode='wait'>
                             {
-                                show &&
-                                <AlertCustom type='info' message='Some text here..' />
+                                (error !== '' || successMsg !== '') &&
+                                <AlertCustom message={error !== '' ? error : successMsg} type={error !== '' ? 'error' : 'success'} />
                             }
                         </AnimatePresence>
                     </Box>
@@ -57,8 +107,8 @@ const AuthLoginForm = ({ changeForm }) => {
                             w='full'
                             colorScheme={'teal'}
                             size={sizeBreakPoints} rounded={sizeBreakPoints}
-
-                            onClick={(e) => { setShow(!show) }}
+                            isLoading={status === 'loading'}
+                            onClick={(e) => formSubmit(e)}
                         >Login
                         </Button>
                     </Box>
