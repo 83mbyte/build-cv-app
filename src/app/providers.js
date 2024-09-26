@@ -2,6 +2,8 @@
 
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Provider } from 'react-redux';
+import store from '@/redux/store';
 
 const activeLabelStyles = {
     transform: "scale(0.85) translateY(-24px)"
@@ -85,8 +87,9 @@ export function Providers({ children }) {
         <CacheProvider>
             <ChakraProvider theme={theme}>
 
-
-                {children}
+                <Provider store={store}>
+                    {children}
+                </Provider>
 
             </ChakraProvider>
         </CacheProvider>
