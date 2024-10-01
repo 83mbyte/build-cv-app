@@ -1,10 +1,10 @@
 import { Box, Button, VStack, HStack, Text } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setAuthFormError, signInThunk } from '@/redux/features/auth/authSlice';
+import { setAuthFormError, signInGoogleThunk, signInThunk } from '@/redux/features/auth/authSlice';
 
 import InputCustom from '../FormItems/InputCustom';
 import AlternativeSignInForm from '../FormItems/AlternativeSignInForm';
@@ -56,6 +56,10 @@ const AuthLoginForm = ({ changeForm }) => {
         }
     }
 
+    const googleSignIn = () => {
+        dispatch(signInGoogleThunk(true));
+    }
+
     useEffect(() => {
         if (data) {
 
@@ -64,6 +68,17 @@ const AuthLoginForm = ({ changeForm }) => {
             }
         }
     }, [data])
+
+    useEffect(() => {
+        // google signup after redirect
+
+        // TODO
+        // TODO  deploy and test it
+        // TODO
+        if (sessionStorage.getItem(`firebase:pendingRedirect:${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}:[DEFAULT]`)) {
+            dispatch(signInGoogleThunk(false))
+        }
+    }, [])
 
     return (
 
@@ -123,7 +138,8 @@ const AuthLoginForm = ({ changeForm }) => {
                             providerName={'Google'}
                             sizeBreakPoints={sizeBreakPoints}
                             icon={<FcGoogle />}
-                            onClickCallback={null}
+                            isLoading={status === 'loading'}
+                            onClickCallback={googleSignIn}
                         />
                     </AlternativeSignInForm>
                 </VStack></form>

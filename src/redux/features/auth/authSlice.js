@@ -90,6 +90,28 @@ const authSlice = createSlice({
                 }
             })
 
+            // Google SignIn
+            .addCase(signInGoogleThunk.pending, (state) => {
+                state.auth.status = 'loading';
+            })
+            .addCase(signInGoogleThunk.rejected, (state, action) => {
+                state.auth.status = 'failed';
+                state.auth.error = action.error.message;
+            })
+            .addCase(signInGoogleThunk.fulfilled, (state, action) => {
+                console.log('signInGoogleThunk.fulfilled, ACTION:', action)
+                state.auth.status = 'ready';
+                if (action?.payload) {
+                    if (action.payload.data) {
+                        state.auth.data = action.payload.data;
+                        state.auth.error = '';
+                    } else {
+                        state.auth.data = null;
+                        state.auth.error = action.payload.message;
+                    }
+                }
+            })
+
     }
 })
 
@@ -118,6 +140,15 @@ export const signInThunk = createAsyncThunk('authSlice/signInUser', async (dataO
     let resp = await authAPI.signIn(dataObj.email, dataObj.password);
     if (resp) {
         return resp
+    } else {
+        return null
+    }
+})
+
+export const signInGoogleThunk = createAsyncThunk('authSlice/signInGoogleThunk', async (initial = true) => {
+    let resp = await authAPI.signInGoogle(initial);
+    if (resp) {
+        return resp;
     } else {
         return null
     }

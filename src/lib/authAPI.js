@@ -1,6 +1,7 @@
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 
 import { app } from '@/__firebase/__firebaseConf';
+
 const auth = getAuth(app);
 
 export const authAPI = {
@@ -59,5 +60,49 @@ export const authAPI = {
                 const errorMessage = error.message;
                 return { data: null, message: errorCode }
             });
+    },
+
+    signInGoogle: async (initial) => {
+        // const auth = getAuth(app);
+        if (initial === true) {
+            // sign in with Google, first click
+            const provider = new GoogleAuthProvider();
+            auth.useDeviceLanguage();
+            await signInWithRedirect(auth, provider);
+
+        } else {
+
+            // continue to signup after redirect..
+            return await getRedirectResult(auth)
+                .then((result) => {
+                    // This gives you a Google Access Token. You can use it to access Google APIs.
+                    //const credential = GoogleAuthProvider.credentialFromResult(result);
+                    //const token = credential.accessToken;
+
+                    // The signed-in user info.
+                    const user = result.user;
+                    // IdP data available using getAdditionalUserInfo(result)
+                    // ...
+                    return {
+                        data: {
+                            userId: user.uid,
+                            email: user.email,
+                            accessToken: user.accessToken
+                        },
+                        message: 'success'
+                    }
+                }).catch((error) => {
+                    // Handle Errors here.
+                    console.log('ERROR with getRedirectResult..');
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    // The email of the user's account used.
+                    //const email = error.customData.email;
+                    // The AuthCredential type that was used.
+                    //const credential = GoogleAuthProvider.credentialFromError(error);
+                    // ...
+                    return ({ data: null, message: errorMessage })
+                });
+        }
     }
 }

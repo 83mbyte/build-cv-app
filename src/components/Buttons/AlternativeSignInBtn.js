@@ -1,6 +1,6 @@
 import { Button, Text } from '@chakra-ui/react';
 
-const AlternativeSignInBtn = ({ sizeBreakPoints, providerName, icon, onClickCallback }) => {
+const AlternativeSignInBtn = ({ sizeBreakPoints, providerName, icon, isLoading, onClickCallback }) => {
     return (
 
         <Button
@@ -10,6 +10,7 @@ const AlternativeSignInBtn = ({ sizeBreakPoints, providerName, icon, onClickCall
             variant={'outline'}
             colorScheme='teal'
             leftIcon={icon}
+            isLoading={isLoading}
             _hover={{ backgroundColor: 'white' }}
         >
             <Text>Sign In with {providerName}</Text>
