@@ -112,6 +112,32 @@ const authSlice = createSlice({
                 }
             })
 
+            // sign-out
+            .addCase(signOutThunk.pending, (state) => {
+                state.auth.status = 'loading';
+            })
+            .addCase(signOutThunk.rejected, (state, action) => {
+                state.auth.status = 'failed'
+                state.auth.error = action.error.message;
+            })
+            .addCase(signOutThunk.fulfilled, (state, action) => {
+                state.auth.status = 'ready';
+                if (action.payload) {
+                    switch (action.payload.message) {
+                        case 'sign-out successful':
+                            state.auth.error = '';
+                            state.auth.successMsg = ''
+                            state.auth.data = null;
+                            break;
+
+                        default:
+                            state.auth.error = 'SignOut error. Possible reason: ' + action.payload.message;
+                            state.auth.successMsg = '';
+                            break;
+                    }
+                }
+            })
+
     }
 })
 
@@ -147,6 +173,15 @@ export const signInThunk = createAsyncThunk('authSlice/signInUser', async (dataO
 
 export const signInGoogleThunk = createAsyncThunk('authSlice/signInGoogleThunk', async (initial = true) => {
     let resp = await authAPI.signInGoogle(initial);
+    if (resp) {
+        return resp;
+    } else {
+        return null
+    }
+})
+
+export const signOutThunk = createAsyncThunk('utility/signOutThunk', async () => {
+    let resp = await authAPI.signOut();
     if (resp) {
         return resp;
     } else {

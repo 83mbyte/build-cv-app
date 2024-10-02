@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
 
 import { app } from '@/__firebase/__firebaseConf';
 
@@ -60,6 +60,17 @@ export const authAPI = {
                 const errorMessage = error.message;
                 return { data: null, message: errorCode }
             });
+    },
+    signOut: () => {
+        // const auth = getAuth(app);
+        signOut(auth).then(() => {
+            console.log('SignOut done')
+            // Sign-out successful.
+            return { data: null, message: 'sign-out successful' }
+        }).catch((error) => {
+            // An error happened.
+            return { data: null, message: error.code }
+        });
     },
 
     signInGoogle: async (initial) => {
