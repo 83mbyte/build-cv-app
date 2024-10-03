@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle } from '@/redux/features/utility/utilitySlice';
 
 import ToolTip from '@/components/ToolTip/ToolTip';
+import HeaderLogo from './HeaderLogo';
 
 const DrawerContainer = lazy(() => import('@/components/Drawer/DrawerContainer'));
 const MenuDrawer = lazy(() => import('@/components/Drawer/MenuDrawer/MenuDrawer'));
@@ -30,7 +31,9 @@ const DashboardHeaderContainer = () => {
 
             <Container maxW={'3xl'} py={1} px={['10px', '10px', '20px']} bg={'transparent'}>
                 <HStack justify={'space-between'} align='center'>
-                    <Box>Logo_Here</Box>
+                    <Box>
+                        <HeaderLogo />
+                    </Box>
                     <HStack spacing={2} p={0}>
                         <Box>
                             <ToolTip label='preview document'>
@@ -67,7 +70,6 @@ const DashboardHeaderContainer = () => {
                                 <DrawerContainer placement='right' isOpen={isMenuDrawerOpen} keyId={'menuDrawer'}>
                                     <MenuDrawer onCloseHandler={toogleMenuDrawer} />
                                 </DrawerContainer>
-
                             </Suspense>
                         </Box>
                     </HStack>
