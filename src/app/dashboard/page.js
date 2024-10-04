@@ -1,5 +1,6 @@
 
 import DashboardHeaderContainer from '@/components/Dashboard/Header/DashboardHeaderContainer';
+import DashboardMainContainer from '@/components/Dashboard/MainArea/DashboardMainContainer';
 import { Suspense } from 'react';
 
 export default function Dashboard_Page() {
@@ -9,12 +10,16 @@ export default function Dashboard_Page() {
 
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', margin: 0, padding: 0 }}>
 
-                <DashboardHeaderContainer />
-                <div style={{ margin: 10, marginTop: 40, padding: 15 }}>
-                    Dashboard main area..
-                    <p>LoreIpsum sunt consequat ut pariatur nisi magna mollit consequat exercitation. Et pariatur quis magna sit nisi elit
-                        Ipsum sunt non do dolor mollit sunt ea non. Magna labore laborum duis eu. Consequat aute ullamco tempor veniam laboris est labore officia. Exercitation incididunt commodo qui adipisicing culpa. Nulla laborum sunt anim dolor cupidatat ut ullamco deserunt do ullamco aute esse veniam occaecat. In culpa ad commodo exercitation aliquip. Laboris et nisi ea enim proident nisi pariatur ea cillum excepteur.</p>
-                </div>
+                {/* header container */}
+                <header>
+                    <DashboardHeaderContainer />
+                </header>
+
+                {/* main area container */}
+                <main style={{ height: '100%' }}>
+                    <DashboardMainContainer />
+                </main>
+
             </div>
 
         </Suspense>

@@ -28,11 +28,11 @@ const Dashboard_Layout = ({ children }) => {
 
         const unsubscribe = onAuthStateChanged(auth, (user) => {
 
-            if ((process.env.NEXT_PUBLIC_NODE_MODE !== 'development') && (user && user.uid && user.accessToken && user.emailVerified)) {
+            if (user && user.uid && user.accessToken && user.emailVerified) {
 
                 dispatch(setLoggedUser({ userId: user.uid, accessToken: user.accessToken, email: user.email }));
 
-            } else if (user && user.uid && user.accessToken) {
+            } else if ((process.env.NEXT_PUBLIC_NODE_MODE === 'development') && (user && user.uid && user.accessToken)) {
 
                 dispatch(setLoggedUser({ userId: user.uid, accessToken: user.accessToken, email: user.email }));
 
