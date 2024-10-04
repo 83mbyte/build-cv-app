@@ -3,6 +3,8 @@
 import { Box, Container, Spinner, } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import PersonalDetailsContainer from './PersonalDetails/PersonalDetailsContainer';
+import Summary from './Summary/Summary';
+
 import AnimationWrapper from '@/components/Animation/AnimationWrapper';
 
 const DashboardMainContainer = () => {
@@ -16,8 +18,11 @@ const DashboardMainContainer = () => {
                     ? <Box p={2} w='full' display={'flex'} bg={'transparent'} justifyContent={'center'} h='100%' alignItems={'center'}>
                         <Spinner color='teal' size='xl' />
                     </Box>
-                    : <Box>
+                    : <Box display={'flex'} flexDirection={'column'}>
                         <PersonalDetailsContainer />
+                        <Summary />
+
+
                     </Box>
             }
         </WhiteAreaWrapperAnimated>

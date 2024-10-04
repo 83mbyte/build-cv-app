@@ -2,13 +2,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import authSliceReducer from "./features/auth/authSlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
 import personDetailsSliceReducer from "./features/personDetails/personDetailsSlice";
+import summarySliceReducer from "./features/summary/summarySlice";
+
 
 export default configureStore({
     reducer: {
         auth: authSliceReducer,
         utility: utilitySliceReducer,
         personDetails: personDetailsSliceReducer,
-        // summary: summarySliceReducer,
+        summary: summarySliceReducer,
         // education: educationSliceReducer,
         // links: linksSliceReducer,
         // skills: skillsSliceReducer,
