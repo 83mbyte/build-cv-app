@@ -1,4 +1,28 @@
-.wrapper-class {
+.coverLetter {
+  height: 50vh;
+  min-height: 200px;
+}
+
+.rsw-editor {
+}
+
+.rsw-toolbar {
+}
+
+.rsw-ce {
+  background-color: white;
+}
+.rsw-ce ul {
+  list-style: disc;
+  padding-left: 2em;
+}
+
+.rsw-ce ol {
+  list-style: decimal;
+  padding-left: 2em;
+}
+
+/* .wrapper-class {
   border: 1px solid rgb(226, 232, 240);
   border-radius: 6px;
   padding: 1px;
@@ -18,19 +42,15 @@
 }
 
 .toolbar-class > div::after {
-  content: '|';
+  content: "|";
   color: rgb(226, 232, 240);
   margin: -2px 0.5rem 0 0.5rem;
 }
 .toolbar-class > div:last-child::after {
-  content: '';
+  content: "";
 }
 .editor-class {
   background-color: white;
   padding: 0 1rem;
   margin: 0 0;
-}
-.coverLetter {
-  height: 50vh;
-  min-height: 200px;
-}
+} */
