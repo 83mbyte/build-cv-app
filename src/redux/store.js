@@ -3,6 +3,7 @@ import authSliceReducer from "./features/auth/authSlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
 import personDetailsSliceReducer from "./features/personDetails/personDetailsSlice";
 import summarySliceReducer from "./features/summary/summarySlice";
+import educationSliceReducer from "./features/education/educationSlice";
 
 
 export default configureStore({
@@ -11,7 +12,7 @@ export default configureStore({
         utility: utilitySliceReducer,
         personDetails: personDetailsSliceReducer,
         summary: summarySliceReducer,
-        // education: educationSliceReducer,
+        education: educationSliceReducer,
         // links: linksSliceReducer,
         // skills: skillsSliceReducer,
         // courses: coursesSliceReducer,

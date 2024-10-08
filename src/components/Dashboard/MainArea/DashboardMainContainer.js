@@ -2,10 +2,11 @@
 
 import { Box, Container, Spinner, } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+import AnimationWrapper from '@/components/Animation/AnimationWrapper';
+
 import PersonalDetailsContainer from './PersonalDetails/PersonalDetailsContainer';
 import Summary from './Summary/Summary';
-
-import AnimationWrapper from '@/components/Animation/AnimationWrapper';
+import Education from './Education/Education';
 
 const DashboardMainContainer = () => {
 
@@ -21,6 +22,7 @@ const DashboardMainContainer = () => {
                     : <Box display={'flex'} flexDirection={'column'}>
                         <PersonalDetailsContainer />
                         <Summary />
+                        <Education userLogged={userLogged} />
 
 
                     </Box>
