@@ -7,6 +7,7 @@ import AnimationWrapper from '@/components/Animation/AnimationWrapper';
 import PersonalDetailsContainer from './PersonalDetails/PersonalDetailsContainer';
 import Summary from './Summary/Summary';
 import Education from './Education/Education';
+import Skills from './Skills/Skills';
 
 const DashboardMainContainer = () => {
 
@@ -20,9 +21,10 @@ const DashboardMainContainer = () => {
                         <Spinner color='teal' size='xl' />
                     </Box>
                     : <Box display={'flex'} flexDirection={'column'}>
-                        <PersonalDetailsContainer />
-                        <Summary />
+                        <PersonalDetailsContainer userLogged={userLogged} />
                         <Education userLogged={userLogged} />
+                        <Skills userLogged={userLogged} />
+                        <Summary userLogged={userLogged} />
 
 
                     </Box>

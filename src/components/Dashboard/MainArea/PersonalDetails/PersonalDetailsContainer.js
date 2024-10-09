@@ -9,10 +9,9 @@ import DashboardInput from '@/components/FormItems/DashboardInputs/DashboardInpu
 import SectionWrapper from '../SectionsWrapper';
 import LoadingSectionSkeleton from '@/components/Loaders/LoadingSectionSkeleton';
 
-const PersonalDetailsContainer = () => {
+const PersonalDetailsContainer = ({ userLogged }) => {
 
     const dispatch = useDispatch();
-    const userLogged = useSelector(state => state.auth.auth.data);
     const data = useSelector(state => state.personDetails.data);
     const status = useSelector(state => state.personDetails.status);
     const error = useSelector(state => state.personDetails.error);
@@ -42,11 +41,11 @@ const PersonalDetailsContainer = () => {
 
             dispatch(getPersonDetailsThunk(userLogged));
         }
-        if (status === 'ready') {
-            //TODO
-            //TODO
-            // setLoadedPersonDetailsSection(true);
-        }
+        // if (status === 'ready') {
+        //     //TODO
+        //     //TODO
+        //     // setLoadedPersonDetailsSection(true);
+        // }
     }, [status])
 
     return (

@@ -11,10 +11,10 @@ import SectionDescription from '../SectionDescription';
 import LoadingSectionSkeleton from '@/components/Loaders/LoadingSectionSkeleton';
 import TextEditor from '@/components/FormItems/TextEditor/TextEditor';
 
-const Summary = () => {
+const Summary = ({ userLogged }) => {
     let content = null;
     const dispatch = useDispatch();
-    const userLogged = useSelector(state => state.auth.auth.data);
+
     const data = useSelector(state => state.summary.data);
     const status = useSelector(state => state.summary.status);
     const error = useSelector(state => state.summary.error);
@@ -43,7 +43,7 @@ const Summary = () => {
     }
 
     useEffect(() => {
-        if (status === 'idle') {
+        if (status === 'idle' && userLogged) {
             dispatch(getSummary(userLogged));
         }
     }, [status]);
