@@ -39,4 +39,9 @@ yarn-error.log*
 next-env.d.ts
 
 # custom
+.firebaserc
+firebase.json
+functions/lib/promptsByRoles.js
+functions/firebase-debug.log
+functions/ui-debug.log
 src/lib/content-lib.js
