@@ -8,6 +8,7 @@ import PersonalDetailsContainer from './PersonalDetails/PersonalDetailsContainer
 import Summary from './Summary/Summary';
 import Education from './Education/Education';
 import Skills from './Skills/Skills';
+import History from './History/History';
 
 const DashboardMainContainer = () => {
 
@@ -25,6 +26,7 @@ const DashboardMainContainer = () => {
                         <Education userLogged={userLogged} />
                         <Skills userLogged={userLogged} />
                         <Summary userLogged={userLogged} />
+                        <History userLogged={userLogged} />
 
 
                     </Box>

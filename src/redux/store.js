@@ -5,6 +5,7 @@ import personDetailsSliceReducer from "./features/personDetails/personDetailsSli
 import summarySliceReducer from "./features/summary/summarySlice";
 import educationSliceReducer from "./features/education/educationSlice";
 import skillsSliceReducer from "./features/skills/skillsSlice";
+import historySliceReducer from "./features/history/historySlice";
 
 export default configureStore({
     reducer: {
@@ -14,9 +15,9 @@ export default configureStore({
         summary: summarySliceReducer,
         education: educationSliceReducer,
         skills: skillsSliceReducer,
+        history: historySliceReducer,
         // links: linksSliceReducer,
         // courses: coursesSliceReducer,
-        // history: historySliceReducer,
         // languages: languagesSliceReducer,
         // references: referencesSliceReducer,
         // hobbies: hobbiesSliceReducer,
