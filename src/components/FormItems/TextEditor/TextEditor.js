@@ -38,11 +38,11 @@ const TextEditor = ({ state, onChangeCallback }) => {
     }
 
     return (
-        <Box my={state?.label === '' ? '3' : '0'} w={'100%'} px={[1, 0]} minW={'200px'}>
+        <Box my={state?.label === '' ? '3' : '0'} w={'100%'} px={[0, 0]}>
 
             {state?.label && <Text color={'gray.500'} px={2} mx={3} mb={'-2px'} fontSize={'xs'} fontWeight={'semibold'}>{state.label}</Text>}
             <EditorProvider>
-                <Editor value={html} onChange={onChange} onBlur={applyChanges} >
+                <Editor value={html} onChange={onChange} onBlur={applyChanges} tagName='p'>
                     <Toolbar  >
                         <BtnUndo />
                         <BtnRedo />

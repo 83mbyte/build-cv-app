@@ -23,7 +23,7 @@ const AccordionElem = ({ index, title, descr = null, removeItem, children }) => 
             borderColor={'gray.200'}
             borderRadius={"5px"}
             mb={4}
-            mx={2}
+            mx={0}
         >
             {
                 ({ isExpanded }) => (

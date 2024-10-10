@@ -11,7 +11,7 @@ const ProposedItems = ({ predefined, sectionName, onClickCallback }) => {
                     {
                         predefined && predefined.length > 0 &&
                         predefined.map((item, index) => {
-                            return <Button key={`${sectionName}_predef_${index}`} onClick={() => onClickCallback(item)}>{`+ ${item.label}`}</Button>
+                            return <Button size={'xs'} key={`${sectionName}_predef_${index}`} onClick={() => onClickCallback(item)}>{`+ ${item.label}`}</Button>
                         })
                     }
                 </Wrap>
