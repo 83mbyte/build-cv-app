@@ -6,7 +6,7 @@ import { MdPreview, MdMenu } from 'react-icons/md';
 
 import store from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, putDataOnServerThunk } from '@/redux/features/utility/utilitySlice';
+import { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, putDataOnServerThunk, putAdditionalSectionsOnServerThunk } from '@/redux/features/utility/utilitySlice';
 
 import ToolTip from '@/components/ToolTip/ToolTip';
 import HeaderLogo from './HeaderLogo';
@@ -20,6 +20,9 @@ const DashboardHeaderContainer = () => {
     const isPreviewDrawerOpen = useSelector(state => state.utility.previewDrawer.isOpen);
     const isModifiedContent = useSelector(state => state.utility.isModifiedContent);
     const userLogged = useSelector(state => state.auth.auth.data);
+
+    const additionalSections = useSelector(state => state.utility.additionalSections.data);
+    const isModifiedAdditionalSections = useSelector(state => state.utility.additionalSections.modified);
     const dispatch = useDispatch();
 
     const saveUserProvidedData = () => {
@@ -40,6 +43,13 @@ const DashboardHeaderContainer = () => {
                     }
                 ))
             }
+        }
+        if (isModifiedAdditionalSections) {
+            dispatch(putAdditionalSectionsOnServerThunk({
+                user: userLogged.userId,
+                token: userLogged.accessToken,
+                data: additionalSections
+            }));
         }
     }
     const toogleMenuDrawer = () => {

@@ -8,6 +8,7 @@ import educationSliceReducer from "./features/education/educationSlice";
 import skillsSliceReducer from "./features/skills/skillsSlice";
 import historySliceReducer from "./features/history/historySlice";
 import linksSliceReducer from "./features/links/linksSlice";
+import coursesSliceReducer from "./features/courses/coursesSlice";
 
 export default configureStore({
     reducer: {
@@ -19,7 +20,7 @@ export default configureStore({
         skills: skillsSliceReducer,
         history: historySliceReducer,
         links: linksSliceReducer,
-        // courses: coursesSliceReducer,
+        courses: coursesSliceReducer,
         // languages: languagesSliceReducer,
         // references: referencesSliceReducer,
         // hobbies: hobbiesSliceReducer,
