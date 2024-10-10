@@ -55,14 +55,13 @@ const History = ({ userLogged }) => {
         content = <Box>{error}</Box>
     }
     else if (status === 'ready' && data) {
-        content = isSectionVisible &&
-            <HistoryForm data={data} addItem={addItem} removeItem={removeItem} onChangeHandler={onChangeHandler} />
+        content = <HistoryForm data={data} addItem={addItem} removeItem={removeItem} onChangeHandler={onChangeHandler} />
     }
 
 
 
     useEffect(() => {
-        if (status === 'idle') {
+        if (status === 'idle' && userLogged && isSectionVisible) {
             dispatch(getHistory(userLogged));
         }
     }, [status, dispatch, userLogged])
@@ -72,7 +71,7 @@ const History = ({ userLogged }) => {
             {
                 isSectionVisible &&
                 <SectionWrapper sectionTitle={'Employment History'} flexDirect='column'>
-                    <SectionDescription value={historyData.sectionDescription || `Earum exercitationem commodi culpa, temporibus blanditiis adipisci optio, ad architecto vero debitis voluptas!`} />
+                    <SectionDescription value={historyData?.sectionDescription || `Earum exercitationem commodi culpa, temporibus blanditiis adipisci optio, ad architecto vero debitis voluptas!`} />
                     <>
                         {content}
                     </>

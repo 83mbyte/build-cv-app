@@ -11,8 +11,8 @@ import SectionWrapper from '../SectionsWrapper';
 import SectionDescription from '../SectionDescription';
 import LoadingSectionSkeleton from '@/components/Loaders/LoadingSectionSkeleton';
 import SwitchCustom from '@/components/Switch/SwitchCustom';
-import GenerateProposals from './ProposedItems/GenerateProposals';
-import ProposedItems from './ProposedItems/ProposedItems';
+import GenerateProposals from '../../../ProposedItems/GenerateProposals';
+import ProposedItems from '../../../ProposedItems/ProposedItems';
 import AccordionElem from '@/components/Accordion/AccordionElem';
 import LevelSlider from '@/components/LevelSlider/LevelSlider';
 import DashboardInput from '@/components/FormItems/DashboardInputs/DashboardInput';
@@ -187,7 +187,7 @@ const Skills = ({ userLogged }) => {
     }
 
     useEffect(() => {
-        if (status === 'idle' && userLogged) {
+        if (status === 'idle' && userLogged && isSectionVisible) {
             dispatch(getSkills(userLogged))
         }
     }, [status, userLogged, dispatch]);
