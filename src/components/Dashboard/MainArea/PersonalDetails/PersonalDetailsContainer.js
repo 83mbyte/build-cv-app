@@ -8,6 +8,7 @@ import { setIsModifiedContent } from '@/redux/features/utility/utilitySlice';
 import DashboardInput from '@/components/FormItems/DashboardInputs/DashboardInput';
 import SectionWrapper from '../SectionsWrapper';
 import LoadingSectionSkeleton from '@/components/Loaders/LoadingSectionSkeleton';
+import ProfilePhoto from '../../ProfilePhoto/ProfilePhoto';
 
 const PersonalDetailsContainer = ({ userLogged }) => {
 
@@ -27,7 +28,7 @@ const PersonalDetailsContainer = ({ userLogged }) => {
     if (status == 'ready' && data) {
 
         contentToShow =
-            isSectionVisible && <PersonDetailsForm data={data} onChangeHandler={onChangeHandler} />
+            isSectionVisible && <PersonDetailsForm data={data} onChangeHandler={onChangeHandler} userLogged={userLogged} />
     }
     else if (status === 'failed') {
         contentToShow = <Box p={'10px'}>Something wrong. {error}</Box>
@@ -41,12 +42,8 @@ const PersonalDetailsContainer = ({ userLogged }) => {
 
             dispatch(getPersonDetailsThunk(userLogged));
         }
-        // if (status === 'ready') {
-        //     //TODO
-        //     //TODO
-        //     // setLoadedPersonDetailsSection(true);
-        // }
-    }, [status])
+
+    }, [status, userLogged])
 
     return (
         <>
@@ -57,13 +54,13 @@ const PersonalDetailsContainer = ({ userLogged }) => {
 
 export default PersonalDetailsContainer;
 
-const PersonDetailsForm = ({ data, onChangeHandler }) => {
+const PersonDetailsForm = ({ data, userLogged, onChangeHandler }) => {
     return (
         <SectionWrapper sectionTitle={'Personal Details'} type={'grid'}>
 
             <Box h={''}></Box>
             <Box display='flex' justifyContent={'flex-end'} px={2}>
-                {/* <ProfilePhoto user={user} /> */}photo
+                <ProfilePhoto userLogged={userLogged} />
             </Box>
             <Box ><DashboardInput labelText='Job Title' name={'jobTitle'} inputValue={data?.jobTitle || ''} onChangeCallback={onChangeHandler} /></Box>
             <Box><DashboardInput labelText='Email' required name={'email'} inputValue={data?.email || ''} onChangeCallback={onChangeHandler} /></Box>
