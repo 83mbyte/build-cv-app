@@ -11,6 +11,8 @@ import linksSliceReducer from "./features/links/linksSlice";
 import coursesSliceReducer from "./features/courses/coursesSlice";
 import languagesSliceReducer from "./features/languages/languagesSlice";
 import referencesSliceReducer from "./features/references/referencesSlice";
+import hobbiesSliceReducer from "./features/hobbies/hobbiesSlice";
+
 
 export default configureStore({
     reducer: {
@@ -25,7 +27,7 @@ export default configureStore({
         courses: coursesSliceReducer,
         languages: languagesSliceReducer,
         references: referencesSliceReducer,
-        // hobbies: hobbiesSliceReducer,
+        hobbies: hobbiesSliceReducer,
         // image: userImageSliceReducer,
         // templates: templatesSliceReducer,
         // cover: coverLetterSliceReducer

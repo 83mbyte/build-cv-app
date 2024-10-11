@@ -16,6 +16,7 @@ import Links from './Links/Links';
 const Courses = lazy(() => import('./Courses/Courses'));
 const Languages = lazy(() => import('./Languages/Languages'));
 const References = lazy(() => import('./References/References'));
+const Hobbies = lazy(() => import('./Hobbies/Hobbies'));
 
 
 const DashboardMainContainer = () => {
@@ -24,7 +25,7 @@ const DashboardMainContainer = () => {
     const additionalSections = useSelector(state => state.utility.additionalSections);
 
     const sectionsToShow = {
-        // hobbies: <Hobbies userLogged={userLogged} key={'section_hobbies'} />,
+        hobbies: <Hobbies userLogged={userLogged} key={'section_hobbies'} />,
         courses: <Courses userLogged={userLogged} key={'section_courses'} />,
         references: <References userLogged={userLogged} key={'section_references'} />,
         languages: <Languages userLogged={userLogged} key={'section_languages'} />
