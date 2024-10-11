@@ -46,8 +46,8 @@ const References = ({ userLogged }) => {
         let tmp = [...additionalSections];
         tmp.splice(index, 1);
         dispatch(putAdditionalSectionsOnServerThunk({
-            user: loggedUser.userId,
-            token: loggedUser.accessToken,
+            user: userLogged.userId,
+            token: userLogged.accessToken,
             data: tmp
         }))
     }
@@ -69,7 +69,7 @@ const References = ({ userLogged }) => {
 
 
     useEffect(() => {
-        if (status === 'idle') {
+        if (status === 'idle' && userLogged) {
             dispatch(getReferences(userLogged));
         }
     }, [status, userLogged, dispatch])

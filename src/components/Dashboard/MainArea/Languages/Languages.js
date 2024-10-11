@@ -61,7 +61,7 @@ const Languages = ({ userLogged }) => {
     }
 
     useEffect(() => {
-        if (status === 'idle') {
+        if (status === 'idle' && userLogged) {
             dispatch(getLanguages(userLogged));
 
         }

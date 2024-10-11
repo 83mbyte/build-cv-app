@@ -5,6 +5,7 @@ import { signOutThunk } from '@/redux/features/auth/authSlice';
 
 import { CloseIcon } from '../../Icons/Icon';
 import ToolTip from '../../ToolTip/ToolTip';
+import AddMoreSections from './AddMoreSections';
 
 
 
@@ -29,8 +30,11 @@ const MenuDrawer = ({ onCloseHandler }) => {
                     </Box>
                 </HStack>
             </DrawerHeader>
-            <DrawerBody>
-                <Box>body</Box>
+            <DrawerBody borderBottomWidth='1px' p={0}>
+                <Box borderBottomWidth='1px' px={6} pt={3} pb={5} >
+
+                    <AddMoreSections />
+                </Box>
             </DrawerBody>
             <DrawerFooter>
                 <Box w='full'>

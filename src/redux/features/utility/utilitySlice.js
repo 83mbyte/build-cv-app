@@ -15,6 +15,12 @@ const utilitySlice = createSlice({
             status: false,
             sections: []
         },
+        additionalSections: {
+            data: [],
+            modified: false,
+            status: 'idle',
+            error: ''
+        }
 
     },
     reducers: {
@@ -30,6 +36,10 @@ const utilitySlice = createSlice({
                 state.isModifiedContent.sections = [...state.isModifiedContent.sections, action.payload.section]
             }
         },
+        additionalSectionAdd: (state, action) => {
+            state.additionalSections.data = [...state.additionalSections.data, action.payload];
+            state.additionalSections.modified = true;
+        },
     },
     extraReducers(builder) {
         builder
@@ -44,13 +54,46 @@ const utilitySlice = createSlice({
                     }
                 }
             })
+
+            .addCase(putAdditionalSectionsOnServerThunk.pending, (state) => {
+                state.additionalSections.status = 'loading';
+            })
+            .addCase(putAdditionalSectionsOnServerThunk.rejected, (state, action) => {
+                state.additionalSections.status = 'failed';
+                if (action?.error?.message) {
+                    state.additionalSections.error = action.error.message;
+                }
+            })
+            .addCase(putAdditionalSectionsOnServerThunk.fulfilled, (state, action) => {
+                state.additionalSections.status = 'ready';
+                if (action.payload !== null) {
+                    state.additionalSections.data = action.payload;
+                    state.additionalSections.modified = false;
+                }
+            })
+
+            .addCase(getAdditionalSections.pending, (state) => {
+                state.additionalSections.status = 'loading';
+            })
+            .addCase(getAdditionalSections.rejected, (state, action) => {
+                state.additionalSections.status = 'failed';
+                if (action?.error?.message) {
+                    state.additionalSections.error = action.error.message;
+                }
+            })
+            .addCase(getAdditionalSections.fulfilled, (state, action) => {
+                state.additionalSections.status = 'ready';
+                if (action.payload !== null) {
+                    state.additionalSections.data = action.payload;
+                }
+            })
     }
 
 })
 
 
 export default utilitySlice.reducer;
-export const { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, setIsModifiedContent } = utilitySlice.actions;
+export const { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd } = utilitySlice.actions;
 
 export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', async (dataObj) => {
     // put/save data on server..
@@ -61,4 +104,24 @@ export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', 
     } else {
         return null
     }
-})
+});
+
+export const putAdditionalSectionsOnServerThunk = createAsyncThunk('utility/putAdditionalSectionsOnServerThunk', async (dataObj) => {
+    let resp = await dbAPI.putDataToSection(dataObj.user, 'utility/additionalSections/data', dataObj.token, dataObj.data,);
+
+    if (resp.ok && resp.status === 200) {
+        return dataObj.data
+    } else {
+        return null
+    }
+});
+
+export const getAdditionalSections = createAsyncThunk('utility/getAdditionalSections', async (obj) => {
+    let resp = await dbAPI.getSectionData('utility/additionalSections/data', obj.userId, obj.accessToken);
+
+    if (resp) {
+        return resp;
+    } else {
+        return null
+    }
+});
