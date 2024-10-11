@@ -102,7 +102,7 @@ const DashboardHeaderContainer = () => {
                                 />
                             </ToolTip>
                             <Suspense>
-                                <DrawerContainer placement='right' isOpen={isMenuDrawerOpen} keyId={'menuDrawer'}>
+                                <DrawerContainer placement='right' isOpen={isMenuDrawerOpen} keyId={'menuDrawer'} onCloseHandler={toogleMenuDrawer}>
                                     <MenuDrawer onCloseHandler={toogleMenuDrawer} />
                                 </DrawerContainer>
                             </Suspense>

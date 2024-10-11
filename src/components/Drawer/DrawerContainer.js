@@ -14,6 +14,7 @@ const DrawerContainer = ({ keyId, isOpen = false, placement = 'left', size, onCl
                     // isFullHeight={true}
                     onClose={onCloseHandler}
                     isOpen={isOpen}
+                    onOverlayClick={() => { }}
                 >
                     <DrawerOverlay />
                     <DrawerContent padding={0}>
