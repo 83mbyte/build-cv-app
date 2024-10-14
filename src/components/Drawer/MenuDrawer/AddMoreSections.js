@@ -1,4 +1,4 @@
-import { Button, Heading, Wrap, WrapItem } from '@chakra-ui/react';
+import { Button, Heading, VStack } from '@chakra-ui/react';
 import React, { useRef } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,20 +40,20 @@ const AddMoreSections = () => {
 
     return (
 
-        <>
-            <Heading as={'h5'} size={'xs'} mb={2}>Add Resume Sections</Heading>
-            <Wrap px={2}>
-                <WrapItem>
-                    <Button ref={coursesRef} isDisabled={coursesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} onClick={() => onClickBtnHandler(coursesRef.current.innerText)} leftIcon={coursesDisabled ? <IoCheckmarkDone /> : <IoSchool />}
-                    >Courses</Button>
-                </WrapItem>
-                <WrapItem>
-                    <Button ref={hobbiesRef} isDisabled={hobbiesDisable} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={hobbiesDisable ? <IoCheckmarkDone /> : <IoColorPalette />} onClick={() => onClickBtnHandler(hobbiesRef.current.innerText)} >Hobbies</Button>
-                </WrapItem>
-                <WrapItem><Button ref={languagesRef} isDisabled={languagesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={languagesDisabled ? <IoCheckmarkDone /> : <IoLanguage />} onClick={() => onClickBtnHandler(languagesRef.current.innerText)}>Languages</Button></WrapItem>
-                <WrapItem><Button ref={referencesRef} isDisabled={referencesDisabled} size={'sm'} colorScheme={'teal'} variant={'outline'} leftIcon={referencesDisabled ? <IoCheckmarkDone /> : <IoPeople />} onClick={() => onClickBtnHandler(referencesRef.current.innerText)}>References</Button></WrapItem>
-            </Wrap>
-        </>
+        <VStack spacing={1}>
+            <Heading as={'h5'} size={'xs'} mb={1} w='full'>Add  Sections To a Resume</Heading>
+
+            <Button style={{ justifyContent: 'flex-start' }} w='full' size={'sm'} ref={coursesRef} isDisabled={coursesDisabled} colorScheme={'teal'} variant={'ghost'} onClick={() => onClickBtnHandler(coursesRef.current.innerText)} leftIcon={coursesDisabled ? <IoCheckmarkDone /> : <IoSchool />}
+            >Courses</Button>
+
+            <Button style={{ justifyContent: 'flex-start' }} w='full' size={'sm'} variant={'ghost'} ref={hobbiesRef} isDisabled={hobbiesDisable} colorScheme={'teal'} leftIcon={hobbiesDisable ? <IoCheckmarkDone /> : <IoColorPalette />} onClick={() => onClickBtnHandler(hobbiesRef.current.innerText)} >Hobbies</Button>
+
+            <Button style={{ justifyContent: 'flex-start' }} w='full' size={'sm'} variant={'ghost'} ref={languagesRef} isDisabled={languagesDisabled} colorScheme={'teal'} leftIcon={languagesDisabled ? <IoCheckmarkDone /> : <IoLanguage />} onClick={() => onClickBtnHandler(languagesRef.current.innerText)}>Languages</Button>
+
+            <Button style={{ justifyContent: 'flex-start' }} w='full' size={'sm'} variant={'ghost'} ref={referencesRef} isDisabled={referencesDisabled} colorScheme={'teal'} leftIcon={referencesDisabled ? <IoCheckmarkDone /> : <IoPeople />} onClick={() => onClickBtnHandler(referencesRef.current.innerText)}>References</Button>
+
+        </VStack>
+
     )
 };
 

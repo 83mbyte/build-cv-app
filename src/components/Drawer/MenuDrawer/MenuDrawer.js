@@ -38,9 +38,7 @@ const MenuDrawer = ({ onCloseHandler }) => {
             </DrawerBody>
             <DrawerFooter>
                 <Box w='full'>
-                    <ToolTip label='exit from account' type={'warning'} >
-                        <Button colorScheme='red' w={'full'} onClick={signOutHandler} width={'100%'}>Sign Out</Button>
-                    </ToolTip>
+                    <Button colorScheme='red' w={'full'} onClick={signOutHandler} width={'100%'} >Sign Out</Button>
                 </Box>
             </DrawerFooter>
         </>
