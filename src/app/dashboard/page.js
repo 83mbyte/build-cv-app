@@ -1,4 +1,6 @@
 
+import DashboardHeaderContainer from '@/components/Dashboard/Header/DashboardHeaderContainer';
+import DashboardMainContainer from '@/components/Dashboard/MainArea/DashboardMainContainer';
 import { Suspense } from 'react';
 
 export default function Dashboard_Page() {
@@ -7,10 +9,17 @@ export default function Dashboard_Page() {
         <Suspense fallback={<Loading />}>
 
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', margin: 0, padding: 0 }}>
-                <div style={{ marginBottom: 5, padding: 5, borderColor: 'grey', borderWidth: 0, borderBottomWidth: 1, backgroundColor: 'white' }}>Dashboard Header</div>
-                <div style={{ margin: 0, padding: 5 }}>
-                    Dashboard main area..
-                </div>
+
+                {/* header container */}
+                <header>
+                    <DashboardHeaderContainer />
+                </header>
+
+                {/* main area container */}
+                <main style={{ height: '100%' }}>
+                    <DashboardMainContainer />
+                </main>
+
             </div>
 
         </Suspense>

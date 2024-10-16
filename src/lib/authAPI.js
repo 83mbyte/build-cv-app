@@ -1,6 +1,7 @@
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
 
 import { app } from '@/__firebase/__firebaseConf';
+import { dbAPI } from './dbAPI';
 
 const auth = getAuth(app);
 
@@ -32,14 +33,14 @@ export const authAPI = {
     signIn: (email, password) => {
 
         return signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 // console.log('logged')
                 // Signed in 
                 const user = userCredential.user;
 
                 // return user
                 if (user.emailVerified || process.env.NEXT_PUBLIC_NODE_MODE == 'development') {
-                    // await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
+                    await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
 
                     return {
                         data: {
@@ -61,6 +62,17 @@ export const authAPI = {
                 return { data: null, message: errorCode }
             });
     },
+    signOut: () => {
+        // const auth = getAuth(app);
+        signOut(auth).then(() => {
+            console.log('SignOut done')
+            // Sign-out successful.
+            return { data: null, message: 'sign-out successful' }
+        }).catch((error) => {
+            // An error happened.
+            return { data: null, message: error.code }
+        });
+    },
 
     signInGoogle: async (initial) => {
         // const auth = getAuth(app);
@@ -74,22 +86,24 @@ export const authAPI = {
 
             // continue to signup after redirect..
             return await getRedirectResult(auth)
-                .then((result) => {
+                .then(async (result) => {
                     // This gives you a Google Access Token. You can use it to access Google APIs.
                     //const credential = GoogleAuthProvider.credentialFromResult(result);
                     //const token = credential.accessToken;
 
-                    // The signed-in user info.
-                    const user = result.user;
-                    // IdP data available using getAdditionalUserInfo(result)
-                    // ...
-                    return {
-                        data: {
-                            userId: user.uid,
-                            email: user.email,
-                            accessToken: user.accessToken
-                        },
-                        message: 'success'
+
+                    if (result) {
+                        // The signed-in user info.
+                        const user = result.user;
+                        await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
+                        return {
+                            data: {
+                                userId: user.uid,
+                                email: user.email,
+                                accessToken: user.accessToken
+                            },
+                            message: 'success'
+                        }
                     }
                 }).catch((error) => {
                     // Handle Errors here.
