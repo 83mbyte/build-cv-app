@@ -12,6 +12,8 @@
 
 .rsw-ce {
   background-color: white;
+  overflow: scroll;
+  max-height: 250px;
 }
 .rsw-ce ul {
   list-style: disc;

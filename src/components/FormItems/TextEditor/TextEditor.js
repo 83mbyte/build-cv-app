@@ -16,7 +16,7 @@ import './TextEditor.css';
 
 import sanitizeString from '@/lib/sanitizeString';
 
-const TextEditor = ({ state, onChangeCallback }) => {
+const TextEditor = ({ state, onChangeCallback, heightSize }) => {
 
     const [html, setHtml] = useState(() => {
         if (state?.value) {
@@ -42,7 +42,7 @@ const TextEditor = ({ state, onChangeCallback }) => {
 
             {state?.label && <Text color={'gray.500'} px={2} mx={3} mb={'-2px'} fontSize={'xs'} fontWeight={'semibold'}>{state.label}</Text>}
             <EditorProvider>
-                <Editor value={html} onChange={onChange} onBlur={applyChanges} tagName='p'>
+                <Editor value={html} onChange={onChange} onBlur={applyChanges} tagName='p' style={heightSize && { minHeight: heightSize }}>
                     <Toolbar  >
                         <BtnUndo />
                         <BtnRedo />
