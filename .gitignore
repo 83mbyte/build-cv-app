@@ -45,3 +45,4 @@ functions/lib/promptsByRoles.js
 functions/firebase-debug.log
 functions/ui-debug.log
 src/lib/content-lib.js
+ui-debug.log

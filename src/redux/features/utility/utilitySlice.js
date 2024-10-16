@@ -11,6 +11,10 @@ const utilitySlice = createSlice({
         previewDrawer: {
             isOpen: false,
         },
+        coverLettDrawer: {
+            isOpen: false,
+            type: null
+        },
         isModifiedContent: {
             status: false,
             sections: []
@@ -30,6 +34,16 @@ const utilitySlice = createSlice({
         previewDrawerIsOpenToggle: (state) => {
             state.previewDrawer.isOpen = !state.previewDrawer.isOpen
         },
+        coverLettDrawerIsOpenToggle: ((state, action) => {
+            if (action?.payload) {
+                state.coverLettDrawer.isOpen = true;
+                state.coverLettDrawer.type = action.payload.type;
+
+            } else {
+                state.coverLettDrawer.isOpen = false;
+                state.coverLettDrawer.type = null;
+            }
+        }),
         setIsModifiedContent: (state, action) => {
             state.isModifiedContent.status = action.payload.status;
             if (!state.isModifiedContent.sections.includes(action.payload.section)) {
@@ -93,7 +107,7 @@ const utilitySlice = createSlice({
 
 
 export default utilitySlice.reducer;
-export const { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd } = utilitySlice.actions;
+export const { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, coverLettDrawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd } = utilitySlice.actions;
 
 export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', async (dataObj) => {
     // put/save data on server..

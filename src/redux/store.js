@@ -13,6 +13,7 @@ import languagesSliceReducer from "./features/languages/languagesSlice";
 import referencesSliceReducer from "./features/references/referencesSlice";
 import hobbiesSliceReducer from "./features/hobbies/hobbiesSlice";
 import userImageSliceReducer from "./features/userImage/userImageSlice";
+import coverLetterSliceReducer from "./features/coverLetter/coverLetterSlice";
 
 export default configureStore({
     reducer: {
@@ -29,7 +30,7 @@ export default configureStore({
         references: referencesSliceReducer,
         hobbies: hobbiesSliceReducer,
         image: userImageSliceReducer,
+        cover: coverLetterSliceReducer
         // templates: templatesSliceReducer,
-        // cover: coverLetterSliceReducer
     }
 })
