@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+*/node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -44,5 +45,8 @@ firebase.json
 functions/lib/promptsByRoles.js
 functions/firebase-debug.log
 functions/ui-debug.log
+functions/node_modules/
+functions/.env 
+functions/.secret.local
 src/lib/content-lib.js
 ui-debug.log
