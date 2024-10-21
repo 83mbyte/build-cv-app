@@ -10,6 +10,7 @@ import SectionWrapper from '../SectionsWrapper';
 import SectionDescription from '../SectionDescription';
 import LoadingSectionSkeleton from '@/components/Loaders/LoadingSectionSkeleton';
 import TextEditor from '@/components/FormItems/TextEditor/TextEditor';
+import AutoCreateSummary from './AutoCreateSummary/AutoCreateSummary';
 
 const Summary = ({ userLogged }) => {
     let content = null;
@@ -29,6 +30,7 @@ const Summary = ({ userLogged }) => {
         content = isSectionVisible &&
             <SectionWrapper sectionTitle='Professional Summary' flexDirect='column'>
                 <SectionDescription value={summaryData?.sectionDescription || `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Earum exercitationem commodi culpa, temporibus blanditiis adipisci optio, ad architecto vero quidem animi dignissimos debitis voluptas!`} />
+                <AutoCreateSummary accessToken={userLogged.accessToken} onChangeCallback={onChangeHandler} />
                 <TextEditor state={data || ''} onChangeCallback={onChangeHandler} />
             </SectionWrapper>
     }

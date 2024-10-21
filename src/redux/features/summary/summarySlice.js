@@ -6,13 +6,26 @@ const summarySlice = createSlice({
     name: 'summary',
     initialState: {
         data: { value: 'initState' },
-        __serv: { isSectionVisible: true },
+        __serv: { isSectionVisible: true, isLoading: true },
         status: 'idle',
         error: ''
     },
     reducers: {
         inputSummaryUpdate: (state, action) => {
             state.data.value = action.payload.value;
+        },
+        setIsLoadingAutoSummary: (state, action) => {
+            if (!action.payload) {
+                state.__serv = {
+                    ...state.__serv,
+                    isLoading: !state.__serv.isLoading
+                }
+            } else {
+                state.__serv = {
+                    ...state.__serv,
+                    isLoading: action.payload
+                }
+            }
         }
     },
     extraReducers(builder) {
@@ -41,7 +54,7 @@ const summarySlice = createSlice({
 })
 
 export default summarySlice.reducer;
-export const { inputSummaryUpdate } = summarySlice.actions;
+export const { inputSummaryUpdate, setIsLoadingAutoSummary } = summarySlice.actions;
 
 export const getSummary = createAsyncThunk('summary/getSummary', async (obj) => {
     let resp = await dbAPI.getSectionData('summary', obj.userId, obj.accessToken);

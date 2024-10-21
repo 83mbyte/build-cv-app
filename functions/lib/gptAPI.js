@@ -17,6 +17,9 @@ async function createCompletions(openai, data, variant = null) {
     else if (variant === 'humor') {
         messagesArray = [{ ...PROMPTS.humor }, { role: 'user', content: data }]
     }
+    else if (variant === 'summary') {
+        messagesArray = [{ ...PROMPTS.summary }, { role: 'user', content: data }]
+    }
     else if (variant === 'professional') {
         messagesArray = [{ ...PROMPTS.professional }, { role: 'user', content: data }]
     } else if (variant === 'adviser' && (data && data !== '')) {

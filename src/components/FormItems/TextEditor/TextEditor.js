@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { Box, Text } from '@chakra-ui/react';
 
 import {
@@ -18,22 +18,13 @@ import sanitizeString from '@/lib/sanitizeString';
 
 const TextEditor = ({ state, onChangeCallback, heightSize }) => {
 
-    const [html, setHtml] = useState(() => {
-        if (state?.value) {
-            return state.value
-        } else {
-            return ''
-        }
-    });
-
     function onChange(e) {
-        setHtml(e.target.value);
-    }
-
-    const applyChanges = () => {
-        if (html && html !== '') {
-            let cleanString = sanitizeString(html);
+        let cleanString;
+        if ((e.target.value).length > 3) {
+            cleanString = sanitizeString(e.target.value);
             onChangeCallback(cleanString);
+        } else {
+            onChangeCallback(e.target.value);
         }
     }
 
@@ -42,7 +33,7 @@ const TextEditor = ({ state, onChangeCallback, heightSize }) => {
 
             {state?.label && <Text color={'gray.500'} px={2} mx={3} mb={'-2px'} fontSize={'xs'} fontWeight={'semibold'}>{state.label}</Text>}
             <EditorProvider>
-                <Editor value={html} onChange={onChange} onBlur={applyChanges} tagName='p' style={heightSize && { minHeight: heightSize }}>
+                <Editor value={state.value} onChange={onChange} tagName='p' style={heightSize && { minHeight: heightSize }}>
                     <Toolbar  >
                         <BtnUndo />
                         <BtnRedo />
@@ -57,6 +48,7 @@ const TextEditor = ({ state, onChangeCallback, heightSize }) => {
                         <BtnBulletList />
                     </Toolbar>
                 </Editor>
+
             </EditorProvider>
         </Box>
     );

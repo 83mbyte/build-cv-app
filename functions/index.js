@@ -121,7 +121,35 @@ exports.coverLetterCreate = onRequest(
         }
     })
 
+exports.summaryCreate = onRequest(
+    {
+        cors: [process.env.APP_DOMAIN_MAIN, process.env.APP_DOMAIN_SECOND, process.env.APP_DOMAIN_CUSTOM],
+        secrets: ['AIKEY'],
+    },
+    async (req, resp) => {
+        if (req.body) {
+            let { accessToken, query } = req.body;
 
+            const isTokenVerified = await verifyToken(accessToken);
+
+            if (!isTokenVerified || isTokenVerified.status == false) {
+                return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+            }
+
+            const aiKey = process.env.AIKEY;
+
+            if (!query || !aiKey) {
+
+                return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+            }
+            await requestToGPT({ resp, aiKey, query, variant: 'summary' })
+        }
+
+        else {
+            return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+        }
+    }
+)
 
 
 
