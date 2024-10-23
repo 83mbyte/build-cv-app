@@ -5,11 +5,13 @@ import {
     DrawerHeader,
     Box,
     HStack, Center
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+
 
 import { BackIcon } from '@/components/Icons/Icon';
 import ToolTip from '@/components/ToolTip/ToolTip';
-import React from 'react';
+import TemplateSelection from '../../ResumeTemplates/TemplateSelection';
+import TemplateDocumentView from '@/components/ResumeTemplates/TemplateDocumentView';
 
 
 const PreviewDrawer = ({ onCloseHandler }) => {
@@ -39,12 +41,12 @@ const PreviewDrawer = ({ onCloseHandler }) => {
                 <Box display={'flex'} flexDirection={['column', 'row']} bg='' h={'full'}>
                     <Box display={'flex'} flexDirection={['row', 'column']} bg='' h={['35%', 'full']} w={['full', '20%']} borderRight={['none', '2px solid gray']} my={1} >
                         <Box overflowY={'scroll'} bg='white'>
-                            {/* <TemplateSelection /> */}
+                            <TemplateSelection />
                         </Box>
                     </Box>
                     <Box display={'flex'} flexDirection={'column'} bg='gray.50' h={'100%'} w={['full']} >
                         <Box my={1} h={'100%'} overflowY={'scroll'} bg='white'>
-                            {/* <TemplateDocumentView /> */}
+                            <TemplateDocumentView />
                         </Box>
                     </Box>
                 </Box>
