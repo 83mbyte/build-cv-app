@@ -3,10 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsTemplateLoaded } from '@/redux/features/templates/templatesSlice';
+import { getPaidServicesThunk, setFilesAllowed } from '@/redux/features/paidServices/paidServicesSlice';
 
 import { toPng } from 'html-to-image';
+import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 
 import TemplateHiddenRendering from './TemplateHiddenRendering';
+import PdfBtn from '../Buttons/PdfBtn/PdfBtn';
 
 const TemplateDocumentView = () => {
     const htmlRef = useRef(null);
@@ -28,11 +31,43 @@ const TemplateDocumentView = () => {
     const image = useSelector(state => state.image.data.value);
     const additionalSections = useSelector(state => state.utility.additionalSections.data);
 
+    const userLogged = useSelector(state => state.auth.auth.data);
+    const allowedPdf = useSelector(state => state.paidServices.data.pdf);
+    const statusPaidServices = useSelector(state => state.paidServices.status);
+    const errorPaidServices = useSelector(state => state.paidServices.error);
+
+
+
     const [canvasImg, setCanvasImg] = useState(null);
-    const [isReadToPdf, setIsReadyToPdf] = useState(false);
+    const [isReadyToPdf, setIsReadyToPdf] = useState(false);
 
     const setIsLoadedTemplateStatus = (status) => {
         dispatch(setIsTemplateLoaded(status))
+    }
+
+    const createPdf = () => {
+
+        let opt = {
+            margin: [0, 0, 0, 0],
+            // margin: [5, 2, 10, 2],
+            pagebreak: {
+                avoid: ['#details', '#links', '#skills', '#lang', '#hobbies', '#profile', '#education', '#courses', '#employment', '#references']
+            },
+            filename: "resume.pdf",
+            image: { type: "jpeg", quality: 0.9 },
+            // image: { type: "png", quality: 0.95 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
+        };
+
+        html2pdf(htmlRef.current, opt)
+            .then(
+                () => {
+                    // 'PDF created'
+                    dispatch(setFilesAllowed(-1));
+
+                },
+                () => { console.log('something wrong..') });
     }
 
     useEffect(() => {
@@ -63,7 +98,15 @@ const TemplateDocumentView = () => {
             createCanvas(htmlRef);
         }
 
-    }, [templateName, htmlRef, isTemplateLoaded])
+    }, [templateName, htmlRef, isTemplateLoaded]);
+
+
+    useEffect(() => {
+        if (statusPaidServices === 'idle' && userLogged) {
+            dispatch(getPaidServicesThunk(userLogged));
+        }
+    }, [statusPaidServices, userLogged, dispatch])
+
 
     return (
         <Box bg={'white'} h={'100%'} p={1}  >
@@ -77,7 +120,7 @@ const TemplateDocumentView = () => {
 
             {
                 templateName
-                    ? <Preview canvasImg={canvasImg} isReadToPdf={isReadToPdf} createPdf={null} />
+                    ? <Preview canvasImg={canvasImg} isReadyToPdf={isReadyToPdf} createPdf={createPdf} allowedPdf={allowedPdf} />
                     : <Box bg='' display={'flex'} h={'100%'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
                         {'Please choose a template first..'}
                     </Box>
@@ -90,7 +133,7 @@ const TemplateDocumentView = () => {
 
 export default TemplateDocumentView;
 
-const Preview = ({ canvasImg, isReadToPdf, createPdf }) => {
+const Preview = ({ canvasImg, isReadyToPdf, createPdf, allowedPdf }) => {
 
     return (
         <>
@@ -99,9 +142,10 @@ const Preview = ({ canvasImg, isReadToPdf, createPdf }) => {
                     ?
                     <>
                         <img src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} />
-                        {/* {
-                            isReadToPdf && <PdfBtn onClickAction={createPdf} />
-                        } */}
+                        {
+
+                            (allowedPdf.isAllowed && isReadyToPdf) && <PdfBtn onClickAction={createPdf} />
+                        }
                     </>
                     : <Box p={2} w='full' display={'flex'} bg={'transparent'} justifyContent={'center'} h='100%' alignItems={'center'}>
                         <Spinner color='teal' size='xl' />

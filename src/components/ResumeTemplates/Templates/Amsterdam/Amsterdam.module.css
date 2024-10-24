@@ -102,7 +102,8 @@ a.lnk:hover {
   /* height: 830pt; */
   min-height: 830pt;
   max-width: 594pt;
-  width: 594pt !important;
+  height: 840pt;
+  width: 595pt !important;
   /* height: 100%; */
   /* background-color: rgb(237, 237, 237); */
   background: linear-gradient(90deg, #f7f7f7 35%, #ffffff 35%);

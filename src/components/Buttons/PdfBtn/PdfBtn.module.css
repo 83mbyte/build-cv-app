@@ -1,0 +1,10 @@
+.pdfBtnContainer {
+  border: 0px solid red;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  background-color: transparent;
+  right: 0;
+  bottom: 0;
+  margin: 0 25px 95px 0;
+}

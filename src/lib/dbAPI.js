@@ -7,6 +7,14 @@ export const dbAPI = {
 
         let userNameSplitted = displayName.split(' ')
         let userTemplate = {
+            paidServices: {
+                data: {
+                    pdf: {
+                        isAllowed: false,
+                        filesAllowed: 2
+                    }
+                }
+            },
             image: { value: '' },
             personDetails: {
                 __serv: {
