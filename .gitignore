@@ -50,3 +50,4 @@ functions/.env
 functions/.secret.local
 src/lib/content-lib.js
 ui-debug.log
+firebase-debug.log
