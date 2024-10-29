@@ -40,14 +40,14 @@ const LoadingTemplate = () => {
 
 function EnhancedComponent(Component) {
 
-    const WithRef = forwardRef((props, ref) => {
+    const Tmp = forwardRef(function TmpWithRef(props, ref) {
         return <Component data={props.data} templateName={props.templateName} ref={ref} />
     })
 
-    return WithRef;
+    return Tmp;
 }
 
-const ChooseTemplateToShow = forwardRef(({ data, templateName }, ref) => {
+const ChooseTemplateToShow = forwardRef(function ChooseTemplateToShowWithRef({ data, templateName }, ref) {
     let selectedTemplate;
     if (templateName) {
         switch (templateName.toLowerCase()) {

@@ -30,7 +30,7 @@ const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) =>
         return (
             <Box p={0} mx={0} my={1} w={'100%'} mb={2}>
                 <HStack spacing={1} justifyContent={'space-between'} alignItems={'center'} h={'100%'}>
-                    <Text mb={'10px'} fontSize={'xs'} color={'gray.500'} pt={'5px'} mt={0} >{skillsData?.generateProposals || `Lorem ipsum dolor, sit amet consectetur adipisicing elit.`} '<span className='italic bold'>{jobTitle}</span>'.</Text>
+                    <Text mb={'10px'} fontSize={'xs'} color={'gray.500'} pt={'5px'} mt={0} >{skillsData?.generateProposals || `Lorem ipsum dolor, sit amet consectetur adipisicing elit.`} <span style={{ fontStyle: 'italic', }}>{jobTitle}</span>.</Text>
                     <Box>
                         <ToolTip label='generate skills suggestions'>
                             <Button

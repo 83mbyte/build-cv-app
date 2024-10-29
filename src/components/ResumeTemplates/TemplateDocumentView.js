@@ -12,6 +12,7 @@ import TemplateHiddenRendering from './TemplateHiddenRendering';
 import PdfBtn from '../Buttons/PdfBtn/PdfBtn';
 import { functionsAPI } from '@/lib/functionsAPI';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const TemplateDocumentView = () => {
     const htmlRef = useRef(null);
@@ -191,7 +192,8 @@ const Preview = ({ canvasImg, isReadyToPdf, createPdf, allowedPdf, createPayment
                 canvasImg !== null
                     ?
                     <>
-                        <img src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} />
+                        <Image src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} />
+                        {/* <img src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} /> */}
                         {
 
                             (isReadyToPdf) && <PdfBtn isAllowed={allowedPdf.isAllowed} onClickAction={allowedPdf.isAllowed ? createPdf : createPayment} />
