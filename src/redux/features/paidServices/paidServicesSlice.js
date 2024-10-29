@@ -7,7 +7,7 @@ const paidServices = createSlice({
         data: {
             pdf: {
                 isAllowed: false,
-                filesAllowed: 2
+                filesAllowed: 0
             },
 
         },
@@ -22,9 +22,16 @@ const paidServices = createSlice({
                 state.data.pdf.isAllowed = false;
             }
         },
-        resetAllowedPdf: (state) => {
-            state.data.pdf.isAllowed = true;
-            state.data.pdf.filesAllowed = 2;
+        // resetAllowedPdf: (state) => {
+        //     state.data.pdf.isAllowed = true;
+        //     state.data.pdf.filesAllowed = 2;
+        // },
+        setStatusPaidServices: (state, action) => {
+            if (action?.payload?.status) {
+                state.status = action.payload.status
+            } else {
+                state.status = 'idle'
+            }
         }
     },
     extraReducers(builder) {
@@ -53,7 +60,7 @@ const paidServices = createSlice({
 
 
 export default paidServices.reducer;
-export const { setFilesAllowed, resetAllowedPdf } = paidServices.actions
+export const { setFilesAllowed, resetAllowedPdf, setStatusPaidServices } = paidServices.actions
 
 export const getPaidServicesThunk = createAsyncThunk('paidServices/getPaidServicesThunk', async (obj) => {
     let resp = await dbAPI.getSectionData('paidServices', obj.userId, obj.accessToken);

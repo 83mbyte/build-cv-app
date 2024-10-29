@@ -1,18 +1,22 @@
-import { Box, Spinner } from '@chakra-ui/react';
+import { Box, Spinner, useToast } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsTemplateLoaded } from '@/redux/features/templates/templatesSlice';
-import { getPaidServicesThunk, setFilesAllowed } from '@/redux/features/paidServices/paidServicesSlice';
+import { getPaidServicesThunk, setFilesAllowed, setStatusPaidServices } from '@/redux/features/paidServices/paidServicesSlice';
 
 import { toPng } from 'html-to-image';
 import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 
 import TemplateHiddenRendering from './TemplateHiddenRendering';
 import PdfBtn from '../Buttons/PdfBtn/PdfBtn';
+import { functionsAPI } from '@/lib/functionsAPI';
+import { useRouter } from 'next/navigation';
 
 const TemplateDocumentView = () => {
     const htmlRef = useRef(null);
+    const router = useRouter();
+    const toast = useToast({ position: 'top-right', variant: 'left-accent' });
 
     const dispatch = useDispatch();
     const templateName = useSelector(state => state.templates.data.selected);
@@ -37,6 +41,7 @@ const TemplateDocumentView = () => {
     const errorPaidServices = useSelector(state => state.paidServices.error);
 
 
+    const timerTimeout = useRef(null);
 
     const [canvasImg, setCanvasImg] = useState(null);
     const [isReadyToPdf, setIsReadyToPdf] = useState(false);
@@ -68,6 +73,51 @@ const TemplateDocumentView = () => {
 
                 },
                 () => { console.log('something wrong..') });
+    }
+
+    const createPayment = async () => {
+
+        const createCheckoutData = async (resolve, reject) => {
+            let data = await functionsAPI.callFunction('createCheckoutSession', userLogged.accessToken);
+            if (!data || data.status !== 'Success') {
+
+                reject({ timerTimeout: timerTimeout.current });
+            } else {
+                setStatusPaidServices({ status: 'idle' });
+                resolve({
+                    timerTimeout: timerTimeout.current,
+                    data: data
+                })
+            }
+        }
+
+        const promiseCheckoutSession = new Promise(async (resolve, reject) => {
+            timerTimeout.current = setTimeout(() => createCheckoutData(resolve, reject), 1000);
+        });
+
+        toast
+            .promise(promiseCheckoutSession, {
+                error: (obj) => {
+                    clearTimeout(obj.timerTimeout);
+                    return ({
+                        title: 'Warning',
+                        description: 'Unable to create a payment checkout session. Please try again later.',
+                        duration: 5000,
+                    })
+                },
+                loading: { title: 'We are creating a checkout session for you.', description: 'Please wait..' },
+
+                success: (obj) => ({
+                    title: 'Success',
+                    description: 'You will be redirected to checkout page',
+                    duration: 1000,
+                    onCloseComplete: () => {
+                        clearTimeout(obj.timerTimeout);
+                        router.push(`${obj.data.content}`)
+                    }
+                }),
+            })
+
     }
 
     useEffect(() => {
@@ -120,7 +170,7 @@ const TemplateDocumentView = () => {
 
             {
                 templateName
-                    ? <Preview canvasImg={canvasImg} isReadyToPdf={isReadyToPdf} createPdf={createPdf} allowedPdf={allowedPdf} />
+                    ? <Preview canvasImg={canvasImg} createPayment={createPayment} isReadyToPdf={isReadyToPdf} createPdf={createPdf} allowedPdf={allowedPdf} />
                     : <Box bg='' display={'flex'} h={'100%'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
                         {'Please choose a template first..'}
                     </Box>
@@ -133,7 +183,7 @@ const TemplateDocumentView = () => {
 
 export default TemplateDocumentView;
 
-const Preview = ({ canvasImg, isReadyToPdf, createPdf, allowedPdf }) => {
+const Preview = ({ canvasImg, isReadyToPdf, createPdf, allowedPdf, createPayment }) => {
 
     return (
         <>
@@ -144,7 +194,7 @@ const Preview = ({ canvasImg, isReadyToPdf, createPdf, allowedPdf }) => {
                         <img src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} />
                         {
 
-                            (allowedPdf.isAllowed && isReadyToPdf) && <PdfBtn onClickAction={createPdf} />
+                            (isReadyToPdf) && <PdfBtn isAllowed={allowedPdf.isAllowed} onClickAction={allowedPdf.isAllowed ? createPdf : createPayment} />
                         }
                     </>
                     : <Box p={2} w='full' display={'flex'} bg={'transparent'} justifyContent={'center'} h='100%' alignItems={'center'}>

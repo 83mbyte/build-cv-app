@@ -7,25 +7,35 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
+const { OpenAI } = require("openai");
+const admin = require("firebase-admin");
 const { onRequest } = require("firebase-functions/v2/https");
 const { setGlobalOptions } = require("firebase-functions/v2");
-const { getAuth } = require("firebase-admin/auth");
-const { initializeApp } = require("firebase-admin/app");
-const { OpenAI } = require("openai");
+const { defineSecret } = require('firebase-functions/params');
+
+const STRIPE_WHSEC = defineSecret('STRIPE_WHSEC');
+const STRIPE_SECRET = defineSecret('STRIPE_SECRET');
+const PDF_PRICE_ID = process.env.PDF_PRICE_ID;
 
 const gptAPI = require('./lib/gptAPI');
-let app = initializeApp();
+const stripeAPI = require("./lib/stripeAPI");
+
+const app = admin.initializeApp();
+const db = admin.database();
 
 setGlobalOptions({ maxInstances: 10 });
 
 
 
 const verifyToken = async (userToken) => {
-    return await getAuth(app)
+
+    return await admin.auth(app)
         .verifyIdToken(userToken)
         .then((decodedToken) => {
             const uid = decodedToken.uid;
-            return ({ status: true, uid, message: 'Token verified successfully' })
+            const email = decodedToken.email;
+
+            return ({ status: true, uid, email, message: 'Token verified successfully' })
         })
         .catch((error) => {
             return ({ status: false, uid: null, message: 'Unauthorized request' })
@@ -127,6 +137,9 @@ exports.summaryCreate = onRequest(
         secrets: ['AIKEY'],
     },
     async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
         if (req.body) {
             let { accessToken, query } = req.body;
 
@@ -148,6 +161,98 @@ exports.summaryCreate = onRequest(
         else {
             return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
         }
+    }
+)
+
+// STRIPE related functions
+
+exports.createCheckoutSession = onRequest({
+    // cors: true,
+    cors: [process.env.APP_DOMAIN_MAIN, process.env.APP_DOMAIN_SECOND, process.env.APP_DOMAIN_CUSTOM],
+    secrets: ['STRIPE_SECRET']
+},
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
+
+        if (req.body) {
+            let { accessToken } = req.body;
+
+            const isTokenVerified = await verifyToken(accessToken);
+
+            if (!isTokenVerified || isTokenVerified.status == false) {
+                return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+            }
+
+
+            const stripeKey = STRIPE_SECRET.value();
+            const customer_email = isTokenVerified.email;
+            const customer_id = isTokenVerified.uid;
+
+            let result = null;
+            try {
+
+                result = await stripeAPI.createSession(stripeKey, PDF_PRICE_ID, customer_email, customer_id, req.headers.origin);
+
+                if (result && result.status == 'Success') {
+                    resp.status(200).json({ content: result.content, status: 'Success' })
+                } else {
+                    throw new Error('Internal Server Error')
+                }
+
+            } catch (error) {
+
+                return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error' });
+            }
+        }
+        else {
+            return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+        }
+    })
+exports.webhookStr = onRequest(
+    {
+        // cors: true,
+        // PROD
+        cors: ['/stripe\.com$/'],
+        secrets: ['STRIPE_WHSEC', 'STRIPE_SECRET']
+    },
+    async (req, resp) => {
+
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.' });
+        };
+
+
+
+        try {
+            const payloadBody = req.rawBody;
+            const sig = req.headers['stripe-signature'];
+            const endpointSecret = STRIPE_WHSEC.value();
+            const stripeKey = STRIPE_SECRET.value();
+
+            let respWebhookStr = await stripeAPI.webhookEventCheck(stripeKey, endpointSecret, sig, payloadBody);
+            if (respWebhookStr && respWebhookStr.status !== 'Success') {
+
+                throw new Error(respWebhookStr.message)
+            } else {
+
+                let userId = respWebhookStr.userId;
+                let paidServiceRef = db.ref(`${process.env.APP_DB_USERS}/${userId}/paidServices/data/`)
+                const pdfRef = paidServiceRef.child('pdf');
+                pdfRef.set({
+                    isAllowed: true,
+                    filesAllowed: 2
+                });
+                return resp.status(200).end();
+            }
+        } catch (error) {
+
+            return resp.status(500).send(`Unsuccessful transaction.. ${error.message}`);
+        }
+
+
+        return resp.status(200).end();
     }
 )
 
