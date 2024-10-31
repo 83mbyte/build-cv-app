@@ -72,9 +72,6 @@ const AuthLoginForm = ({ changeForm }) => {
     useEffect(() => {
         // google signup after redirect
 
-        // TODO
-        // TODO  deploy and test it
-        // TODO
         if (sessionStorage.getItem(`firebase:pendingRedirect:${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}:[DEFAULT]`)) {
             dispatch(signInGoogleThunk(false))
         }

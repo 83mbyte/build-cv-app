@@ -21,12 +21,12 @@ const authSlice = createSlice({
             state.auth.successMsg = '';
         },
         setAuthFormError: (state, action) => {
-            console.log('action ', action)
+
             state.auth.error = action.payload.message;
         },
         setLoggedUser: (state, action) => {
             state.auth.error = '';
-            state.auth.status = '';
+            state.auth.status = 'ready';
             state.auth.successMsg = '';
             state.auth.data = action?.payload ? action.payload : null;
 

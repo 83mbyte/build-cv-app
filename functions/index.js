@@ -232,6 +232,9 @@ exports.webhookStr = onRequest(
             const stripeKey = STRIPE_SECRET.value();
 
             let respWebhookStr = await stripeAPI.webhookEventCheck(stripeKey, endpointSecret, sig, payloadBody);
+            if (respWebhookStr && respWebhookStr.status == 'Default_Return') {
+                return resp.status(200).end();
+            }
             if (respWebhookStr && respWebhookStr.status !== 'Success') {
 
                 throw new Error(respWebhookStr.message)

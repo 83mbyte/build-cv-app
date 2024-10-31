@@ -32,6 +32,8 @@ module.exports = {
             return ({ status: 'Error', message: 'Payment was not received', code: 400 })
         }
 
+        return ({ status: 'Default_Return', message: 'default return..' })
+
     },
 
     createSession: async (STRIPE_SECRET, PRICE_ID, customer_email, customer_id, path_origin) => {

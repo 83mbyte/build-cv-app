@@ -8,6 +8,7 @@ const auth = getAuth(app);
 export const authAPI = {
 
     signUp: (email, password, firstName = '', lastName = '') => {
+        // const auth = getAuth(app);
         return createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in 
@@ -31,7 +32,7 @@ export const authAPI = {
             });
     },
     signIn: (email, password) => {
-
+        // const auth = getAuth(app);
         return signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 // console.log('logged')
@@ -76,6 +77,7 @@ export const authAPI = {
 
     signInGoogle: async (initial) => {
         // const auth = getAuth(app);
+
         if (initial === true) {
             // sign in with Google, first click
             const provider = new GoogleAuthProvider();
@@ -84,13 +86,11 @@ export const authAPI = {
 
         } else {
 
-            // continue to signup after redirect..
             return await getRedirectResult(auth)
                 .then(async (result) => {
                     // This gives you a Google Access Token. You can use it to access Google APIs.
                     //const credential = GoogleAuthProvider.credentialFromResult(result);
                     //const token = credential.accessToken;
-
 
                     if (result) {
                         // The signed-in user info.
@@ -107,7 +107,6 @@ export const authAPI = {
                     }
                 }).catch((error) => {
                     // Handle Errors here.
-                    console.log('ERROR with getRedirectResult..');
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     // The email of the user's account used.
@@ -117,6 +116,45 @@ export const authAPI = {
                     // ...
                     return ({ data: null, message: errorMessage })
                 });
-        }
+            // return setPersistence(auth, browserSessionPersistence)
+            //     .then(async () => {
+            //         return await getRedirectResult(auth)
+            //             .then(async (result) => {
+            //                 // This gives you a Google Access Token. You can use it to access Google APIs.
+            //                 //const credential = GoogleAuthProvider.credentialFromResult(result);
+            //                 //const token = credential.accessToken;
+
+
+            //                 if (result) {
+            //                     // The signed-in user info.
+            //                     const user = result.user;
+            //                     await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
+            //                     return {
+            //                         data: {
+            //                             userId: user.uid,
+            //                             email: user.email,
+            //                             accessToken: user.accessToken
+            //                         },
+            //                         message: 'success'
+            //                     }
+            //                 }
+            //             }).catch((error) => {
+            //                 // Handle Errors here.
+            //                 console.log('ERROR with getRedirectResult..');
+            //                 const errorCode = error.code;
+            //                 const errorMessage = error.message;
+            //                 // The email of the user's account used.
+            //                 //const email = error.customData.email;
+            //                 // The AuthCredential type that was used.
+            //                 //const credential = GoogleAuthProvider.credentialFromError(error);
+            //                 // ...
+            //                 return ({ data: null, message: errorMessage })
+            //             });
+            //     })
+
+            // ===
+
+        }  //end else 
     }
 }
+
