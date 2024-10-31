@@ -99,7 +99,7 @@ const authSlice = createSlice({
                 state.auth.error = action.error.message;
             })
             .addCase(signInGoogleThunk.fulfilled, (state, action) => {
-                console.log('signInGoogleThunk.fulfilled, ACTION:', action)
+
                 state.auth.status = 'ready';
                 if (action?.payload) {
                     if (action.payload.data) {

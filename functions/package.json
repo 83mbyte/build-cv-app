@@ -13,10 +13,10 @@
   },
   "main": "index.js",
   "dependencies": {
-    "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.0.1",
-    "openai": "^4.67.3",
-    "stripe": "^17.2.1"
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^6.1.0",
+    "openai": "^4.69.0",
+    "stripe": "^17.3.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"
