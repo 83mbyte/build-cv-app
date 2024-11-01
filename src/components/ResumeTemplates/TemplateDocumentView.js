@@ -8,11 +8,13 @@ import { getPaidServicesThunk, setFilesAllowed, setStatusPaidServices } from '@/
 import { toPng } from 'html-to-image';
 import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 
-import TemplateHiddenRendering from './TemplateHiddenRendering';
-import PdfBtn from '../Buttons/PdfBtn/PdfBtn';
-import { functionsAPI } from '@/lib/functionsAPI';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+
+import { functionsAPI } from '@/lib/functionsAPI';
+import { paymentsToastData } from '@/lib/content-lib';
+
+import PdfBtn from '../Buttons/PdfBtn/PdfBtn';
+import TemplateHiddenRendering from './TemplateHiddenRendering';
 
 const TemplateDocumentView = () => {
     const htmlRef = useRef(null);
@@ -101,16 +103,20 @@ const TemplateDocumentView = () => {
                 error: (obj) => {
                     clearTimeout(obj.timerTimeout);
                     return ({
-                        title: 'Warning',
-                        description: 'Unable to create a payment checkout session. Please try again later.',
+                        title: paymentsToastData.prepareSession.error.title || `Earum exercitationem culpa!`,
+                        description: paymentsToastData.prepareSession.error.descr || `Ad architecto vero debitis voluptas!`,
                         duration: 5000,
                     })
                 },
-                loading: { title: 'We are creating a checkout session for you.', description: 'Please wait..' },
+
+                loading: {
+                    title: paymentsToastData.prepareSession.loading.title || `Earum exercitationem culpa!`,
+                    description: paymentsToastData.prepareSession.loading.descr || `Ad architecto vero debitis voluptas!`
+                },
 
                 success: (obj) => ({
-                    title: 'Success',
-                    description: 'You will be redirected to checkout page',
+                    title: paymentsToastData.prepareSession.success.title || `Earum exercitationem culpa!`,
+                    description: paymentsToastData.prepareSession.success.descr || `Ad architecto vero debitis voluptas!`,
                     duration: 1000,
                     onCloseComplete: () => {
                         clearTimeout(obj.timerTimeout);
@@ -124,30 +130,35 @@ const TemplateDocumentView = () => {
     useEffect(() => {
 
         const createCanvas = (htmlRef) => {
-
             let sourceNode = htmlRef.current;
             toPng(sourceNode, { cacheBust: true })
-                .then(function (dataUrl) {
+                .then((dataUrl) => {
                     let img = new Image();
+
                     img.src = dataUrl;
                     img.alt = 'resume_preview';
                     setCanvasImg(img);
                     setIsReadyToPdf(true);
                     img = null;
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.error('oops, something went wrong! ', error.message);
                     setCanvasImg(null);
                 });
         }
-
-
 
         if (htmlRef.current && isTemplateLoaded) {
             setCanvasImg(null);
             setIsReadyToPdf(false);
             createCanvas(htmlRef);
         }
+
+        // return () => {
+
+        //     setIsReadyToPdf(false);
+        //     setCanvasImg(null);
+        //     setIsLoadedTemplateStatus(false)
+        // };
 
     }, [templateName, htmlRef, isTemplateLoaded]);
 
@@ -171,6 +182,7 @@ const TemplateDocumentView = () => {
 
             {
                 templateName
+
                     ? <Preview canvasImg={canvasImg} createPayment={createPayment} isReadyToPdf={isReadyToPdf} createPdf={createPdf} allowedPdf={allowedPdf} />
                     : <Box bg='' display={'flex'} h={'100%'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
                         {'Please choose a template first..'}
@@ -192,10 +204,9 @@ const Preview = ({ canvasImg, isReadyToPdf, createPdf, allowedPdf, createPayment
                 canvasImg !== null
                     ?
                     <>
-                        <Image src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} />
-                        {/* <img src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} /> */}
-                        {
+                        <img src={canvasImg.src} alt={canvasImg.alt} style={{ objectFit: 'contain', border: '1px solid gray' }} />
 
+                        {
                             (isReadyToPdf) && <PdfBtn isAllowed={allowedPdf.isAllowed} onClickAction={allowedPdf.isAllowed ? createPdf : createPayment} />
                         }
                     </>
