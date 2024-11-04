@@ -66,16 +66,12 @@ const AuthLoginForm = ({ changeForm }) => {
             if (data?.accessToken && data?.userId) {
                 router.push('/dashboard')
             }
+        } else {
+            dispatch(signInGoogleThunk(false));
         }
     }, [data])
 
-    useEffect(() => {
-        // google signup after redirect
 
-        if (sessionStorage.getItem(`firebase:pendingRedirect:${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}:[DEFAULT]`)) {
-            dispatch(signInGoogleThunk(false))
-        }
-    }, [])
 
     return (
 

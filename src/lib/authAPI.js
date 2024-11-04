@@ -116,43 +116,7 @@ export const authAPI = {
                     // ...
                     return ({ data: null, message: errorMessage })
                 });
-            // return setPersistence(auth, browserSessionPersistence)
-            //     .then(async () => {
-            //         return await getRedirectResult(auth)
-            //             .then(async (result) => {
-            //                 // This gives you a Google Access Token. You can use it to access Google APIs.
-            //                 //const credential = GoogleAuthProvider.credentialFromResult(result);
-            //                 //const token = credential.accessToken;
 
-
-            //                 if (result) {
-            //                     // The signed-in user info.
-            //                     const user = result.user;
-            //                     await dbAPI.checkAndCreate(user.uid, user.accessToken, user.displayName, user.email);
-            //                     return {
-            //                         data: {
-            //                             userId: user.uid,
-            //                             email: user.email,
-            //                             accessToken: user.accessToken
-            //                         },
-            //                         message: 'success'
-            //                     }
-            //                 }
-            //             }).catch((error) => {
-            //                 // Handle Errors here.
-            //                 console.log('ERROR with getRedirectResult..');
-            //                 const errorCode = error.code;
-            //                 const errorMessage = error.message;
-            //                 // The email of the user's account used.
-            //                 //const email = error.customData.email;
-            //                 // The AuthCredential type that was used.
-            //                 //const credential = GoogleAuthProvider.credentialFromError(error);
-            //                 // ...
-            //                 return ({ data: null, message: errorMessage })
-            //             });
-            //     })
-
-            // ===
 
         }  //end else 
     }

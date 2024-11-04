@@ -6,14 +6,13 @@ const getDataFromFunctionsEndpoint = async (endPoint, options) => {
 
     let resp = null;
     try {
-        resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/${endPoint}`, options);
 
-        // if (process.env.NODE_ENV == "development") {
-        //     resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/${endPoint}`, options);
+        if (process.env.NODE_ENV == "development") {
+            resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/${endPoint}`, options);
 
-        // } else {
-        //     resp = await fetch(`https://${endPoint}-${process.env.NEXT_PUBLIC_FUNC_SUFFIX}`, options);
-        // }
+        } else {
+            resp = await fetch(`https://${endPoint}-${process.env.NEXT_PUBLIC_FUNC_SUFFIX}`, options);
+        }
 
         if (resp) {
             let data = await resp.json();

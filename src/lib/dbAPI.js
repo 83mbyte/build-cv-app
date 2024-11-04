@@ -11,7 +11,10 @@ export const dbAPI = {
                 data: {
                     pdf: {
                         isAllowed: false,
-                        filesAllowed: 2
+                        filesAllowed: 0
+                    },
+                    interview: {
+                        isAllowed: false
                     }
                 }
             },
