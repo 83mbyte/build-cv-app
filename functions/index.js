@@ -13,6 +13,8 @@ const { onRequest } = require("firebase-functions/v2/https");
 const { setGlobalOptions } = require("firebase-functions/v2");
 const { defineSecret } = require('firebase-functions/params');
 
+const functionsV1auth = require('firebase-functions/v1/auth');
+
 const STRIPE_WHSEC = defineSecret('STRIPE_WHSEC');
 const STRIPE_SECRET = defineSecret('STRIPE_SECRET');
 const PDF_PRICE_ID = process.env.PDF_PRICE_ID;
@@ -24,7 +26,6 @@ const app = admin.initializeApp();
 const db = admin.database();
 
 setGlobalOptions({ maxInstances: 10 });
-
 
 
 const verifyToken = async (userToken) => {
@@ -63,10 +64,10 @@ exports.generateSkills = onRequest(
         //dev
         // cors: true,
 
-        cors: [process.env.APP_DOMAIN_MAIN, process.env.APP_DOMAIN_SECOND, process.env.APP_DOMAIN_CUSTOM],
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
         secrets: ['AIKEY']
     },
-    //{ cors: true },
+
     async (req, resp) => {
 
         if (req.method !== 'POST') {
@@ -100,7 +101,7 @@ exports.generateSkills = onRequest(
 
 exports.coverLetterCreate = onRequest(
     {
-        cors: [process.env.APP_DOMAIN_MAIN, process.env.APP_DOMAIN_SECOND, process.env.APP_DOMAIN_CUSTOM],
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
         secrets: ['AIKEY'],
     },
     async (req, resp) => {
@@ -133,7 +134,7 @@ exports.coverLetterCreate = onRequest(
 
 exports.summaryCreate = onRequest(
     {
-        cors: [process.env.APP_DOMAIN_MAIN, process.env.APP_DOMAIN_SECOND, process.env.APP_DOMAIN_CUSTOM],
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
         secrets: ['AIKEY'],
     },
     async (req, resp) => {
@@ -168,7 +169,7 @@ exports.summaryCreate = onRequest(
 
 exports.createCheckoutSession = onRequest({
     // cors: true,
-    cors: [process.env.APP_DOMAIN_MAIN, process.env.APP_DOMAIN_SECOND, process.env.APP_DOMAIN_CUSTOM],
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
     secrets: ['STRIPE_SECRET']
 },
     async (req, resp) => {
@@ -214,7 +215,7 @@ exports.webhookStr = onRequest(
     {
         // cors: true,
         // PROD
-        cors: ['/stripe\.com$/'],
+        cors: [/stripe\.com$/],
         secrets: ['STRIPE_WHSEC', 'STRIPE_SECRET']
     },
     async (req, resp) => {
@@ -260,6 +261,23 @@ exports.webhookStr = onRequest(
 )
 
 
+// AUTH users DELETE
+exports.deleteUser = functionsV1auth.user().onDelete((user) => {
+
+    // DELETE a user data (all data) in database while delete user
+
+    let dbUsers = db.ref(`${process.env.APP_DB_USERS}/`);
+    let userRef = dbUsers.child(user.uid);
+    userRef.set(null)
+        .then(() => {
+            return true;
+        })
+        .catch((error) => {
+            console.log(`ERROR while user ${user.ui} delete: `, error.message);
+            return false
+        });
+})
+
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
@@ -268,6 +286,3 @@ exports.webhookStr = onRequest(
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
-
-
-
