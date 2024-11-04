@@ -95,7 +95,7 @@ const HistoryForm = ({ data, addItem, removeItem, onChangeHandler }) => {
 
                             <AccordionElem index={index} key={`history_${index}`} title={`${elem.job}`} descr={elem.employer} removeItem={(e) => removeItem(e, data[index])}>
 
-                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={3}>
+                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
 
                                     <DashboardInput labelText={'Job Title'} name={'job'} inputValue={elem.job} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />
                                     <DashboardInput labelText={'Employer'} name={'employer'} inputValue={elem.employer} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />

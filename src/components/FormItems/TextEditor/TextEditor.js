@@ -1,5 +1,5 @@
 
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, useBreakpointValue } from '@chakra-ui/react';
 
 import {
     BtnBold,
@@ -17,7 +17,13 @@ import './TextEditor.css';
 import sanitizeString from '@/lib/sanitizeString';
 
 const TextEditor = ({ state, onChangeCallback, heightSize }) => {
+    const variantBreakpointFont = useBreakpointValue(
+        {
+            base: '0.875rem',
+            md: '1rem',
+        }, { ssr: false }
 
+    )
     function onChange(e) {
         let cleanString;
         if ((e.target.value).length > 3) {
@@ -33,8 +39,14 @@ const TextEditor = ({ state, onChangeCallback, heightSize }) => {
 
             {state?.label && <Text color={'gray.500'} px={2} mx={3} mb={'-2px'} fontSize={'xs'} fontWeight={'semibold'}>{state.label}</Text>}
             <EditorProvider>
-                <Editor value={state.value} onChange={onChange} tagName='p' style={heightSize && { minHeight: heightSize }}>
-                    <Toolbar  >
+                <Editor
+                    value={state.value}
+                    onChange={onChange}
+                    tagName='p'
+                    style={heightSize && { minHeight: heightSize }}
+                    containerProps={{ style: { fontSize: variantBreakpointFont } }}
+                >
+                    <Toolbar style={{ fontSize: '1rem' }} >
                         <BtnUndo />
                         <BtnRedo />
 

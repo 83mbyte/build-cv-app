@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsTemplateLoaded } from '@/redux/features/templates/templatesSlice';
 import { getPaidServicesThunk, setFilesAllowed, setStatusPaidServices } from '@/redux/features/paidServices/paidServicesSlice';
+import { putDataOnServerThunk } from '@/redux/features/utility/utilitySlice';
 
 import { toPng } from 'html-to-image';
 import html2pdf from 'html2pdf.js/dist/html2pdf.min';
@@ -39,6 +40,7 @@ const TemplateDocumentView = () => {
     const additionalSections = useSelector(state => state.utility.additionalSections.data);
 
     const userLogged = useSelector(state => state.auth.auth.data);
+    const paidServicesData = useSelector(state => state.paidServices.data);
     const allowedPdf = useSelector(state => state.paidServices.data.pdf);
     const statusPaidServices = useSelector(state => state.paidServices.status);
     const errorPaidServices = useSelector(state => state.paidServices.error);
@@ -72,7 +74,43 @@ const TemplateDocumentView = () => {
             .then(
                 () => {
                     // 'PDF created'
+
                     dispatch(setFilesAllowed(-1));
+
+                    if (allowedPdf.filesAllowed == 0) {
+
+                        dispatch(putDataOnServerThunk(
+                            {
+                                user: userLogged.userId,
+                                token: userLogged.accessToken,
+                                section: 'paidServices',
+                                data: {
+                                    data: {
+                                        ...paidServicesData,
+                                        pdf: {
+                                            isAllowed: false,
+                                            filesAllowed: allowedPdf.filesAllowed
+                                        }
+                                    }
+                                }
+                            }
+                        ))
+                    } else {
+
+                        dispatch(putDataOnServerThunk(
+                            {
+                                user: userLogged.userId,
+                                token: userLogged.accessToken,
+                                section: 'paidServices',
+                                data: {
+                                    data: {
+                                        ...paidServicesData,
+                                        pdf: allowedPdf
+                                    }
+                                }
+                            }
+                        ))
+                    }
 
                 },
                 () => { console.log('something wrong..') });

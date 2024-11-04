@@ -5,6 +5,8 @@ import ToolTip from '@/components/ToolTip/ToolTip';
 import { functionsAPI } from '@/lib/functionsAPI';
 import { skillsData } from '@/lib/content-lib';
 
+import { MdOutlineAutoAwesome } from "react-icons/md";
+
 const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) => {
 
     const [loading, setLoading] = React.useState(false);
@@ -39,6 +41,7 @@ const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) =>
                                 variant={'outline'}
                                 onClick={onClickHandler}
                                 isLoading={loading}
+                                leftIcon={<MdOutlineAutoAwesome />}
                             >
                                 Generate Skills
                             </Button>

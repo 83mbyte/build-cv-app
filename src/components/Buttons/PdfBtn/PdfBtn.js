@@ -47,7 +47,7 @@ const PdfBtn = ({ onClickAction, isAllowed }) => {
                         colorScheme='teal'
                         aria-label='buy pdf'
                         // fontSize='30px'
-                        size={'xs'}
+                        size={['sm', 'md']}
                         leftIcon={<BsCart2 />}
                     >Buy just for $1.50</Button>
 
@@ -57,7 +57,7 @@ const PdfBtn = ({ onClickAction, isAllowed }) => {
                         colorScheme='teal'
                         aria-label='buy pdf'
                         // fontSize='30px'
-                        size={'xs'}
+                        size={['sm', 'md']}
                         leftIcon={<BsFiletypePdf />}
                     >Export to PDF</Button>
                 // <IconButton

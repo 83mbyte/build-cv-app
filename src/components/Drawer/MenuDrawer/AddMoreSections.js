@@ -41,7 +41,7 @@ const AddMoreSections = () => {
     return (
 
         <VStack spacing={1}>
-            <Heading as={'h5'} size={'xs'} mb={1} w='full'>Add  Sections To a Resume</Heading>
+            <Heading as={'h5'} size={'xs'} mb={1} w='full'>Add Sections To Your Resume</Heading>
 
             <Button style={{ justifyContent: 'flex-start' }} w='full' size={'sm'} ref={coursesRef} isDisabled={coursesDisabled} colorScheme={'teal'} variant={'ghost'} onClick={() => onClickBtnHandler(coursesRef.current.innerText)} leftIcon={coursesDisabled ? <IoCheckmarkDone /> : <IoSchool />}
             >Courses</Button>
