@@ -39,6 +39,7 @@ const PdfBtn = ({ onClickAction, isAllowed }) => {
             initial="initial"
             animate="animate"
             exit="exit"
+            paddingBottom={[15, 0]}
         >
             {
                 !isAllowed
