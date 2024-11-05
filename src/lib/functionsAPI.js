@@ -15,16 +15,19 @@ const getDataFromFunctionsEndpoint = async (endPoint, options) => {
         }
 
         if (resp) {
+
             let data = await resp.json();
 
             return { status: data.status, content: data?.content ?? data?.message ?? data?.error }
         } else {
-            throw new Error(`HTTP error: ${resp.status}`)
+
+            throw new Error(`missed response from server`)
+            // throw new Error(`HTTP error: ${resp.status}`)
         }
 
     } catch (error) {
-        console.error(':: ', error);
-        return { status: 'Error', content: error.message ? error.messsage : null }
+        //console.error(':: ', error);
+        return { status: 'Error', content: error.message || null }
     }
 };
 

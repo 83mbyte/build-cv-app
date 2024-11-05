@@ -8,7 +8,7 @@ import { setIsLoadingAutoSummary } from '@/redux/features/summary/summarySlice';
 import { MdOutlineAutoAwesome } from "react-icons/md";
 import { functionsAPI } from '@/lib/functionsAPI';
 
-const AutoCreateSummary = ({ accessToken, onChangeCallback }) => {
+const AutoCreateSummary = ({ accessToken, onChangeCallback, disabled }) => {
     const dispatch = useDispatch();
 
     const skillsData = useSelector(state => state.skills.data);
@@ -24,10 +24,14 @@ const AutoCreateSummary = ({ accessToken, onChangeCallback }) => {
             if (data && data.status === 'Success' && (data.content && data.content !== '')) {
 
                 onChangeCallback(data.content);
+            } else {
+                throw new Error(data.content)
             }
             dispatch(setIsLoadingAutoSummary());
+
         } catch (error) {
             dispatch(setIsLoadingAutoSummary());
+            onChangeCallback(null, { status: 'Error', message: error.message });
         }
     }
 
@@ -66,7 +70,8 @@ const AutoCreateSummary = ({ accessToken, onChangeCallback }) => {
                 <Text mb={'10px'} fontSize={'xs'} color={'gray.500'} pt={'5px'} mt={0} >Also, you can use our ASSISTANT to create a simple summary based on your data.</Text>
                 <Box>
                     <ToolTip label={!skillsData ? 'add your skills to enable it' : 'auto create summary text'}>
-                        <Button leftIcon={<MdOutlineAutoAwesome />} isLoading={loading} isDisabled={!skillsData} size={'xs'} colorScheme='teal' variant={'outline'} onClick={() => onClickHandler()}>Auto Create</Button>
+                        <Button leftIcon={<MdOutlineAutoAwesome />}
+                            isLoading={loading} isDisabled={!skillsData || disabled} size={'xs'} colorScheme='teal' variant={'outline'} onClick={() => onClickHandler()}>Auto Create</Button>
                     </ToolTip>
                 </Box>
             </HStack>

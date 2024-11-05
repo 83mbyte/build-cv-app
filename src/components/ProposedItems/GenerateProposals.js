@@ -7,7 +7,7 @@ import { skillsData } from '@/lib/content-lib';
 
 import { MdOutlineAutoAwesome } from "react-icons/md";
 
-const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) => {
+const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken, disabled }) => {
 
     const [loading, setLoading] = React.useState(false);
 
@@ -41,6 +41,7 @@ const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) =>
                                 variant={'outline'}
                                 onClick={onClickHandler}
                                 isLoading={loading}
+                                isDisabled={disabled}
                                 leftIcon={<MdOutlineAutoAwesome />}
                             >
                                 Generate Skills

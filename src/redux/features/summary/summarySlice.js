@@ -26,7 +26,14 @@ const summarySlice = createSlice({
                     isLoading: action.payload
                 }
             }
-        }
+        },
+        setSummaryErrorMessage: (state, action) => {
+            if (action?.payload?.message) {
+                state.error = action.payload.message;
+            } else {
+                state.error = ''
+            }
+        },
     },
     extraReducers(builder) {
         builder
@@ -54,7 +61,7 @@ const summarySlice = createSlice({
 })
 
 export default summarySlice.reducer;
-export const { inputSummaryUpdate, setIsLoadingAutoSummary } = summarySlice.actions;
+export const { inputSummaryUpdate, setIsLoadingAutoSummary, setSummaryErrorMessage } = summarySlice.actions;
 
 export const getSummary = createAsyncThunk('summary/getSummary', async (obj) => {
     let resp = await dbAPI.getSectionData('summary', obj.userId, obj.accessToken);
