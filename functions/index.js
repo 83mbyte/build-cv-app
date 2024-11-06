@@ -241,20 +241,21 @@ exports.webhookStr = onRequest(
                 throw new Error(respWebhookStr.message)
             } else {
 
-                let userId = respWebhookStr.userId;
-                let paidServiceRef = db.ref(`${process.env.APP_DB_USERS}/${userId}/paidServices/data/`)
-                const pdfRef = paidServiceRef.child('pdf');
-                pdfRef.set({
-                    isAllowed: true,
-                    filesAllowed: 2
-                });
+                if (respWebhookStr.userId && respWebhookStr.message === 'Payment completed') {
+                    let userId = respWebhookStr.userId;
+                    let paidServiceRef = db.ref(`${process.env.APP_DB_USERS}/${userId}/paidServices/data/`)
+                    const pdfRef = paidServiceRef.child('pdf');
+                    pdfRef.set({
+                        isAllowed: true,
+                        filesAllowed: 2
+                    });
+                }
                 return resp.status(200).end();
             }
         } catch (error) {
-
-            return resp.status(500).send(`Unsuccessful transaction.. ${error.message}`);
+            console.log(`Unsuccessful transaction.. ${error.message}`);
+            // return resp.status(500).send(`Unsuccessful transaction.. ${error.message}`);
         }
-
 
         return resp.status(200).end();
     }
