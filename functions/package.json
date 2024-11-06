@@ -15,8 +15,8 @@
   "dependencies": {
     "firebase-admin": "^12.7.0",
     "firebase-functions": "^6.1.0",
-    "openai": "^4.69.0",
-    "stripe": "^17.3.0"
+    "openai": "^4.71.0",
+    "stripe": "^17.3.1"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"
