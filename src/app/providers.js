@@ -1,6 +1,5 @@
 'use client';
 
-import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { Provider } from 'react-redux';
 import store from '@/redux/store';
@@ -84,15 +83,13 @@ const theme = extendTheme({
 
 export function Providers({ children }) {
     return (
-        <CacheProvider>
-            <ChakraProvider theme={theme}>
+        <ChakraProvider theme={theme}>
 
-                <Provider store={store}>
-                    {children}
-                </Provider>
+            <Provider store={store}>
+                {children}
+            </Provider>
 
-            </ChakraProvider>
-        </CacheProvider>
+        </ChakraProvider>
     );
 }
 

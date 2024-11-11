@@ -7,6 +7,7 @@ import { CloseIcon } from '../../Icons/Icon';
 import ToolTip from '../../ToolTip/ToolTip';
 import AddMoreSections from './AddMoreSections';
 import CoverLetterSection from '../CoverLetterDrawer/CoverLetterMenuSection';
+import InterviewMenu from './InterviewMenu';
 
 
 
@@ -32,13 +33,16 @@ const MenuDrawer = ({ onCloseHandler }) => {
                 </HStack>
             </DrawerHeader>
             <DrawerBody borderBottomWidth='1px' p={0}>
-                <Box borderBottomWidth='1px' px={6} pt={3} pb={5} >
+                <Box borderBottomWidth='1px' px={6} pt={3} pb={5}>
 
                     <AddMoreSections />
                 </Box>
-                <Box borderBottomWidth='1px' px={6} pt={3} pb={5} >
+                <Box borderBottomWidth='1px' px={6} pt={3} pb={5}>
 
                     <CoverLetterSection />
+                </Box>
+                <Box borderBottomWidth='1px' px={6} pt={3} pb={5}>
+                    <InterviewMenu />
                 </Box>
 
             </DrawerBody>

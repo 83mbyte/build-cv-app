@@ -15,6 +15,10 @@ const utilitySlice = createSlice({
             isOpen: false,
             type: null
         },
+        interviewDrawer: {
+            isOpen: false,
+            type: null
+        },
         isModifiedContent: {
             status: false,
             sections: []
@@ -44,6 +48,9 @@ const utilitySlice = createSlice({
                 state.coverLettDrawer.type = null;
             }
         }),
+        interviewDrawerIsOpenToggle: (state) => {
+            state.interviewDrawer.isOpen = !state.interviewDrawer.isOpen;
+        },
         setIsModifiedContent: (state, action) => {
             state.isModifiedContent.status = action.payload.status;
             if (!state.isModifiedContent.sections.includes(action.payload.section)) {
@@ -107,7 +114,7 @@ const utilitySlice = createSlice({
 
 
 export default utilitySlice.reducer;
-export const { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, coverLettDrawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd } = utilitySlice.actions;
+export const { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, coverLettDrawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, interviewDrawerIsOpenToggle } = utilitySlice.actions;
 
 export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', async (dataObj) => {
     // put/save data on server..
