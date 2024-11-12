@@ -16,6 +16,7 @@ import userImageSliceReducer from "./features/userImage/userImageSlice";
 import coverLetterSliceReducer from "./features/coverLetter/coverLetterSlice";
 import templatesSliceReducer from "./features/templates/templatesSlice";
 import paidServicesSliceReducer from "./features/paidServices/paidServicesSlice";
+import interviewSliceReducer from "./features/interview/interviewSlice";
 
 export default configureStore({
     reducer: {
@@ -34,6 +35,7 @@ export default configureStore({
         image: userImageSliceReducer,
         cover: coverLetterSliceReducer,
         templates: templatesSliceReducer,
-        paidServices: paidServicesSliceReducer
+        paidServices: paidServicesSliceReducer,
+        interview: interviewSliceReducer
     }
 })
