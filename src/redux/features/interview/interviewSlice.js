@@ -10,7 +10,7 @@ const interviewSlice = createSlice({
         settings: {
             category: '',
             position: '',
-            lang: 'English'
+            language: 'English'
         },
         error: '',
         status: 'idle'
@@ -34,6 +34,9 @@ const interviewSlice = createSlice({
                 state.data.messages = [...state.data.messages, action.payload];
             }
         },
+        interviewMessagesClear: (state) => {
+            state.data.messages = [];
+        },
         interviewConclusionUpdate: (state, action) => {
             if (action?.payload) {
                 state.data.conclusion = action.payload;
@@ -44,4 +47,4 @@ const interviewSlice = createSlice({
 
 
 export default interviewSlice.reducer;
-export const { interviewSettingsUpdate, interviewStatusUpdate, interviewMessagesUpdate, interviewConclusionUpdate } = interviewSlice.actions;
+export const { interviewSettingsUpdate, interviewStatusUpdate, interviewMessagesUpdate, interviewConclusionUpdate, interviewMessagesClear } = interviewSlice.actions;

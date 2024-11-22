@@ -6,7 +6,7 @@ import { animationVariants } from './animationVariants';
 
 const keyId = uid();
 
-const AnimationWrapper = ({ width = 'auto', variant = 'opacity', whileInView = false, showOnce = false, custom = null, children }) => {
+const AnimationWrapper = ({ width = 'auto', height = null, variant = 'opacity', whileInView = false, showOnce = false, custom = null, children }) => {
 
     return (
         <motion.div
@@ -18,7 +18,7 @@ const AnimationWrapper = ({ width = 'auto', variant = 'opacity', whileInView = f
             whileInView={whileInView ? 'animate' : null}
             exit={'exit'}
             viewport={{ once: showOnce, }}
-            style={{ width: width }}
+            style={{ width: width, height: height, }}
         >
             {children}
         </motion.div>

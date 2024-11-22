@@ -1,11 +1,13 @@
-import { Box, VStack, Select, Button, useToast } from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { Box, VStack, Select, Button, useToast, Stack, Text } from '@chakra-ui/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { interviewMessagesUpdate, interviewSettingsUpdate, interviewStatusUpdate } from '@/redux/features/interview/interviewSlice';
+import { functionsAPI } from '@/lib/functionsAPI';
 
 import SectionDescription from '@/components/Dashboard/MainArea/SectionDescription';
 import DashboardInput from '@/components/FormItems/DashboardInputs/DashboardInput';
-import { functionsAPI } from '@/lib/functionsAPI';
+import AnimationWrapper from '@/components/Animation/AnimationWrapper';
 
 const itemsArray = [
     'Accountancy',
@@ -39,7 +41,24 @@ const itemsArray = [
     'Tourism', 'Translation Services'
 ] // move to the top of the component or use useMemo
 
+const LANGUAGES = ['English', 'German', 'French', 'Spanish', 'Russian'];
+const JOB_CATEGORIES = ['',
+    'Agriculture, Food, and Natural Resources',
+    'Architecture and Construction',
+    'Arts, Audio/Video Technology, and Communication',
+    'Business and Finance',
+    'Education and Training',
+    'Government and Public Administration',
+    'Health Science',
+    'Information Technology',
+    'Marketing and PR',
+    'Law, Public Safety, Corrections, and Security',
+    'Science, Technology, Engineering, and Math',
+];
+
+
 const InterviewSetup = ({ startButtonCallback }) => {
+
     const toast = useToast({
         position: 'top-right',
         variant: 'left-accent'
@@ -47,6 +66,7 @@ const InterviewSetup = ({ startButtonCallback }) => {
     const dispatch = useDispatch();
     const position = useSelector(state => state.interview.settings.position);
     const category = useSelector(state => state.interview.settings.category);
+    const language = useSelector(state => state.interview.settings.language);
     const status = useSelector(state => state.interview.status);
 
     const userLogged = useSelector(state => state.auth.auth.data);
@@ -60,7 +80,7 @@ const InterviewSetup = ({ startButtonCallback }) => {
         try {
 
             dispatch(interviewStatusUpdate('loading'));
-            let respFromRequest = await functionsAPI.requestAI('interview', { position, category, firstRequest: true }, userLogged.accessToken);
+            let respFromRequest = await functionsAPI.requestAI('interview', { position, category, language, firstRequest: true }, userLogged.accessToken);
             if (respFromRequest && respFromRequest.status == 'Success') {
 
                 dispatch(interviewMessagesUpdate({ role: 'system', content: respFromRequest.systemPrompt }));
@@ -82,43 +102,67 @@ const InterviewSetup = ({ startButtonCallback }) => {
         }
     }
 
+    const settingsItems = [
+        {
+            labelValue: 'Language',
+            option: <SelectComponent name='language' optionsArray={LANGUAGES} handleInputChange={handleInputChange} />
+        },
+        {
+            labelValue: 'Job Category',
+            option: <SelectComponent name='category' optionsArray={JOB_CATEGORIES} handleInputChange={handleInputChange} />
+        },
+        {
+            labelValue: 'Job Position',
+            option: <DashboardInput inputValue={position} onChangeCallback={handleInputChange} name={'position'} />
+        }
+    ]
+
     return (
-        <VStack bg='' h='100%' w='100%' p={1} spacing={[5, 3]} justifyContent={'space-between'}>
+        <AnimationWrapper variant='opacity' width={'100%'} height={'100%'}>
+            <VStack bg='' h='100%' w='100%' p={1} spacing={[5, 3]} justifyContent={'space-between'}>
 
-            <VStack spacing={[5, 3]} bg='' w='75%'>
-                <SectionDescription value={`Adjust the following details before start the interview.`} />
-
-                <Box display={'flex'} bg='' flexDirection={['column', 'row']} alignItems={'center'} width={'75%'} mx={'auto'} >
-                    <Box flex={1}>Job Category:</Box>
-                    <Box flex={1}>
-                        <Select onChange={(e) => handleInputChange('category', e.target.value)} _focusVisible={{ 'boxShadow': 'none' }} defaultValue={category || null}>
-                            {/* {
-                            itemsArray.map((item, index) => {
-                                return (
-                                    <option value={item} key={index}>{item}</option>
-                                )
-                            })
-                        } */}
-                            <option value=''> </option>
-                            <option value='Information Technology'>Information Technology</option>
-                            <option value='Marketing and PR'>Marketing and PR</option>
-                            <option value='Education'>Education</option>
-                            <option value='Education_2'>Education_2</option>
-                        </Select>
-                    </Box>
+                <VStack spacing={[5, 3]} bg='' w='75%'>
+                    <SectionDescription value={`Adjust the following details before start the interview.`} />
+                    {
+                        settingsItems.map((elem, index) => {
+                            return (
+                                <SettingsElementStack labelValue={elem.labelValue} option={elem.option} key={index} />
+                            )
+                        })
+                    }
+                </VStack>
+                <Box bg='' display={'flex'} justifyContent={'center'} flexDirection={'row'} w='100%'  >
+                    <Button variant={'solid'} w={['full', 'xs']} colorScheme={'green'} onClick={onClickStartButton} isDisabled={!position || position == '' || category == ''} isLoading={status == 'loading'}>Start</Button>
                 </Box>
-                <Box display={'flex'} bg='' flexDirection={['column', 'row']} alignItems={'center'} width={'75%'} mx={'auto'}>
-                    <Box flex={1}>Job Position:</Box>
-                    <Box flex={1}>
-                        <DashboardInput inputValue={position} onChangeCallback={handleInputChange} name={'position'} />
-                    </Box>
-                </Box>
-            </VStack>
-            <Box bg='' display={'flex'} justifyContent={'center'} flexDirection={'row'} w='100%'  >
-                <Button variant={'solid'} w={['full', 'xs']} colorScheme={'green'} onClick={onClickStartButton} isDisabled={!position || position == '' || category == ''} isLoading={status == 'loading'}>Start</Button>
-            </Box>
-        </VStack >
+            </VStack >
+        </AnimationWrapper>
     )
 }
 
 export default InterviewSetup;
+
+const SettingsElementStack = ({ labelValue, option }) => {
+    return (
+        <Stack direction={['column', 'row']} alignItems={['flex-start', 'center']} bg='' w='100%'>
+            <Box minW={'25%'} bg=''><Text fontSize={['sm', 'md']}>{labelValue}:</Text></Box>
+            <Box flex={1} w='full'>
+                {option}
+            </Box>
+        </Stack>
+    )
+}
+
+const SelectComponent = ({ optionsArray, name, handleInputChange }) => {
+    const options = useMemo(() => {
+        return optionsArray.map((value, index) => <option value={value} key={`${index}_option`}>{value}</option>)
+    }, [optionsArray]);
+
+    return (
+        <Select onChange={(e) => handleInputChange(name, e.target.value)} _focusVisible={{ 'boxShadow': 'none' }} defaultValue={name || null} size={['xs', 'md']}>
+            {
+                options
+            }
+        </Select>
+    )
+}
+

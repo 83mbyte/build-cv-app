@@ -18,7 +18,7 @@ const getDataFromFunctionsEndpoint = async (endPoint, options) => {
 
             let data = await resp.json();
 
-            return { status: data.status, content: data?.content ?? data?.message ?? data?.error }
+            return { status: data.status, content: data?.content ?? data?.message ?? data?.error, systemPrompt: data?.systemPrompt ?? null }
         } else {
 
             throw new Error(`missed response from server`)

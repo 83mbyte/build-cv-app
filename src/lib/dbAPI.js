@@ -143,7 +143,10 @@ const getData = async (url) => {
                 throw new Error(`HTTP error: ${resp.status}`)
             }
         })
-        .catch((error) => (console.log(`Couldn't fetch data.. ${error}`)));
+        .catch((error) => {
+            console.log(`Couldn't fetch data.. ${error}`);
+            return null
+        });
 }
 
 const putData = async (url, data) => {

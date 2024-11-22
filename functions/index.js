@@ -55,8 +55,47 @@ const requestToGPT = async ({ resp, aiKey, query, variant = 'professional' }) =>
         return resp.status(500).json({ message: `${assistReply?.message || 'Internal Server Error.'}`, status: 'Error', code: 500 });
     }
 
-    return resp.status(200).json({ content: assistReply.content[0].message.content, status: 'Success', code: 200 })
+    return resp.status(200).json({ content: assistReply.content[0].message.content, status: 'Success', code: 200, systemPrompt: assistReply.systemPrompt })
 }
+
+exports.interview = onRequest(
+    {
+        // DEV
+        // cors: true,
+
+        // PROD
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+        secrets: ['AIKEY']
+    },
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
+        else {
+            if (req.body) {
+
+                let { accessToken, query } = req.body;
+
+                const isTokenVerified = await verifyToken(accessToken);
+                if (!isTokenVerified || isTokenVerified.status == false) {
+                    return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+                }
+                const aiKey = process.env.AIKEY;
+
+                if (!aiKey || !query) {
+
+                    return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+                }
+                await requestToGPT({ resp, aiKey, query, variant: 'interview' })
+            }
+
+            else {
+                return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+            }
+
+        } //end of else about POST
+    } //end of async(req,resp)
+)
 
 
 exports.generateSkills = onRequest(

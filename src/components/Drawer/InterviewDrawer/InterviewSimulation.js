@@ -1,22 +1,28 @@
-import SectionDescription from '@/components/Dashboard/MainArea/SectionDescription';
-import { IoCheckmarkDone } from "react-icons/io5";
+import { Suspense, lazy } from 'react';
 import {
     Step,
     StepIndicator,
     StepSeparator,
     StepStatus,
     Stepper,
-    useSteps, Box, Heading, VStack, Text, Spinner
+    StepNumber,
+    useSteps, Box, Heading, VStack, Text, HStack,
 } from '@chakra-ui/react';
 
-import InterviewSetup from './InterviewSteps/InterviewSetup';
-import InterviewProcess from './InterviewSteps/InterviewProcess';
-import InterviewConclusion from './InterviewSteps/InterviewConclusion';
+import { IoCheckmarkDone } from "react-icons/io5";
+import { AnimatePresence } from 'framer-motion';
+
+import SectionDescription from '@/components/Dashboard/MainArea/SectionDescription';
+
+const InterviewSetup = lazy(() => import('./InterviewSteps/InterviewSetup'));
+const InterviewProcess = lazy(() => import('./InterviewSteps/InterviewProcess'));
+const InterviewConclusion = lazy(() => import('./InterviewSteps/InterviewConclusion'));
+
 
 const steps = [
-    { title: '', description: 'Setup' },
-    { title: ' ', description: 'Running interview process' },
-    { title: ' ', description: 'Conclusion' },
+    { title: 'Setup', description: '' },
+    { title: 'Interview', description: '' },
+    { title: 'Conclusion', description: '' },
 ]
 
 
@@ -25,8 +31,6 @@ const InterviewSimulation = () => {
         index: 0,
         count: steps.length,
     });
-
-    const activeStepText = steps[activeStep].description;
 
     const toTheNextStep = () => {
         {
@@ -43,35 +47,59 @@ const InterviewSimulation = () => {
                 <SectionDescription value={`Challenge yourself with our AI-driven interview simulation, and receive immediate evaluation to refine your knowledge and skills.`} />
                 <VStack alignItems={'flex-start'} px={[2, 5]} pb={2} >
 
-                    <Stepper index={activeStep} colorScheme='teal' size={'sm'} w='100%'>
+                    <Stepper index={activeStep} colorScheme='teal' size={'sm'} w='100%' mt={3}>
                         {steps.map((step, index) => (
-                            <Step key={index} gap='0'>
-                                <StepIndicator>
-                                    <StepStatus complete={<IoCheckmarkDone />} active={activeStep == 2 ? <IoCheckmarkDone /> : <Spinner color='teal' />} />
-                                </StepIndicator>
-                                <StepSeparator _horizontal={{ ml: '0' }} />
+                            <Step key={index}>
+                                <Box display={'flex'} flexDir={['column']} alignItems={'center'} >
+                                    <StepIndicator >
+                                        <StepStatus
+                                            complete={<IoCheckmarkDone />}
+                                            incomplete={<StepNumber />}
+                                            active={activeStep == 2 ? <IoCheckmarkDone /> : <StepNumber />}
+                                        />
+                                    </StepIndicator>
+
+                                </Box>
+                                <StepSeparator />
                             </Step>
                         ))}
                     </Stepper>
-
-                    <Text><b>{activeStepText}</b></Text>
+                    <HStack width={'100%'} justifyContent={'space-between'}>
+                        {
+                            steps.map((step, index) => {
+                                let align = 'left';
+                                if (index == 1) {
+                                    align = 'center';
+                                }
+                                if (index == 2) {
+                                    align = 'right';
+                                }
+                                return (
+                                    <Text textAlign={align} color={activeStep == index ? 'teal' : '#CBD5E0'} key={index} flex={1} fontSize={'xs'}>{step.title}</Text>
+                                )
+                            })
+                        }
+                    </HStack>
 
 
                 </VStack>
             </Box>
 
-            <Box bg='' flex={1} py={[1, 2]} borderColor={'teal.50'} borderWidth={1} borderRadius={10} overflow={'hidden'}>
+            <Box bg='' flex={1} py={[1, 2]} borderColor={'teal.400'} borderWidth={1} borderRadius={10} overflow={'hidden'}>
 
-                {
-                    activeStep == 0 && <InterviewSetup startButtonCallback={toTheNextStep} />
-                }
-                {
-                    activeStep == 1 && <InterviewProcess toTheNextStep={toTheNextStep} />
-                }
-                {
-                    activeStep == 2 && <InterviewConclusion />
-                }
-
+                <Suspense fallback={<Loading />}>
+                    <AnimatePresence mode='wait'>
+                        {
+                            activeStep == 0 && <InterviewSetup startButtonCallback={toTheNextStep} key={'InterviewSetup'} />
+                        }
+                        {
+                            activeStep == 1 && <InterviewProcess toTheNextStep={toTheNextStep} key={'InterviewProcess'} />
+                        }
+                        {
+                            activeStep == 2 && <InterviewConclusion key={'InterviewConclusion'} />
+                        }
+                    </AnimatePresence>
+                </Suspense>
 
             </Box>
 
@@ -82,4 +110,10 @@ const InterviewSimulation = () => {
 export default InterviewSimulation;
 
 
-
+const Loading = () => {
+    return (
+        <div style={{ display: 'flex', height: '100vh', width: '100%', margin: 1, padding: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <h2>Loading... Please wait.</h2>
+        </div>
+    )
+}
