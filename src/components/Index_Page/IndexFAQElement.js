@@ -12,6 +12,7 @@ const faqData = [
     { q: indexData?.faq?.one?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.one?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
     { q: indexData?.faq?.two?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.two?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
     { q: indexData?.faq?.three?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.three?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
+    { q: indexData?.faq?.four?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.four?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
 ];
 const itemMotion = {
     initial: { opacity: 0, x: 0 },
