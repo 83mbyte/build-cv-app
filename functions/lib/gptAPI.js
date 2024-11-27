@@ -31,7 +31,7 @@ async function createCompletions(openai, data, variant = null,) {
 
         if (data.firstRequest) {
 
-            interviewSystemPrompt = PROMPTS.interviewProcess({ position: data.position, category: data.category, language: data.language });
+            interviewSystemPrompt = PROMPTS.interviewProcess({ position: data.position, category: data.category, language: data.language, difficulty: data.difficulty });
             messagesArray = [interviewSystemPrompt]
         }
         if (data.messages) {

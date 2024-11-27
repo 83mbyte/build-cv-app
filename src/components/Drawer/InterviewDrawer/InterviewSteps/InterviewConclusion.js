@@ -1,10 +1,15 @@
+import { Suspense, lazy } from 'react';
 
-import { Box, Heading, List, ListItem, Spinner, Text, } from '@chakra-ui/react';
+import { Box, CircularProgress, CircularProgressLabel, HStack, Heading, List, ListItem, Spinner, Text, } from '@chakra-ui/react';
 
 import { useSelector } from 'react-redux';
 
+
+
 import SectionDescription from '@/components/Dashboard/MainArea/SectionDescription';
 import AnimationWrapper from '@/components/Animation/AnimationWrapper';
+
+const ScoresChart = lazy(() => import('./ScoresChart'))
 
 const InterviewConclusion = () => {
     const conclusion = useSelector(state => state.interview.data.conclusion);
@@ -22,19 +27,33 @@ const InterviewConclusion = () => {
                             ? <LoadingSpinner />
                             : <List styleType={'none'} spacing={[3, 5]}>
                                 <ListItem >
-                                    <Text px={1}>{conclusion.greetings}</Text>
+                                    <Text px={1}>{conclusion?.greetings || 'missed data'}</Text>
+                                </ListItem>
+                                <ListItem>
+                                    <Heading as={'h2'} size={['sm', 'md']} textAlign={'center'} >Statistics:</Heading>
+                                    {
+                                        conclusion?.statistics &&
+                                        <CircularStats statistics={conclusion.statistics} />
+                                    }
                                 </ListItem>
                                 <ListItem>
                                     <Heading as={'h2'} size={'sm'} textAlign={'center'} >Analysis:</Heading>
-                                    <Text px={1}>{conclusion.analysis}</Text>
+                                    <Text px={1}>{conclusion?.analysis || 'missed data'}</Text>
                                 </ListItem>
                                 <ListItem>
                                     <Heading as={'h2'} size={'sm'} textAlign={'center'} >Conclusion:</Heading>
-                                    <Text px={1}>{conclusion.conclusion}</Text>
+                                    <Text px={1}>{conclusion?.conclusion || 'missed data'}</Text>
                                 </ListItem>
                                 <ListItem>
                                     <Heading as={'h2'} size={'sm'} textAlign={'center'} >Recommendations:</Heading>
-                                    <Text px={1}>{conclusion.recommendations}</Text>
+                                    <Text px={1}>{conclusion?.recommendations || 'missed data'}</Text>
+                                </ListItem>
+                                <ListItem>
+                                    <Heading as={'h2'} size={'sm'} textAlign={'center'} >User scores for each question:</Heading>
+                                    <Suspense fallback={<LoadingSpinner />}>
+                                        <ScoresChart details={conclusion?.details || null} />
+                                    </Suspense>
+
                                 </ListItem>
                             </List>
                     }
@@ -54,3 +73,28 @@ const LoadingSpinner = () => {
         </Box>
     )
 }
+
+
+const CircularStats = ({ statistics }) => {
+    if (!statistics) {
+        return null
+    }
+    return (
+        <HStack justifyContent={'space-around'}>
+            <Box display={'flex'} w='full' alignItems={'center'} bg='' flexDirection={'column'}>
+                <Text fontSize={['sm', 'xs']}>Acceptable answers</Text>
+                <CircularProgress value={statistics.correct} color='green.400' size={'90px'}>
+                    <CircularProgressLabel>{statistics.correct}%</CircularProgressLabel>
+                </CircularProgress>
+            </Box>
+            <Box display={'flex'} w='full' alignItems={'center'} bg='' flexDirection={'column'}>
+                <Text fontSize={['sm', 'xs']}>Unacceptable answers</Text>
+                <CircularProgress value={statistics.incorrect} color='red.500' size={'90px'}>
+                    <CircularProgressLabel>{statistics.incorrect}%</CircularProgressLabel>
+                </CircularProgress>
+            </Box>
+        </HStack>
+    )
+}
+
+

@@ -10,7 +10,8 @@ const interviewSlice = createSlice({
         settings: {
             category: '',
             position: '',
-            language: 'English'
+            language: 'English',
+            difficulty: 'Competent level',
         },
         error: '',
         status: 'idle'

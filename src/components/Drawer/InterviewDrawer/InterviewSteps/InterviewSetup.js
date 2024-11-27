@@ -56,6 +56,8 @@ const JOB_CATEGORIES = ['',
     'Science, Technology, Engineering, and Math',
 ];
 
+const DIFFICULTY = ['Entry level', 'Competent level', 'Expert Level']
+
 
 const InterviewSetup = ({ startButtonCallback }) => {
 
@@ -67,6 +69,7 @@ const InterviewSetup = ({ startButtonCallback }) => {
     const position = useSelector(state => state.interview.settings.position);
     const category = useSelector(state => state.interview.settings.category);
     const language = useSelector(state => state.interview.settings.language);
+    const difficulty = useSelector(state => state.interview.settings.difficulty);
     const status = useSelector(state => state.interview.status);
 
     const userLogged = useSelector(state => state.auth.auth.data);
@@ -80,7 +83,7 @@ const InterviewSetup = ({ startButtonCallback }) => {
         try {
 
             dispatch(interviewStatusUpdate('loading'));
-            let respFromRequest = await functionsAPI.requestAI('interview', { position, category, language, firstRequest: true }, userLogged.accessToken);
+            let respFromRequest = await functionsAPI.requestAI('interview', { position, category, language, difficulty, firstRequest: true }, userLogged.accessToken);
             if (respFromRequest && respFromRequest.status == 'Success') {
 
                 dispatch(interviewMessagesUpdate({ role: 'system', content: respFromRequest.systemPrompt }));
@@ -105,11 +108,15 @@ const InterviewSetup = ({ startButtonCallback }) => {
     const settingsItems = [
         {
             labelValue: 'Language',
-            option: <SelectComponent name='language' optionsArray={LANGUAGES} handleInputChange={handleInputChange} />
+            option: <SelectComponent name='language' defaultValue={language} optionsArray={LANGUAGES} handleInputChange={handleInputChange} />
+        },
+        {
+            labelValue: 'Difficulty',
+            option: <SelectComponent name='difficulty' defaultValue={difficulty} optionsArray={DIFFICULTY} handleInputChange={handleInputChange} />
         },
         {
             labelValue: 'Job Category',
-            option: <SelectComponent name='category' optionsArray={JOB_CATEGORIES} handleInputChange={handleInputChange} />
+            option: <SelectComponent name='category' defaultValue={category} optionsArray={JOB_CATEGORIES} handleInputChange={handleInputChange} />
         },
         {
             labelValue: 'Job Position',
@@ -152,13 +159,13 @@ const SettingsElementStack = ({ labelValue, option }) => {
     )
 }
 
-const SelectComponent = ({ optionsArray, name, handleInputChange }) => {
+const SelectComponent = ({ optionsArray, name, defaultValue, handleInputChange }) => {
     const options = useMemo(() => {
         return optionsArray.map((value, index) => <option value={value} key={`${index}_option`}>{value}</option>)
     }, [optionsArray]);
 
     return (
-        <Select onChange={(e) => handleInputChange(name, e.target.value)} _focusVisible={{ 'boxShadow': 'none' }} defaultValue={name || null} size={['xs', 'md']}>
+        <Select onChange={(e) => handleInputChange(name, e.target.value)} _focusVisible={{ 'boxShadow': 'none' }} defaultValue={defaultValue || null} size={['xs', 'md']}>
             {
                 options
             }
