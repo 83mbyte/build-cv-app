@@ -55,6 +55,7 @@ const JOB_CATEGORIES = ['',
     'Law, Public Safety, Corrections, and Security',
     'Science, Technology, Engineering, and Math',
 ];
+const TOTAL_QUESTIONS = [3, 7, 10, 15];
 
 const DIFFICULTY = ['Entry level', 'Competent level', 'Expert Level']
 
@@ -70,6 +71,7 @@ const InterviewSetup = ({ startButtonCallback }) => {
     const category = useSelector(state => state.interview.settings.category);
     const language = useSelector(state => state.interview.settings.language);
     const difficulty = useSelector(state => state.interview.settings.difficulty);
+    const totalQuestions = useSelector(state => state.interview.settings.totalQuestions);
     const status = useSelector(state => state.interview.status);
 
     const userLogged = useSelector(state => state.auth.auth.data);
@@ -83,7 +85,7 @@ const InterviewSetup = ({ startButtonCallback }) => {
         try {
 
             dispatch(interviewStatusUpdate('loading'));
-            let respFromRequest = await functionsAPI.requestAI('interview', { position, category, language, difficulty, firstRequest: true }, userLogged.accessToken);
+            let respFromRequest = await functionsAPI.requestAI('interview', { position, category, language, difficulty, totalQuestions, firstRequest: true }, userLogged.accessToken);
             if (respFromRequest && respFromRequest.status == 'Success') {
 
                 dispatch(interviewMessagesUpdate({ role: 'system', content: respFromRequest.systemPrompt }));
@@ -113,6 +115,10 @@ const InterviewSetup = ({ startButtonCallback }) => {
         {
             labelValue: 'Difficulty',
             option: <SelectComponent name='difficulty' defaultValue={difficulty} optionsArray={DIFFICULTY} handleInputChange={handleInputChange} />
+        },
+        {
+            labelValue: 'Total Questions',
+            option: <SelectComponent name='totalQuestions' defaultValue={totalQuestions} optionsArray={TOTAL_QUESTIONS} handleInputChange={handleInputChange} />
         },
         {
             labelValue: 'Job Category',

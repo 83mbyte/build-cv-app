@@ -12,6 +12,7 @@ const interviewSlice = createSlice({
             position: '',
             language: 'English',
             difficulty: 'Competent level',
+            totalQuestions: 7,
         },
         error: '',
         status: 'idle'
