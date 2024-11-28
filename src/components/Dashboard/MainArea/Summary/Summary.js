@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { summaryData } from '@/lib/content-lib';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getSummary, inputSummaryUpdate, setSummaryErrorMessage } from '@/redux/features/summary/summarySlice';

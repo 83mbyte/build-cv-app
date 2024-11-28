@@ -95,7 +95,7 @@ const LinksForm = ({ data, addItem, removeItem, onChangeHandler }) => {
                     data.map((elem, index) => {
                         return (
                             <AccordionElem key={`link_${index}`} title={elem.label} descr={elem.link} removeItem={(e) => removeItem(e, data[index])}>
-                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={3}>
+                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
 
                                     <DashboardInput
                                         labelText={'Label'}

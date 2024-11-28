@@ -18,7 +18,7 @@ import LevelSlider from '@/components/LevelSlider/LevelSlider';
 import DashboardInput from '@/components/FormItems/DashboardInputs/DashboardInput';
 import AddMoreItemBtn from '@/components/AddMoreItemBtn/AddMoreItemBtn';
 import AlertCustom from '@/components/Alert/AlertCustom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 
 const Skills = ({ userLogged }) => {
     // redux state data
@@ -160,7 +160,7 @@ const Skills = ({ userLogged }) => {
                                     removeItem={(e) => removeItem(e, data[index])}
                                     key={`skill_${index}`}
                                 >
-                                    <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'}>
+                                    <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
 
                                         <DashboardInput
                                             labelText={'Skill'}
