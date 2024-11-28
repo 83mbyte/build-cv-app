@@ -1,15 +1,14 @@
 import { Suspense, lazy } from 'react';
 
-import { Box, CircularProgress, CircularProgressLabel, HStack, Heading, List, ListItem, Spinner, Text, } from '@chakra-ui/react';
+import { Box, Heading, List, ListItem, Spinner, Text, } from '@chakra-ui/react';
 
 import { useSelector } from 'react-redux';
-
-
 
 import SectionDescription from '@/components/Dashboard/MainArea/SectionDescription';
 import AnimationWrapper from '@/components/Animation/AnimationWrapper';
 
-const ScoresChart = lazy(() => import('./ScoresChart'))
+const ScoresChart = lazy(() => import('./ScoresChart'));
+const CircularCharts = lazy(() => import('./CircularCharts'));
 
 const InterviewConclusion = () => {
     const conclusion = useSelector(state => state.interview.data.conclusion);
@@ -27,33 +26,62 @@ const InterviewConclusion = () => {
                             ? <LoadingSpinner />
                             : <List styleType={'none'} spacing={[3, 5]}>
                                 <ListItem >
-                                    <Text px={1}>{conclusion?.greetings || 'missed data'}</Text>
+                                    <Text px={1}>{conclusion?.greetings}</Text>
                                 </ListItem>
+
                                 <ListItem>
-                                    <Heading as={'h2'} size={['sm', 'md']} textAlign={'center'} >Statistics:</Heading>
+                                    <Heading as={'h2'} size={'sm'} textAlign={'center'} >Analysis:</Heading>
                                     {
-                                        conclusion?.statistics &&
-                                        <CircularStats statistics={conclusion.statistics} />
+                                        conclusion?.analysis
+                                            ?
+                                            <Text px={1}>{conclusion.analysis}</Text>
+                                            :
+                                            <MissedDataText />
+                                    }
+                                </ListItem>
+
+
+                                <ListItem>
+                                    <Heading as={'h2'} size={'sm'} textAlign={'center'} >Statistics:</Heading>
+                                    {
+                                        conclusion?.details
+                                            ?
+                                            <Suspense fallback={<LoadingSpinner />}>
+                                                <CircularCharts details={conclusion.details} />
+                                            </Suspense>
+                                            : <MissedDataText />
                                     }
                                 </ListItem>
                                 <ListItem>
-                                    <Heading as={'h2'} size={'sm'} textAlign={'center'} >Analysis:</Heading>
-                                    <Text px={1}>{conclusion?.analysis || 'missed data'}</Text>
+                                    <Heading as={'h2'} size={'sm'} textAlign={'center'} >User scores for each question:</Heading>
+                                    {
+                                        conclusion?.details
+                                            ?
+                                            <Suspense fallback={<LoadingSpinner />}>
+                                                <ScoresChart details={conclusion.details || null} />
+                                            </Suspense>
+                                            : <MissedDataText />
+                                    }
+
+
                                 </ListItem>
                                 <ListItem>
                                     <Heading as={'h2'} size={'sm'} textAlign={'center'} >Conclusion:</Heading>
-                                    <Text px={1}>{conclusion?.conclusion || 'missed data'}</Text>
+                                    {
+                                        conclusion?.conclusion
+                                            ?
+                                            <Text px={1}>{conclusion.conclusion}</Text>
+                                            : <MissedDataText />
+                                    }
                                 </ListItem>
                                 <ListItem>
                                     <Heading as={'h2'} size={'sm'} textAlign={'center'} >Recommendations:</Heading>
-                                    <Text px={1}>{conclusion?.recommendations || 'missed data'}</Text>
-                                </ListItem>
-                                <ListItem>
-                                    <Heading as={'h2'} size={'sm'} textAlign={'center'} >User scores for each question:</Heading>
-                                    <Suspense fallback={<LoadingSpinner />}>
-                                        <ScoresChart details={conclusion?.details || null} />
-                                    </Suspense>
-
+                                    {
+                                        conclusion?.recommendations
+                                            ?
+                                            <Text px={1}>{conclusion.recommendations}</Text>
+                                            : <MissedDataText />
+                                    }
                                 </ListItem>
                             </List>
                     }
@@ -68,33 +96,14 @@ export default InterviewConclusion;
 
 const LoadingSpinner = () => {
     return (
-        <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+        <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height='100%'>
             <Spinner color='teal' size='xl' />
         </Box>
     )
 }
 
-
-const CircularStats = ({ statistics }) => {
-    if (!statistics) {
-        return null
-    }
+const MissedDataText = () => {
     return (
-        <HStack justifyContent={'space-around'}>
-            <Box display={'flex'} w='full' alignItems={'center'} bg='' flexDirection={'column'}>
-                <Text fontSize={['sm', 'xs']}>Acceptable answers</Text>
-                <CircularProgress value={statistics.correct} color='green.400' size={'90px'}>
-                    <CircularProgressLabel>{statistics.correct}%</CircularProgressLabel>
-                </CircularProgress>
-            </Box>
-            <Box display={'flex'} w='full' alignItems={'center'} bg='' flexDirection={'column'}>
-                <Text fontSize={['sm', 'xs']}>Unacceptable answers</Text>
-                <CircularProgress value={statistics.incorrect} color='red.500' size={'90px'}>
-                    <CircularProgressLabel>{statistics.incorrect}%</CircularProgressLabel>
-                </CircularProgress>
-            </Box>
-        </HStack>
+        <Text fontSize={'sm'} fontStyle={'italic'} color={'gray.500'}>..missed data</Text>
     )
 }
-
-

@@ -30,15 +30,13 @@ async function createCompletions(openai, data, variant = null,) {
     else if (variant === 'interview' && (data)) {
 
         if (data.firstRequest) {
-
-            interviewSystemPrompt = PROMPTS.interviewProcess({ position: data.position, category: data.category, language: data.language, difficulty: data.difficulty });
+            interviewSystemPrompt = PROMPTS.interviewProcess({ position: data.position, category: data.category, language: data.language, difficulty: data.difficulty, totalQuestions: data.totalQuestions });
             messagesArray = [interviewSystemPrompt]
         }
         if (data.messages) {
             messagesArray = [...data.messages]
         }
         if (data.isFinal && data.messages) {
-            console.log('json??? : ', data.jsonFormat)
             interviewSystemPrompt = PROMPTS.interviewConclusion({ position: data.position, category: data.category, language: data.language });
             messagesArray = [interviewSystemPrompt, ...data.messages]
         }
