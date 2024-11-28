@@ -1,6 +1,6 @@
 'use client'
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from 'motion/react';
 
 import { useSearchParams } from 'next/navigation';
 import { useMemo, useEffect, useState } from 'react';

@@ -2,7 +2,7 @@ import { Box, Button, IconButton } from '@chakra-ui/react';
 import React from 'react';
 import { BsFiletypePdf, BsCart2 } from "react-icons/bs";
 import styles from './PdfBtn.module.css';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';;
 import { animationVariants } from '@/components/Animation/animationVariants';
 // const animationType = {
 //     newspaper: {

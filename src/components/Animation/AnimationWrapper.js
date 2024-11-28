@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';;
 import { uid } from 'uid/single';
 import { animationVariants } from './animationVariants';
 

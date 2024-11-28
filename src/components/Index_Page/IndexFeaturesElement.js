@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Box, Heading, Text, VStack } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 import { IconContext } from "react-icons";
 import { GiPencilRuler, GiPodiumWinner, GiSandsOfTime } from "react-icons/gi";

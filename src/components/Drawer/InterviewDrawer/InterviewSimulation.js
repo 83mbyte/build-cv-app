@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 
 import { IoCheckmarkDone } from "react-icons/io5";
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 
 import SectionDescription from '@/components/Dashboard/MainArea/SectionDescription';
 

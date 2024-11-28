@@ -1,11 +1,14 @@
 'use client'
 
-import { useEffect, lazy, Suspense, Fragment } from 'react';
+import { useEffect, lazy, Suspense, useRef } from 'react';
 import { Box, Container, Spinner, } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAdditionalSections } from '@/redux/features/utility/utilitySlice';
 
+import { useInView } from 'motion/react';;
+
 import AnimationWrapper from '@/components/Animation/AnimationWrapper';
+
 import PersonalDetailsContainer from './PersonalDetails/PersonalDetailsContainer';
 import Summary from './Summary/Summary';
 import Education from './Education/Education';
@@ -25,10 +28,22 @@ const DashboardMainContainer = () => {
     const additionalSections = useSelector(state => state.utility.additionalSections);
 
     const sectionsToShow = {
-        hobbies: <Hobbies userLogged={userLogged} key={'section_hobbies'} />,
-        courses: <Courses userLogged={userLogged} key={'section_courses'} />,
-        references: <References userLogged={userLogged} key={'section_references'} />,
-        languages: <Languages userLogged={userLogged} key={'section_languages'} />
+        defaultSections: [
+            // sections to show  as defaults
+            <PersonalDetailsContainer userLogged={userLogged} />,
+            <Education userLogged={userLogged} />,
+            <Skills userLogged={userLogged} />,
+            <Summary userLogged={userLogged} />,
+            <History userLogged={userLogged} />,
+            <Links userLogged={userLogged} />
+        ],
+        additionalSections: {
+            // additional sections on request
+            hobbies: <Hobbies userLogged={userLogged} key={'section_hobbies'} />,
+            courses: <Courses userLogged={userLogged} key={'section_courses'} />,
+            references: <References userLogged={userLogged} key={'section_references'} />,
+            languages: <Languages userLogged={userLogged} key={'section_languages'} />
+        }
     }
 
     useEffect(() => {
@@ -45,13 +60,17 @@ const DashboardMainContainer = () => {
                         <Spinner color='teal' size='xl' />
                     </Box>
                     : <Box display={'flex'} flexDirection={'column'}>
-                        <PersonalDetailsContainer userLogged={userLogged} />
-                        <Education userLogged={userLogged} />
-                        <Skills userLogged={userLogged} />
-                        <Summary userLogged={userLogged} />
-                        <History userLogged={userLogged} />
-                        <Links userLogged={userLogged} />
+                        {/* default sections */}
+                        {
+                            sectionsToShow.defaultSections.map((section, index) => {
+                                return (
+                                    <LoadingInViewSection key={`section_#${index}`}>
+                                        {section}
+                                    </LoadingInViewSection>
+                                )
+                            })
 
+                        }
 
                         {/* additional sections */}
                         {
@@ -60,11 +79,11 @@ const DashboardMainContainer = () => {
 
                                 return (
                                     // Additional sections  
-                                    <Fragment key={index}>
-                                        <Suspense >
-                                            {sectionsToShow[item]}
+                                    <LoadingInViewSection key={index}>
+                                        <Suspense>
+                                            {sectionsToShow.additionalSections[item]}
                                         </Suspense>
-                                    </Fragment>
+                                    </LoadingInViewSection>
                                 )
                             })
                         }
@@ -98,5 +117,18 @@ const WhiteAreaWrapperAnimated = ({ children }) => {
                 </Container>
             </AnimationWrapper>
         </Box>
+    )
+}
+
+const LoadingInViewSection = ({ children }) => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true });
+
+    return (
+        <div ref={ref} style={{ margin: 0, padding: 0 }}>
+            {
+                isInView ? children : <div style={{ height: '100vh', backgroundColor: '' }}>&nbsp;</div>
+            }
+        </div>
     )
 }

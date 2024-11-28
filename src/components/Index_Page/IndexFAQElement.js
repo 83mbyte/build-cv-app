@@ -2,7 +2,7 @@
 import React from 'react';
 import IndexSectionsWrapper from './IndexSectionsWrapper';
 import { Accordion, AccordionItem, AccordionButton, AccordionPanel, Box, Heading } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import ToolTip from '../ToolTip/ToolTip';
 import { animationVariants } from '../Animation/animationVariants';
 import { ExpandIcon } from '../Icons/Icon';

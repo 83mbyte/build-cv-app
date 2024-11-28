@@ -1,6 +1,6 @@
 import { Box, Button, HStack, Text, VStack } from '@chakra-ui/react';
 import { useRef } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';;
 import { useSelector, useDispatch } from 'react-redux';
 import { setAuthFormError, signUpThunk } from '@/redux/features/auth/authSlice';
 
