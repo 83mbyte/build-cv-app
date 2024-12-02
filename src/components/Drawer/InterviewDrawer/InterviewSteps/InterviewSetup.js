@@ -41,26 +41,28 @@ const itemsArray = [
     'Tourism', 'Translation Services'
 ] // move to the top of the component or use useMemo
 
-const LANGUAGES = ['English', 'German', 'French', 'Spanish', 'Russian'];
-const JOB_CATEGORIES = ['',
-    'Agriculture, Food, and Natural Resources',
-    'Architecture and Construction',
-    'Arts, Audio/Video Technology, and Communication',
-    'Business and Finance',
-    'Education and Training',
-    'Government and Public Administration',
-    'Health Science',
-    'Information Technology',
-    'Marketing and PR',
-    'Law, Public Safety, Corrections, and Security',
-    'Science, Technology, Engineering, and Math',
-];
-const TOTAL_QUESTIONS = [3, 7, 10, 15];
-
-const DIFFICULTY = ['Entry level', 'Competent level', 'Expert Level']
+const INTERVIEW_DEFAULTS = {
+    LANGUAGES: ['English', 'German', 'French', 'Spanish', 'Russian'],
+    JOB_CATEGORIES: ['',
+        'Agriculture, Food, and Natural Resources',
+        'Architecture and Construction',
+        'Arts, Audio/Video Technology, and Communication',
+        'Business and Finance',
+        'Education and Training',
+        'Government and Public Administration',
+        'Health Science',
+        'Information Technology',
+        'Marketing and PR',
+        'Law, Public Safety, Corrections, and Security',
+        'Science, Technology, Engineering, and Math',
+    ],
+    TOTAL_QUESTIONS: [3, 7, 10, 15],
+    DIFFICULTY: ['Entry level', 'Competent level', 'Expert Level']
+}
 
 
 const InterviewSetup = ({ startButtonCallback }) => {
+    const { LANGUAGES, JOB_CATEGORIES, TOTAL_QUESTIONS, DIFFICULTY } = INTERVIEW_DEFAULTS;
 
     const toast = useToast({
         position: 'top-right',
@@ -79,7 +81,6 @@ const InterviewSetup = ({ startButtonCallback }) => {
     const handleInputChange = (name, value) => {
         dispatch(interviewSettingsUpdate({ name, value }))
     }
-
     const onClickStartButton = async () => {
 
         try {
@@ -132,9 +133,9 @@ const InterviewSetup = ({ startButtonCallback }) => {
 
     return (
         <AnimationWrapper variant='opacity' width={'100%'} height={'100%'}>
-            <VStack bg='' h='100%' w='100%' p={1} spacing={[5, 3]} justifyContent={'space-between'}>
+            <VStack bg='' w='100%' p={1} spacing={[5, 3]} justifyContent={'space-between'} overflowY={'scroll'}>
 
-                <VStack spacing={[5, 3]} bg='' w='75%'>
+                <VStack spacing={[3, 3]} bg='' w={['90%', '75%']}>
                     <SectionDescription value={`Adjust the following details before start the interview.`} />
                     {
                         settingsItems.map((elem, index) => {
@@ -144,8 +145,8 @@ const InterviewSetup = ({ startButtonCallback }) => {
                         })
                     }
                 </VStack>
-                <Box bg='' display={'flex'} justifyContent={'center'} flexDirection={'row'} w='100%'  >
-                    <Button variant={'solid'} w={['full', 'xs']} colorScheme={'green'} onClick={onClickStartButton} isDisabled={!position || position == '' || category == ''} isLoading={status == 'loading'}>Start</Button>
+                <Box bg='' display={'flex'} justifyContent={'center'} flexDirection={'row'} w={['90%', '75%']} mb={3}  >
+                    <Button variant={'solid'} w={'100%'} colorScheme={'green'} onClick={onClickStartButton} isDisabled={!position || position == '' || category == ''} isLoading={status == 'loading'}>Start</Button>
                 </Box>
             </VStack >
         </AnimationWrapper>
@@ -157,7 +158,7 @@ export default InterviewSetup;
 const SettingsElementStack = ({ labelValue, option }) => {
     return (
         <Stack direction={['column', 'row']} alignItems={['flex-start', 'center']} bg='' w='100%'>
-            <Box minW={'25%'} bg=''><Text fontSize={['sm', 'md']}>{labelValue}:</Text></Box>
+            <Box minW={'25%'} bg=''><Text fontSize={['xs', 'md']}>{labelValue}:</Text></Box>
             <Box flex={1} w='full'>
                 {option}
             </Box>

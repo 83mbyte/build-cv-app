@@ -3,7 +3,7 @@ import {
     DrawerBody,
     DrawerHeader,
     Box,
-    HStack, Center, Flex, Container
+    HStack, Center, Flex, Container, DrawerFooter
 } from '@chakra-ui/react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import { getCoverLetter, inputCoverUpdate } from '@/redux/features/coverLetter/c
 
 import ToolTip from '@/components/ToolTip/ToolTip';
 import { BackIcon } from '@/components/Icons/Icon';
+import FooterString from '@/components/Footer/FooterString';
 
 
 const CreateCover = lazy(() => import('./CreateCover/CreateCover'));
@@ -43,7 +44,8 @@ const CoverLetterDrawer = () => {
     return (
 
         <>
-            <DrawerHeader borderBottomWidth='1px' py={[2, 4]}>
+            <DrawerHeader borderBottomWidth='1px' py={[1, 2]} w='100%'>
+
 
                 <HStack>
                     <Box bg='' onClick={() => dispatch(coverLettDrawerIsOpenToggle())} >
@@ -86,6 +88,7 @@ const CoverLetterDrawer = () => {
                     </Container>
                 </Flex>
             </DrawerBody>
+            <DrawerFooter bg='white' justifyContent={'center'} py={0.5}><FooterString /></DrawerFooter>
         </>
 
     );

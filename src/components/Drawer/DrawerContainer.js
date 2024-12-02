@@ -1,28 +1,27 @@
-import { Drawer, DrawerContent, DrawerOverlay, Portal } from '@chakra-ui/react';
-import React, { Fragment } from 'react';
+import { Drawer, DrawerContent, DrawerOverlay, Portal, } from '@chakra-ui/react';
 
 const DrawerContainer = ({ keyId, isOpen = false, placement = 'left', size, onCloseHandler, children }) => {
+
     return (
-        <Fragment key={keyId}>
-            <Portal>
-                <Drawer
-                    placement={placement}
-                    autoFocus={false}
-                    preserveScrollBarGap={true}
-                    returnFocusOnClose={false}
-                    size={size}
-                    // isFullHeight={true}
-                    onClose={onCloseHandler}
-                    isOpen={isOpen}
-                    onOverlayClick={() => { }}
-                >
-                    <DrawerOverlay />
-                    <DrawerContent padding={0}>
-                        {children}
-                    </DrawerContent>
-                </Drawer>
-            </Portal>
-        </Fragment>
+
+        <Portal key={keyId}>
+            <Drawer
+                placement={placement}
+                autoFocus={false}
+                preserveScrollBarGap={true}
+                returnFocusOnClose={false}
+                size={size == 'full' ? '100%' : undefined}
+                // isFullHeight={true}
+                onClose={onCloseHandler}
+                isOpen={isOpen}
+                onOverlayClick={() => { }}
+            >
+                <DrawerOverlay />
+                <DrawerContent padding={0}>
+                    {children}
+                </DrawerContent>
+            </Drawer>
+        </Portal>
     );
 };
 

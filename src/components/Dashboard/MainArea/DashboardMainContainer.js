@@ -29,13 +29,13 @@ const DashboardMainContainer = () => {
 
     const sectionsToShow = {
         defaultSections: [
-            // sections to show  as defaults
-            <PersonalDetailsContainer userLogged={userLogged} />,
-            <Education userLogged={userLogged} />,
-            <Skills userLogged={userLogged} />,
-            <Summary userLogged={userLogged} />,
-            <History userLogged={userLogged} />,
-            <Links userLogged={userLogged} />
+            // sections to show as defaults
+            <PersonalDetailsContainer userLogged={userLogged} key={'section_personDetails'} />,
+            <Education userLogged={userLogged} key={'section_education'} />,
+            <Skills userLogged={userLogged} key={'section_skills'} />,
+            <Summary userLogged={userLogged} key={'section_summary'} />,
+            <History userLogged={userLogged} key={'section_history'} />,
+            <Links userLogged={userLogged} key={'section_links'} />
         ],
         additionalSections: {
             // additional sections on request
@@ -62,11 +62,9 @@ const DashboardMainContainer = () => {
                     : <Box display={'flex'} flexDirection={'column'}>
                         {/* default sections */}
                         {
-                            sectionsToShow.defaultSections.map((section, index) => {
+                            sectionsToShow.defaultSections.map((section,) => {
                                 return (
-                                    <LoadingInViewSection key={`section_#${index}`}>
-                                        {section}
-                                    </LoadingInViewSection>
+                                    section
                                 )
                             })
 

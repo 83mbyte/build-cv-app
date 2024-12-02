@@ -85,22 +85,23 @@ const InterviewSimulation = () => {
                 </VStack>
             </Box>
 
-            <Box bg='' flex={1} py={[1, 2]} borderColor={'teal.400'} borderWidth={1} borderRadius={10} overflow={'hidden'}>
+            <Box bg='white' flex={1} py={[2, 2]} borderColor={'teal.400'} borderWidth={1} borderRadius={10} overflow={'hidden'}>
+                <Box bg='' my={1} overflow={'scroll'} h='100%'>
 
-                <Suspense fallback={<Loading />}>
-                    <AnimatePresence mode='wait'>
-                        {
-                            activeStep == 0 && <InterviewSetup startButtonCallback={toTheNextStep} key={'InterviewSetup'} />
-                        }
-                        {
-                            activeStep == 1 && <InterviewProcess toTheNextStep={toTheNextStep} key={'InterviewProcess'} />
-                        }
-                        {
-                            activeStep == 2 && <InterviewConclusion key={'InterviewConclusion'} />
-                        }
-                    </AnimatePresence>
-                </Suspense>
-
+                    <Suspense fallback={<Loading />}>
+                        <AnimatePresence mode='wait'>
+                            {
+                                activeStep == 0 && <InterviewSetup startButtonCallback={toTheNextStep} key={'InterviewSetup'} />
+                            }
+                            {
+                                activeStep == 1 && <InterviewProcess toTheNextStep={toTheNextStep} key={'InterviewProcess'} />
+                            }
+                            {
+                                activeStep == 2 && <InterviewConclusion key={'InterviewConclusion'} />
+                            }
+                        </AnimatePresence>
+                    </Suspense>
+                </Box>
             </Box>
 
         </Box >

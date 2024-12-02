@@ -12,6 +12,7 @@ import { BackIcon } from '@/components/Icons/Icon';
 import ToolTip from '@/components/ToolTip/ToolTip';
 import TemplateSelection from '../../ResumeTemplates/TemplateSelection';
 import TemplateDocumentView from '@/components/ResumeTemplates/TemplateDocumentView';
+import FooterString from '@/components/Footer/FooterString';
 
 
 const PreviewDrawer = ({ onCloseHandler }) => {
@@ -52,9 +53,7 @@ const PreviewDrawer = ({ onCloseHandler }) => {
                     </Box>
                 </Box>
             </DrawerBody>
-            <DrawerFooter bg='' py={0}  >
-
-            </DrawerFooter>
+            <DrawerFooter bg='gray.200' justifyContent={'center'} py={0.5}><FooterString /></DrawerFooter>
         </>
     );
 };

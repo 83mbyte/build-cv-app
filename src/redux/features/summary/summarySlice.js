@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const summarySlice = createSlice({
     name: 'summary',
     initialState: {
-        data: { value: 'initState' },
+        data: { value: '' },
         __serv: { isSectionVisible: true, isLoading: true },
         status: 'idle',
         error: ''

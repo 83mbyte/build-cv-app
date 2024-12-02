@@ -40,7 +40,7 @@ const theme = extendTheme({
 
                 padding: 0,
                 margin: 0,
-                minHeight: '100vh',
+                // minHeight: '100%',
                 // overflow: 'scroll',
                 //height: '100%'
             }
