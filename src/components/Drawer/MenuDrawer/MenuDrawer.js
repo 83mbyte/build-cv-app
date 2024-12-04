@@ -8,7 +8,7 @@ import ToolTip from '../../ToolTip/ToolTip';
 import AddMoreSections from './AddMoreSections';
 import CoverLetterSection from '../CoverLetterDrawer/CoverLetterMenuSection';
 import InterviewMenu from './InterviewMenu';
-
+import BalanceSection from './BalanceSection';
 
 
 const MenuDrawer = ({ onCloseHandler }) => {
@@ -44,6 +44,10 @@ const MenuDrawer = ({ onCloseHandler }) => {
                 <Box borderBottomWidth='1px' px={6} pt={3} pb={5}>
                     <InterviewMenu />
                 </Box>
+                <Box borderBottomWidth='0px' px={6} pt={3} pb={5}>
+                    <BalanceSection />
+                </Box>
+
 
             </DrawerBody>
             <DrawerFooter>

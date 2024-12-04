@@ -76,41 +76,23 @@ const TemplateDocumentView = () => {
                     // 'PDF created'
 
                     dispatch(setFilesAllowed(-1));
-
-                    if (allowedPdf.filesAllowed == 0) {
-
-                        dispatch(putDataOnServerThunk(
-                            {
-                                user: userLogged.userId,
-                                token: userLogged.accessToken,
-                                section: 'paidServices',
+                    dispatch(putDataOnServerThunk(
+                        {
+                            user: userLogged.userId,
+                            token: userLogged.accessToken,
+                            section: 'paidServices',
+                            data: {
                                 data: {
-                                    data: {
-                                        ...paidServicesData,
-                                        pdf: {
-                                            isAllowed: false,
-                                            filesAllowed: allowedPdf.filesAllowed
-                                        }
+                                    ...paidServicesData,
+                                    pdf: {
+                                        isAllowed: (allowedPdf.filesAllowed - 1 !== 0) ? true : false,
+                                        filesAllowed: allowedPdf.filesAllowed - 1
                                     }
                                 }
                             }
-                        ))
-                    } else {
+                        }
+                    ))
 
-                        dispatch(putDataOnServerThunk(
-                            {
-                                user: userLogged.userId,
-                                token: userLogged.accessToken,
-                                section: 'paidServices',
-                                data: {
-                                    data: {
-                                        ...paidServicesData,
-                                        pdf: allowedPdf
-                                    }
-                                }
-                            }
-                        ))
-                    }
 
                 },
                 () => { console.log('something wrong..') });
@@ -119,16 +101,22 @@ const TemplateDocumentView = () => {
     const createPayment = async () => {
 
         const createCheckoutData = async (resolve, reject) => {
-            let data = await functionsAPI.callFunction('createCheckoutSession', userLogged.accessToken);
-            if (!data || data.status !== 'Success') {
+            try {
+                let data = await functionsAPI.callFunction('createCheckoutSession', userLogged.accessToken);
+                if (!data || data.status !== 'Success') {
 
+                    reject({ timerTimeout: timerTimeout.current });
+                } else {
+                    setStatusPaidServices({ status: 'idle' });
+                    resolve({
+                        timerTimeout: timerTimeout.current,
+                        data: data
+                    })
+                }
+
+            } catch (error) {
+                // console.log('error: ', error.message)
                 reject({ timerTimeout: timerTimeout.current });
-            } else {
-                setStatusPaidServices({ status: 'idle' });
-                resolve({
-                    timerTimeout: timerTimeout.current,
-                    data: data
-                })
             }
         }
 

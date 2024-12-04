@@ -16,11 +16,12 @@ const paidServices = createSlice({
     },
     reducers: {
         setFilesAllowed: (state, action) => {
-            if (state.data.pdf.filesAllowed > 0) {
-                state.data.pdf.filesAllowed = state.data.pdf.filesAllowed + action.payload;
-            } else {
+            if (state.data.pdf.filesAllowed + action.payload <= 0) {
+
                 state.data.pdf.isAllowed = false;
             }
+
+            state.data.pdf.filesAllowed = state.data.pdf.filesAllowed + action.payload;
         },
         // resetAllowedPdf: (state) => {
         //     state.data.pdf.isAllowed = true;

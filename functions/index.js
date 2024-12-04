@@ -286,7 +286,7 @@ exports.webhookStr = onRequest(
                     const pdfRef = paidServiceRef.child('pdf');
                     pdfRef.set({
                         isAllowed: true,
-                        filesAllowed: 2
+                        filesAllowed: 3
                     });
                 }
                 return resp.status(200).end();

@@ -5,7 +5,7 @@ const coverLetterSlice = createSlice({
     name: 'coverLetter',
     initialState: {
         data: {
-            value: 'initState CoverLetter',
+            value: '',
             jobTitle: '',
             company: '',
             hiringManager: ''
