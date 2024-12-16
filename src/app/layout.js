@@ -2,15 +2,30 @@
 import { GoogleTagManager } from "@next/third-parties/google";
 
 import { Providers } from "./providers";
+import { indexData } from "@/lib/content-lib";
 
 const APP_TITLE = process.env.NEXT_PUBLIC_APP_NAME;
-const APP_DESCRIPTION = 'Create your resume, choose between various resume templates. Write your professional resume in 5 minutes.';
+const APP_NAME_FULL = process.env.NEXT_PUBLIC_APP_NAME_FULL;
 
 export const metadata = {
-  title: APP_TITLE,
-  description: `${APP_TITLE} App - The best online resume maker.`,
-  description: `${APP_DESCRIPTION}`,
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_DOMAIN),
+  title: `${APP_TITLE} - ${indexData.app_title_descr || 'Lorem ipsum dolor sit.'}`,
+  description: `${APP_TITLE} App -  ${indexData?.description || 'Lorem ipsum dolor sit.'}`,
+  keywords: indexData.keywords ?? `Lorem, ipsum`,
+
+  alternates: {
+    canonical: './',
+  }
 };
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  // Also supported by less commonly used
+  // interactiveWidget: 'resizes-visual',
+}
 
 export default function RootLayout({ children }) {
 
