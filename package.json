@@ -19,7 +19,7 @@
     "html-to-image": "^1.11.11",
     "html2pdf.js": "^0.10.2",
     "isomorphic-dompurify": "^2.19.0",
-    "motion": "^11.14.4",
+    "motion": "^11.15.0",
     "next": "14.2.10",
     "react": "^18",
     "react-apexcharts": "^1.7.0",
