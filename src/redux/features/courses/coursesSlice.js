@@ -1,13 +1,11 @@
+import { dbAPI } from "@/lib/dbAPI";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
-
 const DATA_TEMPLATE_OBJECT = {
     course: '',
     institution: '',
     period: '',
     cert: ''
-}
-
+};
 
 const coursesSlice = createSlice({
     name: 'courses',
@@ -49,7 +47,7 @@ const coursesSlice = createSlice({
                 }
             })
     }
-})
+});
 
 
 export default coursesSlice.reducer;

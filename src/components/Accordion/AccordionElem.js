@@ -1,12 +1,13 @@
-import React from 'react';
+
 import {
     AccordionItem,
     AccordionButton,
     AccordionPanel,
     Box, Flex,
 } from '@chakra-ui/react';
-import ToolTip from '../Tooltip/ToolTip';
+
 import { ExpandIcon, RemoveIcon } from '../Icons/Icon';
+import ToolTip from '../ToolTip/ToolTip';
 
 const AccordionElem = ({ index, title, descr = null, removeItem, children }) => {
     const capitalizeString = (str) => {
@@ -22,7 +23,7 @@ const AccordionElem = ({ index, title, descr = null, removeItem, children }) => 
             borderColor={'gray.200'}
             borderRadius={"5px"}
             mb={4}
-            mx={2}
+            mx={0}
         >
             {
                 ({ isExpanded }) => (
@@ -66,7 +67,7 @@ const AccordionElem = ({ index, title, descr = null, removeItem, children }) => 
                                 </Flex>
                             </AccordionButton>
                         </h2>
-                        <AccordionPanel pb={4}>
+                        <AccordionPanel py={4}>
 
                             {children}
 

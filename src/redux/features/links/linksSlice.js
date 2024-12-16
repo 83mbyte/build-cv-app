@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
+import { dbAPI } from "@/lib/dbAPI";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const DATA_TEMPLATE_OBJECT = {
     label: '',
@@ -57,9 +57,9 @@ const linksSlice = createSlice({
     }
 })
 
-
 export default linksSlice.reducer;
 export const { inputLinksUpdate, removeLinksItem, addLinksItem } = linksSlice.actions;
+
 
 export const getLinks = createAsyncThunk('links/getLinks', async (obj) => {
     let resp = await dbAPI.getSectionData('links', obj.userId, obj.accessToken);

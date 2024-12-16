@@ -1,5 +1,5 @@
 import { Box, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 const changeColor = (val) => {
     switch (val) {
         case 1:
@@ -21,8 +21,8 @@ const LevelSlider = ({ defValue, levelLabel, onChangeCallback, isDisabled = fals
     const [color, setColor] = useState(changeColor(defValue));
 
     return (
-        <Box px={3}>
-            <Text color={'gray.500'} px={3} fontSize="sm"  >Level:  <Text as={'span'} color={color}>{levelLabel}</Text></Text>
+        <Box px={[0, 3]} pt={[3, 0]}>
+            <Text color={'gray.500'} px={3} fontSize={['2xs', 'sm']}  >Skill:  <Text as={'span'} color={color}>{levelLabel}</Text></Text>
             <Box>
                 <Slider
                     min={1}

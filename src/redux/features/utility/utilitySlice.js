@@ -1,21 +1,23 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { authAPI, dbAPI } from "../../../api/api";
+import { dbAPI } from "@/lib/dbAPI";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 
 const utilitySlice = createSlice({
     name: 'utility',
     initialState: {
-        auth: {
-            data: null,
-            status: '',
-            error: '',
-            successMsg: ''
-        },
-        drawer: {
+        menuDrawer: {
             isOpen: false
         },
         previewDrawer: {
             isOpen: false,
-            status: 'idle'
+        },
+        coverLettDrawer: {
+            isOpen: false,
+            type: null
+        },
+        interviewDrawer: {
+            isOpen: false,
+            type: null
         },
         isModifiedContent: {
             status: false,
@@ -23,101 +25,45 @@ const utilitySlice = createSlice({
         },
         additionalSections: {
             data: [],
+            modified: false,
             status: 'idle',
             error: ''
         }
+
     },
     reducers: {
-        additionalSectionAdd: (state, action) => {
-            state.additionalSections.data = [...state.additionalSections.data, action.payload];
-        },
-
-        clearAuthError: (state) => {
-            state.auth.error = '';
-            state.auth.status = '';
-            state.auth.successMsg = '';
-        },
-        addLoggedUser: (state, action) => {
-            state.auth.status = 'ready';
-            state.auth.data = action.payload;
-        },
-        drawerIsOpenToggle: (state) => {
-            state.drawer.isOpen = !state.drawer.isOpen;
+        menuDrawerIsOpenToggle: (state) => {
+            state.menuDrawer.isOpen = !state.menuDrawer.isOpen;
         },
         previewDrawerIsOpenToggle: (state) => {
-            state.previewDrawer.isOpen = !state.previewDrawer.isOpen;
-
+            state.previewDrawer.isOpen = !state.previewDrawer.isOpen
         },
-        setPreviewDrawerStatus: (state, action) => {
-            if (action.payload !== null && action.payload !== undefined) {
-                state.previewDrawer.status = action.payload;
+        coverLettDrawerIsOpenToggle: ((state, action) => {
+            if (action?.payload) {
+                state.coverLettDrawer.isOpen = true;
+                state.coverLettDrawer.type = action.payload.type;
+
+            } else {
+                state.coverLettDrawer.isOpen = false;
+                state.coverLettDrawer.type = null;
             }
+        }),
+        interviewDrawerIsOpenToggle: (state) => {
+            state.interviewDrawer.isOpen = !state.interviewDrawer.isOpen;
         },
-
         setIsModifiedContent: (state, action) => {
             state.isModifiedContent.status = action.payload.status;
             if (!state.isModifiedContent.sections.includes(action.payload.section)) {
                 state.isModifiedContent.sections = [...state.isModifiedContent.sections, action.payload.section]
             }
         },
-
+        additionalSectionAdd: (state, action) => {
+            state.additionalSections.data = [...state.additionalSections.data, action.payload];
+            state.additionalSections.modified = true;
+        },
     },
     extraReducers(builder) {
         builder
-            .addCase(signUpThunk.pending, (state) => {
-                state.auth.status = 'loading';
-            })
-            .addCase(signUpThunk.rejected, (state, action) => {
-                state.auth.status = 'failed';
-                state.auth.error = action.error.message;
-            })
-            .addCase(signUpThunk.fulfilled, (state, action) => {
-                state.auth.status = 'ready';
-                if (action.payload) {
-                    switch (action.payload.message) {
-                        case 'verify':
-                            state.auth.error = '';
-                            state.auth.successMsg = 'Thank you. You need to verify your email address to complete registration. Please follow an activation link we sent you.';
-                            break;
-
-                        default:
-                            state.auth.error = 'We are unable to register your account. Possible reason: ' + action.payload.message;
-                            state.auth.successMsg = '';
-                            break;
-                    }
-                }
-            })
-
-            .addCase(logInThunk.pending, (state) => {
-                state.auth.status = 'loading';
-            })
-            .addCase(logInThunk.rejected, (state, action) => {
-                state.auth.status = 'failed';
-                state.auth.error = action.error.message;
-            })
-            .addCase(logInThunk.fulfilled, (state, action) => {
-                state.auth.status = 'ready';
-                if (action.payload) {
-                    if (action.payload.data) {
-                        state.auth.data = action.payload.data;
-                        state.auth.error = '';
-                    } else {
-                        state.auth.data = null;
-                        switch (action.payload.message) {
-                            case 'not verified':
-                                state.auth.error = 'You need to verify your email address. Please follow a verification link we sent you.';
-                                break;
-                            case 'wrong credentials':
-                                state.auth.error = 'There was an error processing your request. Check your Email/Password.';
-                                break;
-                            default:
-                                state.auth.error = action.payload.message;
-                                break;
-                        }
-                    }
-
-                }
-            })
             .addCase(putDataOnServerThunk.fulfilled, (state, action) => {
                 if (action.payload !== null) {
                     let index = state.isModifiedContent.sections.indexOf(action.payload);
@@ -126,31 +72,6 @@ const utilitySlice = createSlice({
                         if (state.isModifiedContent.sections.length < 1) {
                             state.isModifiedContent.status = false
                         }
-                    }
-                }
-            })
-
-            .addCase(authLogout.pending, (state) => {
-                state.auth.status = 'loading';
-            })
-            .addCase(authLogout.rejected, (state, action) => {
-                state.auth.status = 'failed'
-                state.auth.error = action.error.message;
-            })
-            .addCase(authLogout.fulfilled, (state, action) => {
-                state.auth.status = 'ready';
-                if (action.payload) {
-                    switch (action.payload.message) {
-                        case 'logged out':
-                            state.auth.error = '';
-                            state.auth.successMsg = ''
-                            state.auth.data = null;
-                            break;
-
-                        default:
-                            state.auth.error = 'Logout error. Possible reason: ' + action.payload.message;
-                            state.auth.successMsg = '';
-                            break;
                     }
                 }
             })
@@ -168,6 +89,7 @@ const utilitySlice = createSlice({
                 state.additionalSections.status = 'ready';
                 if (action.payload !== null) {
                     state.additionalSections.data = action.payload;
+                    state.additionalSections.modified = false;
                 }
             })
 
@@ -186,83 +108,16 @@ const utilitySlice = createSlice({
                     state.additionalSections.data = action.payload;
                 }
             })
-
-            .addCase(signInGoogleThunk.pending, (state) => {
-                state.auth.status = 'loading';
-            })
-            .addCase(signInGoogleThunk.rejected, (state, action) => {
-                state.auth.status = 'failed';
-                state.auth.error = action.error.message;
-            })
-            .addCase(signInGoogleThunk.fulfilled, (state, action) => {
-                state.auth.status = 'ready';
-                if (action?.payload) {
-                    if (action.payload.data) {
-                        state.auth.data = action.payload.data;
-                        state.auth.error = '';
-                    } else {
-                        state.auth.data = null;
-                        switch (action.payload.message) {
-                            case 'not verified':
-                                state.auth.error = 'You need to verify your email address. Please follow a verification link we sent you.';
-                                break;
-                            case 'wrong credentials':
-                                state.auth.error = 'There was an error processing your request. Check your Email/Password.';
-                                break;
-                            default:
-                                state.auth.error = action.payload.message;
-                                break;
-                        }
-                    }
-
-                }
-            })
     }
+
 })
 
-export const { clearAuthError, addLoggedUser, drawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, previewDrawerIsOpenToggle, setPreviewDrawerStatus } = utilitySlice.actions;
 
 export default utilitySlice.reducer;
-
-export const signUpThunk = createAsyncThunk('utilitySlice/signUpUser', async (dataObj) => {
-    let resp = await authAPI.signUp(dataObj.email, dataObj.pass, dataObj.firstName, dataObj.lastName);
-    if (resp) {
-        return resp
-    } else {
-        return null
-    }
-})
-
-export const logInThunk = createAsyncThunk('utility/logInThunk', async (dataObj) => {
-    let resp = await authAPI.logIn(dataObj.email, dataObj.pass);
-    if (resp) {
-        return resp;
-    } else {
-        return null
-    }
-})
-
-export const signInGoogleThunk = createAsyncThunk('utility/signInGoogleThunk', async (initial = true) => {
-    let resp = await authAPI.signInGoogle(initial);
-    if (resp) {
-        return resp;
-    } else {
-        return null
-    }
-})
-
-
-
-export const authLogout = createAsyncThunk('utility/authLogout', async () => {
-    let resp = await authAPI.logOut();
-    if (resp) {
-        return resp;
-    } else {
-        return null
-    }
-})
+export const { menuDrawerIsOpenToggle, previewDrawerIsOpenToggle, coverLettDrawerIsOpenToggle, setIsModifiedContent, additionalSectionAdd, interviewDrawerIsOpenToggle } = utilitySlice.actions;
 
 export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', async (dataObj) => {
+    // put/save data on server..
     let resp = await dbAPI.putDataToSection(dataObj.user, dataObj.section, dataObj.token, dataObj.data);
 
     if (resp.ok && resp.status === 200) {
@@ -270,7 +125,7 @@ export const putDataOnServerThunk = createAsyncThunk('utility/putDataOnServer', 
     } else {
         return null
     }
-})
+});
 
 export const putAdditionalSectionsOnServerThunk = createAsyncThunk('utility/putAdditionalSectionsOnServerThunk', async (dataObj) => {
     let resp = await dbAPI.putDataToSection(dataObj.user, 'utility/additionalSections/data', dataObj.token, dataObj.data,);
@@ -280,9 +135,9 @@ export const putAdditionalSectionsOnServerThunk = createAsyncThunk('utility/putA
     } else {
         return null
     }
-})
+});
 
-export const getAdditionalSections = createAsyncThunk('hobbies/getAdditionalSections', async (obj) => {
+export const getAdditionalSections = createAsyncThunk('utility/getAdditionalSections', async (obj) => {
     let resp = await dbAPI.getSectionData('utility/additionalSections/data', obj.userId, obj.accessToken);
 
     if (resp) {
@@ -290,4 +145,4 @@ export const getAdditionalSections = createAsyncThunk('hobbies/getAdditionalSect
     } else {
         return null
     }
-})
+});

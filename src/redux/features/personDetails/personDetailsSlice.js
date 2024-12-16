@@ -1,12 +1,12 @@
+import { dbAPI } from "@/lib/dbAPI";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
 
 const personDetailsSlice = createSlice({
     name: 'personDetails',
     initialState: {
         data: {
-            firstName: 'First',
-            lastName: 'Last'
+            firstName: 'FirstName',
+            lastName: 'LastName'
         },
         __serv: { isSectionVisible: true },
         status: 'idle',
@@ -20,14 +20,14 @@ const personDetailsSlice = createSlice({
     },
     extraReducers(builder) {
         builder
-            .addCase(getPersonDetails.pending, (state) => {
+            .addCase(getPersonDetailsThunk.pending, (state) => {
                 state.status = 'loading'
             })
-            .addCase(getPersonDetails.rejected, (state, action) => {
+            .addCase(getPersonDetailsThunk.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            .addCase(getPersonDetails.fulfilled, (state, action) => {
+            .addCase(getPersonDetailsThunk.fulfilled, (state, action) => {
 
                 if (action.payload) {
                     state.status = 'ready';
@@ -41,13 +41,14 @@ const personDetailsSlice = createSlice({
                 }
             })
     }
-})
+});
+
 
 export const { inputUpdate } = personDetailsSlice.actions;
 export default personDetailsSlice.reducer;
 
-export const getPersonDetails = createAsyncThunk('personDetails/getPersonDetails', async (obj) => {
 
+export const getPersonDetailsThunk = createAsyncThunk('personDetails/getPersonDetailsThunk', async (obj) => {
     let resp = await dbAPI.getSectionData('personDetails', obj.userId, obj.accessToken);
     if (resp) {
         return resp;

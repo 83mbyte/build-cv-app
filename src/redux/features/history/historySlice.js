@@ -1,5 +1,5 @@
+import { dbAPI } from "@/lib/dbAPI";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
 
 const DATA_TEMPLATE_OBJECT = {
     job: '',
@@ -8,6 +8,7 @@ const DATA_TEMPLATE_OBJECT = {
     location: '',
     comments: ''
 }
+
 const historySlice = createSlice({
     name: 'history',
     initialState: {
@@ -54,11 +55,11 @@ const historySlice = createSlice({
     }
 })
 
+
 export default historySlice.reducer;
 export const { addHistoryItem, removeHistoryItem, inputHistoryUpdate } = historySlice.actions;
 
-
-
+// Thunks
 export const getHistory = createAsyncThunk('history/getHistory', async (obj) => {
     let resp = await dbAPI.getSectionData('history', obj.userId, obj.accessToken);
     if (resp) {

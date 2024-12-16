@@ -6,33 +6,133 @@
  *
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
+
+const { OpenAI } = require("openai");
+const admin = require("firebase-admin");
 const { onRequest } = require("firebase-functions/v2/https");
 const { setGlobalOptions } = require("firebase-functions/v2");
-const { PRIVATE } = require("./keys");   // source for your API keys, Domains, etc.
+const { defineSecret } = require('firebase-functions/params');
+
+const functionsV1auth = require('firebase-functions/v1/auth');
+
+const STRIPE_WHSEC = defineSecret('STRIPE_WHSEC');
+const STRIPE_SECRET = defineSecret('STRIPE_SECRET');
+const PDF_PRICE_ID = process.env.PDF_PRICE_ID;
+
+const gptAPI = require('./lib/gptAPI');
+const stripeAPI = require("./lib/stripeAPI");
+
+const app = admin.initializeApp();
+const db = admin.database();
 
 setGlobalOptions({ maxInstances: 10 });
 
-exports.summaryCreate = onRequest(
 
+const verifyToken = async (userToken) => {
+
+    return await admin.auth(app)
+        .verifyIdToken(userToken)
+        .then((decodedToken) => {
+            const uid = decodedToken.uid;
+            const email = decodedToken.email;
+
+            return ({ status: true, uid, email, message: 'Token verified successfully' })
+        })
+        .catch((error) => {
+            return ({ status: false, uid: null, message: 'Unauthorized request' })
+        });
+}
+
+const requestToGPT = async ({ resp, aiKey, query, variant = 'professional' }) => {
+
+    const openai = new OpenAI({
+        apiKey: aiKey,
+    });
+
+    let assistReply = await gptAPI.createCompletions(openai, query, variant);
+
+    if (assistReply && assistReply.status !== 'Success') {
+        return resp.status(500).json({ message: `${assistReply?.message || 'Internal Server Error.'}`, status: 'Error', code: 500 });
+    }
+
+    return resp.status(200).json({ content: assistReply.content[0].message.content, status: 'Success', code: 200, systemPrompt: assistReply.systemPrompt })
+}
+
+exports.interview = onRequest(
     {
-        cors: [PRIVATE.URLS.domain], //put your domain(s) in case of need 
+        // DEV
+        // cors: true,
+
+        // PROD
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+        secrets: ['AIKEY']
+    },
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
+        else {
+            if (req.body) {
+
+                let { accessToken, query } = req.body;
+
+                const isTokenVerified = await verifyToken(accessToken);
+                if (!isTokenVerified || isTokenVerified.status == false) {
+                    return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+                }
+                const aiKey = process.env.AIKEY;
+
+                if (!aiKey || !query) {
+
+                    return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+                }
+                await requestToGPT({ resp, aiKey, query, variant: 'interview' })
+            }
+
+            else {
+                return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+            }
+
+        } //end of else about POST
+    } //end of async(req,resp)
+)
+
+
+exports.generateSkills = onRequest(
+    {
+        //dev
+        // cors: true,
+
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
         secrets: ['AIKEY']
     },
 
-    //{ cors: true },  // If your function should be openly available, for example if it's serving a public API or website, set the cors policy to true.
     async (req, resp) => {
+
         if (req.method !== 'POST') {
-            resp.status(400).json({ error: 'Bad request.' });
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
         }
         else {
 
             if (req.body) {
-                let apiKey = process.env.AIKEY;
 
-                createRequest(req, resp, apiKey, variant = null, tokens = 1000);
+                let { accessToken, query } = req.body;
+
+                const isTokenVerified = await verifyToken(accessToken);
+                if (!isTokenVerified || isTokenVerified.status == false) {
+                    return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+                }
+                const aiKey = process.env.AIKEY;
+
+                if (!aiKey || !query) {
+
+                    return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+                }
+                await requestToGPT({ resp, aiKey, query, variant: 'adviser' })
             }
+
             else {
-                resp.status(400).json({ error: 'Bad request.' });
+                return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
             }
         }
     }
@@ -40,154 +140,189 @@ exports.summaryCreate = onRequest(
 
 exports.coverLetterCreate = onRequest(
     {
-        cors: [PRIVATE.URLS.domain],
-        secrets: ['AIKEY']
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+        secrets: ['AIKEY'],
     },
-    //{ cors: true },
     async (req, resp) => {
         if (req.method !== 'POST') {
-            resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
-        } else {
-
-            if (req.body) {
-                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'professional', tokens = 1000)
-            } else {
-                resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
-            }
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
         }
-    }
-)
 
-exports.generateSkills = onRequest(
+        if (req.body) {
+            let { accessToken, query } = req.body;
+
+            const isTokenVerified = await verifyToken(accessToken);
+
+            if (!isTokenVerified || isTokenVerified.status == false) {
+                return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+            }
+
+            const aiKey = process.env.AIKEY;
+
+            if (!query || !aiKey) {
+
+                return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+            }
+            await requestToGPT({ resp, aiKey, query, variant: 'professional' })
+        }
+
+        else {
+            return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+        }
+    })
+
+exports.summaryCreate = onRequest(
     {
-        cors: [PRIVATE.URLS.domain],
-        secrets: ['AIKEY']
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+        secrets: ['AIKEY'],
     },
-    //{ cors: true },
     async (req, resp) => {
-
         if (req.method !== 'POST') {
-            resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
-        } else {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
+        if (req.body) {
+            let { accessToken, query } = req.body;
 
-            if (req.body) {
-                createRequest(req, resp, apiKey = process.env.AIKEY, variant = 'adviser', tokens = 1000)
-            } else {
-                resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
+            const isTokenVerified = await verifyToken(accessToken);
+
+            if (!isTokenVerified || isTokenVerified.status == false) {
+                return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
             }
+
+            const aiKey = process.env.AIKEY;
+
+            if (!query || !aiKey) {
+
+                return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+            }
+            await requestToGPT({ resp, aiKey, query, variant: 'summary' })
+        }
+
+        else {
+            return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
         }
     }
 )
 
-exports.adviserChat = onRequest(
-    {
-        cors: [PRIVATE.URLS.domain],
-        secrets: ['AIKEY']
-    },
+// STRIPE related functions
+
+exports.createCheckoutSession = onRequest({
+    // cors: true,
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+    secrets: ['STRIPE_SECRET']
+},
     async (req, resp) => {
-        // resp.set('Access-Control-Allow-Origin', '*');
         if (req.method !== 'POST') {
-            resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
-        } else {
-
-            if (req.body) {
-                adviserRequest(req, resp, process.env.AIKEY, 1500)
-            } else {
-                resp.status(400).send(JSON.stringify({ error: 'Bad request.' }));
-            }
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
         }
-    }
-)
+
+        if (req.body) {
+            let { accessToken } = req.body;
+
+            const isTokenVerified = await verifyToken(accessToken);
+
+            if (!isTokenVerified || isTokenVerified.status == false) {
+                return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+            }
 
 
-const createRequest = async (req, resp, apiKey = null, variant = null, tokens = 1000) => {
-    //const API_KEY = PRIVATE.KEYS.openai; //put YOUR openai KEY to make calls to https://api.openai.com //
+            const stripeKey = STRIPE_SECRET.value();
+            const customer_email = isTokenVerified.email;
+            const customer_id = isTokenVerified.uid;
 
-    const API_KEY = apiKey;
-    const body = req.body.content;
-    let messagesArray = null;
+            let result = null;
+            try {
 
-    if (variant === 'aggression') {
-        messagesArray = [{ ...PRIVATE.PROMPTS.aggression }, { role: 'user', content: body }];
-    }
-    else if (variant === 'humor') {
-        messagesArray = [{ ...PRIVATE.PROMPTS.humor }, { role: 'user', content: body }]
-    }
-    else if (variant === 'professional') {
-        messagesArray = [{ ...PRIVATE.PROMPTS.professional }, { role: 'user', content: body }]
-    } else if (variant === 'adviser' && (body && body !== '')) {
-        messagesArray = [{ ...PRIVATE.PROMPTS.adviser(body) }]
-    }
-    else {
-        messagesArray = [{ role: 'user', content: body }];
-    }
+                result = await stripeAPI.createSession(stripeKey, PDF_PRICE_ID, customer_email, customer_id, req.headers.origin);
 
-
-    const options = {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: messagesArray,
-            max_tokens: tokens
-        })
-    }
-    sendRequestToAI(resp, API_KEY, options);
-}
-
-const adviserRequest = async (req, resp, apiKey, tokens = 1000,) => {
-
-
-    const API_KEY = apiKey;
-    let messagesArray = req.body.content;
-
-    const options = {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: messagesArray,
-            max_tokens: tokens,
-            temperature: 1
-        })
-    }
-    sendRequestToAI(resp, API_KEY, options);
-}
-
-const sendRequestToAI = async (resp, API_KEY, options) => {
-
-    try {
-        // dev mode
-        // resp.status(200).send({ content: `"ABC"|"123"|"M93"` })   // just temporal data .... 
-        //
-
-        //Production mode
-        if (!API_KEY) {
-            throw new Error('Warning! No KEY provided.')
-        } else {
-            const response = await fetch(PRIVATE.URLS.openai, options);
-            if (response.status === 200) {
-                const data = await response.json();
-
-                if (data.choices.length > 0) {
-                    resp.status(200).send(JSON.stringify({ content: data.choices[0].message.content }));
+                if (result && result.status == 'Success') {
+                    resp.status(200).json({ content: result.content, status: 'Success' })
                 } else {
-                    resp.status(200).send(JSON.stringify({ content: 'Unexpected error.' }));
+                    throw new Error('Internal Server Error')
                 }
-            } else {
-                resp.status(200).send(JSON.stringify({ content: `response = ${response.status} ` }));
+
+            } catch (error) {
+
+                return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error' });
             }
         }
-        //
+        else {
+            return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+        }
+    })
+exports.webhookStr = onRequest(
+    {
+        // cors: true,
+        // PROD
+        cors: [/stripe\.com$/],
+        secrets: ['STRIPE_WHSEC', 'STRIPE_SECRET']
+    },
+    async (req, resp) => {
+
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.' });
+        };
 
 
-    } catch (error) {
-        resp.status(500).send(JSON.stringify({ content: `Internal server error - ${error}; ` }));
+
+        try {
+            const payloadBody = req.rawBody;
+            const sig = req.headers['stripe-signature'];
+            const endpointSecret = STRIPE_WHSEC.value();
+            const stripeKey = STRIPE_SECRET.value();
+
+            let respWebhookStr = await stripeAPI.webhookEventCheck(stripeKey, endpointSecret, sig, payloadBody);
+            if (respWebhookStr && respWebhookStr.status == 'Default_Return') {
+                return resp.status(200).end();
+            }
+            if (respWebhookStr && respWebhookStr.status !== 'Success') {
+
+                throw new Error(respWebhookStr.message)
+            } else {
+
+                if (respWebhookStr.userId && respWebhookStr.message === 'Payment completed') {
+                    let userId = respWebhookStr.userId;
+                    let paidServiceRef = db.ref(`${process.env.APP_DB_USERS}/${userId}/paidServices/data/`)
+                    const pdfRef = paidServiceRef.child('pdf');
+                    pdfRef.set({
+                        isAllowed: true,
+                        filesAllowed: 3
+                    });
+                }
+                return resp.status(200).end();
+            }
+        } catch (error) {
+            console.log(`Unsuccessful transaction.. ${error.message}`);
+            // return resp.status(500).send(`Unsuccessful transaction.. ${error.message}`);
+        }
+
+        return resp.status(200).end();
     }
-}
+)
+
+
+// AUTH users DELETE
+exports.deleteUser = functionsV1auth.user().onDelete((user) => {
+
+    // DELETE a user data (all data) in database while delete user
+
+    let dbUsers = db.ref(`${process.env.APP_DB_USERS}/`);
+    let userRef = dbUsers.child(user.uid);
+    userRef.set(null)
+        .then(() => {
+            return true;
+        })
+        .catch((error) => {
+            console.log(`ERROR while user ${user.ui} delete: `, error.message);
+            return false
+        });
+})
+
+
+// Create and deploy your first functions
+// https://firebase.google.com/docs/functions/get-started
+
+// exports.helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });

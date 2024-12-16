@@ -1,0 +1,230 @@
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&family=Noto+Sans:wght@400;700&family=Roboto:wght@400;700&display=swap");
+
+/* html,
+body {
+  padding: 5px;
+  margin: 0;
+  height: 100%;
+  background-color: white;
+  display: block;
+  box-sizing: border-box !important;
+}
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+:root {
+  --title-font-ams: 'Hanken Grotesk', sans-serif;
+  --section-font-ams: 'Roboto', sans-serif;
+  --text-font-ams: 'Noto Sans', sans-serif;
+
+  --font-bold-ams: 700;
+  --font-normal-ams: 400;
+
+  --font-size-xl-ams: 20px;
+  --font-size-lg-ams: 16px;
+  --font-size-md-ams: 13px;
+  --font-size-sm-ams: 11px;
+
+  --font-size-xl-ams-media900: 17px;
+  --font-size-lg-ams-media900: 13px;
+  --font-size-md-ams-media900: 11px;
+  --font-size-sm-ams-media900: 10px;
+
+  --font-size-xl-ams-media450: 15px;
+  --font-size-lg-ams-media450: 11px;
+  --font-size-md-ams-media450: 9px;
+  --font-size-sm-ams-media450: 8px;
+
+  --font-size-xl-ams-media320: 14px;
+  --font-size-lg-ams-media320: 10px;
+  --font-size-md-ams-media320: 9px;
+  --font-size-sm-ams-media320: 8px;
+} */
+
+@value --title-font-ams: 'Hanken Grotesk', sans-serif;
+@value --section-font-ams: 'Roboto', sans-serif;
+@value --text-font-ams: 'Noto Sans', sans-serif;
+
+@value --font-bold-ams: 700;
+@value --font-normal-ams: 400;
+
+@value --font-size-xl-ams: 20px;
+@value --font-size-lg-ams: 16px;
+@value --font-size-md-ams: 13px;
+@value --font-size-sm-ams: 11px;
+
+@value --font-size-xl-ams-media900: 17px;
+@value --font-size-lg-ams-media900: 13px;
+@value --font-size-md-ams-media900: 11px;
+@value --font-size-sm-ams-media900: 10px;
+
+@value --font-size-xl-ams-media450: 15px;
+@value --font-size-lg-ams-media450: 11px;
+@value --font-size-md-ams-media450: 9px;
+@value --font-size-sm-ams-media450: 8px;
+
+@value --font-size-xl-ams-media320: 14px;
+@value --font-size-lg-ams-media320: 10px;
+@value --font-size-md-ams-media320: 9px;
+@value --font-size-sm-ams-media320: 8px;
+
+#buttonContainer {
+  position: absolute;
+  top: 2px;
+  left: 15px;
+}
+
+/* common elements */
+.bold {
+  font-weight: --font-bold-ams;
+}
+.upperCase {
+  text-transform: uppercase;
+}
+a.lnk {
+  text-decoration: underline;
+  color: black;
+}
+a.lnk:hover {
+  text-decoration: none;
+}
+
+/* elements */
+.resumeContainer {
+  border: 1px solid rgb(163, 163, 163);
+  /* width: 21cm; */
+  /* height: 29.7cm; */
+  /* //padding: 2cm; */
+  /* max-width: 793.706pt; */
+  /* min-height: 97vh; */
+  /* height: 830pt; */
+  min-height: 830pt;
+  max-width: 594pt;
+  height: 840pt;
+  width: 595pt !important;
+  /* height: 100%; */
+  /* background-color: rgb(237, 237, 237); */
+  background: linear-gradient(90deg, #f7f7f7 35%, #ffffff 35%);
+  /* background-image: url("./images/grey_bg.png"); */
+  /* background-repeat: no-repeat; */
+  /* background-size: 35% 100%; */
+  box-sizing: border-box;
+}
+
+.headerContainer {
+  background-color: #fff;
+  border: 1px solid black;
+  border-bottom: 2px solid black;
+  padding: 30px 15px;
+  margin: 10px auto;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 10px;
+  font-family: --title-font-ams;
+}
+.personName {
+  font-size: 20px;
+  width: 100%;
+  text-align: center;
+  font-weight: --font-bold-ams;
+  text-transform: uppercase;
+}
+.personJobTitle {
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+  font-weight: --font-normal-ams;
+}
+
+.detailsContainer {
+  display: flex;
+
+  margin-top: 25px;
+  flex-direction: row;
+}
+.leftSide,
+.rightSide {
+  padding: 3px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.leftSide {
+  width: 35%;
+}
+.rightSide {
+  width: 65%;
+}
+
+.sectionContainer {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.sectionTitle {
+  font-family: --section-font-ams;
+  font-weight: --font-bold-ams;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding-bottom: 5px;
+  margin: 0 0 10px 0;
+  border: 0;
+  border-bottom: 2px solid black;
+}
+
+.sectionBody {
+  font-family: --title-font-ams;
+  font-size: 13px;
+}
+.item {
+  margin: 0 0 15px 0;
+  width: 100%;
+  font-family: --text-font-ams;
+
+  box-sizing: border-box;
+}
+
+.item ol,
+.item ul {
+  margin-left: 30px;
+}
+.itemRow {
+  margin: 0 0 0px 0;
+  display: flex;
+  justify-content: space-between;
+}
+.firstColumn {
+  /* width: 75%; */
+  flex: 1;
+  /* background-color: red; */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-right: 10px;
+}
+.secondColumn {
+  /* width: 25%; */
+
+  /* background-color: blue; */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+/* text variants */
+.infoText {
+  font-size: 11px;
+  display: flex;
+  flex: 1;
+}
+.item p {
+  margin: 0 0;
+}

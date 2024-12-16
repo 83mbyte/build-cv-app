@@ -1,5 +1,6 @@
+import { dbAPI } from "@/lib/dbAPI";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
+
 
 const DATA_TEMPLATE_OBJECT = {
     name: '',

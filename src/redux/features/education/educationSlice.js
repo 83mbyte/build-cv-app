@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
+import { dbAPI } from "@/lib/dbAPI";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const DATA_TEMPLATE_OBJECT = {
     degree: '',
@@ -30,7 +30,6 @@ const educationSlice = createSlice({
         addEducationItem: (state) => {
             state.data = [...state.data, DATA_TEMPLATE_OBJECT]
         }
-
     },
     extraReducers(builder) {
         builder
@@ -57,8 +56,11 @@ const educationSlice = createSlice({
     }
 })
 
+
 export default educationSlice.reducer;
+
 export const { inputEducationUpdate, removeEducationItem, addEducationItem } = educationSlice.actions;
+
 
 export const getEducation = createAsyncThunk('education/getEducation', async (obj) => {
     let resp = await dbAPI.getSectionData('education', obj.userId, obj.accessToken);

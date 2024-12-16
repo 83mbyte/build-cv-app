@@ -1,5 +1,4 @@
-import { Box, ButtonGroup, Wrap, Button } from '@chakra-ui/react';
-import React from 'react';
+import { Box, ButtonGroup, Wrap, Button, WrapItem } from '@chakra-ui/react';
 
 const ProposedItems = ({ predefined, sectionName, onClickCallback }) => {
 
@@ -12,7 +11,9 @@ const ProposedItems = ({ predefined, sectionName, onClickCallback }) => {
                     {
                         predefined && predefined.length > 0 &&
                         predefined.map((item, index) => {
-                            return <Button key={`${sectionName}_predef_${index}`} onClick={() => onClickCallback(item)}>{`+ ${item.label}`}</Button>
+                            return <WrapItem key={`${sectionName}_predef_${index}`}>
+                                <Button size={'xs'} onClick={() => onClickCallback(item)}>{`+ ${item.label}`}</Button>
+                            </WrapItem>
                         })
                     }
                 </Wrap>

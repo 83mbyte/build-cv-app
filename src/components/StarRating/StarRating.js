@@ -1,8 +1,7 @@
 import React from 'react';
-import DOMPurify from 'dompurify';
-
 
 import styles from './StarRating.module.css';
+import sanitizeString from '@/lib/sanitizeString';
 
 const StarRating = ({ level, type, customSize = null }) => {
     let point;
@@ -26,12 +25,12 @@ const StarRating = ({ level, type, customSize = null }) => {
     point = itemFilled.repeat(level) + itemEmpty.repeat(5 - level)
 
     return (
-        // <span style={{ fontSize: '5px', letterSpacing: '7px' }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(point) }}></span>
+
         <>
             {
                 !customSize
-                    ? <span className={styles.item} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(point) }}></span>
-                    : <span className={styles.item} style={{ fontSize: `${customSize}` }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(point) }}></span>
+                    ? <span className={styles.item} dangerouslySetInnerHTML={{ __html: sanitizeString(point) }}></span>
+                    : <span className={styles.item} style={{ fontSize: `${customSize}` }} dangerouslySetInnerHTML={{ __html: sanitizeString(point) }}></span>
             }
         </>
 

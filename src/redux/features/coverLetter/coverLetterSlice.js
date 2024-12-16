@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
+import { dbAPI } from "@/lib/dbAPI";
 
 const coverLetterSlice = createSlice({
     name: 'coverLetter',
     initialState: {
         data: {
-            value: 'initState CoverLetter',
+            value: '',
             jobTitle: '',
             company: '',
             hiringManager: ''

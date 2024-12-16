@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
+import { dbAPI } from "@/lib/dbAPI";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
 const DATA_TEMPLATE_OBJECT = {
     label: '',
@@ -24,6 +24,16 @@ const skillsSlice = createSlice({
         inputSkillsUpdate: (state, action) => {
             state.data[action.payload.arrayIndex][action.payload.inputName] = action.payload.value;
         },
+
+        generateSkills: (state, action) => {
+            state.__serv = {
+                ...state.__serv,
+                predefined: {
+                    ...state.__serv.predefined,
+                    [action.payload.role.toLowerCase().replace(/\s/g, '')]: [...action.payload.value]
+                }
+            }
+        },
         removeSkillsItem: (state, action) => {
             state.data.splice(action.payload, 1);
             if (state.data.length < 1) {
@@ -37,18 +47,19 @@ const skillsSlice = createSlice({
                 state.data = [...state.data, { label: action.payload.label, level: action.payload.level }]
             }
         },
+        setSkillsErrorMessage: (state, action) => {
+            if (action?.payload?.message) {
+                state.error = action.payload.message;
+            } else {
+                state.error = ''
+            }
+        },
+        clearSkillsErrorMessage: (state) => {
+            state.error = ''
+        },
         toggleSkillsSwitch: (state) => {
             state.__serv.isSwitchChecked = !state.__serv.isSwitchChecked;
         },
-        generateSkills: (state, action) => {
-            state.__serv = {
-                ...state.__serv,
-                predefined: {
-                    ...state.__serv.predefined,
-                    [action.payload.role.toLowerCase().replace(/\s/g, '')]: [...action.payload.value]
-                }
-            }
-        }
     },
     extraReducers(builder) {
         builder
@@ -75,8 +86,9 @@ const skillsSlice = createSlice({
 })
 
 export default skillsSlice.reducer;
-export const { removeSkillsItem, inputSkillsUpdate, addSkillsItem, toggleSkillsSwitch, generateSkills } = skillsSlice.actions;
+export const { inputSkillsUpdate, generateSkills, removeSkillsItem, addSkillsItem, setSkillsErrorMessage, clearSkillsErrorMessage, toggleSkillsSwitch } = skillsSlice.actions;
 
+// async thunks
 export const getSkills = createAsyncThunk('skills/getSkills', async (obj) => {
     let resp = await dbAPI.getSectionData('skills', obj.userId, obj.accessToken);
     if (resp) {

@@ -1,34 +1,41 @@
 import { configureStore } from "@reduxjs/toolkit";
-import coursesSliceReducer from "./features/courses/coursesSlice";
-import educationSliceReducer from "./features/education/educationSlice";
-import historySliceReducer from "./features/history/historySlice";
-import hobbiesSliceReducer from "./features/hobbies/hobbiesSlice";
-import languagesSliceReducer from "./features/languages/languagesSlice";
-import linksSliceReducer from "./features/links/linksSlice";
-import personDetailsSliceReducer from "./features/personDetails/personDetailsSlice";
-import referencesSliceReducer from "./features/references/referencesSlice";
-import skillsSliceReducer from "./features/skills/skillsSlice";
-import summarySliceReducer from "./features/summary/summarySlice";
+
+import authSliceReducer from "./features/auth/authSlice";
 import utilitySliceReducer from "./features/utility/utilitySlice";
+import personDetailsSliceReducer from "./features/personDetails/personDetailsSlice";
+import summarySliceReducer from "./features/summary/summarySlice";
+import educationSliceReducer from "./features/education/educationSlice";
+import skillsSliceReducer from "./features/skills/skillsSlice";
+import historySliceReducer from "./features/history/historySlice";
+import linksSliceReducer from "./features/links/linksSlice";
+import coursesSliceReducer from "./features/courses/coursesSlice";
+import languagesSliceReducer from "./features/languages/languagesSlice";
+import referencesSliceReducer from "./features/references/referencesSlice";
+import hobbiesSliceReducer from "./features/hobbies/hobbiesSlice";
 import userImageSliceReducer from "./features/userImage/userImageSlice";
-import templatesSliceReducer from "./features/templates/templatesSlice";
 import coverLetterSliceReducer from "./features/coverLetter/coverLetterSlice";
+import templatesSliceReducer from "./features/templates/templatesSlice";
+import paidServicesSliceReducer from "./features/paidServices/paidServicesSlice";
+import interviewSliceReducer from "./features/interview/interviewSlice";
 
 export default configureStore({
     reducer: {
+        auth: authSliceReducer,
         utility: utilitySliceReducer,
         personDetails: personDetailsSliceReducer,
         summary: summarySliceReducer,
         education: educationSliceReducer,
-        links: linksSliceReducer,
         skills: skillsSliceReducer,
-        courses: coursesSliceReducer,
         history: historySliceReducer,
+        links: linksSliceReducer,
+        courses: coursesSliceReducer,
         languages: languagesSliceReducer,
         references: referencesSliceReducer,
         hobbies: hobbiesSliceReducer,
         image: userImageSliceReducer,
+        cover: coverLetterSliceReducer,
         templates: templatesSliceReducer,
-        cover: coverLetterSliceReducer
+        paidServices: paidServicesSliceReducer,
+        interview: interviewSliceReducer
     }
 })

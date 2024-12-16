@@ -1,67 +1,60 @@
-import React from 'react';
+
 import {
-    Drawer,
     DrawerBody,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
     Box,
-    HStack, Center
-} from '@chakra-ui/react'
-import { BackIcon } from '../../Icons/Icon';
-import TemplateSelection from '../../ResumeTemplate/TemplateSelection';
-import TemplateDocumentView from '../../ResumeTemplate/TemplateDocumentView';
+    HStack, Center, Heading
+} from '@chakra-ui/react';
 
-const PreviewDrawer = ({ isOpenProp, onCloseHandler }) => {
+
+import { BackIcon } from '@/components/Icons/Icon';
+import ToolTip from '@/components/ToolTip/ToolTip';
+import TemplateSelection from '../../ResumeTemplates/TemplateSelection';
+import TemplateDocumentView from '@/components/ResumeTemplates/TemplateDocumentView';
+import FooterString from '@/components/Footer/FooterString';
+
+
+const PreviewDrawer = ({ onCloseHandler }) => {
+
     return (
-        <Drawer
-            placement={'left'}
-            autoFocus={false}
-            preserveScrollBarGap={true}
-            returnFocusOnClose={false}
-            size={'full'}
-            // isFullHeight={true}
-            onClose={onCloseHandler}
-            isOpen={isOpenProp}
-        >
-            <DrawerOverlay />
-            <DrawerContent>
-                <DrawerHeader borderBottomWidth='1px' py={[2, 4]}>
-                    {/* <HStack alignItems={'center'}>
+        // render in the drawer container
+        <>
+            <DrawerHeader borderBottomWidth='1px' py={[1, 2]}>
+                {/* <HStack alignItems={'center'}>
                         <Box flex={1} alignItems={'center'}>Resume Preview</Box>
                         <Box bg='' onClick={onCloseHandler} >
                             <CloseIcon />
                         </Box>
                     </HStack> */}
-                    <HStack  >
-                        <Box bg='' onClick={() => onCloseHandler()} >
+                <HStack  >
+                    <Box bg='' onClick={() => onCloseHandler()} >
+                        <ToolTip label='back to dashboard'>
                             <BackIcon />
-                        </Box>
-                        <Box w='full' >
-                            <Center>Resume Preview</Center>
-                        </Box>
-                    </HStack>
-                </DrawerHeader>
-                <DrawerBody p={0} bg='gray.50'>
-                    <Box display={'flex'} flexDirection={['column', 'row']} bg='' h={'full'}>
-                        <Box display={'flex'} flexDirection={['row', 'column']} bg='' h={['35%', 'full']} w={['full', '20%']} borderRight={['none', '2px solid gray']} my={1} >
-                            <Box overflowY={'scroll'} bg='white'>
-                                <TemplateSelection />
-                            </Box>
-                        </Box>
-                        <Box display={'flex'} flexDirection={'column'} bg='gray.50' h={'100%'} w={['full']} >
-                            <Box my={1} h={'100%'} overflowY={'scroll'} bg='white'>
-                                <TemplateDocumentView />
-                            </Box>
+                        </ToolTip>
+                    </Box>
+                    <Box w='full' >
+                        <Center><Heading size={['xs', 'md']} as='h2'> Resume Preview</Heading></Center>
+                    </Box>
+                </HStack>
+            </DrawerHeader>
+            <DrawerBody p={0} bg='gray.200'>
+
+                <Box display={'flex'} flexDirection={['column', 'row']} bg='' h={'full'}>
+                    <Box display={'flex'} flexDirection={['row', 'column']} bg='' h={['31%', 'full']} w={['full', '20%']} borderRight={['none', '1px solid grey']} py={[1, 5]} px={[2, 0]} borderBottom={['1px solid grey', 'none']}>
+                        <Box overflow={'scroll'} bg='transparent' >
+                            <TemplateSelection />
                         </Box>
                     </Box>
-                </DrawerBody>
-                <DrawerFooter bg='' py={'1'}  >
-
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer >
+                    <Box display={'flex'} flexDirection={'column'} bg='gray.50' h={'100%'} w={['full']} >
+                        <Box my={1} h={'100%'} overflowY={'scroll'} bg='white'>
+                            <TemplateDocumentView />
+                        </Box>
+                    </Box>
+                </Box>
+            </DrawerBody>
+            <DrawerFooter bg='gray.200' justifyContent={'center'} py={0.5}><FooterString /></DrawerFooter>
+        </>
     );
 };
 

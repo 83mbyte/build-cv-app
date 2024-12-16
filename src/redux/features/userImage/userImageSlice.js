@@ -1,5 +1,5 @@
+import { dbAPI } from "@/lib/dbAPI";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { dbAPI } from "../../../api/api";
 
 const userImageSlice = createSlice({
     name: 'userImage',
@@ -60,21 +60,25 @@ const userImageSlice = createSlice({
 
 export default userImageSlice.reducer;
 
-export const uploadImageData = createAsyncThunk('userImage/uploadImageData', async ({ user, imageData }) => {
-    const resp = await dbAPI.putUserImageData(user.userId, user.accessToken, imageData)
+export const uploadImageData = createAsyncThunk('userImage/uploadImageData', async ({ userLogged, imageData }) => {
+    const resp = await dbAPI.putUserImageData(userLogged.userId, userLogged.accessToken, imageData);
+    if (resp) {
+        console.log('RESP image :', resp)
+    }
     if (resp && resp.status === 200) {
         return imageData
     }
 })
 
-export const deleteImageData = createAsyncThunk('userImage/deleteImageData', async ({ user }) => {
-    const resp = await dbAPI.putUserImageData(user.userId, user.accessToken, '')
+export const deleteImageData = createAsyncThunk('userImage/deleteImageData', async ({ userLogged }) => {
+    const resp = await dbAPI.putUserImageData(userLogged.userId, userLogged.accessToken, '')
     if (resp && resp.status === 200) {
         return 'image removed'
     }
 })
 
 export const getUserImage = createAsyncThunk('userImage/getUserImage', async (obj) => {
+
     let resp = await dbAPI.getSectionData('image', obj.userId, obj.accessToken);
     if (resp) {
         return resp;
