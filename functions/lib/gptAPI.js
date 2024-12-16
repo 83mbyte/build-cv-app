@@ -63,50 +63,6 @@ async function createCompletions(openai, data, variant = null,) {
             n: n_param,
             messages: messagesArray,
             response_format: data.jsonFormat ? { type: 'json_object' } : { type: 'text' },
-
-            // response_format: !outputFormat ? { type: 'text' } : {
-            //     type: 'json_schema',
-            //     json_schema: {
-            //         name: 'interview_analysis',
-            //         schema: {
-            //             type: 'object',
-            //             properties: {
-            //                 greetings: {
-            //                     type: 'string',
-            //                     description: `Generate a thankful message about the complete interview.`
-            //                 },
-            //                 analysis: {
-            //                     type: 'string',
-            //                     description: `Provide an analysis the candidate's answers to your questions.`
-            //                 },
-            //                 conclusion: {
-            //                     type: 'string',
-            //                     description: `Provide a conclusion about the candidate's readiness for the position.`
-            //                 },
-            //                 recommendations: {
-            //                     type: 'string',
-            //                     description: `Provide some recommendations what and where the candidate can read about missed or incorrect answers.`
-            //                 },
-            //                 statistics: {
-            //                     type: 'object',
-            //                     properties: {
-            //                         correct: {
-            //                             type: 'string',
-            //                             description: `Percentage (%) of the candidate's correct answers`
-            //                         },
-            //                         incorrect: {
-            //                             type: 'string',
-            //                             description: `Percentage (%) of the candidate's incorrect answers`
-            //                         }
-            //                     }
-            //                 }
-
-            //             }
-            //         }
-            //     },
-            //     strict: true
-            // }
-
         });
 
         if (completion && data.firstRequest && variant == 'interview') {
