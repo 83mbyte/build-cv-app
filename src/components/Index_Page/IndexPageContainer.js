@@ -6,6 +6,7 @@ import IndexTopElement from './IndexTopElement';
 import IndexFeaturesElement from './IndexFeaturesElement';
 import IndexCoverElement from './IndexCoverElement';
 import IndexFAQElement from './IndexFAQElement';
+import IndexInterviewElement from './IndexInterviewElement';
 
 const IndexPageContainer = () => {
     return (
@@ -13,6 +14,7 @@ const IndexPageContainer = () => {
             <IndexTopElement />
             <IndexFeaturesElement />
             <IndexCoverElement />
+            <IndexInterviewElement />
             <IndexFAQElement />
         </Box>
     );

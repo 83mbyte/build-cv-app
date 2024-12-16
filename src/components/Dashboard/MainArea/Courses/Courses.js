@@ -84,7 +84,7 @@ const CoursesForm = ({ data, addItem, removeItem, onChangeHandler, hidingClickHa
                         return (
 
                             <AccordionElem index={index} key={`course_${index}`} title={elem.course} removeItem={(e) => removeItem(e, data[index])}>
-                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={3}>
+                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
                                     <DashboardInput labelText={'Course'} name={'course'} inputValue={elem.course} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />
                                     <DashboardInput labelText={'Institution'} name={'institution'} inputValue={elem.institution} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />
                                     <DashboardInput labelText={'Start-End Date'} name={'period'} inputValue={elem.period} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />

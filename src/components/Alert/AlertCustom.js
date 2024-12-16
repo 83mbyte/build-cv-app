@@ -1,6 +1,6 @@
 import { Alert, AlertIcon } from '@chakra-ui/react';
 import AnimationWrapper from '../Animation/AnimationWrapper';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';;;
 import { uid } from 'uid/single';
 
 const sizeBreakPoints = ['sm', 'md'];

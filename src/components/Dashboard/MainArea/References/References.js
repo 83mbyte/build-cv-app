@@ -103,7 +103,7 @@ const ReferecesForm = ({ data, addItem, isSwitchChecked, toggleSwitch, removeIte
                         return (
                             <AccordionElem key={`reference_${index}`} title={elem.name} descr={elem.company} removeItem={(e) => removeItem(e, data[index])}>
 
-                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={3}>
+                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
 
                                     <DashboardInput labelText={`Referent's Full Name`} name={'name'} inputValue={elem.name} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />
                                     <DashboardInput labelText={`Company`} name={'company'} inputValue={elem.company} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />

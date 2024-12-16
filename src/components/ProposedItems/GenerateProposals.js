@@ -5,7 +5,9 @@ import ToolTip from '@/components/ToolTip/ToolTip';
 import { functionsAPI } from '@/lib/functionsAPI';
 import { skillsData } from '@/lib/content-lib';
 
-const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) => {
+import { MdOutlineAutoAwesome } from "react-icons/md";
+
+const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken, disabled }) => {
 
     const [loading, setLoading] = React.useState(false);
 
@@ -30,7 +32,7 @@ const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) =>
         return (
             <Box p={0} mx={0} my={1} w={'100%'} mb={2}>
                 <HStack spacing={1} justifyContent={'space-between'} alignItems={'center'} h={'100%'}>
-                    <Text mb={'10px'} fontSize={'xs'} color={'gray.500'} pt={'5px'} mt={0} >{skillsData?.generateProposals || `Lorem ipsum dolor, sit amet consectetur adipisicing elit.`} '<span className='italic bold'>{jobTitle}</span>'.</Text>
+                    <Text mb={'10px'} fontSize={'xs'} color={'gray.500'} pt={'5px'} mt={0} >{skillsData?.generateProposals || `Lorem ipsum dolor, sit amet consectetur adipisicing elit.`} <span style={{ fontStyle: 'italic', }}>{jobTitle}</span>.</Text>
                     <Box>
                         <ToolTip label='generate skills suggestions'>
                             <Button
@@ -39,6 +41,8 @@ const GenerateProposals = ({ jobTitle = null, onClickCallback, accessToken }) =>
                                 variant={'outline'}
                                 onClick={onClickHandler}
                                 isLoading={loading}
+                                isDisabled={disabled}
+                                leftIcon={<MdOutlineAutoAwesome />}
                             >
                                 Generate Skills
                             </Button>

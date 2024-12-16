@@ -1,6 +1,6 @@
 'use client'
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from 'motion/react';
 
 import { useSearchParams } from 'next/navigation';
 import { useMemo, useEffect, useState } from 'react';
@@ -33,11 +33,11 @@ const AuthPageContainer = () => {
 
     const changeForm = async (form) => {
 
-        if (params.has('page')) {
-            params.delete('page');
-            history.replaceState(null, "", "auth");
+        // if (params.has('page')) {
+        //     params.delete('page');
+        //     history.replaceState(null, "", "auth");
 
-        }
+        // }
         runExitAnimation().then(resp => {
             if (error !== '' || successMsg !== '') {
                 dispatch(clearAuthError())
@@ -55,6 +55,8 @@ const AuthPageContainer = () => {
             if (params.has('page')) {
 
                 let current = params.get('page');
+                params.delete('page');
+                history.replaceState(null, "", "auth")
                 if (current === 'login' || current === 'signup') {
                     setIsVisible({ status: true, form: current });
                 }

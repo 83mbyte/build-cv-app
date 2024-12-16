@@ -48,7 +48,11 @@ const skillsSlice = createSlice({
             }
         },
         setSkillsErrorMessage: (state, action) => {
-            state.error = action.payload.message;
+            if (action?.payload?.message) {
+                state.error = action.payload.message;
+            } else {
+                state.error = ''
+            }
         },
         clearSkillsErrorMessage: (state) => {
             state.error = ''

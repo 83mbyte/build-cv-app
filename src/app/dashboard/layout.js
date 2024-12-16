@@ -11,6 +11,8 @@ import { app } from '@/__firebase/__firebaseConf';
 
 import FooterContainer from '@/components/Footer/FooterContainer';
 
+import '../global.css';
+
 const metadata = {
     title: `${process.env.NEXT_PUBLIC_APP_NAME} - Dashboard. User Area.`,
     description: `${process.env.NEXT_PUBLIC_APP_NAME} - AI-powered Resume Builder.`,

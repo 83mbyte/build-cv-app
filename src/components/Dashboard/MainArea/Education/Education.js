@@ -85,7 +85,7 @@ const EducationForm = ({ data, removeItem, addItem, onChangeHandler }) => {
                         return (
                             <AccordionElem index={index} key={`education_${index}`} title={elem.institution} removeItem={(e) => removeItem(e, data[index])}>
 
-                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={3}>
+                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
                                     <DashboardInput labelText='Institution' name={'institution'} inputValue={elem.institution} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />
                                     <DashboardInput labelText='Degree' name={'degree'} inputValue={elem.degree} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />
                                     <DashboardInput labelText='Start-End Date' name={'period'} inputValue={elem.period} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />

@@ -1,7 +1,7 @@
 import { Box, Button, VStack, HStack, Text } from '@chakra-ui/react';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setAuthFormError, signInGoogleThunk, signInThunk } from '@/redux/features/auth/authSlice';
@@ -66,19 +66,12 @@ const AuthLoginForm = ({ changeForm }) => {
             if (data?.accessToken && data?.userId) {
                 router.push('/dashboard')
             }
+        } else {
+            dispatch(signInGoogleThunk(false));
         }
     }, [data])
 
-    useEffect(() => {
-        // google signup after redirect
 
-        // TODO
-        // TODO  deploy and test it
-        // TODO
-        if (sessionStorage.getItem(`firebase:pendingRedirect:${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}:[DEFAULT]`)) {
-            dispatch(signInGoogleThunk(false))
-        }
-    }, [])
 
     return (
 

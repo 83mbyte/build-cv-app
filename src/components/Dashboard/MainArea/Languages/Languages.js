@@ -87,7 +87,7 @@ const LanguagesForm = ({ data, removeItem, addItem, onChangeHandler, hidingClick
                     data.map((elem, index) => {
                         return (
                             <AccordionElem key={`language_${index}`} title={elem.language} removeItem={(e) => removeItem(e, data[index])}>
-                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={3} >
+                                <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
                                     <DashboardInput labelText={'Language'} name={'language'} inputValue={elem.language} onChangeCallback={(name, value) => onChangeHandler(index, name, value)} />
 
                                     <SelectCustom value={elem.level} itemsArray={itemsArray} onChangeCallback={(value) => onChangeHandler(index, 'level', value)} />

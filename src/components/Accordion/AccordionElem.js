@@ -67,7 +67,7 @@ const AccordionElem = ({ index, title, descr = null, removeItem, children }) => 
                                 </Flex>
                             </AccordionButton>
                         </h2>
-                        <AccordionPanel pb={4}>
+                        <AccordionPanel py={4}>
 
                             {children}
 

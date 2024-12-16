@@ -55,7 +55,7 @@ const EditDataPopover = (props) => {
 
 export default EditDataPopover;
 
-const TextInput = React.forwardRef((props, ref) => {
+const TextInput = React.forwardRef(function TextInputWithRef(props, ref) {
     return (
         <FormControl>
             <FormLabel htmlFor={props.id}>{props.label}</FormLabel>
@@ -65,7 +65,7 @@ const TextInput = React.forwardRef((props, ref) => {
 })
 
 
-const NameForm = React.forwardRef((props, ref) => {
+const NameForm = React.forwardRef(function NameFormWithRef(props, ref) {
 
     const [disabled, setDisabled] = useState(true);
 
@@ -108,7 +108,7 @@ const NameForm = React.forwardRef((props, ref) => {
     )
 })
 
-const SkillsForm = React.forwardRef((props, ref) => {
+const SkillsForm = React.forwardRef(function SkillsFormWithRef(props, ref) {
     const [disabled, setDisabled] = useState(true);
     const dispatch = useDispatch();
 

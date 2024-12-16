@@ -1,5 +1,7 @@
 import {
-    Button, Heading, VStack, Wrap, WrapItem
+    Box,
+    Badge,
+    Button, HStack, Heading, VStack, Wrap, WrapItem
 } from '@chakra-ui/react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +14,8 @@ import CoverLetterDrawer from './CoverLetterDrawer';
 
 const CoverLetterMenuSection = () => {
 
+    const isPaidServicesAllowed = useSelector(state => state.paidServices.data.pdf.isAllowed);
+
     const type = useSelector(state => state.utility.coverLettDrawer.type)
     const isOpen = useSelector(state => state.utility.coverLettDrawer.isOpen)
     const dispatch = useDispatch();
@@ -21,9 +25,9 @@ const CoverLetterMenuSection = () => {
     const onClickBtnHandler = (type) => {
 
         if (type) {
-            dispatch(coverLettDrawerIsOpenToggle({ type: type }))
+            dispatch(coverLettDrawerIsOpenToggle({ type: type }));
         } else {
-            dispatch(coverLettDrawerIsOpenToggle())
+            dispatch(coverLettDrawerIsOpenToggle());
         }
     }
 
@@ -33,7 +37,18 @@ const CoverLetterMenuSection = () => {
 
             <Button style={{ justifyContent: 'flex-start' }} w='full' size={'sm'} colorScheme={'teal'} variant={'ghost'} leftIcon={<IoDocumentTextOutline />} onClick={() => onClickBtnHandler('Create')}>New / Edit</Button>
 
-            <Button style={{ justifyContent: 'flex-start' }} w='full' size={'sm'} colorScheme={'teal'} variant={'ghost'} leftIcon={<IoBulbOutline />} onClick={() => onClickBtnHandler('Generate')}>Generate</Button>
+            <HStack w='full' spacing={0} alignItems={'center'}>
+                {!isPaidServicesAllowed &&
+                    <Box bg='' display='flex' flex={1}>
+                        <Badge fontSize={'9px'} variant='outline' colorScheme='orange'>Unlocks after payment</Badge>
+                    </Box>
+                }
+                <Box display='flex' bg='' flex={1}>
+                    <Button isDisabled={!isPaidServicesAllowed} style={{ justifyContent: 'flex-start' }} size={'sm'} colorScheme={'teal'} variant={'ghost'} leftIcon={<IoBulbOutline />} onClick={() => onClickBtnHandler('Generate')}>Generate</Button>
+                </Box>
+
+            </HStack>
+
             <Suspense>
                 <DrawerContainer keyId='coverLetterDrawer' isOpen={isOpen} size='full'>
                     <CoverLetterDrawer />

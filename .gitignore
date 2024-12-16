@@ -14,6 +14,20 @@
 /.next/
 /out/
 
+# firebase
+/.firebase/
+.firebaserc
+firebase.json
+firebase-debug.log
+
+# functions
+/functions/lib/promptsByRoles.js
+/functions/firebase-debug.log
+/functions/ui-debug.log
+/functions/node_modules/
+/functions/.env 
+/functions/.secret.local
+
 # production
 /build
 
@@ -40,13 +54,6 @@ yarn-error.log*
 next-env.d.ts
 
 # custom
-.firebaserc
-firebase.json
-functions/lib/promptsByRoles.js
-functions/firebase-debug.log
-functions/ui-debug.log
-functions/node_modules/
-functions/.env 
-functions/.secret.local
 src/lib/content-lib.js
 ui-debug.log
+

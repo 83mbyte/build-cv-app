@@ -7,6 +7,17 @@ export const dbAPI = {
 
         let userNameSplitted = displayName.split(' ')
         let userTemplate = {
+            paidServices: {
+                data: {
+                    pdf: {
+                        isAllowed: false,
+                        filesAllowed: 0
+                    },
+                    interview: {
+                        isAllowed: false
+                    }
+                }
+            },
             image: { value: '' },
             personDetails: {
                 __serv: {
@@ -132,7 +143,10 @@ const getData = async (url) => {
                 throw new Error(`HTTP error: ${resp.status}`)
             }
         })
-        .catch((error) => (console.log(`Couldn't fetch data.. ${error}`)));
+        .catch((error) => {
+            console.log(`Couldn't fetch data.. ${error}`);
+            return null
+        });
 }
 
 const putData = async (url, data) => {

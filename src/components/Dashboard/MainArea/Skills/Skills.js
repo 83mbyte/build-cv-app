@@ -17,6 +17,8 @@ import AccordionElem from '@/components/Accordion/AccordionElem';
 import LevelSlider from '@/components/LevelSlider/LevelSlider';
 import DashboardInput from '@/components/FormItems/DashboardInputs/DashboardInput';
 import AddMoreItemBtn from '@/components/AddMoreItemBtn/AddMoreItemBtn';
+import AlertCustom from '@/components/Alert/AlertCustom';
+import { AnimatePresence } from 'motion/react';
 
 const Skills = ({ userLogged }) => {
     // redux state data
@@ -51,11 +53,13 @@ const Skills = ({ userLogged }) => {
     }
 
     const onChangeHandler = (index, name, value) => {
+
         dispatch(inputSkillsUpdate({ arrayIndex: index, inputName: name, value: value }));
         dispatch(setIsModifiedContent({ status: true, section: 'skills' }));
     }
 
     const onClickGenerateSkill = (dataObj) => {
+
         if (dataObj.status == 'Success') {
 
             let editedArray = dataObj.data.map(item => {
@@ -65,8 +69,9 @@ const Skills = ({ userLogged }) => {
             dispatch(generateSkills({ role: jobTitle, value: editedArray }));
             dispatch(setIsModifiedContent({ status: true, section: 'skills' }));
         } else {
-
-            dispatch(setSkillsErrorMessage({ message: dataObj.message }))
+            dispatch(setSkillsErrorMessage({
+                message: skillsData.alerts.error || `Lorem ipsum dolor, sit amet consectetur`
+            }))
         }
     }
     const addItem = (data = null) => {
@@ -109,15 +114,18 @@ const Skills = ({ userLogged }) => {
 
                 {/* button generate start*/}
                 {
-                    (!predefined || predefined[predefinedRole] === undefined) &&
-                    <GenerateProposals jobTitle={jobTitle} onClickCallback={onClickGenerateSkill} accessToken={userLogged.accessToken} />
+                    ((!predefined || predefined[predefinedRole] === undefined)) &&
+                    <GenerateProposals jobTitle={jobTitle} onClickCallback={onClickGenerateSkill} accessToken={userLogged.accessToken} disabled={error !== ''} />
 
-                    // TODO
-                    // TODO  create alert in case of error
-                    // TODO
                 }
                 {/* button generate end */}
 
+                <AnimatePresence mode='wait'>
+                    {    // in case of error
+                        (error && error !== '' && error !== undefined) &&
+                        <AlertCustom type='error' message={error} />
+                    }
+                </AnimatePresence>
                 {
                     predefined && predefined[predefinedRole] !== undefined && predefined[predefinedRole].length > 0 &&
                     <ProposedItems sectionName={'skills'} predefined={
@@ -152,7 +160,7 @@ const Skills = ({ userLogged }) => {
                                     removeItem={(e) => removeItem(e, data[index])}
                                     key={`skill_${index}`}
                                 >
-                                    <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'}>
+                                    <SimpleGrid columns={[1, 1, 2]} alignItems={'center'} justifyContent={'center'} spacing={[5, 3]}>
 
                                         <DashboardInput
                                             labelText={'Skill'}
@@ -191,6 +199,21 @@ const Skills = ({ userLogged }) => {
             dispatch(getSkills(userLogged))
         }
     }, [status, userLogged, dispatch]);
+
+    useEffect(() => {
+        // to hide error alert with delay
+        let timer1 = null;
+
+        if (error && error !== '') {
+            timer1 = setTimeout(() => { dispatch(setSkillsErrorMessage()) }, 5000);
+        }
+
+        return () => {
+            if (timer1) {
+                clearTimeout(timer1);
+            }
+        };
+    }, [error]);
 
     return (
         <>

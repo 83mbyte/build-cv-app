@@ -8,7 +8,7 @@ const SectionWrapper = ({ sectionTitle, type = 'flex', flexDirect = 'row', isHid
         switch (type) {
             case 'grid':
                 return (
-                    <SimpleGrid columns={[1, 1, 2]} spacing={3}>
+                    <SimpleGrid columns={[1, 1, 2]} spacing={[5, 3]}>
                         {children}
                     </SimpleGrid>
                 )

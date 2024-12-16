@@ -3,7 +3,7 @@
 // 
 
 import { Heading, Card, CardBody, CardHeader } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 import AnimationWrapper from '../Animation/AnimationWrapper';
 
