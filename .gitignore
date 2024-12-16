@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+*/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -12,6 +13,20 @@
 # next.js
 /.next/
 /out/
+
+# firebase
+/.firebase/
+.firebaserc
+firebase.json
+firebase-debug.log
+
+# functions
+/functions/lib/promptsByRoles.js
+/functions/firebase-debug.log
+/functions/ui-debug.log
+/functions/node_modules/
+/functions/.env 
+/functions/.secret.local
 
 # production
 /build
@@ -37,3 +52,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# custom
+src/lib/content-lib.js
+ui-debug.log
+
