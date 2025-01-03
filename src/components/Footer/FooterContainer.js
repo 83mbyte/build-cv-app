@@ -14,8 +14,8 @@ const FooterContainer = ({ textColor = 'teal' }) => {
                 align={{ base: 'center', md: 'center' }}
                 fontSize={'xs'}
             >
-                <Text color={textColor}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Text>
                 <FooterString color={textColor} />
+                <Text color={textColor}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Text>
             </Container>
         </Box >
     );
