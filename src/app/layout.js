@@ -1,8 +1,9 @@
 
+import "./globals.css";
+import { Jersey_15, Oswald, Dancing_Script } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
-
-import { Providers } from "./providers";
 import { indexData } from "@/lib/content-lib";
+
 
 const APP_TITLE = process.env.NEXT_PUBLIC_APP_NAME;
 const APP_NAME_FULL = process.env.NEXT_PUBLIC_APP_NAME_FULL;
@@ -20,28 +21,41 @@ export const metadata = {
 
 export const viewport = {
   width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  initialScale: '1.0',
+  maximumScale: '1.0',
+  minimumScale: '1.0',
+  userScalable: 'no',
   // Also supported by less commonly used
   // interactiveWidget: 'resizes-visual',
 }
 
-export default function RootLayout({ children }) {
 
+const jersey = Jersey_15({
+  variable: "--font-jersey",
+  weight: ['400'],
+  subsets: ["latin"],
+})
+const oswald = Oswald({
+  variable: '--font-oswald',
+  weight: ['200', '300', '400', '500', '600', '700'],
+  subsets: ['latin', 'cyrillic'],
+})
+const dancing_script = Dancing_Script({
+  variable: '--font-dancing',
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+})
+
+export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html className={`${dancing_script.variable} ${jersey.variable} ${oswald.variable}`} lang="en" suppressHydrationWarning={true}>
+      <body>
+        {children}
+      </body>
       {
         process.env.NODE_ENV !== "development" && <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_GTM} />
       }
-      <body>
-
-        <Providers>
-          {children}
-        </Providers>
-
-      </body>
-
     </html>
-  )
+
+  );
 }

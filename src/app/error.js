@@ -1,40 +1,59 @@
 'use client'
 
-import ButtonBackTo from '@/components/Buttons/ButtonBackTo';
-import FooterString from '@/components/Footer/FooterString';
-import { Box, Text, VStack, Heading } from '@chakra-ui/react';
-import React from 'react';
+import { Box, Flex, VStack, Heading, Text, Button } from '@chakra-ui/react';
+
+import { motion } from 'motion/react';
+import { useRouter } from 'next/navigation';
+import { LuChevronLeft } from "react-icons/lu";
+
+import FooterContainer from '@/components/footerCopyright/FooterContainer';
+import { ProviderUI } from './providers';
 
 const Error = ({
     error,
     reset,
 }) => {
+    const router = useRouter();
 
     return (
-        <Box justifyContent={'center'} alignItems={'center'} height='100vh' display={'flex'} flexDirection={'column'}>
-            <VStack spacing={1} justifyContent={'space-between'} h='100vh' p={5} w='100%'>
-                <Box w='100%' my={5}>
-                    <Heading as='h1' color={'teal'}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Heading>
-                </Box>
-                <Box justifyContent={'center'} alignItems={'center'} display={'flex'} flexDirection={'column'}>
-                    <Text>Something wrong happens..</Text>
-                    {
-                        error?.message &&
-                        <>
-                            <Box m={[1, 5]} p={5} backgroundColor={'lightgrey'} w={['sm', 'md']}>
-                                <Text fontSize={'xs'} color='lightslategrey' >{error.message}</Text>
+
+        <ProviderUI>
+            <VStack justifyContent={'space-between'} h='100vh' w='full' >
+                <Heading as='h1' color={'teal'} my={5}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Heading>
+                <Flex bg='' flex={1} alignItems={'center'} direction={'column'} justifyContent={'center'}>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.75 }}
+                        animate={{ opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.4 } }}
+                    >
+                        <VStack gap={'6'}>
+
+                            <Text>Something wrong happens..</Text>
+                            {
+                                error?.message &&
+                                <>
+                                    <Box m={[1, 5]} p={5} backgroundColor={'lightgrey'} w={['sm', 'md']}>
+                                        <Text fontSize={'xs'} color='lightslategrey' >{error.message}</Text>
+                                    </Box>
+                                </>
+                            }
+
+                            <Box my={3}>
+                                <Button
+                                    colorPalette={'teal'}
+                                    paddingX={2}
+                                    size={['sm', 'md']}
+                                    variant={'ghost'}
+                                    onClick={() => router.back()}
+                                >
+                                    <LuChevronLeft /> back
+                                </Button>
                             </Box>
-
-                        </>
-                    }
-                    <Box>
-                        <ButtonBackTo href='/' value='back to index' />
-                    </Box>
-                </Box>
-                <FooterString />
+                        </VStack>
+                    </motion.div>
+                </Flex>
+                <FooterContainer />
             </VStack>
-
-        </Box>
+        </ProviderUI>
     );
 };
 

@@ -16,4 +16,4 @@ const sanitizeString = (dirtyString) => {
     return cleanString;
 }
 
-export default sanitizeString 
+export default sanitizeString;

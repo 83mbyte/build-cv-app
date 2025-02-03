@@ -1,32 +1,55 @@
+'use client'
 
-import AnimationWrapper from '@/components/Animation/AnimationWrapper';
-import ButtonBackTo from '@/components/Buttons/ButtonBackTo';
-import FooterString from '@/components/Footer/FooterString';
-import { Box, Heading, Text, VStack } from '@chakra-ui/react'
+import { ProviderUI } from './providers';
+import { Flex, VStack, Heading, Text, Button, } from '@chakra-ui/react';
 
+import { motion } from 'motion/react';
+import { useRouter, } from 'next/navigation';
 
-export default function NotFound() {
+import { LuChevronLeft, } from "react-icons/lu";
+import FooterContainer from '@/components/footerCopyright/FooterContainer';
+
+const NotFound = () => {
+    const router = useRouter();
     return (
-        <Box justifyContent={'center'} alignItems={'center'} height='100vh' display={'flex'} flexDirection={'column'} w='100%'>
+        <ProviderUI>
+            <VStack justifyContent={'space-between'} h='100vh' w='full'  >
+                <Heading as='h1' color={'teal'} my={5}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Heading>
+                <Flex bg='' flex={1} alignItems={'center'} direction={'column'} justifyContent={'center'}>
 
-            <VStack spacing={1} justifyContent={'space-between'} h='100vh' p={5} w='100%'>
-                <Box w='100%' my={5}>
-                    <Heading as='h1' color={'teal'}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Heading>
-                </Box>
-                <AnimationWrapper>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.75 }}
+                        animate={{ opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.4 } }}
+                    >
+                        <VStack gap={'6'}
 
-                    <VStack>
-                        <Heading as='h2'>Not Found</Heading>
-                        <Text>Could not find requested resource</Text>
-                        <Box my={3}>
-                            <ButtonBackTo href='/' value={'back to index'} />
-                        </Box>
-                    </VStack>
-                </AnimationWrapper>
+                        >
+                            <Heading as='h2' size={'2xl'} >Not Found</Heading>
+                            <Text>Could not find requested resource..</Text>
 
-                <FooterString />
+                            <Button
+                                colorPalette={'teal'}
+                                paddingX={2}
+                                size={['sm', 'md']}
+                                variant={'ghost'}
+                                onClick={() => router.back()}
+                            >
+                                <LuChevronLeft /> back
+                            </Button>
+                        </VStack>
+                    </motion.div>
+                </Flex>
+                <FooterContainer />
             </VStack>
-        </Box>
+        </ProviderUI>
 
-    )
-}
+        // <ChakraProvider value={defaultSystem}>
+
+
+
+
+        // </ChakraProvider>
+    );
+};
+
+export default NotFound;
