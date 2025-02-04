@@ -2,6 +2,7 @@ import { Box, Stack, Text, } from '@chakra-ui/react';
 import HeaderFontsMenu from './HeaderFontsMenu';
 import HeaderThemeMenu from './HeaderThemeMenu';
 import HeaderLayoutMenu from './HeaderLayoutMenu';
+import HeaderDownloadButton from './HeaderDownloadButton';
 
 
 const HeaderContainer = () => {
@@ -27,8 +28,8 @@ const HeaderContainer = () => {
                         {/* Layout menu */}
                         <HeaderLayoutMenu />
 
-
                         {/* Download button */}
+                        <HeaderDownloadButton />
 
                     </Box>
                 </Stack>
