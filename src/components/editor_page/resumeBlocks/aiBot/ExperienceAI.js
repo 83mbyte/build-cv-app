@@ -1,16 +1,16 @@
 import { useRef } from 'react';
-import { VStack, Text, Box, Input, Button } from '@chakra-ui/react';
+import { VStack, Text, Box, Input, Button, HStack, Icon } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setExperienceRole, setExperienceGeneratedItems, setShowModalAiBotContainer, addExperienceSelectedItems, removeExperienceSelectedItems } from '@/redux/modals/resumeAiBotSlice';
+import { setExpItemData } from '@/redux/resume/experienceBlockSlice';
 
 import { experienceBotData } from '@/lib/content-lib';
 import { sanitizeInput } from '@/lib/commonScripts';
-import { LuSparkles } from "react-icons/lu";
+import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
 
 import ModalAiContainer from './ModalAiContainer';
-import { setExpItemData } from '@/redux/resume/experienceBlockSlice';
 
 const ExperienceAI = ({ currentId, fieldName = 'description' }) => {
 
@@ -117,7 +117,7 @@ const ExperienceAI = ({ currentId, fieldName = 'description' }) => {
                                 bg=''
                                 overflow={'scroll'}
                             >
-                                <VStack width='full' bg='' overflow={'scroll'}>
+                                <VStack width='full' bg='' overflow={'scroll'} gap={3}>
                                     {
                                         generatedItems[currentId].map((item, index) => {
                                             let isSelectedIndex = -1;
@@ -126,12 +126,25 @@ const ExperienceAI = ({ currentId, fieldName = 'description' }) => {
                                             }
 
                                             return (
-                                                <Box borderWidth={'1px'} width={'full'} cursor={'pointer'}
+                                                <Box width={'full'} cursor={'pointer'}
+                                                    borderWidth={'0px'}
+                                                    _hover={{ opacity: 0.5 }}
+                                                    borderStyle={isSelectedIndex != -1 ? 'solid' : 'dashed'}
+                                                    borderBottomWidth={'1px'}
                                                     userSelect={'none'}
                                                     key={index}
-                                                    backgroundColor={isSelectedIndex != -1 ? 'lightgray' : ''}
                                                     onClick={() => clickToSelectItem(isSelectedIndex, item)}
-                                                >{index + 1}. {item}</Box>
+                                                >
+                                                    <HStack>
+                                                        <Icon color={isSelectedIndex != -1 ? `${themeColor}` : 'lightgrey'}>
+                                                            {isSelectedIndex != -1
+                                                                ? <LuSquareCheck />
+                                                                : <LuSquare />
+                                                            }
+                                                        </Icon>
+                                                        {item}
+                                                    </HStack>
+                                                </Box>
                                             )
                                         })
                                     }
