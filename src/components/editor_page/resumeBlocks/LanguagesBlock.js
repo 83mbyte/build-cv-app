@@ -13,6 +13,7 @@ import AddOrRemoveItem from '../addOrRemoveItem/AddOrRemoveItem';
 const LanguagesBlock = ({ editableFields, layoutNumber }) => {
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
+    const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
 
     const languagesHeading = useSelector(state => state.resumeLanguages.languagesHeading);
     const languagesItems = useSelector(state => state.resumeLanguages.items)
@@ -80,8 +81,16 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
                                             />
 
                                             {
-                                                editableFields &&
-                                                <AddOrRemoveItem currentId={item.id} blockName={'resumeLanguages'} actionRemove={removeLanguagesItem} actionAdd={addLanguagesItem} marginRight={'10px'} sizeButtons={'15px'} />
+                                                editableFields && (show.show && show.id == item.id) &&
+                                                <motion.div
+                                                    key={`motion_${item.id}_resumeLanguages`}
+                                                    initial={{ opacity: 0, }}
+                                                    animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                                                    style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
+                                                >
+
+                                                    <AddOrRemoveItem currentId={item.id} actionRemove={removeLanguagesItem} actionAdd={addLanguagesItem} marginRight={'10px'} sizeButtons={'15px'} />
+                                                </motion.div>
                                             }
                                         </motion.div>
                                     )

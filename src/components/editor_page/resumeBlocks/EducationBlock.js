@@ -3,9 +3,8 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { addEducationItem, removeEducationItem, setEducationItemData, setResumeEducationHeading, } from '@/redux/resume/educationBlockSlice';
-
-
 import { setShowAddRemoveButtons } from '@/redux/settings/editorSettingsSlice';
+
 import CustomHeading from '../dataFields/CustomHeading';
 import CustomText from '../dataFields/CustomText';
 import AddOrRemoveItem from '../addOrRemoveItem/AddOrRemoveItem';
@@ -79,6 +78,7 @@ const EducationBlock = ({ editableFields }) => {
 export default EducationBlock;
 
 const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, ref }) => {
+    const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
 
     const onChangeHandler = (id, name, value,) => {
         dispatch(setEducationItemData({ id, name, value }));
@@ -147,8 +147,17 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
             </HStack>
 
             {
-                editableFields &&
-                <AddOrRemoveItem currentId={data.id} blockName={'resumeEducation'} actionAdd={addEducationItem} actionRemove={removeEducationItem} />
+                editableFields && (show.show && show.id == data.id) &&
+                <motion.div
+                    key={`motion_${data.id}_resumeEducation`}
+                    initial={{ opacity: 0, }}
+                    animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                    style={{ position: 'absolute', top: -10, right: '20px', display: 'block', }}
+                >
+                    <HStack>
+                        <AddOrRemoveItem currentId={data.id} actionAdd={addEducationItem} actionRemove={removeEducationItem} />
+                    </HStack>
+                </motion.div>
             }
         </Box >
     )

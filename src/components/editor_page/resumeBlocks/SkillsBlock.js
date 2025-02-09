@@ -14,9 +14,12 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
 
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
+    const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
 
     const skillsHeading = useSelector(state => state.resumeSkills.skillsHeading);
     const skillsItems = useSelector(state => state.resumeSkills.items)
+
+
     const dispatch = useDispatch();
 
     const onChangeHeadingHandler = (name, value,) => {
@@ -81,8 +84,16 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                                             />
 
                                             {
-                                                editableFields &&
-                                                <AddOrRemoveItem currentId={item.id} blockName={'resumeSkills'} actionRemove={removeSkillItem} actionAdd={addSkillItem} marginRight={'10px'} sizeButtons={'15px'} />
+                                                editableFields && (show.show && show.id == item.id) &&
+                                                <motion.div
+                                                    key={`motion_${item.id}_resumeSkills`}
+                                                    initial={{ opacity: 0, }}
+                                                    animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                                                    style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
+                                                >
+                                                    <AddOrRemoveItem currentId={item.id} actionRemove={removeSkillItem} actionAdd={addSkillItem} sizeButtons={'15px'} />
+                                                </motion.div>
+
                                             }
                                         </motion.div>
                                     )
