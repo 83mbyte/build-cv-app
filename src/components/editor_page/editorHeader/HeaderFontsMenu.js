@@ -54,7 +54,7 @@ const HeaderFontsMenu = () => {
         }}>
             <PopoverTrigger asChild>
                 <Button
-                    variant={'link'} colorPalette={'white'} size={'xs'}
+                    variant={'link'} colorPalette={'white'} size={['2xs', 'xs']}
                     _hover={{ opacity: 0.5 }}
                 >
                     <HStack gap={['1', '2']} >

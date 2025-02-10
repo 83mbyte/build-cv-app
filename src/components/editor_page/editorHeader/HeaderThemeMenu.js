@@ -25,7 +25,7 @@ const HeaderThemeMenu = () => {
             dispatch(setIsHeaderMenuOpen({ menu: 'themeMenu', value: e.open }))
         }}>
             <PopoverTrigger asChild>
-                <Button variant={'link'} colorPalette={'white'} size={'xs'}
+                <Button variant={'link'} colorPalette={'white'} size={['2xs', 'xs']}
                     _hover={{ opacity: 0.5 }}
                 >
                     <HStack gap={['1', '2']}>
