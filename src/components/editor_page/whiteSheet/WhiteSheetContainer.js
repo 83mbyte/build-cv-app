@@ -45,7 +45,7 @@ const WhiteSheetContainer = ({ ref }) => {
                     boxSizing={'border-box'}
                     ref={ref}
                     id='resumePapperHidden'
-                    zIndex={-99}
+                    zIndex={-10}
                     w={a4.w}
                     minW={'595pt'}
                     maxWidth={a4.w}
@@ -56,6 +56,7 @@ const WhiteSheetContainer = ({ ref }) => {
                     padding={'4rem'}
                     // padding={'0rem 4rem 0rem 4rem'}
                     border={'0px solid gray'}
+                    visibility={'hidden'}
                 >
 
                     {/* duplicate for rendering goes here  */}
