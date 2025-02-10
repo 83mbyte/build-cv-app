@@ -4,7 +4,7 @@ export const headerBlockSlice = createSlice({
     name: 'resumeHeader',
     initialState: {
         fullName: null,
-        position: 'position'
+        position: null
     },
     reducers: {
         setResumeHeaderData: (state, action) => {

@@ -26,7 +26,7 @@ const HeaderBlock = ({ editableFields }) => {
                         variant={'h1'}
                         size={fontSize.h1}
                         fontWeight={'600'}
-                        defaultValue={'Your name test'}
+                        defaultValue={'Full Name '}
                         name='fullName'
                         value={fullName}
                         isEditable={editableFields}
