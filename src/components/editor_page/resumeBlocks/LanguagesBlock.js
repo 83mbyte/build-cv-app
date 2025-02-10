@@ -2,18 +2,21 @@ import { Box, Stack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addLanguagesItem, removeLanguagesItem, setLanguagesItemData, setResumeLanguagesHeading } from '@/redux/resume/languagesBlockSlice';
-import { setShowAddRemoveButtons } from '@/redux/settings/editorSettingsSlice';
+import { addLanguagesItem, removeLanguagesItem, setLanguagesItemData, setResumeLanguagesHeading, setResumeLanguagesIsVisible } from '@/redux/resume/languagesBlockSlice';
+import { setShowAddRemoveButtons, setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
 import CustomHeading from '../dataFields/CustomHeading';
 import CustomText from '../dataFields/CustomText';
 import AddOrRemoveItem from '../addOrRemoveItem/AddOrRemoveItem';
-
+import BlockControlContainer from '../blockControl/BlockControlContainer';
 
 
 const LanguagesBlock = ({ editableFields, layoutNumber }) => {
+    const blockName = 'resumeLanguages';
+
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
     const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
+    const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
 
     const languagesHeading = useSelector(state => state.resumeLanguages.languagesHeading);
     const languagesItems = useSelector(state => state.resumeLanguages.items)
@@ -35,8 +38,13 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
             flexDirection={'column'}
             gap={layoutNumber == 0 ? 2 : 4}
             justifyContent={layoutNumber == 0 && 'space-between'}
-            _hover={{ outlineStyle: 'solid', outlineColor: `${themeColor}.100`, outlineWidth: '1px' }}
+            outlineStyle={'solid'}
+            outlineColor={`${themeColor}.100`}
+            outlineWidth={(showBlockControl.show && showBlockControl.blockName == 'resumeLanguages') ? '1px' : '0px'}
             padding={1} borderRadius={'lg'}
+            position={'relative'}
+            onMouseEnter={() => dispatch(setShowBlockControl({ blockName, show: true }))}
+            onMouseLeave={() => dispatch(setShowBlockControl({ blockName: null, show: false }))}
         >
 
             <CustomHeading
@@ -119,6 +127,12 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
                 }
             </Stack>
 
+            {
+                (showBlockControl.show && showBlockControl.blockName == 'resumeLanguages') &&
+                <BlockControlContainer blockName={blockName} hideButtonAction={setResumeLanguagesIsVisible} closeText={'Hide Languages block'}>
+                    {/* add aditional controls here.. */}
+                </BlockControlContainer>
+            }
         </Stack >
     );
 };

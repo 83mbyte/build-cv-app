@@ -14,6 +14,7 @@ export const experienceBlockSlice = createSlice({
     name: 'resumeExperience',
     initialState: {
         expHeading: null,
+        isVisible: true,
         items: [
             experienceItemDefault
         ],
@@ -25,6 +26,14 @@ export const experienceBlockSlice = createSlice({
             return {
                 ...state,
                 [action.payload.name]: action.payload.value
+            }
+        },
+        setResumeExperienceIsVisible: (state, action) => {
+            if (action.payload) {
+                return {
+                    ...state,
+                    isVisible: action.payload.show
+                }
             }
         },
 
@@ -60,5 +69,5 @@ export const experienceBlockSlice = createSlice({
     }
 })
 
-export const { setResumeExperienceHeading, setExpItemData, addExpItem, removeExpItem } = experienceBlockSlice.actions;
+export const { setResumeExperienceHeading, setResumeExperienceIsVisible, setExpItemData, addExpItem, removeExpItem } = experienceBlockSlice.actions;
 export default experienceBlockSlice.reducer;

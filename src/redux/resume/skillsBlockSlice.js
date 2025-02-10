@@ -6,6 +6,7 @@ const skillsItemDefault = { id: 'init_skills', value: 'Enter skill' };
 export const skillsBlockSlice = createSlice({
     name: 'resumeSkills',
     initialState: {
+        isVisible: true,
         skillsHeading: null,
         showAddRemoveButtons: {
             id: null,
@@ -18,6 +19,14 @@ export const skillsBlockSlice = createSlice({
             return {
                 ...state,
                 [action.payload.name]: action.payload.value
+            }
+        },
+        setResumeSkillsIsVisible: (state, action) => {
+            if (action.payload) {
+                return {
+                    ...state,
+                    isVisible: action.payload.show
+                }
             }
         },
 
@@ -55,5 +64,5 @@ export const skillsBlockSlice = createSlice({
     }
 })
 
-export const { setResumeSkillsHeading, setSkillItemData, addSkillItem, removeSkillItem, } = skillsBlockSlice.actions;
+export const { setResumeSkillsHeading, setResumeSkillsIsVisible, setSkillItemData, addSkillItem, removeSkillItem, } = skillsBlockSlice.actions;
 export default skillsBlockSlice.reducer;

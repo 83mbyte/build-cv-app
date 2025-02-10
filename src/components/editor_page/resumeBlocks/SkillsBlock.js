@@ -3,18 +3,22 @@ import { AnimatePresence, motion } from 'motion/react';
 import React from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addSkillItem, removeSkillItem, setResumeSkillsHeading, setSkillItemData } from "@/redux/resume/skillsBlockSlice";
-import { setShowAddRemoveButtons } from '@/redux/settings/editorSettingsSlice';
+import { addSkillItem, removeSkillItem, setResumeSkillsHeading, setSkillItemData, setResumeSkillsIsVisible } from "@/redux/resume/skillsBlockSlice";
+import { setShowAddRemoveButtons, setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
 
 import CustomText from '../dataFields/CustomText';
 import CustomHeading from '../dataFields/CustomHeading';
 import AddOrRemoveItem from "../addOrRemoveItem/AddOrRemoveItem";
+import BlockControlContainer from '../blockControl/BlockControlContainer';
 
 const SkillsBlock = ({ editableFields, layoutNumber }) => {
+    const blockName = 'resumeSkills';
 
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
     const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
+    const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
+
 
     const skillsHeading = useSelector(state => state.resumeSkills.skillsHeading);
     const skillsItems = useSelector(state => state.resumeSkills.items)
@@ -38,8 +42,13 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
             flexDirection={'column'}
             gap={layoutNumber == 0 ? 2 : 4}
             justifyContent={layoutNumber == 0 && 'space-between'}
-            _hover={{ outlineStyle: 'solid', outlineColor: `${themeColor}.100`, outlineWidth: '1px' }}
+            outlineStyle={'solid'}
+            outlineColor={`${themeColor}.100`}
+            outlineWidth={(showBlockControl.show && showBlockControl.blockName == 'resumeSkills') ? '1px' : '0px'}
             padding={1} borderRadius={'lg'}
+            position={'relative'}
+            onMouseEnter={() => dispatch(setShowBlockControl({ blockName, show: true }))}
+            onMouseLeave={() => dispatch(setShowBlockControl({ blockName: null, show: false }))}
         >
 
             <CustomHeading
@@ -121,6 +130,12 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                         })
                 }
             </Stack>
+            {
+                (showBlockControl.show && showBlockControl.blockName == 'resumeSkills') &&
+                <BlockControlContainer blockName={blockName} hideButtonAction={setResumeSkillsIsVisible} closeText={'Hide Skills block'}>
+                    {/* add aditional controls here.. */}
+                </BlockControlContainer>
+            }
         </Stack >
 
     );

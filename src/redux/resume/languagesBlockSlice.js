@@ -6,8 +6,8 @@ const languagesItemDefault = { id: 'init_languages', value: 'Enter language' };
 export const languagesBlockSlice = createSlice({
     name: 'resumeLanguages',
     initialState: {
+        isVisible: false,
         languagesHeading: null,
-
         items: [languagesItemDefault, { id: 'init_languages2', value: 'Enter lang' }]
     },
     reducers: {
@@ -15,6 +15,14 @@ export const languagesBlockSlice = createSlice({
             return {
                 ...state,
                 [action.payload.name]: action.payload.value
+            }
+        },
+        setResumeLanguagesIsVisible: (state, action) => {
+            if (action.payload) {
+                return {
+                    ...state,
+                    isVisible: action.payload.show
+                }
             }
         },
 
@@ -52,5 +60,5 @@ export const languagesBlockSlice = createSlice({
     }
 })
 
-export const { setResumeLanguagesHeading, setLanguagesItemData, setShowAddLanguagesButtons, addLanguagesItem, removeLanguagesItem, } = languagesBlockSlice.actions;
+export const { setResumeLanguagesHeading, setResumeLanguagesIsVisible, setLanguagesItemData, setShowAddLanguagesButtons, addLanguagesItem, removeLanguagesItem, } = languagesBlockSlice.actions;
 export default languagesBlockSlice.reducer;

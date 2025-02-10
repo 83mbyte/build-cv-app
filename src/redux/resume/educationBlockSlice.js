@@ -11,6 +11,7 @@ const educationItem = {
 export const educationBlockSlice = createSlice({
     name: 'resumeEducation',
     initialState: {
+        isVisible: true,
         educationHeading: null,
 
         items: [
@@ -59,8 +60,17 @@ export const educationBlockSlice = createSlice({
             let index = state.items.findIndex((item, index) => item.id == action.payload.id);
             state.items[index][action.payload.name] = action.payload.value;
         },
+
+        setResumeEducationIsVisible: (state, action) => {
+            if (action.payload) {
+                return {
+                    ...state,
+                    isVisible: action.payload.show
+                }
+            }
+        },
     }
 })
 
-export const { setResumeEducationHeading, addEducationItem, removeEducationItem, setEducationItemData, } = educationBlockSlice.actions;
+export const { setResumeEducationHeading, addEducationItem, removeEducationItem, setEducationItemData, setResumeEducationIsVisible } = educationBlockSlice.actions;
 export default educationBlockSlice.reducer;

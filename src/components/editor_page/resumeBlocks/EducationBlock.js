@@ -2,30 +2,45 @@ import { VStack, Box, Stack, Text, HStack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addEducationItem, removeEducationItem, setEducationItemData, setResumeEducationHeading, } from '@/redux/resume/educationBlockSlice';
-import { setShowAddRemoveButtons } from '@/redux/settings/editorSettingsSlice';
+import { addEducationItem, removeEducationItem, setEducationItemData, setResumeEducationHeading, setResumeEducationIsVisible } from '@/redux/resume/educationBlockSlice';
+import { setShowAddRemoveButtons, setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
 
 import CustomHeading from '../dataFields/CustomHeading';
 import CustomText from '../dataFields/CustomText';
 import AddOrRemoveItem from '../addOrRemoveItem/AddOrRemoveItem';
+import BlockControlContainer from '../blockControl/BlockControlContainer';
 
 
 const EducationBlock = ({ editableFields }) => {
 
+    const blockName = 'resumeEducation';
+
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
+    const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
 
     const educationHeading = useSelector(state => state.resumeEducation.educationHeading);
     const educationData = useSelector(state => state.resumeEducation.items);
 
     const dispatch = useDispatch();
 
+
     const onChangeHeadingHandler = (name, value,) => {
         dispatch(setResumeEducationHeading({ name, value }));
     }
 
     return (
-        <VStack bg='' alignItems={'flex-start'} w='full' padding={1} borderRadius={'lg'} gap={2} _hover={{ outlineStyle: 'solid', outlineColor: `${themeColor}.100`, outlineWidth: '1px' }} scrollbar={'hidden'}>
+        <VStack bg='' alignItems={'flex-start'} w='full' padding={1} borderRadius={'lg'} gap={2}
+
+            scrollbar={'hidden'}
+            outlineStyle={'solid'}
+            outlineColor={`${themeColor}.100`}
+            outlineWidth={(showBlockControl.show && showBlockControl.blockName == 'resumeEducation') ? '1px' : '0px'}
+
+            position={'relative'}
+            onMouseEnter={() => dispatch(setShowBlockControl({ blockName, show: true }))}
+            onMouseLeave={() => dispatch(setShowBlockControl({ blockName: null, show: false }))}
+        >
 
             <CustomHeading
                 variant={'h2'}
@@ -71,6 +86,13 @@ const EducationBlock = ({ editableFields }) => {
                         })
                 }
             </VStack>
+
+            {
+                (showBlockControl.show && showBlockControl.blockName == 'resumeEducation') &&
+                <BlockControlContainer blockName={blockName} hideButtonAction={setResumeEducationIsVisible} closeText={'Hide Education block'}>
+                    {/* add aditional controls here.. */}
+                </BlockControlContainer>
+            }
         </VStack>
     );
 };

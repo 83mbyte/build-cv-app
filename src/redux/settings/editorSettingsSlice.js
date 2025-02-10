@@ -17,7 +17,11 @@ export const editorSettingsSlice = createSlice({
             show: false,
             blockName: null,
         },
-
+        // show or hide the resume block
+        showBlockControl: {
+            show: false,
+            blockName: null
+        },
 
     },
     reducers: {
@@ -34,12 +38,7 @@ export const editorSettingsSlice = createSlice({
                 showOverlay: action.payload
             }
         },
-        setLayout: (state, action) => {
-            return {
-                ...state,
-                layout: action.payload
-            }
-        },
+
         setIsHeaderMenuOpen: (state, action) => {
             return {
                 ...state,
@@ -59,9 +58,24 @@ export const editorSettingsSlice = createSlice({
                 }
             }
         },
+        setShowBlockControl: (state, action) => {
+            return {
+                ...state,
+                showBlockControl: {
+                    show: action.payload.show,
+                    blockName: action.payload.blockName
+                }
+            }
+        },
+        setLayout: (state, action) => {
+            return {
+                ...state,
+                layout: action.payload
+            }
+        },
 
     }
 });
 
-export const { setThemeColor, setShowOverlay, setLayout, setIsHeaderMenuOpen, setShowAddRemoveButtons, } = editorSettingsSlice.actions;
+export const { setThemeColor, setShowOverlay, setLayout, setIsHeaderMenuOpen, setShowAddRemoveButtons, setShowBlockControl, } = editorSettingsSlice.actions;
 export default editorSettingsSlice.reducer;

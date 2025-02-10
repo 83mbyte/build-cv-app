@@ -96,7 +96,7 @@ const ContactItem = ({ type = 'text', iconCode, name, defaultValue, value, edita
     }
 
     return (
-        <HStack bg=''>
+        <HStack bg='' minW={'22%'}>
             <Text
                 fontSize={fontSize.p}
                 fontWeight={'600'}
