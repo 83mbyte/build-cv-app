@@ -1,16 +1,17 @@
-import React from 'react';
-import { Grid, GridItem, VStack } from '@chakra-ui/react';
+import React, { Suspense, lazy } from 'react';
+import { Grid, GridItem, VStack, Spinner } from '@chakra-ui/react';
 import { motion, LayoutGroup } from 'motion/react';
 
 import { useSelector } from 'react-redux';
 import HeaderBlock from '../resumeBlocks/HeaderBlock';
 import ContactBlock from '../resumeBlocks/ContactBlock';
-import SummaryBlock from '../resumeBlocks/SummaryBlock';
-import EducationBlock from '../resumeBlocks/EducationBlock';
-import ExperienceBlock from '../resumeBlocks/ExperienceBlock';
-import SkillsBlock from '../resumeBlocks/SkillsBlock';
-import LanguagesBlock from '../resumeBlocks/LanguagesBlock';
 
+
+const SummaryBlock = lazy(() => import('../resumeBlocks/SummaryBlock'));
+const EducationBlock = lazy(() => import('../resumeBlocks/EducationBlock'));
+const ExperienceBlock = lazy(() => import('../resumeBlocks/ExperienceBlock'));
+const SkillsBlock = lazy(() => import('../resumeBlocks/SkillsBlock'));
+const LanguagesBlock = lazy(() => import('../resumeBlocks/LanguagesBlock'));
 
 const gridTemplates = {
     0: {
@@ -39,6 +40,12 @@ const itemsBlockSpacing = '8';
 
 const WhiteSheetGridLayout = ({ editableFields }) => {
     const layoutNumber = useSelector(state => state.editorSettings.layout);
+    const resumeSummaryVisible = useSelector(state => state.resumeSummary.isVisible);
+    const resumeEducationVisible = useSelector(state => state.resumeEducation.isVisible);
+    const resumeExperienceVisible = useSelector(state => state.resumeExperience.isVisible);
+    const resumeSkillsVisible = useSelector(state => state.resumeSkills.isVisible);
+    const resumeLanguagesVisible = useSelector(state => state.resumeLanguages.isVisible);
+
     if (editableFields != false) {
         return (
 
@@ -46,11 +53,11 @@ const WhiteSheetGridLayout = ({ editableFields }) => {
                 layoutNumber={layoutNumber}
                 headerBlock={<HeaderBlock editableFields={editableFields} />}
                 contactBlock={<ContactBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
-                summaryBlock={<SummaryBlock editableFields={editableFields} />}
-                educationBlock={<EducationBlock editableFields={editableFields} />}
-                experienceBlock={<ExperienceBlock editableFields={editableFields} />}
-                skillsBlock={<SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
-                languagesBlock={<LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
+                summaryBlock={resumeSummaryVisible ? <Suspense fallback={<Spinner />}><SummaryBlock editableFields={editableFields} /></Suspense> : null}
+                educationBlock={resumeEducationVisible ? <Suspense fallback={<Spinner />}><EducationBlock editableFields={editableFields} /></Suspense> : null}
+                experienceBlock={resumeExperienceVisible ? <Suspense fallback={<Spinner />}><ExperienceBlock editableFields={editableFields} /></Suspense> : null}
+                skillsBlock={resumeSkillsVisible ? <Suspense fallback={<Spinner />}><SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
+                languagesBlock={resumeLanguagesVisible ? <Suspense fallback={<Spinner />}><LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
 
             />
         )
@@ -60,11 +67,11 @@ const WhiteSheetGridLayout = ({ editableFields }) => {
                 layoutNumber={layoutNumber}
                 headerBlock={<HeaderBlock editableFields={editableFields} />}
                 contactBlock={<ContactBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
-                summaryBlock={<SummaryBlock editableFields={editableFields} />}
-                educationBlock={<EducationBlock editableFields={editableFields} />}
-                experienceBlock={<ExperienceBlock editableFields={editableFields} />}
-                skillsBlock={<SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
-                languagesBlock={<LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
+                summaryBlock={resumeSummaryVisible ? <Suspense fallback={<Spinner />}><SummaryBlock editableFields={editableFields} /></Suspense> : null}
+                educationBlock={resumeEducationVisible ? <Suspense fallback={<Spinner />}><EducationBlock editableFields={editableFields} /></Suspense> : null}
+                experienceBlock={resumeExperienceVisible ? <Suspense fallback={<Spinner />}><ExperienceBlock editableFields={editableFields} /></Suspense> : null}
+                skillsBlock={resumeSkillsVisible ? <Suspense fallback={<Spinner />}><SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
+                languagesBlock={resumeLanguagesVisible ? <Suspense fallback={<Spinner />}><LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
             />
         )
     }
@@ -102,25 +109,33 @@ const DocumentLayoutAnimated = ({ layoutNumber, headerBlock, contactBlock, summa
                                 {contactBlock}
                             </AnimatedBlockWrapper>
                         }
-                        <AnimatedBlockWrapper id={'summaryCenterCenterArea'}>
-                            {summaryBlock}
-                        </AnimatedBlockWrapper>
-
-                        <AnimatedBlockWrapper id={'educationBlockCenterArea'}>
-                            {educationBlock}
-                        </AnimatedBlockWrapper>
-                        <AnimatedBlockWrapper id='experienceBlock'>
-                            {experienceBlock}
-                        </AnimatedBlockWrapper>
                         {
-                            layoutNumber == 0 &&
-                            <AnimatedBlockWrapper id={'skillsBlock'} >
+                            summaryBlock &&
+                            <AnimatedBlockWrapper id={'summaryCenterCenterArea'}>
+                                {summaryBlock}
+                            </AnimatedBlockWrapper>
+                        }
+
+                        {
+                            educationBlock &&
+                            <AnimatedBlockWrapper id={'educationBlockCenterArea'}>
+                                {educationBlock}
+                            </AnimatedBlockWrapper>}
+                        {
+                            experienceBlock &&
+                            <AnimatedBlockWrapper id='experienceBlock'>
+                                {experienceBlock}
+                            </AnimatedBlockWrapper>
+                        }
+                        {
+                            (layoutNumber == 0 && skillsBlock) &&
+                            <AnimatedBlockWrapper id={'skillsBlock'}>
                                 {skillsBlock}
                             </AnimatedBlockWrapper>
                         }
                         {
-                            layoutNumber == 0 &&
-                            <AnimatedBlockWrapper id={'languagesBlock'} >
+                            (layoutNumber == 0 && languagesBlock) &&
+                            <AnimatedBlockWrapper id={'languagesBlock'}>
                                 {languagesBlock}
                             </AnimatedBlockWrapper>
                         }
@@ -139,18 +154,24 @@ const DocumentLayoutAnimated = ({ layoutNumber, headerBlock, contactBlock, summa
                             <AnimatedBlockWrapper id={'contactBlock'} >
                                 {contactBlock}
                             </AnimatedBlockWrapper>
-                            <AnimatedBlockWrapper id={'skillsBlock'} >
-                                {skillsBlock}
-                            </AnimatedBlockWrapper>
-                            <AnimatedBlockWrapper id={'languagesBlock'} >
-                                {languagesBlock}
-                            </AnimatedBlockWrapper>
+                            {
+                                skillsBlock &&
+                                <AnimatedBlockWrapper id={'skillsBlock'} >
+                                    {skillsBlock}
+                                </AnimatedBlockWrapper>
+                            }
+                            {
+                                languagesBlock &&
+                                <AnimatedBlockWrapper id={'languagesBlock'} >
+                                    {languagesBlock}
+                                </AnimatedBlockWrapper>
+                            }
                         </VStack>
                     </GridItemAnimated>
                 }
 
             </Grid>
-        </LayoutGroup>
+        </LayoutGroup >
     )
 };
 
