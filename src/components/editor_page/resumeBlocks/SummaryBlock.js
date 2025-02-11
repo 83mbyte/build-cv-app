@@ -8,6 +8,7 @@ import { setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
 import CustomHeading from '../dataFields/CustomHeading';
 import CustomText from '../dataFields/CustomText';
 import BlockControlContainer from '../blockControl/BlockControlContainer';
+import SummaryAI from './aiBot/SummaryAI';
 
 const SummaryBlock = ({ editableFields }) => {
     const blockName = 'resumeSummary';
@@ -64,6 +65,7 @@ const SummaryBlock = ({ editableFields }) => {
                 (showBlockControl.show && showBlockControl.blockName == 'resumeSummary') &&
                 <BlockControlContainer blockName={'resumeSummary'} hideButtonAction={setResumeSummaryIsVisible} closeText={'Hide Summary block'}  >
                     {/* add aditional controls here.. */}
+                    <SummaryAI />
                 </BlockControlContainer>
 
             }

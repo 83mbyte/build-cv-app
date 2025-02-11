@@ -5,15 +5,24 @@ export const resumeAiBotSlice = createSlice({
     initialState: {
         showModalAiBotContainer: {
             id: null,
-            show: false
+            blockName: null,
+            show: false,
         },
         resumeExperience: {
             position: null,  //role
             generatedItems: null,   // as { someId:[item,item2,...], someId_2:[item_2,item_3,...] }
             selectedItems: null
-        }
+        },
+        resumeSummary: {
+            position: null,
+            generatedItems: null,
+            selectedItems: null
+        },
     },
     reducers: {
+        // ---------------------
+        // Experience reducers
+        // ---------------------
         setShowModalAiBotContainer: (state, action) => {
             return {
                 ...state,
@@ -90,12 +99,50 @@ export const resumeAiBotSlice = createSlice({
                     state.resumeExperience.selectedItems[action.payload.currentId].splice(indexToRemove, 1);
                 }
             }
-        }
+        },
+
+        // -------------------
+        // summary reducers
+        // -------------------
+        setSummaryGeneratedItems: (state, action) => {
+            if (action.payload && action.payload.value) {
+                return {
+                    ...state,
+                    resumeSummary: {
+                        ...state.resumeSummary,
+                        generatedItems: action.payload.value
+                    }
+                }
+            }
+        },
+        addResumeSelectedItems: (state, action) => {
+            if (action.payload && action.payload.value) {
+
+                return {
+                    ...state,
+                    resumeSummary: {
+                        ...state.resumeSummary,
+                        selectedItems: [action.payload.value]
+                    }
+                }
+            }
+        },
+        removeSummarySelectedItems: (state, action) => {
+            if (action.payload && action.payload.value && state.resumeSummary.selectedItems) {
+                return {
+                    ...state,
+                    resumeSummary: {
+                        ...state.resumeSummary,
+                        selectedItems: null
+                    }
+                }
+            }
+        },
     }
 })
 
 
 
-export const { setExperienceRole, setShowModalAiBotContainer, setExperienceGeneratedItems, addExperienceSelectedItems, removeExperienceSelectedItems } = resumeAiBotSlice.actions;
+export const { setExperienceRole, setShowModalAiBotContainer, setExperienceGeneratedItems, addExperienceSelectedItems, removeExperienceSelectedItems, setSummaryGeneratedItems, addResumeSelectedItems, removeSummarySelectedItems } = resumeAiBotSlice.actions;
 
 export default resumeAiBotSlice.reducer;
