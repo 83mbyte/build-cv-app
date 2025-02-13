@@ -6,6 +6,10 @@ export const summaryBlockSlice = createSlice({
         isVisible: true,
         summaryHeading: null,
         summaryText: null,
+        assistant: {
+            genereatedItems: null,
+            selectedItems: null
+        }
     },
     reducers: {
         setResumeSummaryData: (state, action) => {
@@ -14,7 +18,6 @@ export const summaryBlockSlice = createSlice({
                 [action.payload.name]: action.payload.value
             }
         },
-
         setResumeSummaryIsVisible: (state, action) => {
             if (action.payload) {
                 return {
@@ -23,8 +26,42 @@ export const summaryBlockSlice = createSlice({
                 }
             }
         },
+        setSummaryGeneratedItems: (state, action) => {
+            if (action.payload && action.payload.value) {
+                return {
+                    ...state,
+                    assistant: {
+                        ...state.assistant,
+                        generatedItems: action.payload.value
+                    }
+                }
+            }
+        },
+        addSummarySelectedItems: (state, action) => {
+            if (action.payload && action.payload.value) {
+
+                return {
+                    ...state,
+                    assistant: {
+                        ...state.assistant,
+                        selectedItems: [action.payload.value]
+                    }
+                }
+            }
+        },
+        removeSummarySelectedItems: (state, action) => {
+            if (action.payload && action.payload.value && state.assistant.selectedItems) {
+                return {
+                    ...state,
+                    assistant: {
+                        ...state.assistant,
+                        selectedItems: null
+                    }
+                }
+            }
+        },
     }
 })
 
-export const { setResumeSummaryData, setResumeSummaryIsVisible } = summaryBlockSlice.actions;
+export const { setResumeSummaryData, setResumeSummaryIsVisible, setSummaryGeneratedItems, addSummarySelectedItems, removeSummarySelectedItems } = summaryBlockSlice.actions;
 export default summaryBlockSlice.reducer;

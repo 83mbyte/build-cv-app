@@ -1,14 +1,18 @@
 
-import { VStack } from '@chakra-ui/react';
+import { VStack, Button } from '@chakra-ui/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setResumeSummaryData, setResumeSummaryIsVisible } from '@/redux/resume/summaryBlockSlice';
-import { setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
+import { setShowBlockControl, setShowModal } from '@/redux/settings/editorSettingsSlice';
+
+import { LuSparkles } from "react-icons/lu";
 
 import CustomHeading from '../dataFields/CustomHeading';
 import CustomText from '../dataFields/CustomText';
 import BlockControlContainer from '../blockControl/BlockControlContainer';
 import SummaryAI from './aiBot/SummaryAI';
+import ModalWindowBot from '@/components/modalWindow/ModalWindowBot';
+
 
 const SummaryBlock = ({ editableFields }) => {
     const blockName = 'resumeSummary';
@@ -63,12 +67,29 @@ const SummaryBlock = ({ editableFields }) => {
             />
             {
                 (showBlockControl.show && showBlockControl.blockName == 'resumeSummary') &&
+
+
                 <BlockControlContainer blockName={'resumeSummary'} hideButtonAction={setResumeSummaryIsVisible} closeText={'Hide Summary block'}  >
                     {/* add aditional controls here.. */}
-                    <SummaryAI />
-                </BlockControlContainer>
 
+                    <Button
+                        aria-label="AI Assistant"
+                        variant={'outline'}
+                        bgColor={`white`}
+                        borderWidth={'1px'}
+                        borderColor={`${themeColor}.100`}
+                        _hover={{ backgroundColor: `${themeColor}.50` }}
+                        size={'xs'}
+                        rounded={'md'}
+                        px={1}
+                        onClick={() => dispatch(setShowModal({ blockName, show: true }))}
+                    ><LuSparkles />{'Ai Assistant' || `Click Me`}</Button>
+
+                </BlockControlContainer>
             }
+            <ModalWindowBot title='AI-powered assistant' size='lg'>
+                <SummaryAI />
+            </ModalWindowBot>
         </VStack >
     );
 };
