@@ -22,6 +22,11 @@ export const editorSettingsSlice = createSlice({
             show: false,
             blockName: null
         },
+        showModal: {
+            show: false,
+            blockName: null,
+            id: null,
+        }
 
     },
     reducers: {
@@ -74,8 +79,30 @@ export const editorSettingsSlice = createSlice({
             }
         },
 
+        setShowModal: (state, action) => {
+            if (action.payload && action.payload.blockName && action.payload.show) {
+                return {
+                    ...state,
+                    showModal: {
+                        show: action.payload.show,
+                        blockName: action.payload.blockName,
+                    }
+                }
+            } else {
+                return {
+                    ...state,
+                    showModal: {
+                        show: false,
+                        blockName: null,
+                        id: null
+                    }
+                }
+            }
+        },
+
+
     }
 });
 
-export const { setThemeColor, setShowOverlay, setLayout, setIsHeaderMenuOpen, setShowAddRemoveButtons, setShowBlockControl, } = editorSettingsSlice.actions;
+export const { setThemeColor, setShowOverlay, setLayout, setIsHeaderMenuOpen, setShowAddRemoveButtons, setShowBlockControl, setShowModal, } = editorSettingsSlice.actions;
 export default editorSettingsSlice.reducer;
