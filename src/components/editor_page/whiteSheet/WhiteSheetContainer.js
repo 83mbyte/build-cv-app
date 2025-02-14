@@ -29,9 +29,8 @@ const WhiteSheetContainer = ({ ref }) => {
                     maxWidth={a4.w}
                     minHeight={a4.h}
                     h='100%'
-                    overflow={'hidden'}
+                    // overflow={'hidden'}
                     marginX={['0.5', '1', 'auto']}
-                    //position={'relative'}
                     padding={['2', '4rem']}
                     border={'0px solid red'}
                 >
