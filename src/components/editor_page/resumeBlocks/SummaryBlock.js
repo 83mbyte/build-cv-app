@@ -10,9 +10,6 @@ import { LuSparkles } from "react-icons/lu";
 import CustomHeading from '../dataFields/CustomHeading';
 import CustomText from '../dataFields/CustomText';
 import BlockControlContainer from '../blockControl/BlockControlContainer';
-import SummaryAI from './aiBot/SummaryAI';
-import ModalWindowBot from '@/components/modalWindow/ModalWindowBot';
-
 
 const SummaryBlock = ({ editableFields }) => {
     const blockName = 'resumeSummary';
@@ -22,7 +19,6 @@ const SummaryBlock = ({ editableFields }) => {
     const summaryText = useSelector(state => state.resumeSummary.summaryText);
 
     const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
-
 
     const dispatch = useDispatch();
 
@@ -87,9 +83,6 @@ const SummaryBlock = ({ editableFields }) => {
 
                 </BlockControlContainer>
             }
-            <ModalWindowBot title='AI-powered assistant' size='lg'>
-                <SummaryAI />
-            </ModalWindowBot>
         </VStack >
     );
 };

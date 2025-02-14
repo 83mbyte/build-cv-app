@@ -69,7 +69,6 @@ export const skillsBlockSlice = createSlice({
         // assistant reducers
         setSkillsGeneratedItems: (state, action) => {
             if (action.payload && action.payload.value) {
-                console.log('in reducer')
                 return {
                     ...state,
                     assistant: {

@@ -7,7 +7,7 @@ export const summaryBlockSlice = createSlice({
         summaryHeading: null,
         summaryText: null,
         assistant: {
-            genereatedItems: null,
+            generatedItems: null,
             selectedItems: null
         }
     },
