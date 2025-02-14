@@ -7,6 +7,7 @@ import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import { LuX, } from "react-icons/lu";
 import { BsRobot } from "react-icons/bs";
+import { useEffect } from 'react';
 
 const ModalWindowBot = ({ size = 'lg', title = 'Modal Title', children }) => {
     const showModal = useSelector(state => state.editorSettings.showModal.show);
@@ -14,9 +15,18 @@ const ModalWindowBot = ({ size = 'lg', title = 'Modal Title', children }) => {
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (showModal) {
+            document.body.style.overflowY = 'hidden';
+        } else {
+            document.body.style.overflowY = '';
+        }
+    }, [showModal])
+
     return (
         <AnimatePresence mode='wait'>
-            {showModal &&
+            {
+                showModal &&
                 <Portal>
                     <Box position={'fixed'} bgColor={'rgba(0,0,0,0.3)'} w='100%' h='100vh' zIndex={10} overflowY={'hidden'} top={0} left={0}>
                         <AbsoluteCenter w='full' px={1}>

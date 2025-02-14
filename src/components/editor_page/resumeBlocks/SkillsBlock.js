@@ -1,15 +1,16 @@
-import { Box, Stack } from '@chakra-ui/react';
+import { Box, Button, Stack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
-import React from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { addSkillItem, removeSkillItem, setResumeSkillsHeading, setSkillItemData, setResumeSkillsIsVisible } from "@/redux/resume/skillsBlockSlice";
-import { setShowAddRemoveButtons, setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
+import { setShowAddRemoveButtons, setShowBlockControl, setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import CustomText from '../dataFields/CustomText';
 import CustomHeading from '../dataFields/CustomHeading';
 import AddOrRemoveItem from "../addOrRemoveItem/AddOrRemoveItem";
 import BlockControlContainer from '../blockControl/BlockControlContainer';
+
+import { LuSparkles } from "react-icons/lu";
 
 const SkillsBlock = ({ editableFields, layoutNumber }) => {
     const blockName = 'resumeSkills';
@@ -134,6 +135,18 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                 (showBlockControl.show && showBlockControl.blockName == 'resumeSkills') &&
                 <BlockControlContainer blockName={blockName} hideButtonAction={setResumeSkillsIsVisible} closeText={'Hide Skills block'}>
                     {/* add aditional controls here.. */}
+                    <Button
+                        aria-label="AI Assistant"
+                        variant={'outline'}
+                        bgColor={`white`}
+                        borderWidth={'1px'}
+                        borderColor={`${themeColor}.100`}
+                        _hover={{ backgroundColor: `${themeColor}.50` }}
+                        size={'xs'}
+                        rounded={'md'}
+                        px={1}
+                        onClick={() => dispatch(setShowModal({ blockName, show: true }))}
+                    ><LuSparkles />{'Ai Assistant' || `Click Me`}</Button>
                 </BlockControlContainer>
             }
         </Stack >
