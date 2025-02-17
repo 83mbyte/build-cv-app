@@ -1,5 +1,5 @@
 import { Box, Button, Stack } from '@chakra-ui/react';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { addSkillItem, removeSkillItem, setResumeSkillsHeading, setSkillItemData, setResumeSkillsIsVisible } from "@/redux/resume/skillsBlockSlice";
@@ -17,24 +17,15 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
 
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
-    const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
     const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
-
-
     const skillsHeading = useSelector(state => state.resumeSkills.skillsHeading);
     const skillsItems = useSelector(state => state.resumeSkills.items)
-
 
     const dispatch = useDispatch();
 
     const onChangeHeadingHandler = (name, value,) => {
         dispatch(setResumeSkillsHeading({ name, value }));
     }
-
-    const onChangeHandler = (id, value) => {
-        dispatch(setSkillItemData({ id, value }));
-    }
-
 
     return (
         <Stack
@@ -67,66 +58,28 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
 
                 {
                     editableFields == true
-                        ? // return  animated
-                        <AnimatePresence>
+                        ? // return animated 
+                        <>
                             {
-                                skillsItems.map((item, index) => {
+                                skillsItems.map((item) => {
 
                                     return (
-                                        <motion.div key={item.id}
+                                        <SkillsItemMotion
                                             initial={{ opacity: 0, }}
-                                            animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.25 } }}
-                                            exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.3, delay: 0.1 } }}
+                                            animate={{ opacity: 1, transition: { duration: 0.5, delay: 0.25 } }}
+                                            exit={{ opacity: 0, transition: { delay: 0.1 } }}
                                             layout
-                                            style={{ position: 'relative', backgroundColor: '', minWidth: '23%', margin: 0 }}
-                                            onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
-                                            onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
-                                        >
-                                            <CustomText
-                                                variant={'p'}
-                                                size={fontSize.p}
-                                                fontWeight={'400'}
-                                                defaultValue={'Enter skill'}
-                                                name={null}
-                                                value={item.value}
-                                                isEditable={editableFields}
-                                                onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
-                                            />
-
-                                            {
-                                                editableFields && (show.show && show.id == item.id) &&
-                                                <motion.div
-                                                    key={`motion_${item.id}_resumeSkills`}
-                                                    initial={{ opacity: 0, }}
-                                                    animate={{ opacity: 1, transition: { delay: 0.1 } }}
-                                                    style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
-                                                >
-                                                    <AddOrRemoveItem currentId={item.id} actionRemove={removeSkillItem} actionAdd={addSkillItem} sizeButtons={'15px'} />
-                                                </motion.div>
-
-                                            }
-                                        </motion.div>
+                                            item={item} key={item.id} fontSize={fontSize} dispatch={dispatch} editableFields={editableFields} />
                                     )
                                 })
                             }
-                        </AnimatePresence>
+                        </>
                         :
                         // return not animated
-                        skillsItems.map((item, index) => {
+                        skillsItems.map((item) => {
 
                             return (
-                                <Box key={item.id}>
-                                    <CustomText
-                                        variant={'p'}
-                                        size={fontSize.p}
-                                        fontWeight={'400'}
-                                        defaultValue={'Enter skill'}
-                                        name={null}
-                                        value={item.value}
-                                        isEditable={editableFields}
-                                        onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
-                                    />
-                                </Box>
+                                <SkillsItem item={item} key={`notAnimated_${item.id}`} fontSize={fontSize} dispatch={dispatch} editableFields={editableFields} />
                             )
                         })
                 }
@@ -156,3 +109,50 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
 
 export default SkillsBlock;
 
+
+
+const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
+    let suffForIds = '';
+    if (editableFields == false) {
+        suffForIds = '_notAnimate';
+    }
+    const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
+    const onChangeHandler = (id, value) => {
+        dispatch(setSkillItemData({ id, value }));
+    }
+    return (
+        <Box key={`li_${item.id}_${suffForIds}`}
+            ref={ref}
+            margin={0}
+            minWidth={'23%'}
+            position='relative'
+            onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
+            onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
+        >
+            <CustomText
+                variant={'p'}
+                size={fontSize.p}
+                fontWeight={'400'}
+                defaultValue={'Enter skill'}
+                name={null}
+                value={item.value}
+                isEditable={editableFields}
+                onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
+            />
+
+            {
+                editableFields && (show.show && show.id == item.id) &&
+                <motion.div
+                    key={`motion_${item.id}_resumeSkills`}
+                    initial={{ opacity: 0, }}
+                    animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                    style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
+                >
+                    <AddOrRemoveItem currentId={item.id} actionRemove={removeSkillItem} actionAdd={addSkillItem} sizeButtons={'15px'} />
+                </motion.div>
+            }
+        </Box>
+    )
+}
+
+const SkillsItemMotion = motion.create(SkillsItem);
