@@ -86,6 +86,7 @@ export const editorSettingsSlice = createSlice({
                     showModal: {
                         show: action.payload.show,
                         blockName: action.payload.blockName,
+                        id: action.payload.id ?? null
                     }
                 }
             } else {

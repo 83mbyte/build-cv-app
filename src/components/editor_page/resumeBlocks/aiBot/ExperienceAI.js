@@ -3,28 +3,28 @@ import { VStack, Text, Box, Input, Button, HStack, Icon } from '@chakra-ui/react
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setExperienceRole, setExperienceGeneratedItems, setShowModalAiBotContainer, addExperienceSelectedItems, removeExperienceSelectedItems } from '@/redux/modals/resumeAiBotSlice';
-import { setExpItemData } from '@/redux/resume/experienceBlockSlice';
+import { addExperienceSelectedItems, removeExperienceSelectedItems, setExpItemData, setExperienceGeneratedItems, setExperiencePositionForAssistant } from '@/redux/resume/experienceBlockSlice';
+import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import { experienceBotData } from '@/lib/content-lib';
 import { sanitizeInput } from '@/lib/commonScripts';
 import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
 
-import ModalAiContainer from './ModalAiContainer';
 
-const ExperienceAI = ({ currentId, fieldName = 'description' }) => {
-
+const ExperienceAI = ({ fieldName = 'description' }) => {
+    const currentId = useSelector(state => state.editorSettings.showModal.id);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
-    const position = useSelector(state => state.resumeAiBot.resumeExperience.position);
-    const generatedItems = useSelector(state => state.resumeAiBot.resumeExperience.generatedItems);
-    const selectedItems = useSelector(state => state.resumeAiBot.resumeExperience.selectedItems);
+
+    const position = useSelector(state => state.resumeExperience.assistant.position);
+    const generatedItems = useSelector(state => state.resumeExperience.assistant.generatedItems);
+    const selectedItems = useSelector(state => state.resumeExperience.assistant.selectedItems);
     const dispatch = useDispatch();
 
     const positionField = useRef(null);
 
     const onChangeHandler = (currentId, value,) => {
         const cleanValue = sanitizeInput(value);
-        dispatch(setExperienceRole({ currentId, value: cleanValue }));
+        dispatch(setExperiencePositionForAssistant({ currentId, value: cleanValue }));
     }
 
     const clickToGenerate = (currentId) => {
@@ -33,7 +33,7 @@ const ExperienceAI = ({ currentId, fieldName = 'description' }) => {
         const tempData = ['BC', 37399, 'LOREM IPSUM', '2BC', 372399, 'LOREM1 IPSUM'];
 
         dispatch(setExperienceGeneratedItems({ currentId, value: tempData }));
-        dispatch(setExperienceRole({ currentId, value: null }));
+        dispatch(setExperiencePositionForAssistant({ currentId, value: null }));
     }
 
     const clickUseItButton = (id, fieldName) => {
@@ -56,124 +56,125 @@ const ExperienceAI = ({ currentId, fieldName = 'description' }) => {
 
         // add data to the resume block
         dispatch(setExpItemData({ id: currentId, name: fieldName, value: stringToSave }));
+        dispatch(setShowModal({ show: false }));
+    }
 
-        dispatch(setShowModalAiBotContainer({ id: null, show: false }));
-    }
-    const clickCancelButton = () => {
-        dispatch(setShowModalAiBotContainer({ id: null, show: false }))
-    }
 
     const clickToSelectItem = (isSelectedIndex, item) => {
 
         if (isSelectedIndex == -1) {
             dispatch(addExperienceSelectedItems({ currentId, value: item }));
-        } else {
-            dispatch(removeExperienceSelectedItems({ currentId, value: item }))
+        }
+        else {
+            dispatch(removeExperienceSelectedItems({ currentId, value: item }));
         }
     }
 
+    const clickCancelButton = () => {
+        dispatch(setShowModal({ show: false }));
+    }
+
+
     return (
-        <ModalAiContainer title={'AI Bot'}>
 
-            <VStack position={'relative'}  >
-                <Text>Work Experience</Text>
-                {(!generatedItems || (generatedItems && !generatedItems[currentId])) &&
-                    <VStack>
-                        <Text bg='' w='full' textAlign={'left'} fontSize={'sm'}>{experienceBotData.description ?? 'lorem ipsum lorem ipsum'}</Text>
-                        <Box w='full'>
-                            <Input
-                                size={'xs'}
-                                borderWidth={'1px'}
-                                borderColor={`${themeColor}.200`}
-                                borderStyle={'solid'}
-                                borderRadius={'lg'}
-                                ref={positionField}
-                                placeholder={experienceBotData.positionField ?? 'lorem ipsum'}
-                                defaultValue={position ?? null}
-                                _focusVisible={{ outline: 'none' }}
-                                onChange={() => onChangeHandler(currentId, positionField.current.value)}
-                            />
-                        </Box>
-                    </VStack>
-                }
-
-                <AnimatePresence>
-                    {
-                        (generatedItems && (generatedItems[currentId] && generatedItems[currentId].length > 0)) &&
-                        <motion.div
-                            key={'generatedDataDiv'}
-                            style={{ width: '100%', overflow: 'hidden' }}
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: '130px', opacity: 1, transition: { opacity: { delay: 0.3 } } }}
-                            exit={{ height: 0, opacity: 0 }}
-                            viewport={{ once: true }}
-                        >
-                            <Box padding={2} w='full' minHeight={'50px'}
-                                height={'130px'}
-                                borderWidth={'1px'}
-                                borderColor={`${themeColor}.200`}
-                                borderStyle={'solid'}
-                                borderRadius={'lg'}
-                                bg=''
-                                overflow={'scroll'}
-                            >
-                                <VStack width='full' bg='' overflow={'scroll'} gap={3}>
-                                    {
-                                        generatedItems[currentId].map((item, index) => {
-                                            let isSelectedIndex = -1;
-                                            if (selectedItems && selectedItems[currentId]) {
-                                                isSelectedIndex = selectedItems[currentId].findIndex(itemToCheck => itemToCheck == item);
-                                            }
-
-                                            return (
-                                                <Box width={'full'} cursor={'pointer'}
-                                                    borderWidth={'0px'}
-                                                    _hover={{ opacity: 0.5 }}
-                                                    borderStyle={isSelectedIndex != -1 ? 'solid' : 'dashed'}
-                                                    borderBottomWidth={'1px'}
-                                                    userSelect={'none'}
-                                                    key={index}
-                                                    onClick={() => clickToSelectItem(isSelectedIndex, item)}
-                                                >
-                                                    <HStack>
-                                                        <Icon color={isSelectedIndex != -1 ? `${themeColor}` : 'lightgrey'}>
-                                                            {isSelectedIndex != -1
-                                                                ? <LuSquareCheck />
-                                                                : <LuSquare />
-                                                            }
-                                                        </Icon>
-                                                        {item}
-                                                    </HStack>
-                                                </Box>
-                                            )
-                                        })
-                                    }
-                                </VStack>
-                            </Box>
-                        </motion.div>
-                    }
-                </AnimatePresence>
-
-                <VStack gap={2} w='full' marginTop={2}>
-                    {
-                        (!generatedItems || !generatedItems[currentId])
-                            ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={() => clickToGenerate(currentId)} disabled={(!position || position.length < 3)}> <LuSparkles />Generate</Button>
-
-                            :
-                            <>
-                                <Button size='xs' w={'full'}
-                                    colorPalette={themeColor} onClick={() => clickUseItButton(currentId, fieldName)}
-                                    disabled={(
-                                        !selectedItems || !selectedItems[currentId] || selectedItems[currentId].length < 1
-                                    )}
-                                >Use selected</Button>
-                                <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>cancel</Button>
-                            </>
-                    }
+        <VStack position={'relative'}  >
+            <Text>Work Experience</Text>
+            {(!generatedItems || (generatedItems && !generatedItems[currentId])) &&
+                <VStack>
+                    <Text bg='' w='full' textAlign={'left'} fontSize={'sm'}>{experienceBotData.description ?? 'lorem ipsum lorem ipsum'}</Text>
+                    <Box w='full'>
+                        <Input
+                            size={'xs'}
+                            borderWidth={'1px'}
+                            borderColor={`${themeColor}.200`}
+                            borderStyle={'solid'}
+                            borderRadius={'lg'}
+                            ref={positionField}
+                            placeholder={experienceBotData.positionField ?? 'lorem ipsum'}
+                            defaultValue={position ?? null}
+                            _focusVisible={{ outline: 'none' }}
+                            onChange={() => onChangeHandler(currentId, positionField.current.value)}
+                        />
+                    </Box>
                 </VStack>
+            }
 
+            <AnimatePresence>
+                {
+                    (generatedItems && (generatedItems[currentId] && generatedItems[currentId].length > 0)) &&
+                    <motion.div
+                        key={'generatedDataDiv'}
+                        style={{ width: '100%', overflow: 'hidden' }}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: '130px', opacity: 1, transition: { opacity: { delay: 0.3 } } }}
+                        exit={{ height: 0, opacity: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <Box padding={2} w='full' minHeight={'50px'}
+                            height={'130px'}
+                            borderWidth={'1px'}
+                            borderColor={`${themeColor}.200`}
+                            borderStyle={'solid'}
+                            borderRadius={'lg'}
+                            bg=''
+                            overflow={'scroll'}
+                        >
+                            <VStack width='full' bg='' overflow={'scroll'} gap={3}>
+                                {
+                                    generatedItems[currentId].map((item, index) => {
+                                        let isSelectedIndex = -1;
+
+                                        if (selectedItems && selectedItems[currentId]) {
+                                            isSelectedIndex = selectedItems[currentId].findIndex(itemToCheck => itemToCheck == item);
+                                        }
+
+                                        return (
+                                            <Box width={'full'} cursor={'pointer'}
+                                                borderWidth={'0px'}
+                                                _hover={{ opacity: 0.5 }}
+                                                borderStyle={isSelectedIndex != -1 ? 'solid' : 'dashed'}
+                                                borderBottomWidth={'1px'}
+                                                userSelect={'none'}
+                                                key={index}
+                                                onClick={() => clickToSelectItem(isSelectedIndex, item)}
+                                            >
+                                                <HStack>
+                                                    <Icon color={isSelectedIndex != -1 ? `${themeColor}` : 'lightgrey'}>
+                                                        {isSelectedIndex != -1
+                                                            ? <LuSquareCheck />
+                                                            : <LuSquare />
+                                                        }
+                                                    </Icon>
+                                                    {item}
+                                                </HStack>
+                                            </Box>
+                                        )
+                                    })
+                                }
+                            </VStack>
+                        </Box>
+                    </motion.div>
+                }
+            </AnimatePresence>
+
+            <VStack gap={2} w='full' marginTop={2}>
+                {
+                    (!generatedItems || !generatedItems[currentId])
+                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={() => clickToGenerate(currentId)} disabled={(!position || position.length < 3)}> <LuSparkles />Generate</Button>
+
+                        :
+                        <>
+                            <Button size='xs' w={'full'}
+                                colorPalette={themeColor} onClick={() => clickUseItButton(currentId, fieldName)}
+                                disabled={(
+                                    !selectedItems || !selectedItems[currentId] || selectedItems[currentId].length < 1
+                                )}
+                            >Use selected</Button>
+                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>cancel</Button>
+                        </>
+                }
             </VStack>
-        </ModalAiContainer>
+        </VStack>
     );
 };
 

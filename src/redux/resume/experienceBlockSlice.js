@@ -18,6 +18,11 @@ export const experienceBlockSlice = createSlice({
         items: [
             experienceItemDefault
         ],
+        assistant: {
+            position: null,  //role
+            generatedItems: null,   // as { someId:[item,item2,...], someId_2:[item_2,item_3,...] }
+            selectedItems: null
+        }
 
     },
 
@@ -66,8 +71,76 @@ export const experienceBlockSlice = createSlice({
                 items: updatedItems.length > 0 ? updatedItems : [{ ...experienceItemDefault, id: uid(8) }]
             }
         },
+        // assistants reducers
+        setExperiencePositionForAssistant: (state, action) => {
+            if (action.payload) {
+                return {
+                    ...state,
+                    assistant: {
+                        ...state.assistant,
+                        position: action.payload.value
+                    }
+                }
+            }
+        },
+
+        setExperienceGeneratedItems: (state, action) => {
+            if (action.payload && action.payload.currentId && action.payload.value) {
+                return {
+                    ...state,
+                    assistant: {
+                        ...state.assistant,
+                        generatedItems: {
+                            ...state.assistant.generatedItems,
+                            [action.payload.currentId]: action.payload.value
+                        }
+                    }
+                }
+            }
+        },
+
+        addExperienceSelectedItems: (state, action) => {
+            if (action.payload && action.payload.currentId && action.payload.value) {
+
+                if (!state.assistant.selectedItems || !state.assistant.selectedItems[action.payload.currentId]) {
+                    // if there is NO selections for the currenId yet
+                    return {
+                        ...state,
+                        assistant: {
+                            ...state.assistant,
+                            selectedItems: {
+                                ...state.assistant.selectedItems,
+                                [action.payload.currentId]: [action.payload.value]
+                            }
+                        }
+                    }
+                } else {
+                    // if there is one selection at least for the currenId
+                    return {
+                        ...state,
+                        assistant: {
+                            ...state.assistant,
+                            selectedItems: {
+                                ...state.assistant.selectedItems,
+                                [action.payload.currentId]: [...state.assistant.selectedItems[action.payload.currentId], action.payload.value]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        removeExperienceSelectedItems: (state, action) => {
+
+            if (action.payload && action.payload.value && action.payload.currentId && state.assistant.selectedItems) {
+                let indexToRemove = state.assistant.selectedItems[action.payload.currentId].findIndex((item) => item == action.payload.value)
+
+                if (indexToRemove >= 0) {
+                    state.assistant.selectedItems[action.payload.currentId].splice(indexToRemove, 1);
+                }
+            }
+        },
     }
 })
 
-export const { setResumeExperienceHeading, setResumeExperienceIsVisible, setExpItemData, addExpItem, removeExpItem } = experienceBlockSlice.actions;
+export const { setResumeExperienceHeading, setResumeExperienceIsVisible, setExpItemData, addExpItem, removeExpItem, setExperiencePositionForAssistant, setExperienceGeneratedItems, addExperienceSelectedItems, removeExperienceSelectedItems } = experienceBlockSlice.actions;
 export default experienceBlockSlice.reducer;

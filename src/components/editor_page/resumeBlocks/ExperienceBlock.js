@@ -1,17 +1,19 @@
 
-import { VStack, Box, Stack, Text, HStack, } from '@chakra-ui/react';
+import { VStack, Box, Stack, Text, HStack, Button, IconButton } from '@chakra-ui/react';
 import { motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { addExpItem, removeExpItem, setExpItemData, setResumeExperienceHeading, setResumeExperienceIsVisible } from "@/redux/resume/experienceBlockSlice";
-import { setShowAddRemoveButtons, setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
+import { setShowAddRemoveButtons, setShowBlockControl, setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import CustomText from '../dataFields/CustomText';
 import CustomHeading from '../dataFields/CustomHeading';
 import AddOrRemoveItem from '../addOrRemoveItem/AddOrRemoveItem';
-import ExperienceAI from './aiBot/ExperienceAI';
 import BlockControlContainer from '../blockControl/BlockControlContainer';
 
+
+import { LuSparkles } from "react-icons/lu";
+import { Tooltip } from '@/components/ui/tooltip';
 
 const ExperienceBlock = ({ editableFields }) => {
     const blockName = 'resumeExperience';
@@ -187,7 +189,17 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                     style={{ position: 'absolute', top: -10, right: '20px', display: 'block', }}
                 >
                     <HStack>
-                        <ExperienceAI currentId={data.id} />
+                        <Tooltip showArrow content="AI Assistant" openDelay={300} positioning={{ placement: 'top' }}>
+                            <IconButton
+                                aria-label="AI Assistant"
+                                variant={'solid'}
+                                bgColor={`${themeColor}.500`}
+                                _hover={{ backgroundColor: `${themeColor}.300` }}
+                                size={'2xs'}
+                                rounded={'full'}
+                                onClick={() => dispatch(setShowModal({ blockName: 'resumeExperience', show: true, id: data.id }))}
+                            ><LuSparkles /></IconButton>
+                        </Tooltip>
                         <AddOrRemoveItem currentId={data.id} blockName={'resumeExperience'} actionAdd={addExpItem} actionRemove={removeExpItem} />
                     </HStack>
                 </motion.div>
