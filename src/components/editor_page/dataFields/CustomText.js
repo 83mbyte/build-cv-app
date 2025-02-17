@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 
 import { formatText, preventEnterButton, sanitizeInput } from '@/lib/commonScripts';
 import { optionsForEditableFields } from '@/lib/defaults';
-import { motion } from 'motion/react';
 
 const options = { ...optionsForEditableFields };
 
@@ -22,7 +21,6 @@ const CustomText = ({
     onChangeCallback
 }) => {
 
-    const themeColor = useSelector(state => state.editorSettings.themeColor);
     const currentFont = useSelector(state => state.fontSettings.currentFont);
 
     const fieldRef = useRef(null);
@@ -45,7 +43,7 @@ const CustomText = ({
         if (ref.current.innerText.length > 1) {
             cleanString = sanitizeInput(ref.current.innerText);
         }
-        if ((ref.current.textContent != '' && ref.current.textContent.length > 0)) {
+        if ((ref.current.textContent != '' && ref.current.innerText.length > 0)) {
             let formattedText = formatText(cleanString)
             onChangeCallback(name, formattedText)
         } else {
@@ -55,24 +53,29 @@ const CustomText = ({
     }
 
 
-    textVariant = <Text
-        {...options}
-        {...textStyle}
-        ref={fieldRef}
-        as={variant}
-        defaultValue={defaultValue}
-        onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-        onBlur={() => updateData(name, fieldRef)}
-        dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
-
-    />
+    !isEditable
+        // return as not editable to render pdf
+        ? textVariant = <Text
+            {...options}
+            {...textStyle}
+            ref={fieldRef}
+            as={variant}
+            dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
+        />
+        // return as editable
+        : textVariant = <Text
+            {...options}
+            {...textStyle}
+            ref={fieldRef}
+            as={variant}
+            onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
+            onBlur={() => updateData(name, fieldRef)}
+        >{value ? value : defaultValue}</Text>
 
     return (
         <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'}>
-            <motion.div>
-                {textVariant}
-            </motion.div>
-        </Box>
+            {textVariant}
+        </Box >
     );
 };
 
