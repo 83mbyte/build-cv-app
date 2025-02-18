@@ -1,10 +1,11 @@
 import React, { Suspense, lazy } from 'react';
-import { Grid, GridItem, VStack, Spinner } from '@chakra-ui/react';
+import { Grid, GridItem, VStack } from '@chakra-ui/react';
 import { motion, LayoutGroup } from 'motion/react';
 
 import { useSelector } from 'react-redux';
 import HeaderBlock from '../resumeBlocks/HeaderBlock';
 import ContactBlock from '../resumeBlocks/ContactBlock';
+import FallbackSpinner from '../FallbackSpinner';
 
 
 const SummaryBlock = lazy(() => import('../resumeBlocks/SummaryBlock'));
@@ -53,11 +54,11 @@ const WhiteSheetGridLayout = ({ editableFields }) => {
                 layoutNumber={layoutNumber}
                 headerBlock={<HeaderBlock editableFields={editableFields} />}
                 contactBlock={<ContactBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
-                summaryBlock={resumeSummaryVisible ? <Suspense fallback={<Spinner />}><SummaryBlock editableFields={editableFields} /></Suspense> : null}
-                educationBlock={resumeEducationVisible ? <Suspense fallback={<Spinner />}><EducationBlock editableFields={editableFields} /></Suspense> : null}
-                experienceBlock={resumeExperienceVisible ? <Suspense fallback={<Spinner />}><ExperienceBlock editableFields={editableFields} /></Suspense> : null}
-                skillsBlock={resumeSkillsVisible ? <Suspense fallback={<Spinner />}><SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
-                languagesBlock={resumeLanguagesVisible ? <Suspense fallback={<Spinner />}><LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
+                summaryBlock={resumeSummaryVisible ? <Suspense fallback={<FallbackSpinner />}><SummaryBlock editableFields={editableFields} /></Suspense> : null}
+                educationBlock={resumeEducationVisible ? <Suspense fallback={<FallbackSpinner />}><EducationBlock editableFields={editableFields} /></Suspense> : null}
+                experienceBlock={resumeExperienceVisible ? <Suspense fallback={<FallbackSpinner />}><ExperienceBlock editableFields={editableFields} /></Suspense> : null}
+                skillsBlock={resumeSkillsVisible ? <Suspense fallback={<FallbackSpinner />}><SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
+                languagesBlock={resumeLanguagesVisible ? <Suspense fallback={<FallbackSpinner />}><LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
 
             />
         )
@@ -67,11 +68,11 @@ const WhiteSheetGridLayout = ({ editableFields }) => {
                 layoutNumber={layoutNumber}
                 headerBlock={<HeaderBlock editableFields={editableFields} />}
                 contactBlock={<ContactBlock editableFields={editableFields} layoutNumber={layoutNumber} />}
-                summaryBlock={resumeSummaryVisible ? <Suspense fallback={<Spinner />}><SummaryBlock editableFields={editableFields} /></Suspense> : null}
-                educationBlock={resumeEducationVisible ? <Suspense fallback={<Spinner />}><EducationBlock editableFields={editableFields} /></Suspense> : null}
-                experienceBlock={resumeExperienceVisible ? <Suspense fallback={<Spinner />}><ExperienceBlock editableFields={editableFields} /></Suspense> : null}
-                skillsBlock={resumeSkillsVisible ? <Suspense fallback={<Spinner />}><SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
-                languagesBlock={resumeLanguagesVisible ? <Suspense fallback={<Spinner />}><LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
+                summaryBlock={resumeSummaryVisible ? <Suspense fallback={<FallbackSpinner />}><SummaryBlock editableFields={editableFields} /></Suspense> : null}
+                educationBlock={resumeEducationVisible ? <Suspense fallback={<FallbackSpinner />}><EducationBlock editableFields={editableFields} /></Suspense> : null}
+                experienceBlock={resumeExperienceVisible ? <Suspense fallback={<FallbackSpinner />}><ExperienceBlock editableFields={editableFields} /></Suspense> : null}
+                skillsBlock={resumeSkillsVisible ? <Suspense fallback={<FallbackSpinner />}><SkillsBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
+                languagesBlock={resumeLanguagesVisible ? <Suspense fallback={<FallbackSpinner />}><LanguagesBlock editableFields={editableFields} layoutNumber={layoutNumber} /></Suspense> : null}
             />
         )
     }
@@ -82,7 +83,6 @@ export default WhiteSheetGridLayout;
 
 
 // Animated components to use in DocumentLayoutAnimated
-// const DocumentLayoutAnimated = ({ layoutNumber, headerBlock, contactBlock, summaryBlock, educationBlock, experienceBlock, skillsBlock, languagesBlock }) => {
 const DocumentLayoutAnimated = ({ layoutNumber, headerBlock, contactBlock, summaryBlock, educationBlock, experienceBlock, skillsBlock, languagesBlock }) => {
 
     return (
@@ -146,6 +146,7 @@ const DocumentLayoutAnimated = ({ layoutNumber, headerBlock, contactBlock, summa
                     footer
                 </GridItemAnimated>
 
+                {/* Extra area */}
                 {
                     layoutNumber != 0 &&
                     <GridItemAnimated layout area='extra' key={'extra'} bg='' id={'extra'} marginBottom={GridItemsBottomMargin} transition={{ type: 'spring', stiffness: 100 }}>
@@ -236,6 +237,7 @@ const DocumentLayoutNotAnimated = ({ layoutNumber, headerBlock, contactBlock, su
                     </VStack>
                 </GridItem>
 
+                {/* Extra area */}
                 {
                     layoutNumber != 0 &&
                     <GridItem area='extra' key={`extra_${suffForIds}`} bg='' id={`extra_${suffForIds}`} marginBottom={itemsBlockSpacing}>
@@ -248,6 +250,6 @@ const DocumentLayoutNotAnimated = ({ layoutNumber, headerBlock, contactBlock, su
                 }
 
             </Grid>
-        </LayoutGroup >
+        </LayoutGroup>
     )
 };
