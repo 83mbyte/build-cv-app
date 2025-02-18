@@ -1,7 +1,7 @@
 
 
 import { Box, Link } from '@chakra-ui/react';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'motion/react';
 import { formatText, preventEnterButton, sanitizeInput } from '@/lib/commonScripts';
@@ -57,53 +57,79 @@ const CustomLink = ({
 
     switch (variant) {
         case 'a':
-            linkVariant = <Link
-                {...options}
-                {...linkStyle}
-                ref={fieldRef}
-                href={`http://${href}`}
-                onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                onBlur={() => updateData(name, fieldRef)}
-                dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
+            isEditable
+                // return as editable
+                ? linkVariant = <Link
+                    {...options}
+                    {...linkStyle}
+                    ref={fieldRef}
+                    href={`http://${href}`}
+                    onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
+                    onBlur={() => updateData(name, fieldRef)}>{ }</Link>
+                // return as not editable to render pdf
+                : linkVariant = <Link
+                    {...options}
+                    {...linkStyle}
+                    ref={fieldRef}
+                    href={`http://${href}`}
 
-            />
+                    dangerouslySetInnerHTML={{ __html: value && value }}
+
+                />
             break;
         case 'mailto':
-            linkVariant = <Link
-                {...options}
-                {...linkStyle}
-                ref={fieldRef}
-                href={`mailto:${href}`}
-                marginTop={'0'}
-                // variant={'plain'}
-                onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                onBlur={() => updateData(name, fieldRef)}
-                dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
+            isEditable
+                ? linkVariant = <Link
+                    {...options}
+                    {...linkStyle}
+                    ref={fieldRef}
+                    href={`mailto:${href}`}
+                    marginTop={'0'}
+                    // variant={'plain'}
+                    onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
+                    onBlur={() => updateData(name, fieldRef)} >{ }</Link>
+                : linkVariant = <Link
+                    {...options}
+                    {...linkStyle}
+                    ref={fieldRef}
+                    href={`mailto:${href}`}
+                    marginTop={'0'}
+                    dangerouslySetInnerHTML={{ __html: value && value }}
 
-            />
+                />
             break;
         case 'tel':
-            linkVariant = <Link
-                {...options}
-                {...linkStyle}
-                ref={fieldRef}
-                href={`tel:${href}`}
-                marginTop={'0'}
-                // variant={'plain'}
-                onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                onBlur={() => updateData(name, fieldRef)}
-                dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
-
-            />
+            isEditable
+                ? linkVariant = <Link
+                    {...options}
+                    {...linkStyle}
+                    ref={fieldRef}
+                    href={`tel:${href}`}
+                    marginTop={'0'}
+                    onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
+                    onBlur={() => updateData(name, fieldRef)}>{ }</Link>
+                : linkVariant = <Link
+                    {...options}
+                    {...linkStyle}
+                    ref={fieldRef}
+                    href={`tel:${href}`}
+                    marginTop={'0'}
+                    dangerouslySetInnerHTML={{ __html: value && value }}
+                />
             break;
 
         default:
             break;
     }
+    useEffect(() => {
+        // put defaultValue to editable field on load
+        if (fieldRef && isEditable) {
+            fieldRef.current.innerText = defaultValue
+        }
+    }, []);
 
     return (
         <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'} lineHeight={1}>
-            {/* <Box _hover={{ backgroundColor: 'gray.100' }} w='full' lineHeight={1}> */}
             <motion.div layout>
                 {linkVariant}
             </motion.div>

@@ -1,8 +1,8 @@
 
 import { Text, Box } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-
+import { motion } from 'motion/react';
 import { formatText, preventEnterButton, sanitizeInput } from '@/lib/commonScripts';
 import { optionsForEditableFields } from '@/lib/defaults';
 
@@ -51,30 +51,38 @@ const CustomText = ({
             ref.current.textContent = defaultValue;
         }
     }
+    useEffect(() => {
+        // put defaultValue to editable field on load
+        if (fieldRef && isEditable) {
+            fieldRef.current.innerText = defaultValue
+        }
+    }, []);
 
-
-    !isEditable
-        // return as not editable to render pdf
-        ? textVariant = <Text
-            {...options}
-            {...textStyle}
-            ref={fieldRef}
-            as={variant}
-            dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
-        />
+    isEditable
         // return as editable
-        : textVariant = <Text
+        ? textVariant = <Text
             {...options}
             {...textStyle}
             ref={fieldRef}
             as={variant}
             onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
             onBlur={() => updateData(name, fieldRef)}
-        >{value ? value : defaultValue}</Text>
+        >{ }</Text>
+
+        // return as not editable to render pdf
+        : textVariant = <Text
+            {...options}
+            {...textStyle}
+            ref={fieldRef}
+            as={variant}
+            dangerouslySetInnerHTML={{ __html: value && value }}
+        />
 
     return (
         <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'}>
-            {textVariant}
+            <motion.div layout>
+                {textVariant}
+            </motion.div>
         </Box >
     );
 };

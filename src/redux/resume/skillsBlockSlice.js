@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { uid } from 'uid/single';
 
-const skillsItemDefault = { id: 'init_skills', value: 'Enter skill' };
+const skillsItemDefault = { id: 'init_skills', value: '' };
 
 export const skillsBlockSlice = createSlice({
     name: 'resumeSkills',
     initialState: {
         isVisible: true,
         skillsHeading: null,
-        items: [skillsItemDefault, { id: 'init_skills2', value: 'Enter skill' }],
+        items: [skillsItemDefault, { id: 'init_skills2', value: '' }],
         showAddRemoveButtons: {
             id: null,
             show: false,

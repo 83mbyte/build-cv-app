@@ -15,12 +15,7 @@ export const educationBlockSlice = createSlice({
         educationHeading: null,
 
         items: [
-            educationItem, {
-                id: 'init_ed_2',
-                period: null,
-                degree: null,
-                institution: 'univercity',
-            }
+            educationItem,
         ],
     },
 
