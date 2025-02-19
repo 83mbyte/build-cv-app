@@ -51,12 +51,13 @@ const CustomText = ({
             ref.current.textContent = defaultValue;
         }
     }
+
     useEffect(() => {
-        // put defaultValue to editable field on load
-        if (fieldRef && isEditable) {
-            fieldRef.current.innerText = defaultValue
+
+        if (fieldRef && isEditable && value) {
+            fieldRef.current.innerHTML = value
         }
-    }, []);
+    }, [value]);
 
     isEditable
         // return as editable
@@ -67,7 +68,7 @@ const CustomText = ({
             as={variant}
             onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
             onBlur={() => updateData(name, fieldRef)}
-        >{ }</Text>
+        >{defaultValue}</Text>
 
         // return as not editable to render pdf
         : textVariant = <Text
@@ -75,7 +76,7 @@ const CustomText = ({
             {...textStyle}
             ref={fieldRef}
             as={variant}
-            dangerouslySetInnerHTML={{ __html: value && value }}
+            dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
         />
 
     return (

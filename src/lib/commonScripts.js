@@ -14,9 +14,15 @@ export const sanitizeInput = (dirtyString) => {
     return cleanString;
 }
 
-export const formatText = (stringToFormat) => {
+export const formatText = (stringToFormat, type = 'null') => {
     let newLineRegex = /\n/g;
     let httpsRegex = /(http[s]?:\/\/)+/gim;
     let formatted = stringToFormat.trim().replaceAll(newLineRegex, '</br>').replaceAll(httpsRegex, '');
+    if (type == 'link') {
+        // clean whitespaces in links
+        let whiteSpaceRegex = /(\s)+/g;
+        formatted = formatted.replaceAll(whiteSpaceRegex, '');
+    }
+
     return formatted
 }

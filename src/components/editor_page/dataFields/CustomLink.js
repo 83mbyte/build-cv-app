@@ -23,7 +23,7 @@ const CustomLink = ({
     onChangeCallback
 }) => {
     const fieldRef = useRef(null);
-    // const themeColor = useSelector(state => state.erditorSettings.themeColor);
+
     const currentFont = useSelector(state => state.fontSettings.currentFont);
 
     let linkStyle = {
@@ -47,7 +47,7 @@ const CustomLink = ({
             cleanString = sanitizeInput(ref.current.innerText);
         }
         if ((ref.current.textContent != '' && ref.current.textContent.length > 0) && name) {
-            let formattedText = formatText(cleanString)
+            let formattedText = formatText(cleanString, 'link')
             onChangeCallback(name, formattedText)
         } else {
             onChangeCallback(name, defaultValue)
@@ -65,7 +65,8 @@ const CustomLink = ({
                     ref={fieldRef}
                     href={`http://${href}`}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                    onBlur={() => updateData(name, fieldRef)}>{ }</Link>
+                    onBlur={() => updateData(name, fieldRef)}>{defaultValue}</Link>
+
                 // return as not editable to render pdf
                 : linkVariant = <Link
                     {...options}
@@ -73,8 +74,7 @@ const CustomLink = ({
                     ref={fieldRef}
                     href={`http://${href}`}
 
-                    dangerouslySetInnerHTML={{ __html: value && value }}
-
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
         case 'mailto':
@@ -87,14 +87,14 @@ const CustomLink = ({
                     marginTop={'0'}
                     // variant={'plain'}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                    onBlur={() => updateData(name, fieldRef)} >{ }</Link>
+                    onBlur={() => updateData(name, fieldRef)} >{defaultValue}</Link>
                 : linkVariant = <Link
                     {...options}
                     {...linkStyle}
                     ref={fieldRef}
                     href={`mailto:${href}`}
                     marginTop={'0'}
-                    dangerouslySetInnerHTML={{ __html: value && value }}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
 
                 />
             break;
@@ -107,26 +107,27 @@ const CustomLink = ({
                     href={`tel:${href}`}
                     marginTop={'0'}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                    onBlur={() => updateData(name, fieldRef)}>{ }</Link>
+                    onBlur={() => updateData(name, fieldRef)}>{defaultValue}</Link>
                 : linkVariant = <Link
                     {...options}
                     {...linkStyle}
                     ref={fieldRef}
                     href={`tel:${href}`}
                     marginTop={'0'}
-                    dangerouslySetInnerHTML={{ __html: value && value }}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
 
         default:
             break;
     }
+
     useEffect(() => {
-        // put defaultValue to editable field on load
-        if (fieldRef && isEditable) {
-            fieldRef.current.innerText = defaultValue
+
+        if (fieldRef && isEditable && value) {
+            fieldRef.current.innerHTML = value;
         }
-    }, []);
+    }, [value]);
 
     return (
         <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'} lineHeight={1}>

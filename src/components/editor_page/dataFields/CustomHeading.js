@@ -75,11 +75,11 @@ const CustomHeading = ({
     }
 
     useEffect(() => {
-        // put defaultValue to editable field on load
-        if (fieldRef && isEditable) {
-            fieldRef.current.innerText = defaultValue
+
+        if (fieldRef && isEditable && value) {
+            fieldRef.current.innerHTML = value
         }
-    }, []);
+    }, [value]);
 
     switch (variant) {
         case 'h1':
@@ -92,7 +92,7 @@ const CustomHeading = ({
                     as={variant}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
                     onBlur={() => { updateData(name, fieldRef) }}
-                >{ }</Heading>
+                >{defaultValue}</Heading>
 
                 // return as not editable to render pdf
                 : headingVariant = <Heading
@@ -100,7 +100,7 @@ const CustomHeading = ({
                     {...styleHeading.h1}
                     ref={fieldRef}
                     as={variant}
-                    dangerouslySetInnerHTML={{ __html: value && value }}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
         case 'h2':
@@ -111,14 +111,14 @@ const CustomHeading = ({
                     ref={fieldRef}
                     as={variant}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                    onBlur={() => { updateData(name, fieldRef) }}>{ }</Heading>
+                    onBlur={() => { updateData(name, fieldRef) }}>{defaultValue}</Heading>
 
                 : headingVariant = <Heading
                     {...options}
                     {...styleHeading.h2}
                     ref={fieldRef}
                     as={variant}
-                    dangerouslySetInnerHTML={{ __html: value && value }}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
         case 'h3':
@@ -129,14 +129,14 @@ const CustomHeading = ({
                     ref={fieldRef}
                     as={variant}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                    onBlur={() => { updateData(name, fieldRef) }} >{ }</Heading>
+                    onBlur={() => { updateData(name, fieldRef) }} >{defaultValue}</Heading>
 
                 : headingVariant = <Heading
                     {...options}
                     {...styleHeading.h3}
                     ref={fieldRef}
                     as={variant}
-                    dangerouslySetInnerHTML={{ __html: value && value }}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
         case 'h4':
@@ -147,14 +147,14 @@ const CustomHeading = ({
                     ref={fieldRef}
                     as={variant}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
-                    onBlur={() => { updateData(name, fieldRef) }}>{ }</Heading>
+                    onBlur={() => { updateData(name, fieldRef) }}>{defaultValue}</Heading>
 
                 : headingVariant = <Heading
                     {...options}
                     {...styleHeading.h4}
                     ref={fieldRef}
                     as={variant}
-                    dangerouslySetInnerHTML={{ __html: value && value }}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
 
