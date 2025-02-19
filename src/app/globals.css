@@ -10,7 +10,8 @@ body {
   min-height: 100vh;
   height: 100%;
   max-height: 100%;
-
+  overscroll-behavior: none;
+  scroll-behavior: smooth;
   /* overflow-x: hidden; */
   background-color: darkgray;
   padding: 0;
