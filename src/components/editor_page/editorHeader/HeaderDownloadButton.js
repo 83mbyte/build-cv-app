@@ -2,11 +2,12 @@ import { Button, Box, Icon } from '@chakra-ui/react';
 import { LuDownload } from "react-icons/lu";
 import { useSelector } from 'react-redux';
 
-const HeaderDownloadButton = () => {
+const HeaderDownloadButton = ({ clickGetPDF }) => {
     const themeColor = useSelector(state => state.editorSettings.themeColor);
 
     const getPdf = () => {
         console.log('clicked getPDF..');
+        clickGetPDF();
 
     }
     return (

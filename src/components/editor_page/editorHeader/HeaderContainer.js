@@ -5,7 +5,7 @@ import HeaderLayoutMenu from './HeaderLayoutMenu';
 import HeaderDownloadButton from './HeaderDownloadButton';
 
 
-const HeaderContainer = () => {
+const HeaderContainer = ({ clickGetPDF }) => {
 
     return (
         <Box backgroundColor={'transparent'} w='full' paddingX={[0, '2', '5']} paddingY={[0, 2]} as='header' position={'fixed'} zIndex={111} transition={'all 0.5s ease'}>
@@ -29,7 +29,7 @@ const HeaderContainer = () => {
                         <HeaderLayoutMenu />
 
                         {/* Download button */}
-                        <HeaderDownloadButton />
+                        <HeaderDownloadButton clickGetPDF={clickGetPDF} />
 
                     </Box>
                 </Stack>
