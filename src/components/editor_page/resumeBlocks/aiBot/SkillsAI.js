@@ -1,17 +1,17 @@
 import { useRef } from 'react';
 import { VStack, Text, Box, Input, Button, HStack, Icon, StackSeparator } from '@chakra-ui/react';
 import { Field } from '@/components/ui/field';
+import { toaster } from "@/components/ui/toaster";
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
-
-import { sanitizeInput } from '@/lib/commonScripts';
-import { skillsBotData } from '@/lib/content-lib';
-
-import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
-import { setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems } from '@/redux/resume/skillsBlockSlice';
+import { setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus } from '@/redux/resume/skillsBlockSlice';
 import { setResumeHeaderData } from '@/redux/resume/headerBlockSlice';
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
+
+import { sanitizeInput } from '@/lib/commonScripts';
+import { aiWindowButtons, skillsBotData } from '@/lib/content-lib';
+import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
 
 
 const SkillsAI = ({ blockName }) => {
@@ -24,20 +24,52 @@ const SkillsAI = ({ blockName }) => {
 
     const generatedItems = useSelector(state => state.resumeSkills.assistant.generatedItems);
     const selectedItems = useSelector(state => state.resumeSkills.assistant.selectedItems);
+    const status = useSelector(state => state.resumeSkills.assistant.status);
 
 
     const onChangeHandler = (value) => {
         const cleanValue = sanitizeInput(value);
         dispatch(setResumeHeaderData({ name: 'position', value: cleanValue }));
-
     }
 
-    const clickToGenerate = (currentId) => {
+    const clickToGenerate = async () => {
         // call a cloud function to work with AI
         // await for the function reply with generatedData to dispatch it 
-        const tempData = ['BC', 37399, 'LOREM IPSUM', '2BC', 372399, 'LOREM1 IPSUM'];
 
-        dispatch(setSkillsGeneratedItems({ value: tempData }));
+        dispatch(setSkillsStatus('loading'));
+
+        try {
+
+            let genertateSkillsReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateSkills`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ query: position }),
+                });
+
+            const genertatedSkills = await genertateSkillsReply.json();
+
+            if (genertatedSkills?.status == 'Success') {
+                const data = genertatedSkills.content.split('|');
+                dispatch(setSkillsGeneratedItems({ value: data }));
+                dispatch(setSkillsStatus('fulfilled'));
+            } else {
+                throw new Error(skillsBotData.assistantErrors.generateSkills ?? 'lorem ipsum ');
+            }
+
+
+        } catch (error) {
+            console.error(error?.message ? error.message : skillsBotData.assistantErrors.generateSkillsDefault ?? 'lorem ipsum ');
+            toaster.create({
+                title: 'Error',
+                description: error?.message ? error.message : skillsBotData.assistantErrors.generateSkillsDefault ?? 'lorem ipsum',
+                type: 'error',
+                duration: 5000
+            })
+            dispatch(setSkillsStatus('idle'));
+        }
     }
 
     const clickToSelectItem = (isSelectedIndex, item) => {
@@ -62,7 +94,7 @@ const SkillsAI = ({ blockName }) => {
         <VStack position={'relative'}>
             <Text>{skillsBotData.heading}</Text>
             <VStack w='full'>
-                <Text bg='' w='full' textAlign={'left'} fontSize={'sm'}>{skillsBotData.description ?? 'lorem ipsum lorem ipsum'}</Text>
+                <Text bg='' w='full' textAlign={'left'} fontSize={'sm'}>{skillsBotData.description ?? 'lorem ipsum'}</Text>
                 <Box w={'full'}>
 
                     <Field label={skillsBotData.positionLabel} required>
@@ -72,6 +104,7 @@ const SkillsAI = ({ blockName }) => {
                             borderColor={`${themeColor}.200`}
                             borderStyle={'solid'}
                             borderRadius={'lg'}
+                            disabled={status == 'fulfilled'}
                             ref={positionField}
                             placeholder={skillsBotData.positionField ?? 'lorem ipsum'}
                             defaultValue={position ?? null}
@@ -102,7 +135,7 @@ const SkillsAI = ({ blockName }) => {
                             bg=''
                             overflow={'scroll'}
                         >
-                            <VStack width='full' bg='' overflow={'scroll'} gap={3} separator={<StackSeparator />}>
+                            <VStack width='full' bg='' overflow={'scroll'} gap={3} separator={<StackSeparator />}  >
                                 {
                                     generatedItems.map((item, index) => {
                                         let isSelectedIndex = -1;
@@ -122,7 +155,6 @@ const SkillsAI = ({ blockName }) => {
                                             >
                                                 <HStack>
                                                     <Icon color={isSelectedIndex != -1 ? `${themeColor}` : 'lightgrey'}>
-                                                        {/* <Icon color={'lightgrey'}> */}
 
                                                         {isSelectedIndex != -1
                                                             ? <LuSquareCheck />
@@ -142,25 +174,19 @@ const SkillsAI = ({ blockName }) => {
             </AnimatePresence>
 
             <VStack gap={2} w='full' marginTop={2}>
-                {/* <Button size='xs' w={'full'} colorPalette={themeColor} onClick={clickToGenerate} disabled={(!position || position.length < 3)}> <LuSparkles />Generate</Button> */}
                 {
                     (!generatedItems)
-                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={clickToGenerate} disabled={(!position || position.length < 3)}> <LuSparkles />Generate</Button>
+                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={clickToGenerate} disabled={(!position || position.length < 3)} loading={status == 'loading'}> <LuSparkles />{aiWindowButtons.generate ?? 'lorem ipsum'}</Button>
                         : <>
-
                             <Button size='xs' w={'full'}
                                 colorPalette={themeColor}
                                 disabled={(!selectedItems || selectedItems.length < 1)}
                                 onClick={() => clickUseItButton()}
-                            >Use selected</Button>
-                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>cancel</Button>
-
+                            >{aiWindowButtons.use ?? 'lorem ipsum'}</Button>
+                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>{aiWindowButtons.cancel ?? 'lorem ipsum'}</Button>
                         </>
-
                 }
             </VStack>
-
-
         </VStack>
     );
 };

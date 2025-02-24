@@ -8,14 +8,15 @@ export const skillsBlockSlice = createSlice({
     initialState: {
         isVisible: true,
         skillsHeading: null,
-        items: [skillsItemDefault, { id: 'init_skills2', value: '' }],
+        items: [skillsItemDefault],
         showAddRemoveButtons: {
             id: null,
             show: false,
         },
         assistant: {
             generatedItems: null,
-            selectedItems: null
+            selectedItems: null,
+            status: 'idle'
         }
     },
     reducers: {
@@ -123,9 +124,18 @@ export const skillsBlockSlice = createSlice({
                 }
             }
 
+        },
+        setSkillsStatus: (state, action) => {
+            return {
+                ...state,
+                assistant: {
+                    ...state.assistant,
+                    status: action.payload ?? 'idle'
+                }
+            }
         }
     }
 })
 
-export const { setResumeSkillsHeading, setResumeSkillsIsVisible, setSkillItemData, addSkillItem, removeSkillItem, setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems } = skillsBlockSlice.actions;
+export const { setResumeSkillsHeading, setResumeSkillsIsVisible, setSkillItemData, addSkillItem, removeSkillItem, setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus } = skillsBlockSlice.actions;
 export default skillsBlockSlice.reducer;
