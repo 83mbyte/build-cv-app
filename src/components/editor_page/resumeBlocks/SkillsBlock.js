@@ -1,5 +1,5 @@
 import { Box, Button, Stack } from '@chakra-ui/react';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { addSkillItem, removeSkillItem, setResumeSkillsHeading, setSkillItemData, setResumeSkillsIsVisible } from "@/redux/resume/skillsBlockSlice";
@@ -59,7 +59,7 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                 {
                     editableFields == true
                         ? // return animated 
-                        <>
+                        <AnimatePresence initial={false}>
                             {
                                 skillsItems.map((item) => {
 
@@ -73,7 +73,7 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                                     )
                                 })
                             }
-                        </>
+                        </AnimatePresence>
                         :
                         // return not animated
                         skillsItems.map((item) => {

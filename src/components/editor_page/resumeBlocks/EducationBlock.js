@@ -58,7 +58,7 @@ const EducationBlock = ({ editableFields }) => {
                     editableFields == true
                         ?
                         // return animated items
-                        <AnimatePresence>
+                        <AnimatePresence initial={false}>
                             {
                                 educationData.map((item, index) => {
                                     return (

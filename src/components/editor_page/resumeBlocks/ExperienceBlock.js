@@ -1,6 +1,6 @@
 
 import { VStack, Box, Stack, Text, HStack, Button, IconButton } from '@chakra-ui/react';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { addExpItem, removeExpItem, setExpItemData, setResumeExperienceHeading, setResumeExperienceIsVisible } from "@/redux/resume/experienceBlockSlice";
@@ -59,7 +59,7 @@ const ExperienceBlock = ({ editableFields }) => {
                     editableFields == true
                         ?
                         //return animated items
-                        <>
+                        <AnimatePresence initial={false}>
                             {
                                 expData.map((item, index) => {
                                     return (
@@ -74,7 +74,7 @@ const ExperienceBlock = ({ editableFields }) => {
                                     )
                                 })
                             }
-                        </>
+                        </AnimatePresence>
 
                         :
                         // return not animated
