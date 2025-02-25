@@ -215,8 +215,6 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
                                             >
                                                 <HStack>
                                                     <Icon color={isSelectedIndex != -1 ? `${themeColor}` : 'lightgrey'}>
-                                                        {/* <Icon color={'lightgrey'}> */}
-
                                                         {isSelectedIndex != -1
                                                             ? <LuSquareCheck />
                                                             : <LuSquare />
