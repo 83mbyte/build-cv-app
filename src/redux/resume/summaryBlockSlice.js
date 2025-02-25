@@ -8,7 +8,8 @@ export const summaryBlockSlice = createSlice({
         summaryText: null,
         assistant: {
             generatedItems: null,
-            selectedItems: null
+            selectedItems: null,
+            status: 'idle'
         }
     },
     reducers: {
@@ -32,7 +33,7 @@ export const summaryBlockSlice = createSlice({
                     ...state,
                     assistant: {
                         ...state.assistant,
-                        generatedItems: action.payload.value
+                        generatedItems: [action.payload.value]
                     }
                 }
             }
@@ -60,8 +61,17 @@ export const summaryBlockSlice = createSlice({
                 }
             }
         },
+        setSummaryStatus: (state, action) => {
+            return {
+                ...state,
+                assistant: {
+                    ...state.assistant,
+                    status: action.payload ?? 'idle'
+                }
+            }
+        }
     }
 })
 
-export const { setResumeSummaryData, setResumeSummaryIsVisible, setSummaryGeneratedItems, addSummarySelectedItems, removeSummarySelectedItems } = summaryBlockSlice.actions;
+export const { setResumeSummaryData, setResumeSummaryIsVisible, setSummaryGeneratedItems, addSummarySelectedItems, removeSummarySelectedItems, setSummaryStatus } = summaryBlockSlice.actions;
 export default summaryBlockSlice.reducer;

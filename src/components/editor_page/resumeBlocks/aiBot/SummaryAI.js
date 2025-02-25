@@ -1,18 +1,18 @@
 import { useRef } from 'react';
 import { VStack, Box, Text, Button, Input, HStack, Icon, StackSeparator } from '@chakra-ui/react';
 import { Field } from '@/components/ui/field';
+import { toaster } from "@/components/ui/toaster";
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setResumeHeaderData } from '@/redux/resume/headerBlockSlice';
-import { setSummaryGeneratedItems, setResumeSummaryData, addSummarySelectedItems, removeSummarySelectedItems } from '@/redux/resume/summaryBlockSlice';
+import { setSummaryGeneratedItems, setResumeSummaryData, addSummarySelectedItems, removeSummarySelectedItems, setSummaryStatus } from '@/redux/resume/summaryBlockSlice';
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
-import { summaryBotData } from '@/lib/content-lib';
+import { aiWindowButtons, summaryBotData } from '@/lib/content-lib';
 import { sanitizeInput } from '@/lib/commonScripts';
 
 import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
-
 
 
 const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
@@ -21,6 +21,13 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
     const position = useSelector(state => state.resumeHeader.position);
     const generatedItems = useSelector(state => state.resumeSummary.assistant.generatedItems);
     const selectedItems = useSelector(state => state.resumeSummary.assistant.selectedItems);
+    const status = useSelector(state => state.resumeSummary.assistant.status);
+
+
+    const skills = useSelector(state => state.resumeSkills.items);
+    const languages = useSelector(state => state.resumeLanguages.items);
+    const education = useSelector(state => state.resumeEducation.items);
+
     const positionField = useRef(null);
 
     const onChangeHandler = (value) => {
@@ -28,12 +35,101 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
         dispatch(setResumeHeaderData({ name: 'position', value: cleanValue }));
     }
 
-    const clickToGenerate = () => {
+    const clickToGenerate = async () => {
         // call a cloud function to work with AI
         // await for the function reply with generatedData to dispatch it 
-        const tempData = ['Lorem ipsum dolor sit amet.', 'Nunc ultrices sollicitudin enim ac aliquet. Phasellus hendrerit est lorem, nec tempus urna iaculis sit amet..',];
 
-        dispatch(setSummaryGeneratedItems({ value: tempData }));
+        dispatch(setSummaryStatus('loading'));
+
+        try {
+
+            let detailsForSummary = {
+                skills: null,
+                education: null,
+                languages: null,
+            };
+            let tempArray = [];
+
+            if (skills && skills.length > 0) {
+
+                skills.forEach(item => {
+                    if (item.value != '' && item.value != 'Enter skill') {
+                        tempArray.push(item.value);
+                    }
+                });
+
+                detailsForSummary = {
+                    ...detailsForSummary,
+                    skills: tempArray.join(', ')
+                };
+                tempArray = [];
+            }
+
+            if (languages && languages.length > 0) {
+                languages.forEach(item => {
+                    if (item.value != '' && item.value != 'Enter language') {
+                        tempArray.push(item.value);
+                    }
+                });
+
+                detailsForSummary = {
+                    ...detailsForSummary,
+                    languages: tempArray.join(', ')
+                };
+                tempArray = [];
+            }
+
+            if (education && education.length > 0) {
+                education.forEach(item => {
+                    if (item.institution != '' && item.institution != 'School/College/Univercity') {
+                        tempArray.push(item.institution);
+                    }
+                });
+
+                detailsForSummary = {
+                    ...detailsForSummary,
+                    education: tempArray.join(', ')
+                };
+                tempArray = [];
+            }
+
+
+            let genertateSummaryReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateSummary`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(
+                        {
+                            query: {
+                                position: position,
+                                details: detailsForSummary,
+                            }
+                        }),
+                });
+
+            const genertatedSummary = await genertateSummaryReply.json();
+
+            if (genertatedSummary?.status == 'Success') {
+                const data = genertatedSummary.content;
+                dispatch(setSummaryGeneratedItems({ value: data }));
+                dispatch(setSummaryStatus('fulfilled'));
+            } else {
+                throw new Error(summaryBotData.assistantErrors.generateSummary ?? 'lorem ipsum ');
+            }
+
+
+        } catch (error) {
+            console.error(error?.message ? error.message : summaryBotData.assistantErrors.generateSummaryDefault ?? 'lorem ipsum ');
+            dispatch(setSummaryStatus('idle'));
+            toaster.create({
+                title: 'Error',
+                description: error?.message ? error.message : summaryBotData.assistantErrors.generateSummaryDefault ?? 'lorem ipsum',
+                type: 'error',
+                duration: 5000
+            })
+        }
     }
 
     const clickToSelectItem = (isSelectedIndex, item) => {
@@ -70,6 +166,7 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
                             borderStyle={'solid'}
                             borderRadius={'lg'}
                             ref={positionField}
+                            disabled={status == 'fulfilled'}
                             placeholder={summaryBotData.positionField ?? 'lorem ipsum'}
                             defaultValue={position ?? null}
                             _focusVisible={{ outline: 'none' }}
@@ -140,15 +237,15 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
 
                 {
                     (!generatedItems)
-                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={clickToGenerate} disabled={(!position || position.length < 3)}> <LuSparkles />Generate</Button>
+                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={clickToGenerate} disabled={(!position || position.length < 3)} loading={status == 'loading'}> <LuSparkles />{aiWindowButtons.generate ?? 'lorem ipsum'}</Button>
                         : <>
 
                             <Button size='xs' w={'full'}
                                 colorPalette={themeColor}
                                 disabled={(!selectedItems || selectedItems.length < 1)}
                                 onClick={() => clickUseItButton(fieldName)}
-                            >Use selected</Button>
-                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>cancel</Button>
+                            >{aiWindowButtons.use ?? 'lorem ipsum'}</Button>
+                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>{aiWindowButtons.cancel ?? 'lorem ipsum'}</Button>
 
                         </>
 

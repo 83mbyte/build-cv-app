@@ -42,7 +42,7 @@ const SummaryBlock = ({ editableFields }) => {
                 variant={'h2'}
                 size={fontSize.h2}
                 fontWeight={'600'}
-                defaultValue={'Abouts Me'}
+                defaultValue={'About Me'}
                 name={'summaryHeading'}
                 value={summaryHeading}
                 isEditable={editableFields}
