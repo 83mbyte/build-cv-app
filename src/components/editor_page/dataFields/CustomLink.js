@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { motion } from 'motion/react';
 import { formatText, preventEnterButton, sanitizeInput } from '@/lib/commonScripts';
 
-import { optionsForEditableFields } from '@/lib/defaults';
+import { fontsFamilyPDF, optionsForEditableFields } from '@/lib/defaults';
 
 const options = { ...optionsForEditableFields };
 
@@ -36,7 +36,21 @@ const CustomLink = ({
         lineHeight: 1.5,
         marginBottom: 0,
         color: '#0a0a0b'
+    }
+    console.log('fontSize in link', size)
 
+
+    let linkStylePDF = {
+        fontSize: size[1],
+        fontFamily: fontsFamilyPDF[currentFont],
+        cursor: isEditable && 'text',
+        fontWeight: fontWeight,
+        contentEditable: isEditable,
+        border: '0px solid red',
+        lineHeight: 1.5,
+        marginBottom: 0,
+        color: '#0a0a0b',
+        wordBreak: 'break-word',
     }
 
     let linkVariant;
@@ -68,13 +82,13 @@ const CustomLink = ({
                     onBlur={() => updateData(name, fieldRef)}>{defaultValue}</Link>
 
                 // return as not editable to render pdf
-                : linkVariant = <Link
-                    {...options}
-                    {...linkStyle}
-                    ref={fieldRef}
+                : linkVariant =
+                <a ref={fieldRef}
                     href={`http://${href}`}
-
-                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
+                    style={{ ...linkStylePDF }}
+                    spellCheck={false}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }
+                    }
                 />
             break;
         case 'mailto':
@@ -88,14 +102,13 @@ const CustomLink = ({
                     // variant={'plain'}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
                     onBlur={() => updateData(name, fieldRef)} >{defaultValue}</Link>
-                : linkVariant = <Link
-                    {...options}
-                    {...linkStyle}
-                    ref={fieldRef}
-                    href={`mailto:${href}`}
-                    marginTop={'0'}
-                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
+                : linkVariant =
 
+                <a ref={fieldRef}
+                    href={`mailto:${href}`}
+                    style={{ ...linkStylePDF }}
+                    spellCheck={false}
+                    dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
         case 'tel':
@@ -108,12 +121,12 @@ const CustomLink = ({
                     marginTop={'0'}
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
                     onBlur={() => updateData(name, fieldRef)}>{defaultValue}</Link>
-                : linkVariant = <Link
-                    {...options}
-                    {...linkStyle}
-                    ref={fieldRef}
+                : linkVariant =
+
+                <a ref={fieldRef}
                     href={`tel:${href}`}
-                    marginTop={'0'}
+                    style={{ ...linkStylePDF }}
+                    spellCheck={false}
                     dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
@@ -129,13 +142,26 @@ const CustomLink = ({
         }
     }, [value]);
 
-    return (
-        <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'} lineHeight={1}>
-            <motion.div layout>
-                {linkVariant}
-            </motion.div>
-        </Box>
-    );
+
+    if (isEditable) {
+        return (
+            <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'}>
+                <motion.div layout>
+                    {linkVariant}
+                </motion.div>
+            </Box >
+        );
+    } else {
+        return (
+            <div style={{ width: '100%', paddingInline: '0.125rem', }}  >
+                <motion.div layout>
+                    {linkVariant}
+                </motion.div>
+            </div>
+        );
+    }
+
+
 };
 
 export default CustomLink;

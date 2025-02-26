@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'motion/react';
 import { formatText, preventEnterButton, sanitizeInput } from '@/lib/commonScripts';
-import { optionsForEditableFields } from '@/lib/defaults';
+import { fontsFamilyPDF, optionsForEditableFields } from '@/lib/defaults';
 
 const options = { ...optionsForEditableFields };
 
@@ -36,7 +36,22 @@ const CustomText = ({
         lineHeight: 1.5,
         marginBottom: 0,
     }
+    const textStylePDF = {
+        contentEditable: isEditable,
+        cursor: isEditable && 'text',
+        fontSize: size[!isEditable ? 1 : 0],
+        border: '0px solid black',
+        // fontFamily: currentFont ? currentFont : 'body',
+        fontFamily: fontsFamilyPDF[currentFont],
+        fontWeight: fontWeight,
+        lineHeight: 1.5,
+        marginBottom: 0,
+        wordBreak: 'break-word'
+
+    }
     let textVariant;
+
+
 
     const updateData = (name, ref) => {
         let cleanString;
@@ -71,21 +86,31 @@ const CustomText = ({
         >{defaultValue}</Text>
 
         // return as not editable to render pdf
-        : textVariant = <Text
-            {...options}
-            {...textStyle}
+        : textVariant =
+        <p
+            spellCheck={false}
+            style={{ ...textStylePDF }}
             ref={fieldRef}
-            as={variant}
             dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
         />
 
-    return (
-        <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'}>
-            <motion.div layout>
-                {textVariant}
-            </motion.div>
-        </Box >
-    );
+    if (isEditable) {
+        return (
+            <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'}>
+                <motion.div layout>
+                    {textVariant}
+                </motion.div>
+            </Box >
+        );
+    } else {
+        return (
+            <div style={{ width: '100%', paddingInline: '0.125rem' }}  >
+                <motion.div layout>
+                    {textVariant}
+                </motion.div>
+            </div >
+        );
+    }
 };
 
 export default CustomText;

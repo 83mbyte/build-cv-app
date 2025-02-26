@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { useSelector } from 'react-redux';
 
 import { formatText, preventEnterButton, sanitizeInput } from '@/lib/commonScripts';
-import { optionsForEditableFields } from '@/lib/defaults';
+import { colorsPDF, fontsFamilyPDF, optionsForEditableFields } from '@/lib/defaults';
 
 const options = { ...optionsForEditableFields };
 
@@ -25,6 +25,9 @@ const CustomHeading = ({
 
     const fieldRef = useRef(null);
     let headingVariant;
+
+
+
 
     const updateData = (name, ref) => {
         let cleanString;
@@ -48,6 +51,13 @@ const CustomHeading = ({
             fontFamily: currentFont ? currentFont : 'heading',
             fontWeight: fontWeight
         },
+        h1_pdf: {
+            fontWeight: fontWeight,
+            wordBreak: 'break-word',
+            color: colorsPDF[themeColor],
+            fontSize: size[1],
+            fontFamily: fontsFamilyPDF[currentFont]
+        },
         h2: {
             contentEditable: isEditable,
             size: size[!isEditable ? 1 : 0],
@@ -56,11 +66,25 @@ const CustomHeading = ({
             fontWeight: fontWeight,
             textTransform: 'uppercase',
         },
+        h2_pdf: {
+            fontWeight: fontWeight,
+            wordBreak: 'break-word',
+            fontSize: size[1],
+            fontFamily: fontsFamilyPDF[currentFont],
+            textTransform: 'uppercase'
+        },
         h3: {
             contentEditable: isEditable,
             size: size[!isEditable ? 1 : 0],
             color: `${themeColor}.400`,
             fontFamily: currentFont ? currentFont : 'heading',
+            fontWeight: fontWeight,
+            textTransform: 'capitalize',
+        },
+        h3_pdf: {
+            color: colorsPDF[themeColor],
+            fontSize: size[1],
+            fontFamily: fontsFamilyPDF[currentFont],
             fontWeight: fontWeight,
             textTransform: 'capitalize',
         },
@@ -71,6 +95,11 @@ const CustomHeading = ({
             fontFamily: currentFont ? currentFont : 'heading',
             fontWeight: fontWeight,
             // textTransform:'uppercase',
+        },
+        h4_pdf: {
+            fontSize: size[1],
+            fontFamily: fontsFamilyPDF[currentFont],
+            fontWeight: fontWeight,
         },
     }
 
@@ -95,11 +124,12 @@ const CustomHeading = ({
                 >{defaultValue}</Heading>
 
                 // return as not editable to render pdf
-                : headingVariant = <Heading
-                    {...options}
-                    {...styleHeading.h1}
+                : headingVariant =
+                <h1
                     ref={fieldRef}
-                    as={variant}
+                    style={{
+                        ...styleHeading.h1_pdf
+                    }}
                     dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
@@ -113,11 +143,12 @@ const CustomHeading = ({
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
                     onBlur={() => { updateData(name, fieldRef) }}>{defaultValue}</Heading>
 
-                : headingVariant = <Heading
-                    {...options}
-                    {...styleHeading.h2}
+                : headingVariant =
+                <h2
                     ref={fieldRef}
-                    as={variant}
+                    style={{
+                        ...styleHeading.h2_pdf
+                    }}
                     dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
@@ -131,11 +162,12 @@ const CustomHeading = ({
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
                     onBlur={() => { updateData(name, fieldRef) }} >{defaultValue}</Heading>
 
-                : headingVariant = <Heading
-                    {...options}
-                    {...styleHeading.h3}
+                : headingVariant =
+                <h3
                     ref={fieldRef}
-                    as={variant}
+                    style={{
+                        ...styleHeading.h3_pdf
+                    }}
                     dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
@@ -149,11 +181,12 @@ const CustomHeading = ({
                     onKeyDown={(e) => !allowEnter && preventEnterButton(e)}
                     onBlur={() => { updateData(name, fieldRef) }}>{defaultValue}</Heading>
 
-                : headingVariant = <Heading
-                    {...options}
-                    {...styleHeading.h4}
+                : headingVariant =
+                <h4
                     ref={fieldRef}
-                    as={variant}
+                    style={{
+                        ...styleHeading.h4_pdf
+                    }}
                     dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
@@ -162,13 +195,23 @@ const CustomHeading = ({
             break;
     }
 
-    return (
-        <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'}>
-            <motion.div layout>
-                {headingVariant}
-            </motion.div>
-        </Box>
-    );
+    if (isEditable) {
+        return (
+            <Box _hover={{ backgroundColor: 'gray.100', borderRadius: 'sm' }} w='full' paddingX={'0.5'}>
+                <motion.div layout>
+                    {headingVariant}
+                </motion.div>
+            </Box >
+        );
+    } else {
+        return (
+            <div style={{ width: '100%', paddingInline: '0.125rem' }}  >
+                <motion.div layout>
+                    {headingVariant}
+                </motion.div>
+            </div >
+        );
+    }
 };
 
 export default CustomHeading;
