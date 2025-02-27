@@ -1,4 +1,4 @@
-import { HStack, Stack, Text, } from '@chakra-ui/react';
+import { HStack, Icon, Stack } from '@chakra-ui/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setResumeContactData } from '@/redux/resume/contactBlockSlice';
@@ -6,24 +6,30 @@ import { setResumeContactData } from '@/redux/resume/contactBlockSlice';
 import CustomLink from '../dataFields/CustomLink';
 import CustomText from '../dataFields/CustomText';
 
+import { LuMapPin, LuAtSign, LuPhone, LuLink } from "react-icons/lu";
+
 
 const itemDetails = {
     location: {
+        icon: <LuMapPin />,
         iconCode: `&#9906;`,
         name: 'location',
         defaultValue: 'city/country',
     },
     phone: {
+        icon: <LuPhone />,
         iconCode: '&#9990',
         name: 'phone',
         defaultValue: '123456789',
     },
     email: {
+        icon: <LuAtSign />,
         iconCode: '&#64',
         name: 'email',
         defaultValue: 'mail@example.com',
     },
     web: {
+        icon: <LuLink />,
         iconCode: '&#9741',
         name: 'web',
         defaultValue: 'example.com',
@@ -45,16 +51,16 @@ const ContactBlock = ({ editableFields, layoutNumber }) => {
         <ContactBlockWrapper editableFields={editableFields} layoutNumber={layoutNumber} themeColor={themeColor}>
 
             {/* location */}
-            <ContactItem type='text' iconCode={itemDetails['location'].iconCode} name={itemDetails['location'].name} defaultValue={itemDetails['location'].defaultValue} value={contactData['location']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
+            <ContactItem type='text' icon={itemDetails['location'].icon} name={itemDetails['location'].name} defaultValue={itemDetails['location'].defaultValue} value={contactData['location']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
 
             {/* phone */}
-            <ContactItem type='text' iconCode={itemDetails['phone'].iconCode} name={itemDetails['phone'].name} defaultValue={itemDetails['phone'].defaultValue} value={contactData['phone']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
+            <ContactItem type='text' icon={itemDetails['phone'].icon} name={itemDetails['phone'].name} defaultValue={itemDetails['phone'].defaultValue} value={contactData['phone']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
 
             {/* email */}
-            <ContactItem type='text' iconCode={itemDetails['email'].iconCode} name={itemDetails['email'].name} defaultValue={itemDetails['email'].defaultValue} value={contactData['email']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
+            <ContactItem type='link' linkType='mailto' icon={itemDetails['email'].icon} name={itemDetails['email'].name} defaultValue={itemDetails['email'].defaultValue} value={contactData['email']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
 
             {/* webpage */}
-            <ContactItem type='text' iconCode={itemDetails['web'].iconCode} name={itemDetails['web'].name} defaultValue={itemDetails['web'].defaultValue} value={contactData['web']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
+            <ContactItem type='link' icon={itemDetails['web'].icon} name={itemDetails['web'].name} defaultValue={itemDetails['web'].defaultValue} value={contactData['web']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
 
         </ContactBlockWrapper>
     );
@@ -62,7 +68,7 @@ const ContactBlock = ({ editableFields, layoutNumber }) => {
 
 export default ContactBlock;
 
-const ContactItem = ({ type = 'text', linkType = 'a', iconCode, name, defaultValue, value, editableFields, fontSize, themeColor, onChangeHandler, }) => {
+const ContactItem = ({ type = 'text', linkType = 'a', icon, name, defaultValue, value, editableFields, fontSize, themeColor, onChangeHandler, }) => {
 
     let itemVariant;
     if (type == 'link') {
@@ -92,7 +98,7 @@ const ContactItem = ({ type = 'text', linkType = 'a', iconCode, name, defaultVal
 
     return (
 
-        <ContactItemWrapper editableFields={editableFields} iconCode={iconCode} fontSize={fontSize.p} themeColor={themeColor}  >
+        <ContactItemWrapper editableFields={editableFields} icon={icon} fontSize={fontSize.p} themeColor={themeColor}  >
             {itemVariant}
         </ContactItemWrapper>
     )
@@ -110,6 +116,7 @@ const ContactBlockWrapper = ({ editableFields, layoutNumber, themeColor, childre
                 justifyContent={layoutNumber == 0 && 'space-between'}
                 _hover={{ outlineStyle: 'solid', outlineColor: `${themeColor}.100`, outlineWidth: '1px' }}
                 padding={1} borderRadius={'lg'}
+                wrap={'wrap'}
             >
                 {children}
             </Stack>
@@ -125,6 +132,7 @@ const ContactBlockWrapper = ({ editableFields, layoutNumber, themeColor, childre
                     padding: '0.25rem',
                     borderRadius: '0.5rem',
                     gap: layoutNumber == 0 ? '0.5rem' : '1rem',
+                    flexWrap: 'wrap'
                 }}
             >
                 {children}
@@ -133,7 +141,7 @@ const ContactBlockWrapper = ({ editableFields, layoutNumber, themeColor, childre
     }
 }
 
-const ContactItemWrapper = ({ editableFields, themeColor, iconCode, fontSize, children }) => {
+const ContactItemWrapper = ({ editableFields, themeColor, icon, fontSize, children }) => {
     const colorsPDF = {
         blue: '#60a5fa',
         green: '#4ade80',
@@ -146,25 +154,28 @@ const ContactItemWrapper = ({ editableFields, themeColor, iconCode, fontSize, ch
     if (editableFields) {
         return (
             <HStack bg='' minW={'22%'}>
-                <Text
-                    fontSize={fontSize.p}
-                    fontWeight={'600'}
-                    color={`${themeColor}.400`}
-                    dangerouslySetInnerHTML={{ __html: iconCode }}
-                    marginBottom={0}
-                />
-                {children}
+                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                    <Icon fontSize={fontSize[1]} style={{ height: fontSize[1], }} color={`${themeColor}.400`}>
+                        {icon}
+                    </Icon>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', margin: 0, paddding: 0 }}>{children}</div>
 
             </HStack>
         )
     } else {
         return (
-            <div style={{ display: 'flex', flexDirection: 'row', minWidth: '22%', gap: '0.5rem', alignItems: 'center', backgroundColor: '' }}>
-                <div><p style={{ marginBottom: '0px', fontWeight: 600, color: colorsPDF[themeColor], fontSize: fontSize[1] }}
-                    dangerouslySetInnerHTML={{ __html: iconCode }}
-                /></div>
-                <div  >{children}</div>
+            <div style={{ display: 'flex', flexDirection: 'row', minWidth: '22%', gap: '0.5rem', alignItems: 'center' }}>
+
+                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                    <Icon fontSize={fontSize[1]} style={{ height: fontSize[1], color: colorsPDF[themeColor] }}>
+                        {icon}
+                    </Icon>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', margin: 0, paddding: 0 }}>{children}</div>
+
             </div>
         )
     }
 }
+
