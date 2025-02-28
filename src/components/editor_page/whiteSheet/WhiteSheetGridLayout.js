@@ -86,6 +86,7 @@ export default WhiteSheetGridLayout;
 const DocumentLayoutAnimated = ({ layoutNumber, headerBlock, contactBlock, summaryBlock, educationBlock, experienceBlock, skillsBlock, languagesBlock }) => {
 
     return (
+
         <LayoutGroup id={'animatedLayoutGridGroup'}>
             <Grid
                 width='full'
@@ -204,29 +205,33 @@ const AnimatedBlockWrapper = ({ id, children }) => {
 const DocumentLayoutNotAnimated = ({ layoutNumber, headerBlock, contactBlock, summaryBlock, educationBlock, experienceBlock, skillsBlock, languagesBlock }) => {
     const suffForIds = '_notAnimate';
 
+
     return (
-        <LayoutGroup id={`layoutGridGroup_${suffForIds}`}>
-            <Grid
-                width='full'
-                gap={2}
-                templateAreas={gridTemplates[layoutNumber].template}
-                templateColumns={gridTemplates[layoutNumber].columns}
-            >
-                {/* Header area */}
-                <GridItem area='header' key={`header_${suffForIds}`} bg='' id={`header_${suffForIds}`} marginBottom={itemsBlockSpacing}>
+
+        <div style={{ border: '0px solid #dedede', minWidth: '593pt', width: '593pt', maxWidth: '593pt', minHeight: '842pt', padding: '0rem' }}  >
+
+            <div style={{
+                display: 'grid',
+                backgroundColor: '',
+                gridTemplateAreas: gridTemplates[layoutNumber].template,
+                gridTemplateColumns: gridTemplates[layoutNumber].columns,
+                gap: '10px',
+                width: '100%'
+            }}>
+                <div style={{ gridArea: 'header', backgroundColor: '', marginBottom: '0.75rem' }} id={`header_${suffForIds}`}>
                     {headerBlock}
-                </GridItem>
+                </div>
 
-                {/* Center area */}
-                <GridItem area='center' key={`center_${suffForIds}`} bg='' id={`center_${suffForIds}`} marginBottom={itemsBlockSpacing}>
-
-                    <VStack w='full' bg='' alignItems={'flex-start'} justifyContent={'center'} gap={itemsBlockSpacing}>
+                <div style={{ gridArea: 'center', backgroundColor: '', marginBottom: '0.75rem' }} id={`center_${suffForIds}`}>
+                    <div style={{ display: 'flex', width: '100%', gap: '2rem', justifyContent: 'center', alignItems: 'flex-start', flexDirection: 'column' }}>
                         {
                             layoutNumber == 0 && contactBlock
                         }
                         {summaryBlock}
                         {educationBlock}
                         {experienceBlock}
+
+
                         {
                             layoutNumber == 0 &&
                             <>
@@ -234,22 +239,24 @@ const DocumentLayoutNotAnimated = ({ layoutNumber, headerBlock, contactBlock, su
                                 {languagesBlock}
                             </>
                         }
-                    </VStack>
-                </GridItem>
+                    </div>
 
-                {/* Extra area */}
+                </div>
                 {
                     layoutNumber != 0 &&
-                    <GridItem area='extra' key={`extra_${suffForIds}`} bg='' id={`extra_${suffForIds}`} marginBottom={itemsBlockSpacing}>
-                        <VStack w='full' bg='' alignItems={'flex-start'} justifyContent={'center'} gap={itemsBlockSpacing}>
+                    <div style={{ gridArea: 'extra', marginBottom: '0.75rem' }} bg='' id={`extra_${suffForIds}`}>
+                        <div style={{ display: 'flex', width: '100%', gap: '2rem', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
                             {contactBlock}
                             {skillsBlock}
                             {languagesBlock}
-                        </VStack>
-                    </GridItem>
+                        </div>
+
+                    </div>
                 }
 
-            </Grid>
-        </LayoutGroup>
+                <div style={{ gridArea: 'footer', backgroundColor: 'aqua' }}>footer</div>
+            </div>
+
+        </div>
     )
 };

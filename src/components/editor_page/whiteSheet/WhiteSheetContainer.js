@@ -1,22 +1,10 @@
 import { Box, Portal, } from "@chakra-ui/react";
 import { Fragment } from "react";
 import WhiteSheetGridLayout from "./WhiteSheetGridLayout";
+import { pageSize } from "@/lib/defaults";
 
-const a4 = {
-    // TODO  move to lib/defaults
-    // TODO  move to lib/defaults
-    // TODO  move to lib/defaults
 
-    w: '595pt',
-    h: '842pt',
-    // w: '21cm',
-    // h: '29.7cm',
-    // w: 49.606,
-    // h: 70.157,
-    // w: '49.606rem',
-    // h: '70.157rem',
-}
-
+const a4 = pageSize.a4;
 const WhiteSheetContainer = ({ ref }) => {
 
     return (
@@ -48,13 +36,15 @@ const WhiteSheetContainer = ({ ref }) => {
                     w={a4.w}
                     minW={'595pt'}
                     maxWidth={a4.w}
-                    minHeight={'745pt'}
+                    // minHeight={'745pt'}
                     overflow={'scroll'}   //  OR hidden? 
                     marginX={'auto'}
                     position={'fixed'}   // OR absolute?
-                    padding={'4rem'}
+                    top={30}
+                    left={10}
+                    // padding={'4rem'}
                     // padding={'0rem 4rem 0rem 4rem'}
-                    border={'0px solid gray'}
+                    border={'0px solid blue'}
                     visibility={'hidden'}
                 >
 
