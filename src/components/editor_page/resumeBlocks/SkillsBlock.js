@@ -17,7 +17,6 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
 
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
-    const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
     const skillsHeading = useSelector(state => state.resumeSkills.skillsHeading);
     const skillsItems = useSelector(state => state.resumeSkills.items)
 
@@ -28,20 +27,7 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
     }
 
     return (
-        <Stack
-            bg=''
-            w='full'
-            flexDirection={'column'}
-            gap={layoutNumber == 0 ? 2 : 4}
-            justifyContent={layoutNumber == 0 && 'space-between'}
-            outlineStyle={'solid'}
-            outlineColor={`${themeColor}.100`}
-            outlineWidth={(showBlockControl.show && showBlockControl.blockName == 'resumeSkills') ? '1px' : '0px'}
-            padding={1} borderRadius={'lg'}
-            position={'relative'}
-            onMouseEnter={() => dispatch(setShowBlockControl({ blockName, show: true }))}
-            onMouseLeave={() => dispatch(setShowBlockControl({ blockName: null, show: false }))}
-        >
+        <SkillsBlockWrapper editableFields={editableFields} themeColor={themeColor} dispatch={dispatch} blockName={blockName}>
 
             <CustomHeading
                 variant={'h2'}
@@ -54,7 +40,7 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                 onChangeCallback={(name, value) => onChangeHeadingHandler(name, value)}
             />
 
-            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2}>
+            <SkillsItemsWrapper layoutNumber={layoutNumber} editableFields={editableFields} >
 
                 {
                     editableFields == true
@@ -83,33 +69,92 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                             )
                         })
                 }
-            </Stack>
-            {
-                (showBlockControl.show && showBlockControl.blockName == 'resumeSkills') &&
-                <BlockControlContainer blockName={blockName} hideButtonAction={setResumeSkillsIsVisible} closeText={'Hide Skills block'}>
-                    {/* add aditional controls here.. */}
-                    <Button
-                        aria-label="AI Assistant"
-                        variant={'outline'}
-                        bgColor={`white`}
-                        borderWidth={'1px'}
-                        borderColor={`${themeColor}.100`}
-                        _hover={{ backgroundColor: `${themeColor}.50` }}
-                        size={'xs'}
-                        rounded={'md'}
-                        px={1}
-                        onClick={() => dispatch(setShowModal({ blockName, show: true }))}
-                    ><LuSparkles />{'Ai Assistant' || `Click Me`}</Button>
-                </BlockControlContainer>
-            }
-        </Stack >
 
+            </SkillsItemsWrapper>
+        </SkillsBlockWrapper>
     );
 };
 
 export default SkillsBlock;
 
 
+const SkillsBlockWrapper = ({ editableFields, blockName, themeColor, layoutNumber, dispatch, children }) => {
+
+    const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
+
+    if (editableFields) {
+        return (
+            <Stack
+                bg=''
+                w='full'
+                flexDirection={'column'}
+                gap={layoutNumber == 0 ? 2 : 4}
+                justifyContent={layoutNumber == 0 && 'space-between'}
+                outlineStyle={'solid'}
+                outlineColor={`${themeColor}.100`}
+                outlineWidth={(showBlockControl.show && showBlockControl.blockName == 'resumeSkills') ? '1px' : '0px'}
+                padding={1} borderRadius={'lg'}
+                position={'relative'}
+                onMouseEnter={() => dispatch(setShowBlockControl({ blockName, show: true }))}
+                onMouseLeave={() => dispatch(setShowBlockControl({ blockName: null, show: false }))}
+            >
+                {children}
+
+                {
+                    (showBlockControl.show && showBlockControl.blockName == 'resumeSkills') &&
+                    <BlockControlContainer blockName={blockName} hideButtonAction={setResumeSkillsIsVisible} closeText={'Hide Skills block'}>
+                        {/* add aditional controls here.. */}
+                        <Button
+                            aria-label="AI Assistant"
+                            variant={'outline'}
+                            bgColor={`white`}
+                            borderWidth={'1px'}
+                            borderColor={`${themeColor}.100`}
+                            _hover={{ backgroundColor: `${themeColor}.50` }}
+                            size={'xs'}
+                            rounded={'md'}
+                            px={1}
+                            onClick={() => dispatch(setShowModal({ blockName, show: true }))}
+                        ><LuSparkles />{'Ai Assistant' || `Click Me`}</Button>
+                    </BlockControlContainer>
+                }
+            </Stack>
+        )
+    }
+    else {
+        // rednder to PDF
+        return (
+            <div style={{
+                display: 'flex', flexDirection: 'column', width: '100%',
+                padding: '0.25rem',
+                borderRadius: '0.5rem',
+                position: 'relative',
+                justifyContent: layoutNumber == 0 && 'space-between',
+                gap: layoutNumber == 0 ? '0.5rem' : '1rem'
+            }}>
+                {children}
+            </div>
+        )
+    }
+}
+
+const SkillsItemsWrapper = ({ editableFields, layoutNumber, children }) => {
+    if (editableFields) {
+        return (
+            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2}>
+                {children}
+            </Stack>
+        )
+    } else {
+        // rednder to PDF
+        return (
+            <div style={{ display: 'flex', flexDirection: layoutNumber == 0 ? 'row' : 'column', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {children}
+
+            </div >
+        )
+    }
+}
 
 const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
     let suffForIds = '';
@@ -120,39 +165,58 @@ const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
     const onChangeHandler = (id, value) => {
         dispatch(setSkillItemData({ id, value }));
     }
-    return (
-        <Box key={`li_${item.id}_${suffForIds}`}
-            ref={ref}
-            margin={0}
-            minWidth={'23%'}
-            position='relative'
-            onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
-            onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
-        >
-            <CustomText
-                variant={'p'}
-                size={fontSize.p}
-                fontWeight={'400'}
-                defaultValue={'Enter skill'}
-                name={null}
-                value={item.value}
-                isEditable={editableFields}
-                onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
-            />
 
-            {
-                editableFields && (show.show && show.id == item.id) &&
-                <motion.div
-                    key={`motion_${item.id}_resumeSkills`}
-                    initial={{ opacity: 0, }}
-                    animate={{ opacity: 1, transition: { delay: 0.1 } }}
-                    style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
-                >
-                    <AddOrRemoveItem currentId={item.id} actionRemove={removeSkillItem} actionAdd={addSkillItem} sizeButtons={'15px'} />
-                </motion.div>
-            }
-        </Box>
-    )
+    if (editableFields) {
+        return (
+            <Box key={`li_${item.id}_${suffForIds}`}
+                ref={ref}
+                margin={0}
+                minWidth={'23%'}
+                position='relative'
+                onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
+                onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
+            >
+                <CustomText
+                    variant={'p'}
+                    size={fontSize.p}
+                    fontWeight={'400'}
+                    defaultValue={'Enter skill'}
+                    name={null}
+                    value={item.value}
+                    isEditable={editableFields}
+                    onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
+                />
+
+                {
+                    editableFields && (show.show && show.id == item.id) &&
+                    <motion.div
+                        key={`motion_${item.id}_resumeSkills`}
+                        initial={{ opacity: 0, }}
+                        animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                        style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
+                    >
+                        <AddOrRemoveItem currentId={item.id} actionRemove={removeSkillItem} actionAdd={addSkillItem} sizeButtons={'15px'} />
+                    </motion.div>
+                }
+            </Box>
+        )
+    } else {
+        return (
+            // render to pdf
+            <div style={{ minWidth: '23%', position: 'relative' }} >
+                <CustomText
+                    variant={'p'}
+                    size={fontSize.p}
+                    fontWeight={'400'}
+                    defaultValue={'Enter skill'}
+                    name={null}
+                    value={item.value}
+                    isEditable={editableFields}
+                    onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
+                />
+            </div>
+        )
+    }
 }
 
 const SkillsItemMotion = motion.create(SkillsItem);

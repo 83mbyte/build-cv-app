@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addLanguagesItem, removeLanguagesItem, setLanguagesItemData, setResumeLanguagesHeading, setResumeLanguagesIsVisible } from '@/redux/resume/languagesBlockSlice';
 import { setShowAddRemoveButtons, setShowBlockControl } from '@/redux/settings/editorSettingsSlice';
+
 import CustomHeading from '../dataFields/CustomHeading';
 import CustomText from '../dataFields/CustomText';
 import AddOrRemoveItem from '../addOrRemoveItem/AddOrRemoveItem';
@@ -15,7 +16,6 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
 
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
-    const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
 
     const languagesHeading = useSelector(state => state.resumeLanguages.languagesHeading);
     const languagesItems = useSelector(state => state.resumeLanguages.items);
@@ -27,22 +27,8 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
     }
 
 
-
     return (
-        <Stack
-            bg=''
-            w='full'
-            flexDirection={'column'}
-            gap={layoutNumber == 0 ? 2 : 4}
-            justifyContent={layoutNumber == 0 && 'space-between'}
-            outlineStyle={'solid'}
-            outlineColor={`${themeColor}.100`}
-            outlineWidth={(showBlockControl.show && showBlockControl.blockName == 'resumeLanguages') ? '1px' : '0px'}
-            padding={1} borderRadius={'lg'}
-            position={'relative'}
-            onMouseEnter={() => dispatch(setShowBlockControl({ blockName, show: true }))}
-            onMouseLeave={() => dispatch(setShowBlockControl({ blockName: null, show: false }))}
-        >
+        <LanguagesBlockWrapper editableFields={editableFields} themeColor={themeColor} dispatch={dispatch} blockName={blockName}>
 
             <CustomHeading
                 variant={'h2'}
@@ -55,7 +41,7 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
                 onChangeCallback={(name, value) => onChangeHeadingHandler(name, value)}
             />
 
-            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2}>
+            <LanguagesItemsWrapper layoutNumber={layoutNumber} editableFields={editableFields}>
 
                 {
                     editableFields == true
@@ -84,19 +70,75 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
                             )
                         })
                 }
-            </Stack>
-
-            {
-                (showBlockControl.show && showBlockControl.blockName == 'resumeLanguages') &&
-                <BlockControlContainer blockName={blockName} hideButtonAction={setResumeLanguagesIsVisible} closeText={'Hide Languages block'}>
-                    {/* add aditional controls here.. */}
-                </BlockControlContainer>
-            }
-        </Stack >
+            </LanguagesItemsWrapper>
+        </LanguagesBlockWrapper>
     );
 };
 
 export default LanguagesBlock;
+
+const LanguagesBlockWrapper = ({ editableFields, blockName, themeColor, layoutNumber, dispatch, children }) => {
+    const showBlockControl = useSelector(state => state.editorSettings.showBlockControl);
+
+    if (editableFields) {
+        return (
+            <Stack
+                bg=''
+                w='full'
+                flexDirection={'column'}
+                gap={layoutNumber == 0 ? 2 : 4}
+                justifyContent={layoutNumber == 0 && 'space-between'}
+                outlineStyle={'solid'}
+                outlineColor={`${themeColor}.100`}
+                outlineWidth={(showBlockControl.show && showBlockControl.blockName == 'resumeLanguages') ? '1px' : '0px'}
+                padding={1} borderRadius={'lg'}
+                position={'relative'}
+                onMouseEnter={() => dispatch(setShowBlockControl({ blockName, show: true }))}
+                onMouseLeave={() => dispatch(setShowBlockControl({ blockName: null, show: false }))}
+            >
+                {children}
+
+                {
+                    (showBlockControl.show && showBlockControl.blockName == 'resumeLanguages') &&
+                    <BlockControlContainer blockName={blockName} hideButtonAction={setResumeLanguagesIsVisible} closeText={'Hide Languages block'}>
+                        {/* add aditional controls here.. */}
+                    </BlockControlContainer>
+                }
+            </Stack>
+        )
+    } else {
+        // render to PDF
+        return (
+            <div style={{
+                display: 'flex', flexDirection: 'column', width: '100%',
+                padding: '0.25rem',
+                borderRadius: '0.5rem',
+                position: 'relative',
+                justifyContent: layoutNumber == 0 && 'space-between',
+                gap: layoutNumber == 0 ? '0.5rem' : '1rem'
+            }}>
+                {children}
+            </div>
+        )
+    }
+}
+const LanguagesItemsWrapper = ({ editableFields, layoutNumber, children }) => {
+    if (editableFields) {
+        return (
+            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2}>
+                {children}
+            </Stack>
+        )
+    } else {
+        // render to PDF
+        return (
+            <div style={{ display: 'flex', flexDirection: layoutNumber == 0 ? 'row' : 'column', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {children}
+
+            </div >
+        )
+    }
+}
 
 const LanguagesItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
 
@@ -110,39 +152,59 @@ const LanguagesItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
     const onChangeHandler = (id, value) => {
         dispatch(setLanguagesItemData({ id, value }));
     }
-    return (
-        <Box key={`li_${item.id}_${suffForIds}`}
-            ref={ref}
-            margin={0}
-            minWidth={'23%'}
-            position='relative'
-            onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
-            onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
-        >
-            <CustomText
-                variant={'p'}
-                size={fontSize.p}
-                fontWeight={'400'}
-                defaultValue={'Enter skill'}
-                name={null}
-                value={item.value}
-                isEditable={editableFields}
-                onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
-            />
-            {
-                editableFields && (show.show && show.id == item.id) &&
-                <motion.div
-                    key={`motion_${item.id}_resumeLanguages`}
-                    initial={{ opacity: 0, }}
-                    animate={{ opacity: 1, transition: { delay: 0.1 } }}
-                    style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
-                >
 
-                    <AddOrRemoveItem currentId={item.id} actionRemove={removeLanguagesItem} actionAdd={addLanguagesItem} marginRight={'10px'} sizeButtons={'15px'} />
-                </motion.div>
-            }
-        </Box>
-    )
+    if (editableFields) {
+        return (
+            <Box key={`li_${item.id}_${suffForIds}`}
+                ref={ref}
+                margin={0}
+                minWidth={'23%'}
+                position='relative'
+                onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
+                onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
+            >
+                <CustomText
+                    variant={'p'}
+                    size={fontSize.p}
+                    fontWeight={'400'}
+                    defaultValue={'Enter skill'}
+                    name={null}
+                    value={item.value}
+                    isEditable={editableFields}
+                    onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
+                />
+                {
+                    editableFields && (show.show && show.id == item.id) &&
+                    <motion.div
+                        key={`motion_${item.id}_resumeLanguages`}
+                        initial={{ opacity: 0, }}
+                        animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                        style={{ position: 'absolute', top: -10, right: '10px', display: 'block', }}
+                    >
+
+                        <AddOrRemoveItem currentId={item.id} actionRemove={removeLanguagesItem} actionAdd={addLanguagesItem} marginRight={'10px'} sizeButtons={'15px'} />
+                    </motion.div>
+                }
+            </Box>
+        )
+    }
+    else {
+        return (
+            // render to pdf
+            <div style={{ minWidth: '23%', position: 'relative' }} >
+                <CustomText
+                    variant={'p'}
+                    size={fontSize.p}
+                    fontWeight={'400'}
+                    defaultValue={'Enter skill'}
+                    name={null}
+                    value={item.value}
+                    isEditable={editableFields}
+                    onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
+                />
+            </div>
+        )
+    }
 }
 
 const LanguagesItemMotion = motion.create(LanguagesItem);
