@@ -8,7 +8,7 @@ export const languagesBlockSlice = createSlice({
     initialState: {
         isVisible: false,
         languagesHeading: null,
-        items: [languagesItemDefault, { id: 'init_languages2', value: 'Enter lang' }]
+        items: [languagesItemDefault]
     },
     reducers: {
         setResumeLanguagesHeading: (state, action) => {
