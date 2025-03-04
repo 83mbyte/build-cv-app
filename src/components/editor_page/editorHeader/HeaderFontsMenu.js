@@ -21,10 +21,13 @@ import { fontSizeNames } from '@/lib/defaults';
 
 const frameworks = createListCollection({
     items: [
-        { label: "Default", value: 'body' },
-        { label: "Dancing Script", value: "dancing" },
-        { label: "Jersey 15", value: "jersey" },
-        { label: "Oswald", value: "oswald" },
+        { label: 'Default', value: 'body' },
+        { label: "Inconsolata", value: "inconsolata" },
+        { label: 'Ysabeau', value: 'ysabeau' },
+        { label: 'Recursive', value: 'recursive' },
+        { label: 'Platypi', value: 'platypi' },
+        { label: 'Spectral', value: 'spectral' },
+        { label: "Mali", value: "mali" },
     ],
 })
 

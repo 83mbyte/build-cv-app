@@ -1,6 +1,6 @@
 
 import "./globals.css";
-import { Jersey_15, Oswald, Dancing_Script } from "next/font/google";
+import { Spectral, Platypi, Recursive, Ysabeau, Mali, Inconsolata, } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { indexData } from "@/lib/content-lib";
 
@@ -29,26 +29,45 @@ export const viewport = {
   // interactiveWidget: 'resizes-visual',
 }
 
-
-const jersey = Jersey_15({
-  variable: "--font-jersey",
-  weight: ['400'],
-  subsets: ["latin"],
-})
-const oswald = Oswald({
-  variable: '--font-oswald',
-  weight: ['200', '300', '400', '500', '600', '700'],
+const spectral = Spectral({
+  variable: '--font-spectral',
+  weight: ['300', '400', '500', '600'],
   subsets: ['latin', 'cyrillic'],
 })
-const dancing_script = Dancing_Script({
-  variable: '--font-dancing',
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
+
+const platypi = Platypi({
+  variable: '--font-platypi',
+  weight: ['300', '400', '500', '600'],
+  subsets: ['latin']
+})
+
+const recursive = Recursive({
+  variable: '--font-recursive',
+  weight: ['300', '400', '500', '600'],
+  subsets: ['cyrillic-ext', 'latin']
+})
+
+const ysabeau = Ysabeau({
+  variable: '--font-ysabeau',
+  weight: ['300', '400', '500', '600'],
+  subsets: ['latin', 'cyrillic'],
+})
+
+const mali = Mali({
+  variable: '--font-mali',
+  weight: ['300', '400', '500', '600'],
+  subsets: ['latin']
+})
+
+const inconsolata = Inconsolata({
+  variable: '--font-inconsolata',
+  weight: ['300', '400', '500', '600'],
+  subsets: ['latin']
 })
 
 export default function RootLayout({ children }) {
   return (
-    <html className={`${dancing_script.variable} ${jersey.variable} ${oswald.variable}`} lang="en" suppressHydrationWarning={true}>
+    <html className={`${ysabeau.variable} ${recursive.variable} ${platypi.variable} ${spectral.variable} ${mali.variable} ${inconsolata.variable}`} lang="en" suppressHydrationWarning={true}>
       <body>
         {children}
       </body>
