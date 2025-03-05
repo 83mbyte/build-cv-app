@@ -33,11 +33,10 @@ const CustomLink = ({
         fontWeight: fontWeight,
         contentEditable: isEditable,
         border: '0px solid red',
-        lineHeight: 1.5,
-        marginBottom: 0,
+        lineHeight: 1,
+        // marginBottom: 0,
         color: '#0a0a0b'
     }
-    console.log('fontSize in link', size)
 
 
     let linkStylePDF = {
@@ -47,10 +46,13 @@ const CustomLink = ({
         fontWeight: fontWeight,
         contentEditable: isEditable,
         border: '0px solid red',
+        // lineHeight: 1,
         lineHeight: 1.5,
-        marginBottom: 0,
+        letterSpacing: '1px',
         color: '#0a0a0b',
         wordBreak: 'break-word',
+        // marginTop: '5px',
+        // backgroundColor: 'red', 
     }
 
     let linkVariant;
@@ -153,10 +155,10 @@ const CustomLink = ({
         );
     } else {
         return (
-            <div style={{ width: '100%', paddingInline: '0.125rem', }}  >
-                <motion.div layout>
-                    {linkVariant}
-                </motion.div>
+            <div style={{ width: '100%', paddingInline: '0.125rem', display: 'flex', alignItems: 'baseline' }}  >
+                {/* <motion.div layout style={{ alignItems: 'end', backgroundColor: 'red' }}> */}
+                {linkVariant}
+                {/* </motion.div> */}
             </div>
         );
     }

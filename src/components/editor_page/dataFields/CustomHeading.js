@@ -56,7 +56,10 @@ const CustomHeading = ({
             wordBreak: 'break-word',
             color: colorsPDF[themeColor],
             fontSize: size[1],
-            fontFamily: fontsFamilyPDF[currentFont]
+            fontFamily: fontsFamilyPDF[currentFont],
+            padding: 0,
+            margin: 0,
+            lineHeight: 1.5,
         },
         h2: {
             contentEditable: isEditable,
@@ -71,7 +74,11 @@ const CustomHeading = ({
             wordBreak: 'break-word',
             fontSize: size[1],
             fontFamily: fontsFamilyPDF[currentFont],
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            padding: 0,
+            margin: 0,
+            lineHeight: 1.5,
+            letterSpacing: '1px',
         },
         h3: {
             contentEditable: isEditable,
@@ -87,6 +94,10 @@ const CustomHeading = ({
             fontFamily: fontsFamilyPDF[currentFont],
             fontWeight: fontWeight,
             textTransform: 'capitalize',
+            padding: 0,
+            margin: 0,
+            letterSpacing: '1px',
+
         },
         h4: {
             contentEditable: isEditable,
@@ -100,6 +111,9 @@ const CustomHeading = ({
             fontSize: size[1],
             fontFamily: fontsFamilyPDF[currentFont],
             fontWeight: fontWeight,
+            padding: 0,
+            margin: 0,
+            letterSpacing: '1px',
         },
     }
 
@@ -125,11 +139,12 @@ const CustomHeading = ({
 
                 // return as not editable to render pdf
                 : headingVariant =
-                <h1
+                <h2
                     ref={fieldRef}
                     style={{
                         ...styleHeading.h1_pdf
                     }}
+                    as={'h2'}
                     dangerouslySetInnerHTML={{ __html: value ? value : defaultValue }}
                 />
             break;
@@ -205,7 +220,7 @@ const CustomHeading = ({
         );
     } else {
         return (
-            <div style={{ width: '100%', paddingInline: '0.125rem' }}  >
+            <div style={{ width: '100%', paddingInline: '0.125rem', }}  >
                 <motion.div layout>
                     {headingVariant}
                 </motion.div>

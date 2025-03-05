@@ -33,7 +33,7 @@ const CustomText = ({
         border: '0px solid black',
         fontFamily: currentFont ? currentFont : 'body',
         fontWeight: fontWeight,
-        lineHeight: 1.5,
+        // lineHeight: 2,
         marginBottom: 0,
     }
     const textStylePDF = {
@@ -45,8 +45,10 @@ const CustomText = ({
         fontFamily: fontsFamilyPDF[currentFont],
         fontWeight: fontWeight,
         lineHeight: 1.5,
-        marginBottom: 0,
-        wordBreak: 'break-word'
+        letterSpacing: '1px',
+        // marginBottom: 0,
+        wordBreak: 'break-word',
+        margin: 0
 
     }
     let textVariant;
