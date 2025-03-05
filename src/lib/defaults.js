@@ -25,10 +25,3 @@ export const colorsPDF = {
     gray: '#a1a1aa',
     black: '#000000'
 }
-export const fontsFamilyPDF = {
-    heading: 'Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
-    body: 'Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
-    dancing: `Dancing Script,Dancing Script Fallback`,
-    jersey: '"Jersey 15", "Jersey 15 Fallback"',
-    oswald: '"Oswald", "Oswald Fallback"',
-}

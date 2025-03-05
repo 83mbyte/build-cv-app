@@ -1,16 +1,21 @@
 import { Box, Portal, } from "@chakra-ui/react";
 import { Fragment } from "react";
-import WhiteSheetGridLayout from "./WhiteSheetGridLayout";
-import { pageSize } from "@/lib/defaults";
 
+import WhiteSheetGridLayout from "./WhiteSheetGridLayout";
+
+import { pageSize } from "@/lib/defaults";
+import { spectral, platypi, recursive, ysabeau, mali, inconsolata } from "@/lib/resumeFonts";
 
 const a4 = pageSize.a4;
+
 const WhiteSheetContainer = ({ ref }) => {
 
     return (
         <Fragment>
             <Box backgroundColor={''} w='full' paddingTop={['65px', '100px']} position={'relative'} display={'flex'} justifyContent={'center'}>
-                <Box backgroundColor={'white'}
+                <Box
+                    className={`${ysabeau.className} ${recursive.className} ${platypi.className} ${spectral.className} ${mali.className} ${inconsolata.className}`}
+                    backgroundColor={'white'}
                     id='resumePaper'
                     minW={'xs'}
                     w='full'
@@ -28,7 +33,9 @@ const WhiteSheetContainer = ({ ref }) => {
 
             {/* rendering duplicate */}
             <Portal>
-                <Box backgroundColor={'white'}
+                <Box
+                    className={`${ysabeau.className} ${recursive.className} ${platypi.className} ${spectral.className} ${mali.className} ${inconsolata.className}`}
+                    backgroundColor={'white'}
                     boxSizing={'border-box'}
                     ref={ref}
                     id='resumePapperHidden'

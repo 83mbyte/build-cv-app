@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 import { motion } from 'motion/react';
 import { formatText, preventEnterButton, sanitizeInput } from '@/lib/commonScripts';
 
-import { fontsFamilyPDF, optionsForEditableFields } from '@/lib/defaults';
+import { optionsForEditableFields } from '@/lib/defaults';
+import { fontsFamilyPDF } from '@/lib/resumeFonts';
 
 const options = { ...optionsForEditableFields };
 

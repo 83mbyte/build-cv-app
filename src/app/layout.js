@@ -1,6 +1,5 @@
 
 import "./globals.css";
-import { Spectral, Platypi, Recursive, Ysabeau, Mali, Inconsolata, } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { indexData } from "@/lib/content-lib";
 
@@ -29,45 +28,10 @@ export const viewport = {
   // interactiveWidget: 'resizes-visual',
 }
 
-const spectral = Spectral({
-  variable: '--font-spectral',
-  weight: ['300', '400', '500', '600'],
-  subsets: ['latin', 'cyrillic'],
-})
-
-const platypi = Platypi({
-  variable: '--font-platypi',
-  weight: ['300', '400', '500', '600'],
-  subsets: ['latin']
-})
-
-const recursive = Recursive({
-  variable: '--font-recursive',
-  weight: ['300', '400', '500', '600'],
-  subsets: ['cyrillic-ext', 'latin']
-})
-
-const ysabeau = Ysabeau({
-  variable: '--font-ysabeau',
-  weight: ['300', '400', '500', '600'],
-  subsets: ['latin', 'cyrillic'],
-})
-
-const mali = Mali({
-  variable: '--font-mali',
-  weight: ['300', '400', '500', '600'],
-  subsets: ['latin']
-})
-
-const inconsolata = Inconsolata({
-  variable: '--font-inconsolata',
-  weight: ['300', '400', '500', '600'],
-  subsets: ['latin']
-})
 
 export default function RootLayout({ children }) {
   return (
-    <html className={`${ysabeau.variable} ${recursive.variable} ${platypi.variable} ${spectral.variable} ${mali.variable} ${inconsolata.variable}`} lang="en" suppressHydrationWarning={true}>
+    <html lang="en" suppressHydrationWarning={true}>
       <body>
         {children}
       </body>
