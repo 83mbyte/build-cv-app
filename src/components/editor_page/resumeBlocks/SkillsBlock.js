@@ -141,14 +141,16 @@ const SkillsBlockWrapper = ({ editableFields, blockName, themeColor, layoutNumbe
 const SkillsItemsWrapper = ({ editableFields, layoutNumber, children }) => {
     if (editableFields) {
         return (
-            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2}>
+            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2} px={2}>
                 {children}
             </Stack>
         )
     } else {
         // rednder to PDF
         return (
-            <div style={{ display: 'flex', flexDirection: layoutNumber == 0 ? 'row' : 'column', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div style={{
+                display: 'flex', flexDirection: layoutNumber == 0 ? 'row' : 'column', flexWrap: 'wrap', gap: '0.5rem', paddingInline: '0.5rem'
+            }}>
                 {children}
 
             </div >
@@ -172,6 +174,9 @@ const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
                 ref={ref}
                 margin={0}
                 minWidth={'23%'}
+                px={'1'}
+                borderRadius={'xs'}
+                backgroundColor={'#fafafa'}
                 position='relative'
                 onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
                 onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
@@ -203,7 +208,7 @@ const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
     } else {
         return (
             // render to pdf
-            <div style={{ minWidth: '23%', position: 'relative' }} >
+            <div style={{ minWidth: '23%', position: 'relative', backgroundColor: '#fafafa', paddingInline: '0.125rem', borderRadius: '0.125rem' }} >
                 <CustomText
                     variant={'p'}
                     size={fontSize.p}

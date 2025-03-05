@@ -101,17 +101,19 @@ const SummaryFields = ({ editableFields, dispatch }) => {
 
             />
 
-            <CustomText
-                variant={'p'}
-                allowEnter={true}
-                size={fontSize.p}
-                fontWeight={'400'}
-                defaultValue={'Provide your professional summary'}
-                name={'summaryText'}
-                value={summaryText}
-                isEditable={editableFields}
-                onChangeCallback={(name, value) => onChangeHandler(name, value)}
-            />
+            <div style={{ paddingInline: '0.5rem', width: '100%' }}>
+                <CustomText
+                    variant={'p'}
+                    allowEnter={true}
+                    size={fontSize.p}
+                    fontWeight={'400'}
+                    defaultValue={'Provide your professional summary'}
+                    name={'summaryText'}
+                    value={summaryText}
+                    isEditable={editableFields}
+                    onChangeCallback={(name, value) => onChangeHandler(name, value)}
+                />
+            </div>
         </>
     )
 }

@@ -125,14 +125,14 @@ const LanguagesBlockWrapper = ({ editableFields, blockName, themeColor, layoutNu
 const LanguagesItemsWrapper = ({ editableFields, layoutNumber, children }) => {
     if (editableFields) {
         return (
-            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2}>
+            <Stack flexDirection={layoutNumber == 0 ? 'row' : 'column'} flexWrap={'wrap'} gap={2} px={2}>
                 {children}
             </Stack>
         )
     } else {
         // render to PDF
         return (
-            <div style={{ display: 'flex', flexDirection: layoutNumber == 0 ? 'row' : 'column', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: layoutNumber == 0 ? 'row' : 'column', flexWrap: 'wrap', gap: '0.5rem', paddingInline: '0.5rem' }}>
                 {children}
 
             </div >
@@ -160,6 +160,9 @@ const LanguagesItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
                 margin={0}
                 minWidth={'23%'}
                 position='relative'
+                px={'1'}
+                borderRadius={'xs'}
+                backgroundColor={'#fafafa'}
                 onMouseEnter={() => dispatch(setShowAddRemoveButtons({ id: item.id, show: true }))}
                 onMouseLeave={() => dispatch(setShowAddRemoveButtons({ id: null, show: false }))}
             >
@@ -191,7 +194,7 @@ const LanguagesItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
     else {
         return (
             // render to pdf
-            <div style={{ minWidth: '23%', position: 'relative' }} >
+            <div style={{ minWidth: '23%', position: 'relative', backgroundColor: '#fafafa', paddingInline: '0.125rem', borderRadius: '0.125rem' }} >
                 <CustomText
                     variant={'p'}
                     size={fontSize.p}
