@@ -8,11 +8,13 @@ import educationBlockSliceReducer from './resume/educationBlockSlice';
 import experienceBlockSliceReducer from './resume/experienceBlockSlice';
 import skillsBlockSliceReducer from './resume/skillsBlockSlice';
 import languagesBlockSliceReducer from './resume/languagesBlockSlice';
-import resumeAiBotSlice from './modals/resumeAiBotSlice';
+import authSliceReducer from './auth/authSlice';
+// import resumeAiBotSlice from './modals/resumeAiBotSlice';
 
 
 export default configureStore({
     reducer: {
+        auth: authSliceReducer,
         editorSettings: editorSettingsSliceReducer,
         fontSettings: fontSettingsSliceReducer,
         resumeHeader: headerBlockSliceReducer,
@@ -22,7 +24,7 @@ export default configureStore({
         resumeExperience: experienceBlockSliceReducer,
         resumeSkills: skillsBlockSliceReducer,
         resumeLanguages: languagesBlockSliceReducer,
-        resumeAiBot: resumeAiBotSlice
+        // resumeAiBot: resumeAiBotSlice
 
     },
 })

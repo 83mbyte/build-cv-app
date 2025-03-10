@@ -1,13 +1,22 @@
+import { setShowAuthModal } from '@/redux/auth/authSlice';
 import { Button, Box, Icon } from '@chakra-ui/react';
 import { LuDownload } from "react-icons/lu";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const HeaderDownloadButton = ({ clickGetPDF }) => {
     const themeColor = useSelector(state => state.editorSettings.themeColor);
 
+    const userLogged = useSelector(state => state.auth.data);
+    const dispatch = useDispatch();
+
+
     const getPdf = () => {
         console.log('clicked getPDF..');
-        clickGetPDF();
+        if (userLogged) {
+            clickGetPDF();
+        } else {
+            dispatch(setShowAuthModal({ show: true, type: 'features' }))
+        }
 
     }
     return (
