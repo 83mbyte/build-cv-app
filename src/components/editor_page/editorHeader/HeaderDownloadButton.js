@@ -3,10 +3,10 @@ import { Button, Box, Icon } from '@chakra-ui/react';
 import { LuDownload } from "react-icons/lu";
 import { useDispatch, useSelector } from 'react-redux';
 
-const HeaderDownloadButton = ({ clickGetPDF }) => {
+const HeaderDownloadButton = ({ clickGetPDF, userLogged = null }) => {
     const themeColor = useSelector(state => state.editorSettings.themeColor);
 
-    const userLogged = useSelector(state => state.auth.data);
+
     const dispatch = useDispatch();
 
 

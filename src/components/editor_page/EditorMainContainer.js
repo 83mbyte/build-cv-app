@@ -1,27 +1,35 @@
 
-import { useRef, lazy, Suspense } from 'react';
-import { useSelector } from 'react-redux';
+import { useRef, lazy, Suspense, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Toaster, toaster } from "@/components/ui/toaster";
 
+
+
+import { editorMainContainerData } from '@/lib/content-lib';
+
+import { setAuthUserData } from '@/redux/auth/authSlice';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { app } from '@/__firebase/__firebaseConf';
+
 import HeaderContainer from './editorHeader/HeaderContainer';
-import WhiteSheetContainer from './whiteSheet/WhiteSheetContainer';
 import ModalWindowBot from '../modalWindow/ModalWindowBot';
 import FallbackSpinner from './FallbackSpinner';
 
-import { editorMainContainerData } from '@/lib/content-lib';
-import AuthModal from '../modalWindow/authModal/AuthModal';
-
-
+const WhiteSheetContainer = lazy(() => import('./whiteSheet/WhiteSheetContainer'));
 const SummaryAI = lazy(() => import('./resumeBlocks/aiBot/SummaryAI'));
 const SkillsAI = lazy(() => import('./resumeBlocks/aiBot/SkillsAI'));
 const ExperienceAI = lazy(() => import('./resumeBlocks/aiBot/ExperienceAI'));
+const AuthModal = lazy(() => import('../modalWindow/authModal/AuthModal'));
 
-
+const auth = getAuth(app);
 
 const EditorMainContainer = () => {
+  const [isLoadingUserData, setIsLoadingUserData] = useState(true);
   const resumeAreaRef = useRef(null);
+
   const modalBlockName = useSelector(state => state.editorSettings.showModal.blockName);
+  const dispatch = useDispatch();
 
   let selectedBot;
   let modalTitle = 'Ai-powered assistant';
@@ -119,10 +127,42 @@ const EditorMainContainer = () => {
   }
 
 
+  useEffect(() => {
+    // manage userLogged state
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+      // if (user && user.uid && user.accessToken && user.emailVerified) {
+
+      //   dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email }));
+
+      // } else 
+      if ((process.env.NEXT_PUBLIC_NODE_MODE === 'development') && (user && user.uid && user.accessToken)) {
+
+        dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email }));
+
+      } else {
+        dispatch(setAuthUserData(null));
+      }
+
+      setIsLoadingUserData(false);
+    })
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <>
-      <HeaderContainer clickGetPDF={downloadFilePDF} />
-      <WhiteSheetContainer ref={resumeAreaRef} />
+      {
+        isLoadingUserData
+          ? <FallbackSpinner margin='xl' />
+          : <>
+            <HeaderContainer clickGetPDF={downloadFilePDF} />
+            <Suspense fallback={<FallbackSpinner />} >
+              <WhiteSheetContainer ref={resumeAreaRef} />
+            </Suspense>
+          </>
+      }
+
 
       {/* modal window of assistant */}
       <ModalWindowBot title={modalTitle} size='lg'>
@@ -130,7 +170,9 @@ const EditorMainContainer = () => {
       </ModalWindowBot>
 
       {/* auth modal window */}
-      <AuthModal />
+      <Suspense fallback={<FallbackSpinner />}>
+        <AuthModal />
+      </Suspense>
       <Toaster />
     </>
   );

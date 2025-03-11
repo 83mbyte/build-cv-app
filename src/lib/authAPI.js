@@ -1,6 +1,6 @@
 
 import { app } from "@/__firebase/__firebaseConf";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth"
+import { signInWithEmailAndPassword, getAuth, signOut } from "firebase/auth"
 
 const auth = getAuth(app);
 
@@ -26,5 +26,22 @@ export const authAPI = {
                 return ({ status: 'Error', message: errorCode ?? errorMessage })
             });
     },
+
+    signOut: () => {
+        return signOut(auth).then(() => {
+            // Sign-out successful.
+            return ({
+                status: 'Success',
+                payload: {
+                    userId: null,
+                    email: null,
+                    accessToken: null
+                }
+            })
+        }).catch((error) => {
+            // An error happened.
+            return ({ status: 'Error', error: error.errorCode ?? error.errorMessage })
+        });
+    }
 
 }

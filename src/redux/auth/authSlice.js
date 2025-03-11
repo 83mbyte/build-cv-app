@@ -74,6 +74,11 @@ export const authSlice = createSlice({
                     ...state,
                     data: { ...action.payload }
                 }
+            } else {
+                return {
+                    ...state,
+                    data: null
+                }
             }
         },
         setAuthStatus: (state, action) => {

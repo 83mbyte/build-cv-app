@@ -2,15 +2,19 @@
 import { setShowAuthModal, setAuthFormFieldError, setAuthFormData, setSubscriptionSignTempData, } from '@/redux/auth/authSlice';
 import { Portal, Box, AbsoluteCenter, Container, IconButton, VStack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 
 import { LuX, } from "react-icons/lu";
 import { useDispatch, useSelector } from 'react-redux';
 
-import AuthFeatures from './AuthFeatures';
-import AuthSignupForm from './AuthSignupForm';
-import AuthLoginForm from './AuthLoginForm';
-import AuthPayMerchant from './AuthPayMerchant';
+
+import FallbackSpinner from '@/components/editor_page/FallbackSpinner';
+
+const AuthFeatures = lazy(() => import('./AuthFeatures'));
+const AuthLoginForm = lazy(() => import('./AuthLoginForm'));
+const AuthPayMerchant = lazy(() => import('./AuthPayMerchant'));
+const AuthSignupForm = lazy(() => import('./AuthSignupForm'));
+
 
 
 const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
@@ -80,9 +84,6 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
     }, [showModal])
 
 
-
-
-
     return (
 
         <AnimatePresence mode='wait'>
@@ -125,27 +126,36 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
                                             {
                                                 modalType == 'features'
                                                 &&
-                                                <AuthFeatures changeFormHandler={changeFormHandler} />
+                                                <Suspense fallback={<FallbackSpinner />}>
+
+                                                    <AuthFeatures changeFormHandler={changeFormHandler} />
+                                                </Suspense>
                                             }
                                             {
                                                 modalType == 'signup'
                                                 &&
-                                                <AuthSignupForm
-                                                    errors={errors}
-                                                    validateEmail={validateEmail}
-                                                    validatePass={validatePass}
-                                                    validateAddress={validateAddress}
-                                                    changeFormHandler={changeFormHandler} />
+                                                <Suspense fallback={<FallbackSpinner />}>
+                                                    <AuthSignupForm
+                                                        errors={errors}
+                                                        validateEmail={validateEmail}
+                                                        validatePass={validatePass}
+                                                        validateAddress={validateAddress}
+                                                        changeFormHandler={changeFormHandler} />
+                                                </Suspense>
                                             }
 
                                             {
                                                 modalType == 'merchant' &&
-                                                <AuthPayMerchant changeFormHandler={changeFormHandler} />
+                                                <Suspense fallback={<FallbackSpinner />}>
+                                                    <AuthPayMerchant changeFormHandler={changeFormHandler} />
+                                                </Suspense>
                                             }
 
                                             {
                                                 modalType == 'login' &&
-                                                <AuthLoginForm errors={errors} validateEmail={validateEmail} validatePass={validatePass} changeFormHandler={changeFormHandler} closeWindow={closeWindow} />
+                                                <Suspense fallback={<FallbackSpinner />}>
+                                                    <AuthLoginForm errors={errors} validateEmail={validateEmail} validatePass={validatePass} changeFormHandler={changeFormHandler} closeWindow={closeWindow} />
+                                                </Suspense>
                                             }
 
                                         </VStack>

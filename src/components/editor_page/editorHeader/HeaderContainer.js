@@ -1,11 +1,19 @@
+import { Suspense, lazy } from 'react';
 import { Box, Stack, Text, } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+
 import HeaderFontsMenu from './HeaderFontsMenu';
 import HeaderThemeMenu from './HeaderThemeMenu';
 import HeaderLayoutMenu from './HeaderLayoutMenu';
 import HeaderDownloadButton from './HeaderDownloadButton';
 
+import FallbackSpinner from '../FallbackSpinner';
+const HeaderUserMenu = lazy(() => import('./HeaderUserMenu'));
 
 const HeaderContainer = ({ clickGetPDF }) => {
+
+    const userLogged = useSelector(state => state.auth.data);
+
 
     return (
         <Box backgroundColor={'transparent'} w='full' paddingX={[0, '2', '5']} paddingY={[0, 2]} as='header' position={'fixed'} zIndex={111} transition={'all 0.5s ease'}>
@@ -29,7 +37,16 @@ const HeaderContainer = ({ clickGetPDF }) => {
                         <HeaderLayoutMenu />
 
                         {/* Download button */}
-                        <HeaderDownloadButton clickGetPDF={clickGetPDF} />
+                        <HeaderDownloadButton clickGetPDF={clickGetPDF} userLogged={userLogged} />
+
+                        {/* user profile button */}
+                        {
+                            userLogged &&
+                            <Box><Suspense fallback={<FallbackSpinner size='sm' margin='xs' />}>
+                                <HeaderUserMenu />
+                            </Suspense>
+                            </Box>
+                        }
 
                     </Box>
                 </Stack>
