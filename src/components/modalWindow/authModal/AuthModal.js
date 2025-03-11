@@ -1,5 +1,5 @@
 
-import { setShowAuthModal, setAuthFormFieldError, setAuthFormData, } from '@/redux/auth/authSlice';
+import { setShowAuthModal, setAuthFormFieldError, setAuthFormData, setSubscriptionSignTempData, } from '@/redux/auth/authSlice';
 import { Portal, Box, AbsoluteCenter, Container, IconButton, VStack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect } from 'react';
@@ -27,6 +27,11 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
     const closeWindow = () => {
         dispatch(setAuthFormData({ password: null, email: null }));
         dispatch(setShowAuthModal({ show: false }));
+
+        dispatch(setSubscriptionSignTempData({
+            key: 'clientSecret',
+            value: null
+        }))
     };
 
     const validateEmail = (value) => {
@@ -135,7 +140,7 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
 
                                             {
                                                 modalType == 'merchant' &&
-                                                <AuthPayMerchant />
+                                                <AuthPayMerchant changeFormHandler={changeFormHandler} />
                                             }
 
                                             {

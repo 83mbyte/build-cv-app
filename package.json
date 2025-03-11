@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@adobe/pdfservices-node-sdk": "^4.1.0",
     "@chakra-ui/react": "^3.8.0",
     "@emotion/react": "^11.14.0",
     "@next/third-parties": "^15.1.7",
     "@reduxjs/toolkit": "^2.5.1",
+    "@stripe/react-stripe-js": "^3.3.0",
+    "@stripe/stripe-js": "^5.10.0",
     "firebase": "^11.3.1",
     "html-to-image": "^1.11.13",
     "isomorphic-dompurify": "^2.21.0",

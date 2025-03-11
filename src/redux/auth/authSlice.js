@@ -19,6 +19,10 @@ export const authSlice = createSlice({
             firstName: null,
             lastName: null
         },
+        // key to create Stripe customer
+        subscriptionSignTempData: {
+            clientSecret: null
+        },
         data: null,
         status: '',
         error: '',
@@ -73,10 +77,20 @@ export const authSlice = createSlice({
             }
         },
         setAuthStatus: (state, action) => {
-            if (action.payload) {
+
+            return {
+                ...state,
+                status: action?.payload ?? null
+            }
+        },
+
+        setSubscriptionSignTempData: (state, action) => {
+            if (action?.payload) {
                 return {
                     ...state,
-                    status: action.payload ?? null
+                    subscriptionSignTempData: {
+                        [action.payload.key]: action.payload?.value
+                    }
                 }
             }
         },
@@ -88,7 +102,7 @@ export const authSlice = createSlice({
 })
 
 export default authSlice.reducer;
-export const { setShowAuthModal, setAuthFormFieldError, setAuthUserData, setAuthStatus, setAuthFormData } = authSlice.actions;
+export const { setShowAuthModal, setAuthFormFieldError, setAuthUserData, setAuthStatus, setAuthFormData, setSubscriptionSignTempData } = authSlice.actions;
 
 
 // =============== //
@@ -96,14 +110,4 @@ export const { setShowAuthModal, setAuthFormFieldError, setAuthUserData, setAuth
 // =============== //
 
 
-
-export const signUpThunk = createAsyncThunk('authSlice/signUpThunk', async (dataObj) => {
-
-    // let resp = await authAPI.signUp(dataObj.email, dataObj.password, dataObj.firstName, dataObj.lastName);
-    if (resp) {
-        return resp
-    } else {
-        return null
-    }
-})
 

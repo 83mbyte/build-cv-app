@@ -1,23 +1,53 @@
-import { Heading, VStack, Box, Button, Alert } from '@chakra-ui/react';
-import { authData } from '@/lib/content-lib';
+import React, { useEffect, useState } from 'react';
+import { Heading, VStack, Box, Button, Alert, HStack } from '@chakra-ui/react';
+import { toaster } from '@/components/ui/toaster';
+
 import { motion } from 'motion/react';
 
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, useElements, useStripe, CardElement, } from '@stripe/react-stripe-js';
+import { Elements, useElements, useStripe, PaymentElement } from '@stripe/react-stripe-js';
 
-
-
-
-import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toaster } from '@/components/ui/toaster';
-import { setAuthFormData, setShowAuthModal } from '@/redux/auth/authSlice';
+import { setAuthFormData, setAuthStatus, setShowAuthModal, setSubscriptionSignTempData } from '@/redux/auth/authSlice';
+
+import { authData } from '@/lib/content-lib';
+import FallbackSpinner from '@/components/editor_page/FallbackSpinner';
+
+import { LuShoppingBag } from "react-icons/lu";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-const AuthPayMerchant = () => {
+const AuthPayMerchant = ({ changeFormHandler }) => {
 
+    const showModal = useSelector(state => state.auth.authModal);
+    const clientSecret = useSelector(state => state.auth.subscriptionSignTempData.clientSecret);
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (showModal.show == true && showModal.type === 'merchant' && !clientSecret) {
+
+            fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createSetupIntent`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+
+                    dispatch(
+                        setSubscriptionSignTempData({
+                            key: 'clientSecret',
+                            value: data.clientSecret ?? null,
+                        })
+                    );
+                })
+                .catch((err) => console.error('Error fetching clientSecret:', err));
+        }
+    }, [showModal.type, showModal.show, clientSecret, dispatch]);
+
+    useEffect(() => {
+        console.log('AuthPayMerchant mounted');
+        return () => console.log('AuthPayMerchant unmounted');
+    }, []);
     return (
         <motion.div
             style={{ width: '100%' }}
@@ -27,54 +57,82 @@ const AuthPayMerchant = () => {
 
             <VStack w='full' gap={3} maxH={'80vh'} p={1}>
                 <Heading>{authData.merchant.heading ?? 'Lorem ipsum'}</Heading>
-                <Elements stripe={stripePromise} options={{ appearance: { labels: 'floating', theme: 'night' } }}  >
-                    <PaymentForm />
-                </Elements>
+
+                <motion.div layout style={{ width: '100%' }}>
+                    {
+                        clientSecret ? (
+                            <Elements stripe={stripePromise} options={{ clientSecret }}>
+                                <PaymentForm clientSecret={clientSecret} changeFormHandler={changeFormHandler} />
+                            </Elements>
+                        ) : (
+                            <div>Loading...</div>
+                        )}
+                </motion.div>
             </VStack>
         </motion.div>
     );
 };
-const PaymentForm = () => {
-    const elements = useElements();
+
+export default AuthPayMerchant;
+
+const PaymentForm = ({ clientSecret, changeFormHandler }) => {
+
     const stripe = useStripe();
+    const elements = useElements();
     const [error, setError] = useState(null);
-    const [processing, setProcessing] = useState(false);
+    const [isFormLoading, setIsFormLoading] = useState(true);
+
+    const status = useSelector(state => state.auth.status);
     const { address, email, password, firstName, lastName } = useSelector(state => state.auth.formData);
+
     const dispatch = useDispatch();
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setProcessing(true);
+
 
         if (!stripe || !elements) {
-            retutn;
+            ;
+            return;
         }
 
-        const cardElement = elements.getElement(CardElement);
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: cardElement,
+        dispatch(setAuthStatus('loading'));
+        // sent formdata from PaymentElement before confirmSetup
+        const { error: submitError } = await elements.submit();
+        if (submitError) {
+            setError(submitError.message);
+            dispatch(setAuthStatus(''));
+            return;
+        }
+
+        // confim payment method setup
+        const { error, setupIntent } = await stripe.confirmSetup({
+            elements,
+            clientSecret,
+            // confirmParams: {
+            //     return_url: 'http://sOm3_p4th_t0_r3turn:3000/success', 
+            // },
+            redirect: 'if_required', // redirect if required (in case of 3DS, for example)
         });
 
         if (error) {
             setError(error.message);
-            setProcessing(false);
+            dispatch(setAuthStatus(''));
+
         } else {
-
+            // SetupIntent confirmed,  push data to server to create a subscription
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createSubscription`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createSubscriptionIntent`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        paymentMethodId: paymentMethod.id,
-                        email, password, firstName, lastName,
-                    })
+                        paymentMethodId: setupIntent.payment_method,
+                        email, password, firstName, lastName
+                    }),
                 });
-
                 const result = await response.json();
-                console.log('result: ', result)
+
                 if (result.success == true && result.subscription.status == 'active') {
                     toaster.create({
                         type: 'success',
@@ -84,16 +142,14 @@ const PaymentForm = () => {
                     })
                     dispatch(setShowAuthModal({ show: false }));
                     dispatch(setAuthFormData({ email: null, address: null, firstName: null, lastName: null, password: null }));
-
-                }
-                // TODO 3D sec 
-                // else if (result.success == true && result.subcription.status == 'incomplete') { 'create 3D secure' }
-                else {
-
+                    dispatch(setSubscriptionSignTempData({
+                        key: 'clientSecret',
+                        value: null
+                    }))
+                } else {
                     throw new Error(result.error)
                 }
             } catch (err) {
-                console.log('Error ', err.message)
                 setError(err.message ?? authData?.merchant.errors.default);
                 toaster.create({
                     type: 'error',
@@ -101,58 +157,56 @@ const PaymentForm = () => {
                     description: err.message,
                     duration: 4000
                 })
-
             }
-            setProcessing(false);
+            dispatch(setAuthStatus(''));
+        }
 
-        } //end if (error ) else
+
     }
 
+    useEffect(() => {
+        if (stripe && elements) {
+            setIsFormLoading(false); // Форма готова, когда оба доступны
+        }
+    }, [stripe, elements,]);
     return (
         <form onSubmit={handleSubmit} style={{ width: '100%', minHeight: '30px' }}>
             <VStack gap={3} >
-                <Box borderRadius={'lg'} padding={1} w='full'>
-                    <CardElement
-                        options={{
-                            style: {
-                                base: {
-                                    fontSize: '16px',
-                                    lineHeight: '20px',
-
-                                    color: '#424770',
-                                    '::placeholder': {
-                                        color: '#aab7c4',
-                                    },
-                                },
-                                invalid: {
-                                    color: '#9e2146',
-                                },
-                            },
-                        }}
-                    />
-                </Box>
 
                 {
-                    error &&
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1, transition: { duration: 1 } }}>
-                        <Alert.Root status="error" marginY={2} py={1} alignItems={'center'} >
-                            <Alert.Indicator textStyle="sm" />
-                            <Alert.Title textStyle="sm">{error}</Alert.Title>
-                        </Alert.Root>
-                    </motion.div>
+                    isFormLoading
+                        ? <FallbackSpinner />
+                        :
+                        <>
+                            <Box borderRadius={'lg'} padding={1} w='full'>
+                                <PaymentElement
+                                    options={{
+                                        layout: 'tabs', // can be as (tabs, accordion, auto)
+                                    }}
+                                />
+                            </Box>
+
+                            {
+                                error &&
+                                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1, transition: { duration: 1 } }}>
+                                    <Alert.Root status="error" marginY={2} py={1} alignItems={'center'} >
+                                        <Alert.Indicator textStyle="sm" />
+                                        <Alert.Title textStyle="sm">{error}</Alert.Title>
+                                    </Alert.Root>
+                                </motion.div>
+                            }
+                            <VStack display={'flex'} justifyContent={'center'} w='50%'>
+                                <Button w='full' type='submit' colorPalette={'teal'} size={['xs', 'sm']} disabled={!stripe || status == 'loading'} loading={status == 'loading'} loadingText={authData.merchant.buttons.processing ?? `Lorem psum`}>
+                                    <LuShoppingBag />
+                                    {authData.merchant.buttons.pay ?? `Lorem psum`}
+                                </Button>
+                                <Button variant={'plain'} colorPalette={'teal'} size={['xs', 'sm']} onClick={() => changeFormHandler('signup')}>
+                                    back
+                                </Button>
+                            </VStack>
+                        </>
                 }
-                <Box display={'flex'} justifyContent={'center'}>
-                    <Button type='submit' colorPalette={'teal'} size={['xs', 'sm']} disabled={!stripe || processing}>
-                        {
-                            processing
-                                ? authData.merchant.buttons.processing ?? `Lorem psum`
-                                : authData.merchant.buttons.pay ?? `Lorem psum`
-                        }
-                    </Button>
-                </Box>
             </VStack>
         </form >
-    );
-};
-
-export default AuthPayMerchant;
+    )
+}

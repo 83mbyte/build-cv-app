@@ -10,13 +10,12 @@ import { sanitizeInput } from '@/lib/commonScripts';
 import { toaster } from '@/components/ui/toaster';
 
 
-const AuthSignupForm = ({ errors, validateEmail, validatePass, validateAddress, changeFormHandler }) => {
+const AuthSignupForm = ({ errors, validateEmail, validatePass, changeFormHandler }) => {
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
-    const addressRef = useRef(null);
     const dispatch = useDispatch();
 
     const buttonClickHandler = (type) => {
@@ -31,8 +30,6 @@ const AuthSignupForm = ({ errors, validateEmail, validatePass, validateAddress, 
         let lastName = lastNameRef.current.value;
         let email = emailRef.current.value;
         let password = passwordRef.current.value;
-        let address = addressRef.current.value;
-
 
 
         if (firstName && firstName.length > 1) {
@@ -42,23 +39,18 @@ const AuthSignupForm = ({ errors, validateEmail, validatePass, validateAddress, 
             lastName = sanitizeInput(lastName);
         }
 
-        if (address && address.length > 1) {
-            address = sanitizeInput(address);
-        }
 
         try {
 
-            if (email && password && address && (!errors.email && !errors.password)) {
+            if (email && password && (!errors.email && !errors.password)) {
 
-                /// in the very end
+                dispatch(setAuthFormData({ email, password, firstName, lastName }));
+                buttonClickHandler('merchant');
+
                 firstNameRef.current.value = '';
                 lastNameRef.current.value = '';
                 emailRef.current.value = '';
                 passwordRef.current.value = '';
-
-                dispatch(setAuthFormData({ email, password, address, firstName, lastName }));
-
-                buttonClickHandler('merchant');
 
             } else {
                 throw new Error(authData.signup.errors.noData ?? 'Lorem ipsum');
@@ -115,16 +107,6 @@ const AuthSignupForm = ({ errors, validateEmail, validatePass, validateAddress, 
                     <Input placeholder={authData?.signup.form.password.placeholder ?? 'Lorem ipsum'} type='password' ref={passwordRef} onBlur={() => validatePass(passwordRef.current.value)} />
                     <Field.ErrorText>{authData?.signup.form.password.errorText ?? 'Lorem ipsum'}</Field.ErrorText>
                 </Field.Root>
-                {/* <Field.Root required invalid={errors.address}>
-                    <Field.Label>
-                        {authData?.signup.form?.address?.label ?? 'Lorem ipsum'}
-                        <Field.RequiredIndicator />
-                    </Field.Label>
-                    <Input placeholder={authData?.signup.form?.address?.placeholder ?? 'Lorem ipsum'} type='text' ref={addressRef}
-                        onBlur={() => validateAddress(addressRef.current.value)}
-                    />
-                    <Field.ErrorText>{authData?.signup.form.address.errorText ?? 'Lorem ipsum'}</Field.ErrorText>
-                </Field.Root> */}
 
                 <Button w='75%' size={['sm', 'md']} colorPalette={'teal'} onClick={submitForm}>{authData?.signup.continueButton ?? 'Lorem ipsum'}</Button>
 
