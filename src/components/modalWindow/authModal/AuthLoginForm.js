@@ -2,13 +2,19 @@ import { Input, Heading, Field, Button, VStack, HStack, Separator, Text } from '
 import { useRef } from 'react';
 import { motion } from 'motion/react';
 
-import { authData } from '@/lib/content-lib';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { toaster } from '@/components/ui/toaster';
+import { setAuthStatus, setAuthUserData } from '@/redux/auth/authSlice';
 
-const AuthLoginForm = ({ errors, validateEmail, validatePass, loginCallback, changeFormHandler }) => {
+import { authData } from '@/lib/content-lib';
+import { authAPI } from '@/lib/authAPI';
+
+const AuthLoginForm = ({ errors, validateEmail, validatePass, closeWindow, changeFormHandler }) => {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
+
     const status = useSelector(state => state.auth.status);
+    const dispatch = useDispatch();
 
     const buttonClickHandler = (type) => {
         if (type) {
@@ -20,7 +26,35 @@ const AuthLoginForm = ({ errors, validateEmail, validatePass, loginCallback, cha
         let email = emailRef.current.value;
         let password = passwordRef.current.value;
 
-        loginCallback(email, password);
+
+        dispatch(setAuthStatus('loading'));
+        try {
+            if (email && password && (!errors.email && !errors.password)) {
+
+                let resp = await authAPI.login(email, password);
+
+                if (resp && resp.status != 'Success') {
+                    throw new Error(resp.message);
+                } else {
+                    if (resp.payload) {
+                        dispatch(setAuthStatus('ready'));
+                        dispatch(setAuthUserData(resp.payload));
+                        closeWindow();
+                    }
+                }
+
+            } else {
+
+                throw new Error('incorrect email or password ');
+            }
+        } catch (error) {
+            toaster.create({
+                type: 'error',
+                title: 'Error',
+                description: error?.message ? error.message : 'error while login'
+            })
+            dispatch(setAuthStatus('failed'));
+        }
     }
 
     return (

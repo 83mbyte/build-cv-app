@@ -1,13 +1,11 @@
 
-import { setShowAuthModal, setAuthFormFieldError, setAuthUserData, setAuthStatus, setAuthFormData, } from '@/redux/auth/authSlice';
+import { setShowAuthModal, setAuthFormFieldError, setAuthFormData, } from '@/redux/auth/authSlice';
 import { Portal, Box, AbsoluteCenter, Container, IconButton, VStack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect } from 'react';
 
 import { LuX, } from "react-icons/lu";
 import { useDispatch, useSelector } from 'react-redux';
-import { toaster } from '../../ui/toaster';
-import { authAPI } from '@/lib/authAPI';
 
 import AuthFeatures from './AuthFeatures';
 import AuthSignupForm from './AuthSignupForm';
@@ -22,8 +20,8 @@ const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
 const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
     const showModal = useSelector(state => state.auth.authModal.show);
     const modalType = useSelector(state => state.auth.authModal.type);
+
     const errors = useSelector(state => state.auth.formErrors);
-    const status = useSelector(state => state.auth.status);
     const dispatch = useDispatch();
 
     const closeWindow = () => {
@@ -62,7 +60,7 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
         }
     }
 
-    const changeFormHandler = async (type, email, password) => {
+    const changeFormHandler = async (type) => {
         if (type) {
             dispatch(setShowAuthModal({ show: true, type }));
         }
@@ -77,36 +75,7 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
     }, [showModal])
 
 
-    const submitLogin = async (email, password) => {
-        dispatch(setAuthStatus('loading'));
-        try {
-            if (email && password && (!errors.email && !errors.password)) {
 
-                let resp = await authAPI.login(email, password);
-
-                if (resp && resp.status != 'Success') {
-                    throw new Error(resp.message);
-                } else {
-                    if (resp.payload) {
-                        dispatch(setAuthUserData(resp.payload));
-                        closeWindow();
-                    }
-                }
-
-                dispatch(setAuthStatus('ready'));
-            } else {
-                dispatch(setAuthStatus('failed'));
-                throw new Error('incorrect email or password ');
-            }
-
-        } catch (error) {
-            toaster.create({
-                type: 'error',
-                title: 'Error',
-                description: error?.message ? error.message : 'error while login'
-            })
-        }
-    }
 
 
     return (
@@ -117,7 +86,7 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
                 <Portal>
                     <Box position={'fixed'} bgColor={'rgba(0,0,0,0.3)'} w='100%' h='100vh' zIndex={'10'} overflowY={'hidden'} top={0} left={0}>
                         <AbsoluteCenter w='full' px={1}>
-                            <Container width={['full', size]} padding={0} mx={1} >
+                            <Container width={['full', modalType == 'merchant' ? 'xl' : size]} padding={0} mx={1} >
                                 <motion.div
                                     key={'authModal'}
                                     initial={{ opacity: 0, scale: 0.75 }}
@@ -163,16 +132,15 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
                                                     validateAddress={validateAddress}
                                                     changeFormHandler={changeFormHandler} />
                                             }
+
                                             {
                                                 modalType == 'merchant' &&
-
                                                 <AuthPayMerchant />
-
-
                                             }
+
                                             {
                                                 modalType == 'login' &&
-                                                <AuthLoginForm errors={errors} validateEmail={validateEmail} validatePass={validatePass} loginCallback={submitLogin} changeFormHandler={changeFormHandler} />
+                                                <AuthLoginForm errors={errors} validateEmail={validateEmail} validatePass={validatePass} changeFormHandler={changeFormHandler} closeWindow={closeWindow} />
                                             }
 
                                         </VStack>
@@ -184,7 +152,7 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
                     </Box>
                 </Portal>
             }
-        </AnimatePresence>
+        </AnimatePresence >
     );
 };
 
