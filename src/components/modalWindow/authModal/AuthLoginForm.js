@@ -1,17 +1,21 @@
-import { Input, Heading, Field, Button, VStack, HStack, Separator, Text } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { Input, Heading, Field, Button, VStack, HStack, Separator, Text, Icon, Box } from '@chakra-ui/react';
+import { InputGroup } from '@/components/ui/input-group';
+import { toaster } from '@/components/ui/toaster';
+import { useRef, useState } from 'react';
 import { motion } from 'motion/react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { toaster } from '@/components/ui/toaster';
 import { setAuthStatus, setAuthUserData } from '@/redux/auth/authSlice';
 
 import { authData } from '@/lib/content-lib';
 import { authAPI } from '@/lib/authAPI';
 
+import { LuEye, LuEyeOff } from "react-icons/lu";
+
 const AuthLoginForm = ({ errors, validateEmail, validatePass, closeWindow, changeFormHandler }) => {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const status = useSelector(state => state.auth.status);
     const dispatch = useDispatch();
@@ -73,6 +77,8 @@ const AuthLoginForm = ({ errors, validateEmail, validatePass, closeWindow, chang
                     </Field.Label>
                     <Input
                         placeholder={authData?.login.form.email.placeholder ?? 'Lorem ipsum'}
+                        _focusVisible={{ outline: '1px solid teal', border: '1px solid teal' }}
+                        size={['sm', 'md']}
                         type={'email'} ref={emailRef}
                         onBlur={() => validateEmail(emailRef.current.value)} />
                     <Field.ErrorText>{authData?.login.form.email.errorText ?? 'Lorem ipsum'}</Field.ErrorText>
@@ -83,10 +89,15 @@ const AuthLoginForm = ({ errors, validateEmail, validatePass, closeWindow, chang
                         {authData?.login.form.password.label ?? 'Lorem ipsum'}
                         <Field.RequiredIndicator />
                     </Field.Label>
-                    <Input
-                        placeholder={authData?.login.form.password.placeholder ?? 'Lorem ipsum'}
-                        type='password' ref={passwordRef}
-                        onBlur={() => validatePass(passwordRef.current.value)} />
+                    <InputGroup endElement={<ShowPassword showPassword={showPassword} setShowPassword={setShowPassword} />} style={{ width: '100%' }}>
+                        <Input
+                            placeholder={authData?.login.form.password.placeholder ?? 'Lorem ipsum'}
+                            type={showPassword ? 'text' : 'password'}
+                            ref={passwordRef}
+                            _focusVisible={{ outline: '1px solid teal', border: '1px solid teal' }}
+                            size={['sm', 'md']}
+                            onBlur={() => validatePass(passwordRef.current.value)} />
+                    </InputGroup>
                     <Field.ErrorText>{authData?.login.form.password.errorText ?? 'Lorem ipsum'}</Field.ErrorText>
                 </Field.Root>
                 <Button w='75%' size={['sm', 'md']} colorPalette={'teal'} onClick={submitLogin} loading={status == 'loading'}>
@@ -105,3 +116,18 @@ const AuthLoginForm = ({ errors, validateEmail, validatePass, closeWindow, chang
 }
 
 export default AuthLoginForm;
+
+const ShowPassword = ({ showPassword, setShowPassword }) => {
+
+    return (
+        <Box border={'0px solid red'} p={1} display={'flex'} alignItems={'center'} _hover={{ cursor: 'pointer', color: 'teal' }} onClick={() => setShowPassword(!showPassword)}>
+            <Icon  >
+                {
+                    showPassword
+                        ? <LuEye />
+                        : <LuEyeOff />
+                }
+            </Icon>
+        </Box>
+    )
+}

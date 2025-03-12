@@ -82,21 +82,30 @@ const AuthSignupForm = ({ errors, validateEmail, validatePass, changeFormHandler
                         {authData?.signup.form?.firstName?.label ?? 'Lorem ipsum'}
                         <Field.RequiredIndicator />
                     </Field.Label>
-                    <Input placeholder={authData?.signup.form?.firstName?.placeholder ?? 'Lorem ipsum'} type='text' ref={firstNameRef} />
+                    <Input placeholder={authData?.signup.form?.firstName?.placeholder ?? 'Lorem ipsum'} type='text' ref={firstNameRef}
+                        _focusVisible={{ outline: '1px solid teal', border: '1px solid teal' }}
+                        size={['sm', 'md']}
+                    />
                 </Field.Root>
                 <Field.Root  >
                     <Field.Label>
                         {authData?.signup.form?.lastName?.label ?? 'Lorem ipsum'}
                         <Field.RequiredIndicator />
                     </Field.Label>
-                    <Input placeholder={authData?.signup.form?.lastName?.placeholder ?? 'Lorem ipsum'} type='text' ref={lastNameRef} />
+                    <Input placeholder={authData?.signup.form?.lastName?.placeholder ?? 'Lorem ipsum'} type='text' ref={lastNameRef}
+                        _focusVisible={{ outline: '1px solid teal', border: '1px solid teal' }}
+                        size={['sm', 'md']}
+                    />
                 </Field.Root>
                 <Field.Root required invalid={errors.email}>
                     <Field.Label>
                         {authData?.signup.form.email.label ?? 'Lorem ipsum'}
                         <Field.RequiredIndicator />
                     </Field.Label>
-                    <Input placeholder={authData?.signup.form.email.placeholder ?? 'Lorem ipsum'} type={'email'} ref={emailRef} onBlur={() => validateEmail(emailRef.current.value)} />
+                    <Input placeholder={authData?.signup.form.email.placeholder ?? 'Lorem ipsum'} type={'email'} ref={emailRef} onBlur={() => validateEmail(emailRef.current.value)}
+                        _focusVisible={{ outline: '1px solid teal', border: '1px solid teal' }}
+                        size={['sm', 'md']}
+                    />
                     <Field.ErrorText>{authData?.signup.form.email.errorText ?? 'Lorem ipsum'}</Field.ErrorText>
                 </Field.Root>
                 <Field.Root required invalid={errors.password}>
@@ -104,7 +113,10 @@ const AuthSignupForm = ({ errors, validateEmail, validatePass, changeFormHandler
                         {authData?.signup.form.password.label ?? 'Lorem ipsum'}
                         <Field.RequiredIndicator />
                     </Field.Label>
-                    <Input placeholder={authData?.signup.form.password.placeholder ?? 'Lorem ipsum'} type='password' ref={passwordRef} onBlur={() => validatePass(passwordRef.current.value)} />
+                    <Input placeholder={authData?.signup.form.password.placeholder ?? 'Lorem ipsum'} type='password' ref={passwordRef} onBlur={() => validatePass(passwordRef.current.value)}
+                        _focusVisible={{ outline: '1px solid teal', border: '1px solid teal' }}
+                        size={['sm', 'md']}
+                    />
                     <Field.ErrorText>{authData?.signup.form.password.errorText ?? 'Lorem ipsum'}</Field.ErrorText>
                 </Field.Root>
 
