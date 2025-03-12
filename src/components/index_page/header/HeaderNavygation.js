@@ -16,12 +16,12 @@ const HeaderNavygation = () => {
                     </Button>
                 </Link>
                 <Separator orientation="vertical" size='sm' height={'4'} />
-                <Link href='/signin' prefetch={true}>
+
+                <Link href='/login' prefetch={true}>
                     <Button variant={'plain'} size={['2xs', 'sm']} paddingX={'2'} justifyContent={'center'} gap={1}
                         _hover={{ opacity: 0.75 }}
                         aria-label='signin button'
-                    >
-                        SignIn <LuLogIn />
+                    > Login <LuLogIn />
                     </Button>
                 </Link>
             </HStack>

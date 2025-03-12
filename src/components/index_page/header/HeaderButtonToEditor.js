@@ -1,5 +1,5 @@
-import { HStack, Icon, Button, Text, Link as ChakraLink } from '@chakra-ui/react';
-import NextLink from "next/link"
+import { HStack, Icon, Button, Text, } from '@chakra-ui/react';
+import NextLink from "next/link";
 import React from 'react';
 
 import { LuCheck } from "react-icons/lu";
