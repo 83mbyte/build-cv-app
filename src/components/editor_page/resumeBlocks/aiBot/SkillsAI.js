@@ -56,15 +56,15 @@ const SkillsAI = ({ blockName }) => {
                 dispatch(setSkillsGeneratedItems({ value: data }));
                 dispatch(setSkillsStatus('fulfilled'));
             } else {
-                throw new Error(skillsBotData.assistantErrors.generateSkills ?? 'lorem ipsum ');
+                throw new Error(genertatedSkills?.message ? genertatedSkills.message : skillsBotData.assistantErrors.generateSkills);
             }
 
 
         } catch (error) {
-            console.error(error?.message ? error.message : skillsBotData.assistantErrors.generateSkillsDefault ?? 'lorem ipsum ');
+            console.error(error.message ? error.message : skillsBotData.assistantErrors.generateSkillsDefault ?? 'lorem ipsum ');
             toaster.create({
                 title: 'Error',
-                description: error?.message ? error.message : skillsBotData.assistantErrors.generateSkillsDefault ?? 'lorem ipsum',
+                description: error.message ? error.message : skillsBotData.assistantErrors.generateSkillsDefault ?? 'lorem ipsum',
                 type: 'error',
                 duration: 5000
             })

@@ -29,6 +29,9 @@ const EditorMainContainer = () => {
   const resumeAreaRef = useRef(null);
 
   const modalBlockName = useSelector(state => state.editorSettings.showModal.blockName);
+
+  const userLogged = useSelector(state => state.auth.data);
+
   const dispatch = useDispatch();
 
   let selectedBot;
@@ -65,7 +68,7 @@ const EditorMainContainer = () => {
 
       let response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/streamPDFtoClient`, {
         method: "POST",
-        body: JSON.stringify({ fileName: resumeFileName, userId: process.env.NEXT_PUBLIC_FIREBASE_DEV_USER_ID, accessToken: process.env.NEXT_PUBLIC_FIREBASE_DEV_TOKEN }),
+        body: JSON.stringify({ fileName: resumeFileName, userId: userLogged.userId, accessToken: userLogged.accessToken }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -89,7 +92,7 @@ const EditorMainContainer = () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createPDFfromTemplate`, {
         method: "POST",
-        body: JSON.stringify({ htmlString, userId: process.env.NEXT_PUBLIC_FIREBASE_DEV_USER_ID, accessToken: process.env.NEXT_PUBLIC_FIREBASE_DEV_TOKEN }), // use id and token of registered users
+        body: JSON.stringify({ htmlString, userId: userLogged.userId, accessToken: userLogged.accessToken }), // use id and token of registered users
         headers: {
           "Content-Type": "application/json",
         },
@@ -131,12 +134,7 @@ const EditorMainContainer = () => {
     // manage userLogged state
     const unsubscribe = onAuthStateChanged(auth, (user) => {
 
-      // if (user && user.uid && user.accessToken && user.emailVerified) {
-
-      //   dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email }));
-
-      // } else 
-      if ((process.env.NEXT_PUBLIC_NODE_MODE === 'development') && (user && user.uid && user.accessToken)) {
+      if (user && user.uid && user.accessToken) {
 
         dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email }));
 

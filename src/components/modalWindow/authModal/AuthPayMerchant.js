@@ -166,7 +166,7 @@ const PaymentForm = ({ clientSecret, changeFormHandler }) => {
 
     useEffect(() => {
         if (stripe && elements) {
-            setIsFormLoading(false); // Форма готова, когда оба доступны
+            setIsFormLoading(false); //  
         }
     }, [stripe, elements,]);
     return (
