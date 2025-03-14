@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Heading, VStack, Box, Button, Alert, HStack } from '@chakra-ui/react';
+import { Heading, VStack, Box, Button, Alert, Highlight, Text } from '@chakra-ui/react';
 import { toaster } from '@/components/ui/toaster';
 
 import { motion } from 'motion/react';
@@ -8,16 +8,17 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useElements, useStripe, PaymentElement } from '@stripe/react-stripe-js';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthFormData, setAuthStatus, setShowAuthModal, setSubscriptionSignTempData } from '@/redux/auth/authSlice';
+import { setAuthStatus, setSubscriptionSignTempData } from '@/redux/auth/authSlice';
 
 import { authData } from '@/lib/content-lib';
+import { authAPI } from '@/lib/authAPI';
 import FallbackSpinner from '@/components/editor_page/FallbackSpinner';
 
 import { LuShoppingBag } from "react-icons/lu";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-const AuthPayMerchant = ({ changeFormHandler }) => {
+const AuthPayMerchant = ({ changeFormHandler, closeWindow }) => {
 
     const showModal = useSelector(state => state.auth.authModal);
     const clientSecret = useSelector(state => state.auth.subscriptionSignTempData.clientSecret);
@@ -56,13 +57,16 @@ const AuthPayMerchant = ({ changeFormHandler }) => {
         >
 
             <VStack w='full' gap={3} maxH={'80vh'} p={1}>
-                <Heading>{authData.merchant.heading ?? 'Lorem ipsum'}</Heading>
+                <Box>
+                    <Heading as='h3' size='lg'><Highlight query={'$10/month'} styles={{ px: "0.5", color: "teal" }}>{authData.merchant.heading ?? 'Lorem ipsum'}</Highlight></Heading>
+                    <Text fontSize={'xs'} textAlign={'right'}>{authData.merchant.textCancel ?? 'Lorem ipsum'}</Text>
+                </Box>
 
                 <motion.div layout style={{ width: '100%' }}>
                     {
                         clientSecret ? (
                             <Elements stripe={stripePromise} options={{ clientSecret }}>
-                                <PaymentForm clientSecret={clientSecret} changeFormHandler={changeFormHandler} />
+                                <PaymentForm clientSecret={clientSecret} changeFormHandler={changeFormHandler} closeWindow={closeWindow} />
                             </Elements>
                         ) : (
                             <div>Loading...</div>
@@ -75,7 +79,7 @@ const AuthPayMerchant = ({ changeFormHandler }) => {
 
 export default AuthPayMerchant;
 
-const PaymentForm = ({ clientSecret, changeFormHandler }) => {
+const PaymentForm = ({ clientSecret, changeFormHandler, closeWindow }) => {
 
     const stripe = useStripe();
     const elements = useElements();
@@ -93,7 +97,6 @@ const PaymentForm = ({ clientSecret, changeFormHandler }) => {
 
 
         if (!stripe || !elements) {
-            ;
             return;
         }
 
@@ -139,13 +142,22 @@ const PaymentForm = ({ clientSecret, changeFormHandler }) => {
                         title: 'Success',
                         description: authData?.merchant.toasts.success ?? 'Lorem ipsum',
                         duration: 4000,
-                    })
-                    dispatch(setShowAuthModal({ show: false }));
-                    dispatch(setAuthFormData({ email: null, address: null, firstName: null, lastName: null, password: null }));
-                    dispatch(setSubscriptionSignTempData({
-                        key: 'clientSecret',
-                        value: null
-                    }))
+                    });
+                    let loginResult = await authAPI.login(email, password);
+
+                    if (loginResult && loginResult.status != 'Success') {
+                        throw new Error(resp.message);
+                    } else {
+
+                        if (loginResult.payload) {
+
+
+                            closeWindow();
+                        } else {
+                            throw new Error(authData.merchant.errors.unableToLogin ?? 'Lorem ipsum')
+                        }
+                    }
+
                 } else {
                     throw new Error(result.error)
                 }
@@ -207,6 +219,6 @@ const PaymentForm = ({ clientSecret, changeFormHandler }) => {
                         </>
                 }
             </VStack>
-        </form >
+        </form>
     )
 }

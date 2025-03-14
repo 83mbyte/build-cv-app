@@ -16,7 +16,8 @@ export const authAPI = {
                     payload: {
                         userId: user.uid,
                         email: user.email,
-                        accessToken: user.accessToken
+                        accessToken: user.accessToken,
+                        fullname: user.displayName,
                     },
                 })
             })

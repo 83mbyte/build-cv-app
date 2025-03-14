@@ -147,7 +147,7 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
                                             {
                                                 modalType == 'merchant' &&
                                                 <Suspense fallback={<FallbackSpinner />}>
-                                                    <AuthPayMerchant changeFormHandler={changeFormHandler} />
+                                                    <AuthPayMerchant changeFormHandler={changeFormHandler} closeWindow={closeWindow} />
                                                 </Suspense>
                                             }
 
