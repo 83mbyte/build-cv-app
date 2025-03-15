@@ -10,6 +10,7 @@
 
 
 const admin = require("firebase-admin");
+const { getAuth } = require("firebase-admin/auth");
 const { getDownloadURL } = require("firebase-admin/storage");
 const { onRequest } = require("firebase-functions/v2/https");
 const { setGlobalOptions } = require("firebase-functions/v2");
@@ -21,7 +22,7 @@ const { generatePDFfromHTML } = require("./lib/adobeAPI");
 const stripeAPI = require("./lib/stripeAPI");
 const gptAPI = require('./lib/gptAPI');
 
-// const STRIPE_WHSEC = defineSecret('STRIPE_WHSEC');
+const STRIPE_WHSEC = defineSecret('STRIPE_WHSEC');
 // const PDF_PRICE_ID = process.env.PDF_PRICE_ID;
 const STRIPE_SECRET = defineSecret('STRIPE_SECRET');
 const SUBSCRIPTION_PRICE_ID = process.env.SUBSCRIPTION_PRICE_ID;
@@ -54,7 +55,7 @@ const requestToGPT = async ({ resp, aiKey, query, variant = 'professional' }) =>
     let assistReply = await gptAPI.createCompletions(openai, query, variant);
 
     if (assistReply && assistReply.status !== 'Success') {
-        return resp.status(500).json({ message: assistReply?.message ?? 'fuck', status: 'Error', code: 500 });
+        return resp.status(500).json({ message: assistReply?.message ?? 'Internal Server Error.', status: 'Error', code: 500 });
         // return resp.status(500).json({ message: `${assistReply?.message || 'Internal Server Error.'}`, status: 'Error', code: 500 });
     }
 
@@ -270,71 +271,320 @@ exports.createSubscriptionIntent = onRequest({
                 const stripeKey = STRIPE_SECRET.value();
                 const result = await stripeAPI.createSubscriptionIntent(stripeKey, SUBSCRIPTION_PRICE_ID, paymentMethodId, email);
 
-                resp.status(200).json(result);
+                if (result.success == true && result.subscription.status == 'active') {
+                    let newUserId = await registerUser(email, password, firstName, lastName);
+
+                    if (newUserId) {
+                        await createDBforNewUser(newUserId, email, result.subscription.id, result.subscription.customer);
+                    }
+                    resp.status(200).json({ success: true, subscription: { status: 'active' } });
+
+                } else if (result.success == true && result.subscription.status == 'incomplete') {
+                    resp.status(200).json({ success: true, subscription: { status: 'incomplete' } });
+
+                } else {
+                    throw new Error()
+                }
+
+
+                // resp.status(200).json(result);
 
             } catch (error) {
+                console.log('error subscription: ', error.message)
                 resp.status(200).json({ success: false, error: 'Unable to create a subscription - lack of necessary information' })
             }
         }
     }
-
 )
 
-// ====================================================================================================================================
 
-// exports.webhookStr = onRequest(
-//     {
-//         // cors: true,
-//         // PROD
-//         cors: [/stripe\.com$/],
-//         secrets: ['STRIPE_WHSEC', 'STRIPE_SECRET']
-//     },
-//     async (req, resp) => {
+exports.manageSubscriptionPortal = onRequest({
+    cors: true,
+},
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request' });
+        }
+        const { customerId, accessToken } = req.body;
+        const isTokenVerified = await verifyToken(accessToken);
+        if (!isTokenVerified || isTokenVerified.status == false) {
+            return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+        }
+        try {
+            const stripeKey = STRIPE_SECRET.value();
+            let result = await stripeAPI.createSubscriptionPortalSession(stripeKey, customerId, process.env.SUBSCRIPTION_PORTAL_RETURN_URL);
+            if (result && result.success) {
+                resp.status(200).json(result)
+            } else {
+                throw new Error(result.error);
+            }
 
-//         if (req.method !== 'POST') {
-//             return resp.status(400).json({ error: 'Bad request.' });
-//         };
+        } catch (error) {
+            resp.status(500).json({ error: error.message ? error.message : 'Internal Server Error' })
+        }
+
+    }
+)
+
+const updateSubscriptionData = (dbSubscription, data) => {
+    const subscriptionRef = dbSubscription.child(data.id);
+    subscriptionRef.update({ ...data });
+}
+
+exports.subscriptionWebhook = onRequest(
+    {
+        // cors: true,
+        // PROD
+        cors: [/stripe\.com$/],
+        secrets: ['STRIPE_WHSEC', 'STRIPE_SECRET']
+    },
+    async (req, resp) => {
+
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request' });
+        }
+
+        try {
+            const payloadBody = req.rawBody;
+            const sig = req.headers['stripe-signature'];
+            const endpointSecret = STRIPE_WHSEC.value();
+            const stripeKey = STRIPE_SECRET.value();
+
+            const dbSubscription = db.ref(process.env.APP_DB_SUBSCRIPTIONS_NEW);
+
+            let respWebhook = await stripeAPI.webhookEventCheck(stripeKey, endpointSecret, sig, payloadBody);
+
+            if (respWebhook && respWebhook.status == 'Default_Return') {
+                return resp.status(200).end();
+            }
+            if (respWebhook && respWebhook.status == 'Error') {
+
+                throw new Error(respWebhook.message)
+            } else {
+
+                if (respWebhook.message == 'Subscription created') {
+                    // create subscription 
+                    updateSubscriptionData(dbSubscription, respWebhook.data);
+                    // const subscriptionId = respWebhook.data.subscriptionId;
+                    // const subscriptionRef = dbSubscription.child(subscriptionId);
+                    // subscriptionRef.update({ ...respWebhook.data });
 
 
+                } else if (respWebhook.message == 'Subscription canceled immediately') {
+                    // immediately canceled subscription
+                    updateSubscriptionData(dbSubscription, respWebhook.data);
+                    // const subscriptionId = respWebhook.data.subscriptionId;
+                    // const subscriptionRef = dbSubscription.child(subscriptionId);
+                    // subscriptionRef.update({ ...respWebhook.data });
 
-//         try {
-//             const payloadBody = req.rawBody;
-//             const sig = req.headers['stripe-signature'];
-//             const endpointSecret = STRIPE_WHSEC.value();
-//             const stripeKey = STRIPE_SECRET.value();
+                } else if (respWebhook.message == 'Subscription scheduled for cancellation') {
+                    // Subscription scheduled for cancellation
+                    updateSubscriptionData(dbSubscription, respWebhook.data);
+                    // const subscriptionId = respWebhook.data.subscriptionId;
+                    // const subscriptionRef = dbSubscription.child(subscriptionId);
+                    // subscriptionRef.update({ ...respWebhook.data });
 
-//             let respWebhookStr = await stripeAPI.webhookEventCheck(stripeKey, endpointSecret, sig, payloadBody);
-//             if (respWebhookStr && respWebhookStr.status == 'Default_Return') {
-//                 return resp.status(200).end();
-//             }
-//             if (respWebhookStr && respWebhookStr.status !== 'Success') {
+                } else if (respWebhook.message == 'Subscription active or resumed') {
+                    // Subscription activated or resumed
+                    updateSubscriptionData(dbSubscription, respWebhook.data);
+                    // const subscriptionId = respWebhook.data.subscriptionId;
+                    // const subscriptionRef = dbSubscription.child(subscriptionId);
+                    // subscriptionRef.update({ ...respWebhook.data });
 
-//                 throw new Error(respWebhookStr.message)
-//             } else {
+                } else if (respWebhook.message == 'Subscription renewed with invoice.' || respWebhook.message == 'Payment failed for subscription, invoice.') {
+                    // paid of failed invoice
+                    updateSubscriptionData(dbSubscription, respWebhook.data);
+                    // const subscriptionId = respWebhook.data.subscriptionId;
+                    // const subscriptionRef = dbSubscription.child(subscriptionId);
+                    // subscriptionRef.update({ ...respWebhook.data });
+                }
 
-//                 if (respWebhookStr.userId && respWebhookStr.message === 'Payment completed') {
-//                     let userId = respWebhookStr.userId;
-//                     let paidServiceRef = db.ref(`${process.env.APP_DB_USERS}/${userId}/paidServices/data/`)
-//                     const pdfRef = paidServiceRef.child('pdf');
-//                     pdfRef.set({
-//                         isAllowed: true,
-//                         filesAllowed: 3
-//                     });
-//                 }
-//                 return resp.status(200).end();
-//             }
-//         } catch (error) {
-//             console.log(`Unsuccessful transaction.. ${error.message}`);
-//             // return resp.status(500).send(`Unsuccessful transaction.. ${error.message}`);
-//         }
+                return resp.status(200).end();
+            }
+        } catch (error) {
+            console.log('error', error.message)
+        }
 
-//         return resp.status(200).end();
-//     }
-// )
+        return resp.status(200).end();
+    }
+)
 
+const registerUser = async (email, password, firstName, lastName,) => {
+
+    return getAuth()
+        .createUser({
+            email: email,
+            emailVerified: false,
+            password: password,
+            displayName: firstName + ' ' + lastName,
+            disabled: false,
+        })
+        .then((userRecord) => {
+            // See the UserRecord reference doc for the contents of userRecord.
+            console.log('Successfully created new user:', userRecord.uid);
+            return userRecord.uid
+        })
+        .catch((error) => {
+            console.log('Error creating new user:', error);
+            return null
+        });
+}
+
+const createDBforNewUser = (userId, userEmail, subscriptionId, customerId) => {
+
+    const dbUsers = db.ref(process.env.APP_DB_USERS_NEW);
+    const userRef = dbUsers.child(userId);
+
+    userRef.set({
+        userProfile: {
+            id: userId,
+            email: userEmail,
+            subscription: {
+                subscription: subscriptionId,
+                customer: customerId,
+            }
+        },
+        resume: {
+            editorSetting: {
+                themeColor: 'blue',
+                layout: 0,
+            },
+            fontSettings: {
+                currentFont: null,
+                fontSize: null,
+            },
+            resumeHeader: {
+                fullName: null,
+                position: null,
+                profileImage: null,
+            },
+            resumeContact: {
+                phone: null,
+                email: null,
+                location: null,
+                web: null,
+            },
+            resumeSummary: {
+                isVisible: true,
+                summaryHeading: null,
+                summaryText: null,
+            },
+            resumeEducation: {
+                isVisible: true,
+                educationHeading: null,
+                items: [],
+            },
+            resumeExperience: {
+                expHeading: null,
+                isVisible: true,
+                items: [],
+            },
+            resumeSkills: {
+                isVisible: true,
+                skillsHeading: null,
+                items: [],
+            },
+            resumeLanguages: {
+                isVisible: false,
+                languagesHeading: null,
+                items: [],
+            }
+        },
+
+    }).then(() => {
+        return true
+    }).catch((error) => {
+        console.log(`ERROR while user ${userId} create: `, error.message);
+        return false
+    });
+
+    const dbSubscription = db.ref(process.env.APP_DB_SUBSCRIPTIONS_NEW);
+    const subscriptionRef = dbSubscription.child(subscriptionId);
+    subscriptionRef.update({
+        // status: 'active',
+        // customer: customerId,
+        userId: userId,
+        email: userEmail,
+    }).then(() => {
+        return true
+    }).catch((error) => {
+        console.log(`ERROR while user ${userId} create: `, error.message);
+        return false
+    });
+}
+
+// ============================
 // -----    STRIPE end --------
 
+exports.createUserOnSignup = functionsV1auth.user().onCreate((user) => {
 
+    let dbUsers = db.ref(process.env.APP_DB_USERS_NEW);
+    let userRef = dbUsers.child(user.uid);
+    userRef.set({
+        userProfile: {
+            id: user.uid,
+            email: user.email,
+            subscription: {
+                subscription: null,
+                customer: null,
+            }
+        },
+        resume: {
+            editorSetting: {
+                themeColor: 'blue',
+                layout: 0,
+            },
+            fontSettings: {
+                currentFont: null,
+                fontSize: null,
+            },
+            resumeHeader: {
+                fullName: null,
+                position: null,
+                profileImage: null,
+            },
+            resumeContact: {
+                phone: null,
+                email: null,
+                location: null,
+                web: null,
+            },
+            resumeSummary: {
+                isVisible: true,
+                summaryHeading: null,
+                summaryText: null,
+            },
+            resumeEducation: {
+                isVisible: true,
+                educationHeading: null,
+                items: [],
+            },
+            resumeExperience: {
+                expHeading: null,
+                isVisible: true,
+                items: [],
+            },
+            resumeSkills: {
+                isVisible: true,
+                skillsHeading: null,
+                items: [],
+            },
+            resumeLanguages: {
+                isVisible: false,
+                languagesHeading: null,
+                items: [],
+            }
+
+
+        },
+
+    }).then(() => {
+        return true
+    }).catch((error) => {
+        console.log(`ERROR while user ${user.uid} create: `, error.message);
+        return false
+    });
+});
 
 // AUTH users DELETE
 exports.deleteUser = functionsV1auth.user().onDelete((user) => {
@@ -348,10 +598,11 @@ exports.deleteUser = functionsV1auth.user().onDelete((user) => {
             return true;
         })
         .catch((error) => {
-            console.log(`ERROR while user ${user.ui} delete: `, error.message);
+            console.log(`ERROR while user ${user.uid} delete: `, error.message);
             return false
         });
 })
+
 
 
 // Create and deploy your first functions
