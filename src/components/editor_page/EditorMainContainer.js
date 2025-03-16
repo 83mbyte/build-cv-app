@@ -8,7 +8,7 @@ import { Toaster, toaster } from "@/components/ui/toaster";
 
 import { editorMainContainerData } from '@/lib/content-lib';
 
-import { setAuthUserData } from '@/redux/auth/authSlice';
+import { getCustomerIdThunk, setAuthUserData } from '@/redux/auth/authSlice';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from '@/__firebase/__firebaseConf';
 
@@ -136,7 +136,7 @@ const EditorMainContainer = () => {
 
       if (user && user.uid && user.accessToken) {
 
-        dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email }));
+        dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, fullName: user.displayName }));
 
       } else {
         dispatch(setAuthUserData(null));
@@ -147,6 +147,13 @@ const EditorMainContainer = () => {
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    // get customerId from DB
+    if (userLogged && !userLogged.customerId) {
+      dispatch(getCustomerIdThunk({ userId: userLogged.userId, accessToken: userLogged.accessToken }));
+    }
+  }, [userLogged, dispatch])
 
   return (
     <>

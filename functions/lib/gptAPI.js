@@ -23,7 +23,7 @@ async function createCompletions(openai, data, variant = null,) {
         messagesArray = [{ role: 'user', content: data }];
     }
 
-    let model = GPT_MODEL.default;
+    let model = GPT_MODELS.default;
 
     let presence_p = 0;
     let frequency_p = 0;

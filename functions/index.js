@@ -603,7 +603,32 @@ exports.deleteUser = functionsV1auth.user().onDelete((user) => {
         });
 })
 
+exports.getCustomerId = onRequest(
+    {
+        cors: true,
+    },
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request' });
+        }
+        const { userId, accessToken } = req.body;
 
+        const isTokenVerified = await verifyToken(accessToken);
+        if (!isTokenVerified || isTokenVerified.status == false) {
+            return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+        }
+        try {
+            let dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS_NEW}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
+            dbCustomerIdRef.once('value', function (snapshot) {
+                const data = snapshot.val();
+                return resp.status(200).json(data); // return customerId 
+            })
+
+        } catch (error) {
+            return resp.status(500).end('Internal Server Error')
+        }
+    }
+)
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started

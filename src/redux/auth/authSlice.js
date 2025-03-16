@@ -102,8 +102,35 @@ export const authSlice = createSlice({
 
 
     },
+    extraReducers(builder) {
+        builder
+            .addCase(getCustomerIdThunk.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(getCustomerIdThunk.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getCustomerIdThunk.fulfilled, (state, action) => {
 
 
+                if (action?.payload) {
+                    state.status = 'ready';
+                    if (action.payload.data) {
+                        state.data = {
+                            ...state.data,
+                            customerId: action.payload.data
+                        };
+                        state.error = '';
+                    } else {
+                        state.error = action.payload.message;
+                    }
+                } else {
+                    state.status = 'failed';
+                    state.error = 'no customer id'
+                }
+            })
+    }
 })
 
 export default authSlice.reducer;
@@ -116,3 +143,17 @@ export const { setShowAuthModal, setAuthFormFieldError, setAuthUserData, setAuth
 
 
 
+export const getCustomerIdThunk = createAsyncThunk('getCustomerIdThunk', async ({ userId, accessToken }) => {
+
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/getCustomerId`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, accessToken }),
+    });
+    if (resp) {
+        let data = await resp.json()
+        return { data };
+    } else {
+        return null
+    }
+})
