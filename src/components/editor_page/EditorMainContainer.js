@@ -1,6 +1,7 @@
 
 import { useRef, lazy, Suspense, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { getSubscriptionDetailsThunk, setAuthUserData } from '@/redux/auth/authSlice';
 
 import { Toaster, toaster } from "@/components/ui/toaster";
 
@@ -8,7 +9,6 @@ import { Toaster, toaster } from "@/components/ui/toaster";
 
 import { editorMainContainerData } from '@/lib/content-lib';
 
-import { getCustomerIdThunk, setAuthUserData } from '@/redux/auth/authSlice';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from '@/__firebase/__firebaseConf';
 
@@ -90,6 +90,13 @@ const EditorMainContainer = () => {
     }
 
     try {
+
+      const { currentPeriodEnd, currentTime, status } = userLogged.subscription;
+      let endSubscriptionTime = new Date(currentPeriodEnd).getTime();
+
+      if ((endSubscriptionTime < currentTime || status == 'canceled' || status == 'unpaid')) {
+        throw new Error(editorMainContainerData.errors.subscriptionEnd ?? 'Lorem ipsum')
+      }
       const response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createPDFfromTemplate`, {
         method: "POST",
         body: JSON.stringify({ htmlString, userId: userLogged.userId, accessToken: userLogged.accessToken }), // use id and token of registered users
@@ -119,7 +126,7 @@ const EditorMainContainer = () => {
         throw new Error(data?.message ? data.message : editorMainContainerData.errors.generatingPDF ?? 'Lorem ipsum')
       }
     } catch (error) {
-      console.error(editorMainContainerData.errors.defaultDownloadError ?? 'Lorem ipsum', error);
+      // console.error(editorMainContainerData.errors.defaultDownloadError ?? 'Lorem ipsum', error);
       toaster.create({
         title: editorMainContainerData.toasts.error.title,
         description: error?.message ? error.message : editorMainContainerData.errors.defaultDownloadError ?? 'Lorem ipsum',
@@ -136,8 +143,8 @@ const EditorMainContainer = () => {
 
       if (user && user.uid && user.accessToken) {
 
-        dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, fullName: user.displayName }));
-
+        dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, fullName: user.displayName, subscription: {} }));
+        dispatch(getSubscriptionDetailsThunk({ userId: user.uid, accessToken: user.accessToken, }))
       } else {
         dispatch(setAuthUserData(null));
       }
@@ -148,12 +155,7 @@ const EditorMainContainer = () => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    // get customerId from DB
-    if (userLogged && !userLogged.customerId) {
-      dispatch(getCustomerIdThunk({ userId: userLogged.userId, accessToken: userLogged.accessToken }));
-    }
-  }, [userLogged, dispatch])
+
 
   return (
     <>

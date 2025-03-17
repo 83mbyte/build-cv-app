@@ -36,7 +36,8 @@ export const authAPI = {
                 payload: {
                     userId: null,
                     email: null,
-                    accessToken: null
+                    accessToken: null,
+                    subscription: null,
                 }
             })
         }).catch((error) => {

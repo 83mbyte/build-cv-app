@@ -11,7 +11,7 @@ const HeaderDownloadButton = ({ clickGetPDF, userLogged = null }) => {
 
 
     const getPdf = () => {
-        console.log('clicked getPDF..');
+
         if (userLogged) {
             clickGetPDF();
         } else {

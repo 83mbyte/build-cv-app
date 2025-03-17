@@ -1,6 +1,6 @@
 
 import { PopoverArrow, PopoverBody, PopoverContent, PopoverRoot, PopoverTrigger } from '@/components/ui/popover';
-import { Button, Box, Icon, VStack, StackSeparator, Heading } from '@chakra-ui/react';
+import { Button, Box, Icon, VStack, StackSeparator, Heading, HStack, Alert } from '@chakra-ui/react';
 import { toaster } from '@/components/ui/toaster';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import { LuCircleUserRound } from "react-icons/lu";
 import { authAPI } from '@/lib/authAPI';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { editorHeaderData } from '@/lib/content-lib';
 
 const HeaderUserMenu = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +19,12 @@ const HeaderUserMenu = () => {
     const dispatch = useDispatch();
     const accessToken = useSelector(state => state.auth.data.accessToken);
     const userFullName = useSelector(state => state.auth.data.fullName);
-    const customerId = useSelector(state => state.auth.data.customerId);
+
+    const status = useSelector(state => state.auth.data.subscription.status);
+    const currentPeriodEnd = useSelector(state => state.auth.data.subscription.currentPeriodEnd);
+    const customerId = useSelector(state => state.auth.data.subscription.customerId);
+
+
     const initFocusRef = useRef(null);
 
     const signOutHandler = async () => {
@@ -56,7 +62,7 @@ const HeaderUserMenu = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ customerId: customerId, accessToken }), // user customerId from DB
             });
-            console.log(response)
+
             const data = await response.json();
             if (data.success) {
                 const { url } = data;
@@ -74,6 +80,8 @@ const HeaderUserMenu = () => {
             setIsLoading(false);
         }
     };
+
+    const paidUntil = new Date(currentPeriodEnd).toLocaleDateString();
 
     return (
         <PopoverRoot initialFocusEl={() => initFocusRef.current} onOpenChange={(e) => {
@@ -96,24 +104,50 @@ const HeaderUserMenu = () => {
                                 </Icon>
                                 {userFullName && <Heading as='h2' size='lg'>{userFullName}</Heading>}
                             </Box>
-                            <Box w='full' ref={initFocusRef}>
-                                <Button size={['2xs', 'xs']} w='full' variant={'ghost'} colorPalette={'teal'} _hover={{ opacity: 0.5 }} onClick={handleManageSubscription} loading={isLoading} disabled={!customerId}>
-                                    Manage Subscription
-                                </Button>
+                            {
+                                status &&
+                                <Box w='full' ref={initFocusRef} display={'flex'} color={'gray.500'} flexDirection={'column'} p={1} borderRadius={'lg'} alignItems={'center'} gap={2} justifyContent={'center'} borderBottom={'1px solid #e4e4e7'} borderTop={'1px solid #e4e4e7'} bg='gray.50'>
+                                    <Heading as='h4' size='sm'>{editorHeaderData.userMenu.currentSubscription ?? 'Current Subscription'}</Heading>
+                                    {
+                                        status == 'pending_cancellation' &&
+                                        <Box>
+                                            <Alert.Root status="info" title="you can still use the service" size="sm" alignItems={'center'}>
+                                                <Alert.Indicator />
+                                                <Alert.Description>
+                                                    <Box>
+                                                        {editorHeaderData.userMenu.alertInfo[0] ?? 'lorem upsum'}
+                                                    </Box><Box>{paidUntil} {editorHeaderData.userMenu.alertInfo[1] ?? 'lorem upsum'}</Box>
+                                                </Alert.Description>
+                                            </Alert.Root>
+                                        </Box>
+                                    }
+                                    <HStack bg='' w='full' px={1}>
+                                        <Box fontWeight={'bold'}>{editorHeaderData.userMenu.status ?? 'Status:'}</Box>
+                                        < Box color={status == 'active' ? 'teal' : 'red'}>{status}</Box>
+                                    </HStack>
+                                    {
+                                        status == 'active' &&
+                                        <HStack w='full' px={1}>
+                                            <Box fontWeight={'bold'}>{editorHeaderData.userMenu.paidUntil ?? 'Paid until:'}</Box>
+                                            <Box >{paidUntil}</Box>
+                                        </HStack>
+                                    }
 
-                            </Box>
+                                    <Button size={['2xs', 'xs']} w='full' variant={'solid'} colorPalette={'teal'} _hover={{ opacity: 0.5 }} onClick={handleManageSubscription} loading={isLoading} disabled={!customerId}>
+                                        {editorHeaderData.userMenu.manageSubscription ?? 'Manage Subscription'}
+                                    </Button>
+
+                                </Box>
+                            }
 
                         </VStack>
 
                         <Box w='full'>
                             <Button size={['2xs', 'xs']} w='full' variant={'solid'} colorPalette={'red'} onClick={signOutHandler}>
-                                Sign Out
+                                {editorHeaderData.userMenu.signOut ?? 'Sign Out'}
                             </Button>
 
                         </Box>
-
-                        {/* sizing fonts */}
-
                     </VStack>
                 </PopoverBody>
             </PopoverContent>

@@ -327,7 +327,7 @@ exports.manageSubscriptionPortal = onRequest({
 )
 
 const updateSubscriptionData = (dbSubscription, data) => {
-    const subscriptionRef = dbSubscription.child(data.id);
+    const subscriptionRef = dbSubscription.child(data.subscriptionId);
     subscriptionRef.update({ ...data });
 }
 
@@ -440,8 +440,8 @@ const createDBforNewUser = (userId, userEmail, subscriptionId, customerId) => {
             id: userId,
             email: userEmail,
             subscription: {
-                subscription: subscriptionId,
-                customer: customerId,
+                subscriptionId: subscriptionId,
+                customerId: customerId,
             }
         },
         resume: {
@@ -603,7 +603,9 @@ exports.deleteUser = functionsV1auth.user().onDelete((user) => {
         });
 })
 
-exports.getCustomerId = onRequest(
+
+
+exports.getSubscriptionDetails = onRequest(
     {
         cors: true,
     },
@@ -618,14 +620,31 @@ exports.getCustomerId = onRequest(
             return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
         }
         try {
-            let dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS_NEW}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
-            dbCustomerIdRef.once('value', function (snapshot) {
-                const data = snapshot.val();
-                return resp.status(200).json(data); // return customerId 
+
+            const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS_NEW}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
+            let data = await dbCustomerIdRef.once('value').then((snapshot) => {
+                return snapshot.val()
+            });
+
+            const dbsubscriptionIdRef = db.ref(`${process.env.APP_DB_SUBSCRIPTIONS_NEW}${data.subscriptionId}`);
+            let data2 = await dbsubscriptionIdRef.once('value').then((snapshot) => {
+                return snapshot.val()
             })
 
+            const result = {
+                ...data,
+                cancelAtPeriodEnd: data2.cancelAtPeriodEnd,
+                currentPeriodEnd: data2.currentPeriodEnd,
+                status: data2.status,
+                currentTime: Date.now()
+            };
+
+            return resp.status(200).json(result); // return subscription details {customerId, subscriptionId,cancelAtPeriodEnd,currentPeriodEnd,status} 
+
+
         } catch (error) {
-            return resp.status(500).end('Internal Server Error')
+            return resp.status(500).end(error.message)
+            // return resp.status(500).end('Internal Server Error')
         }
     }
 )

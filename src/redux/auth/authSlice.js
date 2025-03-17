@@ -104,14 +104,14 @@ export const authSlice = createSlice({
     },
     extraReducers(builder) {
         builder
-            .addCase(getCustomerIdThunk.pending, (state) => {
+            .addCase(getSubscriptionDetailsThunk.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(getCustomerIdThunk.rejected, (state, action) => {
+            .addCase(getSubscriptionDetailsThunk.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            .addCase(getCustomerIdThunk.fulfilled, (state, action) => {
+            .addCase(getSubscriptionDetailsThunk.fulfilled, (state, action) => {
 
 
                 if (action?.payload) {
@@ -119,7 +119,9 @@ export const authSlice = createSlice({
                     if (action.payload.data) {
                         state.data = {
                             ...state.data,
-                            customerId: action.payload.data
+                            subscription: {
+                                ...action.payload.data
+                            }
                         };
                         state.error = '';
                     } else {
@@ -143,17 +145,24 @@ export const { setShowAuthModal, setAuthFormFieldError, setAuthUserData, setAuth
 
 
 
-export const getCustomerIdThunk = createAsyncThunk('getCustomerIdThunk', async ({ userId, accessToken }) => {
+export const getSubscriptionDetailsThunk = createAsyncThunk('getSubscriptionDetailsThunk', async ({ userId, accessToken }) => {
+    try {
+        const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/getSubscriptionDetails`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, accessToken }),
+        });
 
-    const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/getCustomerId`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, accessToken }),
-    });
-    if (resp) {
-        let data = await resp.json()
-        return { data };
-    } else {
+
+        if (resp) {
+            let data = await resp.json();
+            return { data };
+        } else {
+            throw new Error('no subscription details received')
+        }
+
+    } catch (error) {
         return null
     }
+
 })
