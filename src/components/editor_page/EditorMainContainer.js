@@ -143,8 +143,13 @@ const EditorMainContainer = () => {
 
       if (user && user.uid && user.accessToken) {
 
-        dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, fullName: user.displayName, subscription: {} }));
-        dispatch(getSubscriptionDetailsThunk({ userId: user.uid, accessToken: user.accessToken, }))
+        auth.currentUser.getIdTokenResult(user.accessToken).then((idTokenResult) => {
+
+          dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, role: idTokenResult?.claims.admin ? 'admin' : 'user', fullName: user.displayName, subscription: {} }));
+          dispatch(getSubscriptionDetailsThunk({ userId: user.uid, accessToken: user.accessToken, }))
+        })
+
+
       } else {
         dispatch(setAuthUserData(null));
       }

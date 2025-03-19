@@ -71,6 +71,12 @@ const AuthModal = ({ size = 'lg', themeColor = 'teal' }) => {
 
     const changeFormHandler = async (type) => {
         if (type) {
+            if (type == 'signup') {
+                dispatch(setSubscriptionSignTempData({
+                    key: 'clientSecret',
+                    value: null
+                }))
+            }
             dispatch(setShowAuthModal({ show: true, type }));
         }
     }
