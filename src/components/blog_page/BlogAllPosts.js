@@ -47,7 +47,7 @@ const BlogCard = ({ data, index }) => {
                     <Avatar.Image src={`https://picsum.photos/id/${index + 11}/200/300?blur`} />
                     <Avatar.Fallback name="Nue Camp" />
                 </Avatar.Root>
-                <Card.Title mt="2" textAlign={'center'} fontSize='3xl' my={3}>
+                <Card.Title mt="2" textAlign={'center'} fontSize={['xl', '3xl']} my={3}>
                     <Link href={`/blog/post/${data.slug}`}>
                         {data.title}
                     </Link>
@@ -55,8 +55,8 @@ const BlogCard = ({ data, index }) => {
                 <Text lineClamp={'3'}>{data.text}</Text>
             </Card.Body>
             <Card.Footer justifyContent='space-between'>
-                <Box transi>{new Date(data.id).toDateString()}</Box>
-                <Link href={`/blog/post/${data.slug}`}><Button variant={'plain'} colorPalette={'teal'} paddingX={2} size={['sm', 'sm']} >Read more<LuArrowRight /></Button></Link>
+                <Box fontSize={['xs', 'sm']}>{new Date(data.id).toDateString()}</Box>
+                <Link href={`/blog/post/${data.slug}`}><Button variant={'plain'} colorPalette={'teal'} paddingX={2} size={['xs', 'sm']} >Read more<LuArrowRight /></Button></Link>
 
             </Card.Footer>
         </Card.Root>

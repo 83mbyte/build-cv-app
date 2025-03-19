@@ -18,6 +18,8 @@ const { defineSecret } = require('firebase-functions/params');
 const functionsV1auth = require('firebase-functions/v1/auth');
 const { OpenAI } = require("openai");
 
+const slugify = require('slugify');
+
 const { generatePDFfromHTML } = require("./lib/adobeAPI");
 const stripeAPI = require("./lib/stripeAPI");
 const gptAPI = require('./lib/gptAPI');
@@ -234,6 +236,47 @@ exports.generateSummary = onRequest(
     }
 )
 
+exports.blogPublish = onRequest({
+    //dev
+    // cors: true,
+
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+},
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error', success: false });
+        }
+        if (req.body) {
+            let { accessToken, text, title } = req.body;
+
+            const isTokenVerified = await verifyToken(accessToken);
+            if (!isTokenVerified || isTokenVerified.status == false) {
+                return resp.status(401).json({ status: 'Error', message: isTokenVerified.message, success: false });
+            }
+
+            // create and save data of the blog article to db
+            const slugAsId = slugify(title, { lower: true });
+            const id = Date.now();
+            const dbBlog = db.ref(`${process.env.APP_DB_BLOG}${slugAsId}`);
+            dbBlog.set({
+                id,
+                text,
+                title
+            }, (error) => {
+                if (error) {
+                    resp.status(200).json({ sucess: false, error: error.message })
+                } else {
+
+                    resp.status(200).json({ sucess: true })
+                }
+            })
+
+
+        } else {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error', success: false });
+        }
+    })
+
 
 // ------- STRIPE   ------
 
@@ -268,6 +311,12 @@ exports.createSubscriptionIntent = onRequest({
 
         if (email && password && paymentMethodId) {
             try {
+                // check if the provided email does not exist before accepting a payment
+                const emailInUse = await isEmailAlreadyExists(email);
+                if (emailInUse === true) {
+                    throw new Error('try to use another email');
+                }
+
                 const stripeKey = STRIPE_SECRET.value();
                 const result = await stripeAPI.createSubscriptionIntent(stripeKey, SUBSCRIPTION_PRICE_ID, paymentMethodId, email);
 
@@ -291,7 +340,7 @@ exports.createSubscriptionIntent = onRequest({
 
             } catch (error) {
                 console.log('error subscription: ', error.message)
-                resp.status(200).json({ success: false, error: 'Unable to create a subscription - lack of necessary information' })
+                resp.status(200).json({ success: false, error: error.message ?? 'Unable to create a subscription - lack of necessary information' })
             }
         }
     }
@@ -513,6 +562,18 @@ const createDBforNewUser = (userId, userEmail, subscriptionId, customerId) => {
     });
 }
 
+const isEmailAlreadyExists = (email) => {
+    // check if the email exists in registered users list
+    return getAuth().getUserByEmail(email)
+        .then((userRecord) => {
+            // See the UserRecord reference doc for the contents of userRecord.
+            return true
+        })
+        .catch((error) => {
+            console.log('Error fetching user data:', error);
+            return false
+        });
+}
 // ============================
 // -----    STRIPE end --------
 
@@ -648,6 +709,36 @@ exports.getSubscriptionDetails = onRequest(
         }
     }
 )
+
+// exports.setCustomClaims = onRequest({
+//     cors: true,
+
+// },
+//     async (req, resp) => {
+// //use to change user role
+//         if (req.method !== 'POST') {
+//             return resp.status(400).send('Bad request\r\n');
+//         }
+
+//         try {
+//             const { email } = req.body;
+//             if (email !== process.env.APP_ADMIN_EMAIL_DEV) {
+//                 throw new Error('incorrect user\r\n')
+//             }
+
+//             getAuth().setCustomUserClaims(process.env.APP_ADMIN_USER_ID, { admin: true })
+//                 .then(() => {
+//                     // The new custom claims will propagate to the user's ID token the
+//                     // next time a new one is issued.
+//                     return resp.status(200).send('Success\r\n')
+//                 });
+
+//         } catch (error) {
+
+//             return resp.status(500).send(error.message ?? 'Unable to create csutom claims\r\n');
+//         }
+
+//     })
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
