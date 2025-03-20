@@ -33,6 +33,7 @@ const app = admin.initializeApp();
 const db = admin.database();
 setGlobalOptions({ maxInstances: 10 });
 
+
 const verifyToken = async (userToken) => {
 
     return await admin.auth(app)
@@ -264,10 +265,10 @@ exports.blogPublish = onRequest({
                 title
             }, (error) => {
                 if (error) {
-                    resp.status(200).json({ sucess: false, error: error.message })
+                    resp.status(200).json({ success: false, error: error.message })
                 } else {
 
-                    resp.status(200).json({ sucess: true })
+                    resp.status(200).json({ success: true })
                 }
             })
 
@@ -277,6 +278,36 @@ exports.blogPublish = onRequest({
         }
     })
 
+exports.contactForm = onRequest({
+    cors: true,
+},
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error', success: false });
+        }
+        if (req.body) {
+            let { reason, id, name, email, message } = req.body;
+            // resp.status(200).json({ success: true })
+            const dbContact = db.ref(`${process.env.APP_DB_CONTACT}${reason}/${id}`);
+            dbContact.update({
+                name,
+                email,
+                message
+            },
+                (error) => {
+                    if (error) {
+                        resp.status(200).json({ success: false, error: error.message })
+                    } else {
+                        // if OK - return success
+                        resp.status(200).json({ success: true })
+                    }
+                })
+        }
+        else {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error', success: false });
+        }
+    }
+)
 
 // ------- STRIPE   ------
 
@@ -414,38 +445,22 @@ exports.subscriptionWebhook = onRequest(
                 if (respWebhook.message == 'Subscription created') {
                     // create subscription 
                     updateSubscriptionData(dbSubscription, respWebhook.data);
-                    // const subscriptionId = respWebhook.data.subscriptionId;
-                    // const subscriptionRef = dbSubscription.child(subscriptionId);
-                    // subscriptionRef.update({ ...respWebhook.data });
-
 
                 } else if (respWebhook.message == 'Subscription canceled immediately') {
                     // immediately canceled subscription
                     updateSubscriptionData(dbSubscription, respWebhook.data);
-                    // const subscriptionId = respWebhook.data.subscriptionId;
-                    // const subscriptionRef = dbSubscription.child(subscriptionId);
-                    // subscriptionRef.update({ ...respWebhook.data });
 
                 } else if (respWebhook.message == 'Subscription scheduled for cancellation') {
                     // Subscription scheduled for cancellation
                     updateSubscriptionData(dbSubscription, respWebhook.data);
-                    // const subscriptionId = respWebhook.data.subscriptionId;
-                    // const subscriptionRef = dbSubscription.child(subscriptionId);
-                    // subscriptionRef.update({ ...respWebhook.data });
 
                 } else if (respWebhook.message == 'Subscription active or resumed') {
                     // Subscription activated or resumed
                     updateSubscriptionData(dbSubscription, respWebhook.data);
-                    // const subscriptionId = respWebhook.data.subscriptionId;
-                    // const subscriptionRef = dbSubscription.child(subscriptionId);
-                    // subscriptionRef.update({ ...respWebhook.data });
 
                 } else if (respWebhook.message == 'Subscription renewed with invoice.' || respWebhook.message == 'Payment failed for subscription, invoice.') {
                     // paid of failed invoice
                     updateSubscriptionData(dbSubscription, respWebhook.data);
-                    // const subscriptionId = respWebhook.data.subscriptionId;
-                    // const subscriptionRef = dbSubscription.child(subscriptionId);
-                    // subscriptionRef.update({ ...respWebhook.data });
                 }
 
                 return resp.status(200).end();
