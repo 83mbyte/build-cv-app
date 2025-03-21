@@ -1,5 +1,6 @@
 
 import "./globals.css";
+import '@stripe/stripe-js';
 import { GoogleTagManager } from "@next/third-parties/google";
 import { indexData } from "@/lib/content-lib";
 
