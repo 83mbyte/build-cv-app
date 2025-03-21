@@ -114,6 +114,7 @@ const LanguagesBlockWrapper = ({ editableFields, blockName, themeColor, layoutNu
                 padding: '0.25rem',
                 borderRadius: '0.5rem',
                 position: 'relative',
+                boxSizing: 'border-box',
                 justifyContent: layoutNumber == 0 && 'space-between',
                 gap: layoutNumber == 0 ? '0.5rem' : '1rem'
             }}>

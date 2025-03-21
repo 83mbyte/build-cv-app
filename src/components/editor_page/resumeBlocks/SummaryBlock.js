@@ -101,7 +101,7 @@ const SummaryFields = ({ editableFields, dispatch }) => {
 
             />
 
-            <div style={{ paddingInline: '0.5rem', width: '100%' }}>
+            <div style={{ paddingInline: '0.5rem', width: '100%', boxSizing: 'border-box' }}>
                 <CustomText
                     variant={'p'}
                     allowEnter={true}

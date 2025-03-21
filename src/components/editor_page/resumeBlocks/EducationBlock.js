@@ -244,8 +244,10 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
 
         return (
             // render to pdf
-            <div style={{ width: '100%', padding: '0.25rem', paddingLeft: '0.5rem', position: 'relative', borderRadius: '0.5rem' }}>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '0.5rem', width: '100%' }}>
+            <div style={{ width: '100%', padding: '0.25rem', borderRadius: '0.5rem', boxSizing: 'border-box' }}>
+
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '0.5rem', flex: 1, paddingLeft: '0.5rem' }}>
+
                     <div style={{ paddingTop: '0.125rem', display: 'flex' }}>
                         <Icon fontSize={fontSize.h3[1]} style={{ height: fontSize[1], color: colorsPDF[themeColor] }}
                         >
@@ -267,7 +269,7 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
                         />
 
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', width: '100%', }}>
-                            <div style={{ flex: 1, }}>
+                            <div style={{ flex: 1 }}>
 
                                 <CustomHeading
                                     variant={'h4'}
