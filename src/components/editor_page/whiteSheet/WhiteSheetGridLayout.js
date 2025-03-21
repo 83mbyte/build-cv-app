@@ -205,10 +205,12 @@ const AnimatedBlockWrapper = ({ id, children }) => {
 const DocumentLayoutNotAnimated = ({ layoutNumber, headerBlock, contactBlock, summaryBlock, educationBlock, experienceBlock, skillsBlock, languagesBlock }) => {
     const suffForIds = '_notAnimate';
 
-
     return (
 
-        <div style={{ border: '0px solid #dedede', minWidth: '593pt', width: '593pt', maxWidth: '593pt', minHeight: '842pt', padding: '0rem' }}  >
+        <div style={{
+            border: '0px solid #dedede', minWidth: '593pt', width: '593pt', maxWidth: '593pt', minHeight: '842pt', padding: '0rem',
+            boxSizing: 'border-box'
+        }}>
 
             <div style={{
                 display: 'grid',

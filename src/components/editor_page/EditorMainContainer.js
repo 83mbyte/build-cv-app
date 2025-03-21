@@ -134,6 +134,9 @@ const EditorMainContainer = () => {
         duration: 5000
       })
     }
+    finally {
+      return true
+    }
   }
 
 
