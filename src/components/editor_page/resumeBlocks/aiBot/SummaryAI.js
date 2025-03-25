@@ -94,7 +94,7 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
             }
 
 
-            let genertateSummaryReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateSummary`,
+            let genertateSummaryReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`,
                 {
                     method: "POST",
                     headers: {
@@ -105,7 +105,8 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
                             query: {
                                 position: position,
                                 details: detailsForSummary,
-                            }
+                            },
+                            variant: 'generateSummary'
                         }),
                 });
 

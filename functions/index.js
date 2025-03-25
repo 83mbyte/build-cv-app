@@ -57,13 +57,49 @@ const requestToGPT = async ({ resp, aiKey, query, variant = 'professional' }) =>
 
     let assistReply = await gptAPI.createCompletions(openai, query, variant);
 
-    if (assistReply && assistReply.status !== 'Success') {
+    if (!assistReply.success) {
         return resp.status(500).json({ message: assistReply?.message ?? 'Internal Server Error.', status: 'Error', code: 500 });
-        // return resp.status(500).json({ message: `${assistReply?.message || 'Internal Server Error.'}`, status: 'Error', code: 500 });
     }
 
     return resp.status(200).json({ content: assistReply.content[0].message.content, status: 'Success', code: 200, systemPrompt: assistReply.systemPrompt })
 }
+// generate data by AI 
+exports.generateData = onRequest({
+    cors: true,
+
+    // cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+    secrets: ['AIKEY']
+},
+    async (req, resp) => {
+
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
+        else {
+
+            if (req.body) {
+
+                let { accessToken, query, variant } = req.body;
+
+                // const isTokenVerified = await verifyToken(accessToken);
+                // if (!isTokenVerified || isTokenVerified.status == false) {
+                //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+                // }
+                const aiKey = process.env.AIKEY;
+
+                if (!aiKey || !query) {
+
+                    return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500, success: false });
+                }
+                await requestToGPT({ resp, aiKey, query, variant })
+            }
+
+            else {
+                return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400, success: false });
+            }
+        }
+    }
+)
 
 exports.streamPDFtoClient = onRequest(
     {
@@ -160,82 +196,82 @@ exports.createPDFfromTemplate = onRequest(
 
 
 
-exports.generateSkills = onRequest(
-    {
-        //dev
-        // cors: true,
+// exports.generateSkills = onRequest(
+//     {
+//         //dev
+//         // cors: true,
 
-        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
-        secrets: ['AIKEY']
-    },
+//         cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+//         secrets: ['AIKEY']
+//     },
 
-    async (req, resp) => {
+//     async (req, resp) => {
 
-        if (req.method !== 'POST') {
-            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
-        }
-        else {
+//         if (req.method !== 'POST') {
+//             return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+//         }
+//         else {
 
-            if (req.body) {
+//             if (req.body) {
 
-                let { accessToken, query } = req.body;
+//                 let { accessToken, query } = req.body;
 
-                // const isTokenVerified = await verifyToken(accessToken);
-                // if (!isTokenVerified || isTokenVerified.status == false) {
-                //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
-                // }
-                const aiKey = process.env.AIKEY;
+//                 // const isTokenVerified = await verifyToken(accessToken);
+//                 // if (!isTokenVerified || isTokenVerified.status == false) {
+//                 //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+//                 // }
+//                 const aiKey = process.env.AIKEY;
 
-                if (!aiKey || !query) {
+//                 if (!aiKey || !query) {
 
-                    return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
-                }
-                await requestToGPT({ resp, aiKey, query, variant: 'generateSkills' })
-            }
+//                     return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+//                 }
+//                 await requestToGPT({ resp, aiKey, query, variant: 'generateSkills' })
+//             }
 
-            else {
-                return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
-            }
-        }
-    }
-)
+//             else {
+//                 return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+//             }
+//         }
+//     }
+// )
 
-exports.generateSummary = onRequest(
-    {
-        //dev
-        // cors: true,
+// exports.generateSummary = onRequest(
+//     {
+//         //dev
+//         // cors: true,
 
-        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
-        secrets: ['AIKEY'],
-    },
-    async (req, resp) => {
-        if (req.method !== 'POST') {
-            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
-        }
-        if (req.body) {
-            let { accessToken, query } = req.body;
+//         cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+//         secrets: ['AIKEY'],
+//     },
+//     async (req, resp) => {
+//         if (req.method !== 'POST') {
+//             return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+//         }
+//         if (req.body) {
+//             let { accessToken, query } = req.body;
 
-            // VERIFY TOKEN  in PROD
-            // const isTokenVerified = await verifyToken(accessToken);
+//             // VERIFY TOKEN  in PROD
+//             // const isTokenVerified = await verifyToken(accessToken);
 
-            // if (!isTokenVerified || isTokenVerified.status == false) {
-            //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
-            // }
+//             // if (!isTokenVerified || isTokenVerified.status == false) {
+//             //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+//             // }
 
-            const aiKey = process.env.AIKEY;
+//             const aiKey = process.env.AIKEY;
 
-            if (!query || !aiKey) {
+//             if (!query || !aiKey) {
 
-                return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
-            }
-            await requestToGPT({ resp, aiKey, query, variant: 'generateSummary' })
-        }
+//                 return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
+//             }
+//             await requestToGPT({ resp, aiKey, query, variant: 'generateSummary' })
+//         }
 
-        else {
-            return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
-        }
-    }
-)
+//         else {
+//             return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
+//         }
+//     }
+// )
 
 exports.blogPublish = onRequest({
     //dev
@@ -309,8 +345,9 @@ exports.contactForm = onRequest({
     }
 )
 
-// ------- STRIPE   ------
 
+
+// ------- STRIPE   ------
 exports.createSetupIntent = onRequest({
     // cors: true,
     cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
@@ -318,7 +355,7 @@ exports.createSetupIntent = onRequest({
 },
     async (req, resp) => {
         if (req.method !== 'POST') {
-            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error', success: false });
         } else {
             try {
                 const stripeKey = STRIPE_SECRET.value();
@@ -326,7 +363,7 @@ exports.createSetupIntent = onRequest({
                 resp.status(200).json(result);
 
             } catch (error) {
-                resp.status(500).json({ error: 'Internal Server Error' })
+                resp.status(500).json({ error: 'Internal Server Error', success: false })
             }
 
         }
@@ -376,8 +413,6 @@ exports.createSubscriptionIntent = onRequest({
         }
     }
 )
-
-
 exports.manageSubscriptionPortal = onRequest({
     cors: true,
 },
@@ -592,75 +627,76 @@ const isEmailAlreadyExists = (email) => {
 // ============================
 // -----    STRIPE end --------
 
-exports.createUserOnSignup = functionsV1auth.user().onCreate((user) => {
 
-    let dbUsers = db.ref(process.env.APP_DB_USERS_NEW);
-    let userRef = dbUsers.child(user.uid);
-    userRef.set({
-        userProfile: {
-            id: user.uid,
-            email: user.email,
-            subscription: {
-                subscription: null,
-                customer: null,
-            }
-        },
-        resume: {
-            editorSetting: {
-                themeColor: 'blue',
-                layout: 0,
-            },
-            fontSettings: {
-                currentFont: null,
-                fontSize: null,
-            },
-            resumeHeader: {
-                fullName: null,
-                position: null,
-                profileImage: null,
-            },
-            resumeContact: {
-                phone: null,
-                email: null,
-                location: null,
-                web: null,
-            },
-            resumeSummary: {
-                isVisible: true,
-                summaryHeading: null,
-                summaryText: null,
-            },
-            resumeEducation: {
-                isVisible: true,
-                educationHeading: null,
-                items: [],
-            },
-            resumeExperience: {
-                expHeading: null,
-                isVisible: true,
-                items: [],
-            },
-            resumeSkills: {
-                isVisible: true,
-                skillsHeading: null,
-                items: [],
-            },
-            resumeLanguages: {
-                isVisible: false,
-                languagesHeading: null,
-                items: [],
-            }
+// exports.createUserOnSignup = functionsV1auth.user().onCreate((user) => {
+
+//     let dbUsers = db.ref(process.env.APP_DB_USERS_NEW);
+//     let userRef = dbUsers.child(user.uid);
+//     userRef.set({
+//         userProfile: {
+//             id: user.uid,
+//             email: user.email,
+//             subscription: {
+//                 subscription: null,
+//                 customer: null,
+//             }
+//         },
+//         resume: {
+//             editorSetting: {
+//                 themeColor: 'blue',
+//                 layout: 0,
+//             },
+//             fontSettings: {
+//                 currentFont: null,
+//                 fontSize: null,
+//             },
+//             resumeHeader: {
+//                 fullName: null,
+//                 position: null,
+//                 profileImage: null,
+//             },
+//             resumeContact: {
+//                 phone: null,
+//                 email: null,
+//                 location: null,
+//                 web: null,
+//             },
+//             resumeSummary: {
+//                 isVisible: true,
+//                 summaryHeading: null,
+//                 summaryText: null,
+//             },
+//             resumeEducation: {
+//                 isVisible: true,
+//                 educationHeading: null,
+//                 items: [],
+//             },
+//             resumeExperience: {
+//                 expHeading: null,
+//                 isVisible: true,
+//                 items: [],
+//             },
+//             resumeSkills: {
+//                 isVisible: true,
+//                 skillsHeading: null,
+//                 items: [],
+//             },
+//             resumeLanguages: {
+//                 isVisible: false,
+//                 languagesHeading: null,
+//                 items: [],
+//             }
 
 
-        },
+//         },
 
-    }).then(() => {
-        return true
-    }).catch((error) => {
-        console.log(`ERROR while user ${user.uid} create: `, error.message);
-        return false
-    });
-});
+//     }).then(() => {
+//         return true
+//     }).catch((error) => {
+//         console.log(`ERROR while user ${user.uid} create: `, error.message);
+//         return false
+//     });
+// });
 
 // AUTH users DELETE
 exports.deleteUser = functionsV1auth.user().onDelete((user) => {

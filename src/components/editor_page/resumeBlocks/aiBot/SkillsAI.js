@@ -40,13 +40,13 @@ const SkillsAI = ({ blockName }) => {
 
         try {
 
-            let genertateSkillsReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateSkills`,
+            let genertateSkillsReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ query: position }),
+                    body: JSON.stringify({ query: position, variant: 'generateSkills' }),
                 });
 
             const genertatedSkills = await genertateSkillsReply.json();
