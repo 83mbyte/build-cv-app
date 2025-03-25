@@ -10,7 +10,6 @@ const GPT_MODELS = {
 };
 
 async function createCompletions(openai, data, variant = null,) {
-
     let messagesArray = null;
 
     if (variant === 'generateSummary') {
@@ -18,6 +17,9 @@ async function createCompletions(openai, data, variant = null,) {
     }
     else if (variant === 'generateSkills' && (data && data !== '')) {
         messagesArray = [{ ...PROMPTS.generateSkills(data) }]
+    }
+    else if (variant == 'generateCoverLetter') {
+        messagesArray = [{ ...PROMPTS.generateCoverLetter(data) }]
     }
     else {
         messagesArray = [{ role: 'user', content: data }];
@@ -31,6 +33,7 @@ async function createCompletions(openai, data, variant = null,) {
     let n_param = 1;
 
     try {
+
         const completion = await openai.chat.completions.create({
             model,
             temperature,
@@ -43,10 +46,10 @@ async function createCompletions(openai, data, variant = null,) {
             response_format: data.jsonFormat ? { type: 'json_object' } : { type: 'text' },
         });
 
-        return ({ status: 'Success', content: completion.choices })
+        return ({ status: 'Success', content: completion.choices, success: true })
 
     } catch (error) {
-        return { status: 'Error', message: error.message }
+        return { status: 'Error', message: error.message, success: false }
     }
 }
 

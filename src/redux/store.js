@@ -9,7 +9,7 @@ import experienceBlockSliceReducer from './resume/experienceBlockSlice';
 import skillsBlockSliceReducer from './resume/skillsBlockSlice';
 import languagesBlockSliceReducer from './resume/languagesBlockSlice';
 import authSliceReducer from './auth/authSlice';
-// import resumeAiBotSlice from './modals/resumeAiBotSlice';
+import coverLetterSliceReducer from './coverLetter/coverLetterSlice';
 
 
 export default configureStore({
@@ -24,7 +24,6 @@ export default configureStore({
         resumeExperience: experienceBlockSliceReducer,
         resumeSkills: skillsBlockSliceReducer,
         resumeLanguages: languagesBlockSliceReducer,
-        // resumeAiBot: resumeAiBotSlice
-
+        coverLetter: coverLetterSliceReducer
     },
 })
