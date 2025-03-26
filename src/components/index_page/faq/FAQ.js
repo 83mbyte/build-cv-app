@@ -43,7 +43,6 @@ const FAQ = () => {
                                         </Icon>
                                     </Box>
                                 </Box>
-                                <Accordion.ItemIndicator />
                             </Accordion.ItemTrigger>
                             <Accordion.ItemContent >
                                 <Accordion.ItemBody padding={'2'} >
