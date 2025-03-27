@@ -49,7 +49,7 @@ const verifyToken = async (userToken) => {
         });
 }
 
-const requestToGPT = async ({ resp, aiKey, query, variant = 'professional' }) => {
+const requestToGPT = async ({ aiKey, query, variant = 'professional' }) => {
 
     const openai = new OpenAI({
         apiKey: aiKey,
@@ -58,19 +58,22 @@ const requestToGPT = async ({ resp, aiKey, query, variant = 'professional' }) =>
     let assistReply = await gptAPI.createCompletions(openai, query, variant);
 
     if (!assistReply.success) {
-        return resp.status(500).json({ message: assistReply?.message ?? 'Internal Server Error.', status: 'Error', code: 500 });
+        return { message: assistReply?.message ?? 'Internal Server Error.', status: 'Error', code: 500 };
+
     }
 
-    return resp.status(200).json({ content: assistReply.content[0].message.content, status: 'Success', code: 200, systemPrompt: assistReply.systemPrompt })
+    return { content: assistReply.content[0].message.content, status: 'Success', code: 200, systemPrompt: assistReply.systemPrompt }
+
 }
 // generate data by AI 
 exports.generateData = onRequest({
-    cors: true,
+    // cors: true,
 
-    // cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
     secrets: ['AIKEY']
 },
     async (req, resp) => {
+
 
         if (req.method !== 'POST') {
             return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
@@ -88,10 +91,18 @@ exports.generateData = onRequest({
                 const aiKey = process.env.AIKEY;
 
                 if (!aiKey || !query) {
-
                     return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500, success: false });
                 }
-                await requestToGPT({ resp, aiKey, query, variant })
+
+                let result = await requestToGPT({ aiKey, query, variant });
+                if (result.status !== 'Success') {
+                    //  unsuccess 
+                    return resp.status(500).json(result);
+                }
+                else {
+                    // if OK
+                    return resp.status(200).json(result)
+                }
             }
 
             else {
@@ -196,82 +207,6 @@ exports.createPDFfromTemplate = onRequest(
 
 
 
-// exports.generateSkills = onRequest(
-//     {
-//         //dev
-//         // cors: true,
-
-//         cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
-//         secrets: ['AIKEY']
-//     },
-
-//     async (req, resp) => {
-
-//         if (req.method !== 'POST') {
-//             return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
-//         }
-//         else {
-
-//             if (req.body) {
-
-//                 let { accessToken, query } = req.body;
-
-//                 // const isTokenVerified = await verifyToken(accessToken);
-//                 // if (!isTokenVerified || isTokenVerified.status == false) {
-//                 //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
-//                 // }
-//                 const aiKey = process.env.AIKEY;
-
-//                 if (!aiKey || !query) {
-
-//                     return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
-//                 }
-//                 await requestToGPT({ resp, aiKey, query, variant: 'generateSkills' })
-//             }
-
-//             else {
-//                 return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
-//             }
-//         }
-//     }
-// )
-
-// exports.generateSummary = onRequest(
-//     {
-//         //dev
-//         // cors: true,
-
-//         cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
-//         secrets: ['AIKEY'],
-//     },
-//     async (req, resp) => {
-//         if (req.method !== 'POST') {
-//             return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
-//         }
-//         if (req.body) {
-//             let { accessToken, query } = req.body;
-
-//             // VERIFY TOKEN  in PROD
-//             // const isTokenVerified = await verifyToken(accessToken);
-
-//             // if (!isTokenVerified || isTokenVerified.status == false) {
-//             //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
-//             // }
-
-//             const aiKey = process.env.AIKEY;
-
-//             if (!query || !aiKey) {
-
-//                 return resp.status(500).json({ message: 'Internal Server Error.', status: 'Error', code: 500 });
-//             }
-//             await requestToGPT({ resp, aiKey, query, variant: 'generateSummary' })
-//         }
-
-//         else {
-//             return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400 });
-//         }
-//     }
-// )
 
 exports.blogPublish = onRequest({
     //dev

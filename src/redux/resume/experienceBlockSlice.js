@@ -21,7 +21,8 @@ export const experienceBlockSlice = createSlice({
         assistant: {
             position: null,  //role
             generatedItems: null,   // as { someId:[item,item2,...], someId_2:[item_2,item_3,...] }
-            selectedItems: null
+            selectedItems: null,
+            status: 'idle',
         }
 
     },
@@ -139,8 +140,28 @@ export const experienceBlockSlice = createSlice({
                 }
             }
         },
+        setExpAssistantStatus: (state, action) => {
+            return {
+                ...state,
+                assistant: {
+                    ...state.assistant,
+                    status: action.payload ?? 'idle'
+                }
+            }
+        },
+        clearExpAssistantData: (state) => {
+            return {
+                ...state,
+                assistant: {
+                    position: null,
+                    generatedItems: null,
+                    selectedItems: null,
+                    status: 'idle',
+                }
+            }
+        },
     }
 })
 
-export const { setResumeExperienceHeading, setResumeExperienceIsVisible, setExpItemData, addExpItem, removeExpItem, setExperiencePositionForAssistant, setExperienceGeneratedItems, addExperienceSelectedItems, removeExperienceSelectedItems } = experienceBlockSlice.actions;
+export const { setResumeExperienceHeading, setResumeExperienceIsVisible, setExpItemData, addExpItem, removeExpItem, setExperiencePositionForAssistant, setExperienceGeneratedItems, addExperienceSelectedItems, removeExperienceSelectedItems, clearExpAssistantData, setExpAssistantStatus } = experienceBlockSlice.actions;
 export default experienceBlockSlice.reducer;

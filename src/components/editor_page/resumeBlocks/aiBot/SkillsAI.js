@@ -5,20 +5,23 @@ import { toaster } from "@/components/ui/toaster";
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus } from '@/redux/resume/skillsBlockSlice';
+import { setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus, clearAssistantData } from '@/redux/resume/skillsBlockSlice';
 import { setResumeHeaderData } from '@/redux/resume/headerBlockSlice';
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import { sanitizeInput } from '@/lib/commonScripts';
 import { aiWindowButtons, skillsBotData } from '@/lib/content-lib';
-import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
+import { cookieHandler } from '@/lib/cookies';
 
+import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
 
 const SkillsAI = ({ blockName }) => {
 
     const positionField = useRef(null);
 
     const dispatch = useDispatch();
+    const userLogged = useSelector(state => state.auth.data);
+    const accessToken = userLogged?.accessToken ?? null;
     const themeColor = useSelector(state => state.editorSettings.themeColor);
     const position = useSelector(state => state.resumeHeader.position);
 
@@ -35,10 +38,17 @@ const SkillsAI = ({ blockName }) => {
     const clickToGenerate = async () => {
         // call a cloud function to work with AI
         // await for the function reply with generatedData to dispatch it 
-
-        dispatch(setSkillsStatus('loading'));
-
         try {
+            dispatch(setSkillsStatus('loading'));
+
+            if (!accessToken) {
+                // as free user use
+                let value = await cookieHandler('skills');
+                if (value > 3) {
+                    throw new Error('You reached the allowed requests daily limit.');
+                }
+            }
+
 
             let genertateSkillsReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`,
                 {
@@ -86,8 +96,12 @@ const SkillsAI = ({ blockName }) => {
         dispatch(setShowModal({ show: false }));
     }
 
+    const clickNewButton = () => {
+        dispatch(clearAssistantData());
+    }
     const clickCancelButton = () => {
-        dispatch(setShowModal({ show: false }))
+
+        dispatch(setShowModal({ show: false }));
     }
     return (
 
@@ -145,7 +159,7 @@ const SkillsAI = ({ blockName }) => {
 
                                         return (
                                             <Box width={'full'} cursor={'pointer'}
-                                                fontSize={'xs'}
+                                                fontSize={'sm'}
                                                 borderWidth={'0px'}
                                                 _hover={{ opacity: 0.5 }}
                                                 userSelect={'none'}
@@ -183,6 +197,7 @@ const SkillsAI = ({ blockName }) => {
                                 disabled={(!selectedItems || selectedItems.length < 1)}
                                 onClick={() => clickUseItButton()}
                             >{aiWindowButtons.use ?? 'lorem ipsum'}</Button>
+                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'surface'} onClick={clickNewButton}>{aiWindowButtons.new ?? 'lorem ipsum'}</Button>
                             <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>{aiWindowButtons.cancel ?? 'lorem ipsum'}</Button>
                         </>
                 }

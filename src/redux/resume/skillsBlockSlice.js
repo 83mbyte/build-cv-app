@@ -3,6 +3,7 @@ import { uid } from 'uid/single';
 
 const skillsItemDefault = { id: 'init_skills', value: '' };
 
+
 export const skillsBlockSlice = createSlice({
     name: 'resumeSkills',
     initialState: {
@@ -133,9 +134,19 @@ export const skillsBlockSlice = createSlice({
                     status: action.payload ?? 'idle'
                 }
             }
+        },
+        clearAssistantData: (state) => {
+            return {
+                ...state,
+                assistant: {
+                    generatedItems: null,
+                    selectedItems: null,
+                    status: 'idle'
+                }
+            }
         }
     }
 })
 
-export const { setResumeSkillsHeading, setResumeSkillsIsVisible, setSkillItemData, addSkillItem, removeSkillItem, setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus } = skillsBlockSlice.actions;
+export const { setResumeSkillsHeading, setResumeSkillsIsVisible, setSkillItemData, addSkillItem, removeSkillItem, setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus, clearAssistantData } = skillsBlockSlice.actions;
 export default skillsBlockSlice.reducer;

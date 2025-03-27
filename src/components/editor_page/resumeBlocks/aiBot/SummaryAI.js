@@ -6,17 +6,21 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setResumeHeaderData } from '@/redux/resume/headerBlockSlice';
-import { setSummaryGeneratedItems, setResumeSummaryData, addSummarySelectedItems, removeSummarySelectedItems, setSummaryStatus } from '@/redux/resume/summaryBlockSlice';
+import { setSummaryGeneratedItems, setResumeSummaryData, addSummarySelectedItems, removeSummarySelectedItems, setSummaryStatus, clearSummaryAssistantData } from '@/redux/resume/summaryBlockSlice';
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import { aiWindowButtons, summaryBotData } from '@/lib/content-lib';
 import { sanitizeInput } from '@/lib/commonScripts';
+import { cookieHandler } from '@/lib/cookies';
 
 import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
 
 
 const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
     const dispatch = useDispatch();
+
+    const userLogged = useSelector(state => state.auth.data);
+    const accessToken = userLogged?.accessToken ?? null;
     const themeColor = useSelector(state => state.editorSettings.themeColor);
     const position = useSelector(state => state.resumeHeader.position);
     const generatedItems = useSelector(state => state.resumeSummary.assistant.generatedItems);
@@ -39,9 +43,16 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
         // call a cloud function to work with AI
         // await for the function reply with generatedData to dispatch it 
 
-        dispatch(setSummaryStatus('loading'));
 
         try {
+            dispatch(setSummaryStatus('loading'));
+            if (!accessToken) {
+                // as free user use
+                let value = await cookieHandler('summary');
+                if (value > 3) {
+                    throw new Error('You reached the allowed requests daily limit.');
+                }
+            }
 
             let detailsForSummary = {
                 skills: null,
@@ -147,6 +158,9 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
         dispatch(setShowModal({ show: false }));
     }
 
+    const clickNewButton = () => {
+        dispatch(clearSummaryAssistantData());
+    }
     const clickCancelButton = () => {
         dispatch(setShowModal({ show: false }))
     }
@@ -206,7 +220,7 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
 
                                         return (
                                             <Box width={'full'} cursor={'pointer'}
-                                                fontSize={'xs'}
+                                                fontSize={'sm'}
                                                 borderWidth={'0px'}
                                                 _hover={{ opacity: 0.5 }}
                                                 userSelect={'none'}
@@ -244,6 +258,7 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
                                 disabled={(!selectedItems || selectedItems.length < 1)}
                                 onClick={() => clickUseItButton(fieldName)}
                             >{aiWindowButtons.use ?? 'lorem ipsum'}</Button>
+                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickNewButton}>{aiWindowButtons.new ?? 'lorem ipsum'}</Button>
                             <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>{aiWindowButtons.cancel ?? 'lorem ipsum'}</Button>
 
                         </>

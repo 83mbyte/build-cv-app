@@ -21,6 +21,9 @@ async function createCompletions(openai, data, variant = null,) {
     else if (variant == 'generateCoverLetter') {
         messagesArray = [{ ...PROMPTS.generateCoverLetter(data) }]
     }
+    else if (variant == 'generateExp') {
+        messagesArray = [{ ...PROMPTS.generateExp(data) }]
+    }
     else {
         messagesArray = [{ role: 'user', content: data }];
     }

@@ -69,9 +69,19 @@ export const summaryBlockSlice = createSlice({
                     status: action.payload ?? 'idle'
                 }
             }
-        }
+        },
+        clearSummaryAssistantData: (state) => {
+            return {
+                ...state,
+                assistant: {
+                    generatedItems: null,
+                    selectedItems: null,
+                    status: 'idle'
+                }
+            }
+        },
     }
 })
 
-export const { setResumeSummaryData, setResumeSummaryIsVisible, setSummaryGeneratedItems, addSummarySelectedItems, removeSummarySelectedItems, setSummaryStatus } = summaryBlockSlice.actions;
+export const { setResumeSummaryData, setResumeSummaryIsVisible, setSummaryGeneratedItems, addSummarySelectedItems, removeSummarySelectedItems, setSummaryStatus, clearSummaryAssistantData } = summaryBlockSlice.actions;
 export default summaryBlockSlice.reducer;

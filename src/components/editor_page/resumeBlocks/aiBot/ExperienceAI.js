@@ -1,12 +1,15 @@
 import { useRef } from 'react';
 import { VStack, Text, Box, Input, Button, HStack, Icon } from '@chakra-ui/react';
+import { toaster } from '@/components/ui/toaster';
+import { Field } from '@/components/ui/field';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addExperienceSelectedItems, removeExperienceSelectedItems, setExpItemData, setExperienceGeneratedItems, setExperiencePositionForAssistant } from '@/redux/resume/experienceBlockSlice';
+import { addExperienceSelectedItems, clearExpAssistantData, removeExperienceSelectedItems, setExpAssistantStatus, setExpItemData, setExperienceGeneratedItems, setExperiencePositionForAssistant } from '@/redux/resume/experienceBlockSlice';
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
-import { experienceBotData } from '@/lib/content-lib';
+import { cookieHandler } from '@/lib/cookies';
+import { aiWindowButtons, experienceBotData } from '@/lib/content-lib';
 import { sanitizeInput } from '@/lib/commonScripts';
 import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
 
@@ -15,9 +18,14 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
     const currentId = useSelector(state => state.editorSettings.showModal.id);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
 
+    const userLogged = useSelector(state => state.auth.data);
+    const accessToken = userLogged?.accessToken ?? null;
     const position = useSelector(state => state.resumeExperience.assistant.position);
     const generatedItems = useSelector(state => state.resumeExperience.assistant.generatedItems);
     const selectedItems = useSelector(state => state.resumeExperience.assistant.selectedItems);
+
+    const status = useSelector(state => state.resumeExperience.assistant.status);
+
     const dispatch = useDispatch();
 
     const positionField = useRef(null);
@@ -27,13 +35,50 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
         dispatch(setExperiencePositionForAssistant({ currentId, value: cleanValue }));
     }
 
-    const clickToGenerate = (currentId) => {
+    const clickToGenerate = async (currentId) => {
         // call a cloud function to work with AI
         // await for the function reply with generatedData to dispatch it 
-        const tempData = ['BC', 37399, 'LOREM IPSUM', '2BC', 372399, 'LOREM1 IPSUM'];
 
-        dispatch(setExperienceGeneratedItems({ currentId, value: tempData }));
-        dispatch(setExperiencePositionForAssistant({ currentId, value: null }));
+        try {
+
+            dispatch(setExpAssistantStatus('loading'));
+            if (!accessToken) {
+                // as free user use
+
+                let value = await cookieHandler('experience');
+                if (value > 3) {
+                    throw new Error('You reached the allowed requests daily limit.');
+                }
+            }
+
+            let genertateExpReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ query: position, variant: 'generateExp' }),
+                });
+
+            const generatedExp = await genertateExpReply.json();
+            if (generatedExp?.status == 'Success') {
+                const data = generatedExp.content.split('|');
+                dispatch(setExperienceGeneratedItems({ currentId, value: data }));
+                dispatch(setExperiencePositionForAssistant({ currentId, value: null }));
+            }
+            dispatch(setExpAssistantStatus('fulfilled'));
+
+        } catch (error) {
+            dispatch(setExpAssistantStatus('idle'));
+            toaster.create({
+                title: 'Error',
+                description: error.message ? error.message : experienceBotData.assistantErrors.generateExperienceyDefault ?? 'lorem ipsum',
+                type: 'error',
+                duration: 5000
+            })
+        }
+
+
     }
 
     const clickUseItButton = (id, fieldName) => {
@@ -70,6 +115,9 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
         }
     }
 
+    const clickNewButton = () => {
+        dispatch(clearExpAssistantData());
+    }
     const clickCancelButton = () => {
         dispatch(setShowModal({ show: false }));
     }
@@ -78,23 +126,25 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
     return (
 
         <VStack position={'relative'}  >
-            <Text>Work Experience</Text>
+            <Text>{experienceBotData.heading ?? 'Work Experience'}</Text>
             {(!generatedItems || (generatedItems && !generatedItems[currentId])) &&
                 <VStack>
                     <Text bg='' w='full' textAlign={'left'} fontSize={'sm'}>{experienceBotData.description ?? 'lorem ipsum lorem ipsum'}</Text>
                     <Box w='full'>
-                        <Input
-                            size={'xs'}
-                            borderWidth={'1px'}
-                            borderColor={`${themeColor}.200`}
-                            borderStyle={'solid'}
-                            borderRadius={'lg'}
-                            ref={positionField}
-                            placeholder={experienceBotData.positionField ?? 'lorem ipsum'}
-                            defaultValue={position ?? null}
-                            _focusVisible={{ outline: 'none' }}
-                            onChange={() => onChangeHandler(currentId, positionField.current.value)}
-                        />
+                        <Field required label={experienceBotData.positionLabel ?? 'Lorem ipsum'}>
+                            <Input
+                                size={'xs'}
+                                borderWidth={'1px'}
+                                borderColor={`${themeColor}.200`}
+                                borderStyle={'solid'}
+                                borderRadius={'lg'}
+                                ref={positionField}
+                                placeholder={experienceBotData.positionField ?? 'lorem ipsum'}
+                                defaultValue={position ?? null}
+                                _focusVisible={{ outline: 'none' }}
+                                onChange={() => onChangeHandler(currentId, positionField.current.value)}
+                            />
+                        </Field>
                     </Box>
                 </VStack>
             }
@@ -131,6 +181,7 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
                                         return (
                                             <Box width={'full'} cursor={'pointer'}
                                                 borderWidth={'0px'}
+                                                fontSize={'sm'}
                                                 _hover={{ opacity: 0.5 }}
                                                 borderStyle={isSelectedIndex != -1 ? 'solid' : 'dashed'}
                                                 borderBottomWidth={'1px'}
@@ -160,7 +211,8 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
             <VStack gap={2} w='full' marginTop={2}>
                 {
                     (!generatedItems || !generatedItems[currentId])
-                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={() => clickToGenerate(currentId)} disabled={(!position || position.length < 3)}> <LuSparkles />Generate</Button>
+                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={() => clickToGenerate(currentId)} disabled={(!position || position.length < 3)}> <LuSparkles />{aiWindowButtons.generate ?? 'lorem ipsum'}</Button>
+
 
                         :
                         <>
@@ -169,8 +221,9 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
                                 disabled={(
                                     !selectedItems || !selectedItems[currentId] || selectedItems[currentId].length < 1
                                 )}
-                            >Use selected</Button>
-                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>cancel</Button>
+                            >{aiWindowButtons.use ?? 'lorem ipsum'}</Button>
+                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickNewButton}>{aiWindowButtons.new ?? 'lorem ipsum'}</Button>
+                            <Button size='2xs' w={'full'} colorPalette={themeColor} variant={'ghost'} onClick={clickCancelButton}>{aiWindowButtons.cancel ?? 'lorem ipsum'}</Button>
                         </>
                 }
             </VStack>
