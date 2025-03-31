@@ -8,6 +8,7 @@ import HeaderLayoutMenu from './HeaderLayoutMenu';
 import HeaderDownloadButton from './HeaderDownloadButton';
 
 import FallbackSpinner from '../FallbackSpinner';
+import Link from 'next/link';
 const HeaderUserMenu = lazy(() => import('./HeaderUserMenu'));
 
 const HeaderContainer = ({ clickGetPDF }) => {
@@ -24,7 +25,7 @@ const HeaderContainer = ({ clickGetPDF }) => {
 
                     alignItems={'center'}>
                     <Box>
-                        <Text fontSize={['sm', 'lg']}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Text>
+                        <Text fontSize={['sm', 'lg']}><Link href={'/'}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Link></Text>
                     </Box>
                     <Box display={'flex'} backgroundColor={''} flex={1} justifyContent={'flex-end'} flexDirection={'row'} columnGap={[0, '4', 5]} alignItems={'center'}>
                         {/* fonts menu */}

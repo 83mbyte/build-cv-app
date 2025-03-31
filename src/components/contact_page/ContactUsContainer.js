@@ -16,6 +16,7 @@ import FooterContainer from '../footerCopyright/FooterContainer';
 import { useRef, useState } from 'react';
 import { authData, contactUsData } from '@/lib/content-lib';
 import { sanitizeInput } from '@/lib/commonScripts';
+import Link from 'next/link';
 
 const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
 
@@ -23,7 +24,7 @@ const ContactUsContainer = () => {
     return (
         <ProviderUI>
             <VStack bg='' w={'full'} justifyContent={'space-between'} minHeight={'100vh'} p={1} >
-                <Heading as='h1' color={'teal'} my={5}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Heading>
+                <Heading as='h1' color={'teal'} my={5}><Link href='/'>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Link></Heading>
                 <motion.div
                     style={{ width: '100%' }}
                     initial={{ opacity: 0, scale: 0.75 }}

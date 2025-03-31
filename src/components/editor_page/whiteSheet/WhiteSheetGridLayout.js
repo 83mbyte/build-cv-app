@@ -143,9 +143,9 @@ const DocumentLayoutAnimated = ({ layoutNumber, headerBlock, contactBlock, summa
                     </VStack>
                 </GridItemAnimated>
 
-                <GridItemAnimated layout area='footer' key={'footer'} bg='green' id={'footer'} marginBottom={GridItemsBottomMargin} transition={{ type: 'spring', stiffness: 100 }}>
+                {/* <GridItemAnimated layout area='footer' key={'footer'} bg='green' id={'footer'} marginBottom={GridItemsBottomMargin} transition={{ type: 'spring', stiffness: 100 }}>
                     footer
-                </GridItemAnimated>
+                </GridItemAnimated> */}
 
                 {/* Extra area */}
                 {
@@ -256,7 +256,7 @@ const DocumentLayoutNotAnimated = ({ layoutNumber, headerBlock, contactBlock, su
                     </div>
                 }
 
-                <div style={{ gridArea: 'footer', backgroundColor: 'aqua' }}>footer</div>
+                {/* <div style={{ gridArea: 'footer', backgroundColor: 'aqua' }}>footer</div> */}
             </div>
 
         </div>

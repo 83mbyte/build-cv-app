@@ -5,7 +5,7 @@ import { toaster } from "@/components/ui/toaster";
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus, clearAssistantData } from '@/redux/resume/skillsBlockSlice';
+import { setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, applySkillsSelecteditems, setSkillsStatus, clearAssistantData } from '@/redux/resume/skillsBlockSlice';
 import { setResumeHeaderData } from '@/redux/resume/headerBlockSlice';
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
@@ -92,7 +92,7 @@ const SkillsAI = ({ blockName }) => {
     }
 
     const clickUseItButton = () => {
-        dispatch(useSkillsSelecteditems());
+        dispatch(applySkillsSelecteditems());
         dispatch(setShowModal({ show: false }));
     }
 

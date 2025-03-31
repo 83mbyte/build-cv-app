@@ -8,7 +8,7 @@ const ToolkitHeader = () => {
         <Stack flexDirection={['row']} justifyContent={'space-between'} w='full' bg='' alignItems={'center'} as='header'>
             <Box>
                 <Link href='/'>
-                    <Button fontSize={'lg'} colorPalette={'teal'} size={['xs', 'sm']} variant={'plain'}>{process.env.NEXT_PUBLIC_APP_NAME}</Button>
+                    <Button fontSize={'lg'} colorPalette={'teal'} size={['xs', 'sm']} variant={'plain'}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Button>
                 </Link>
             </Box>
             <Box>

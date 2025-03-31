@@ -113,7 +113,7 @@ export const skillsBlockSlice = createSlice({
                 }
             }
         },
-        useSkillsSelecteditems: (state, action) => {
+        applySkillsSelecteditems: (state, action) => {
             if (state.assistant.selectedItems && state.assistant.selectedItems.length > 0) {
                 let itemsToAdd = [];
                 state.assistant.selectedItems.map(item => {
@@ -148,5 +148,5 @@ export const skillsBlockSlice = createSlice({
     }
 })
 
-export const { setResumeSkillsHeading, setResumeSkillsIsVisible, setSkillItemData, addSkillItem, removeSkillItem, setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, useSkillsSelecteditems, setSkillsStatus, clearAssistantData } = skillsBlockSlice.actions;
+export const { setResumeSkillsHeading, setResumeSkillsIsVisible, setSkillItemData, addSkillItem, removeSkillItem, setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedItems, applySkillsSelecteditems, setSkillsStatus, clearAssistantData } = skillsBlockSlice.actions;
 export default skillsBlockSlice.reducer;
