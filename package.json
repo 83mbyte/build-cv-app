@@ -16,7 +16,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@stripe/react-stripe-js": "^3.5.1",
     "@stripe/stripe-js": "^6.1.0",
-    "firebase": "^11.5.0",
+    "firebase": "^11.6.0",
     "html-to-image": "^1.11.13",
     "isomorphic-dompurify": "^2.22.0",
     "motion": "^12.6.2",
