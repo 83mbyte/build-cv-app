@@ -15,15 +15,15 @@ const Header = () => {
             <HeaderNavygation />
             <HeaderText />
             <HeaderButtonToEditor />
-            {/* <motion.div viewport={{ once: true }} initial={{ y: 300, opacity: 0 }} whileInView={{ y: 0, opacity: 1, transition: { type: 'spring', stiffness: 85, } }}> */}
-            <Image
-                h={['125px', '250px']}
-                mb={['-40px', '-30px']}
-                fit={'contain'}
-                src={`./${process.env.NEXT_PUBLIC_APP_INDEX_TOP_IMG}`}
-                alt='header section img'
-            />
-            {/* </motion.div> */}
+            <motion.div viewport={{ once: true }} initial={{ y: 300, opacity: 0 }} whileInView={{ y: 0, opacity: 1, transition: { type: 'spring', stiffness: 85, } }}>
+                <Image
+                    h={['125px', '250px']}
+                    mb={['-40px', '-30px']}
+                    fit={'contain'}
+                    src={`./${process.env.NEXT_PUBLIC_APP_INDEX_TOP_IMG}`}
+                    alt='header section img'
+                />
+            </motion.div>
             <AnimateResumeImages />
         </SectionContainer >
     );
@@ -54,7 +54,7 @@ const AnimateResumeImages = () => {
                         return (
                             <motion.div key={index} style={{ zIndex: index, position: 'absolute', top: '0px', transformOrigin: 'bottom', }}
                                 viewport={{ once: true }}
-                                initial={{ opacity: 0, }} whileInView={{ opacity: 1, transform: `rotate(${image.deg})`, transition: { type: 'spring', delay: image.delay } }}
+                                initial={{ opacity: 0, }} whileInView={{ opacity: 1, transform: `rotate(${image.deg})`, transition: { transform: { type: 'spring', delay: image.delay, mass: 2, stiffness: 100, } } }}
                             >
                                 <Image
                                     h={['190px', '469px']}
