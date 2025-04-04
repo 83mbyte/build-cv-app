@@ -26,3 +26,19 @@ export const formatText = (stringToFormat, type = 'null') => {
 
     return formatted
 }
+
+export const getDataFromFunctionsEndpoint = async (endPoint, options) => {
+    let resp = null;
+    try {
+
+        if (process.env.NODE_ENV == "development") {
+            resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/${endPoint}`, options);
+
+        } else {
+            resp = await fetch(`https://${endPoint}-${process.env.NEXT_PUBLIC_FUNC_SUFFIX}`, options);
+        }
+    } catch (error) {
+        return null
+    }
+    return resp
+}

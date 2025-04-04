@@ -13,7 +13,7 @@ import { toaster } from '@/components/ui/toaster';
 import { useSelector, useDispatch } from 'react-redux';
 import { interviewMessagesPut, setCurrentStep, setInterviewSettings, setInterviewStatus } from '@/redux/interview/interviewSlice';
 
-import { sanitizeInput } from '@/lib/commonScripts';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { toolkitData } from '@/lib/content-lib';
 import { cookieHandler } from '@/lib/cookies';
 
@@ -71,7 +71,7 @@ const InterviewSettings = ({ stepDescription, ref }) => {
                 }
             }
 
-            let res = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`, {
+            const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(
@@ -82,7 +82,8 @@ const InterviewSettings = ({ stepDescription, ref }) => {
                         },
                         variant: 'interview'
                     }),
-            })
+            };
+            const res = await getDataFromFunctionsEndpoint('generateData', options);
             if (res) {
                 let result = await res.json();
 

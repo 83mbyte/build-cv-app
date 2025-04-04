@@ -10,7 +10,7 @@ import { setSummaryGeneratedItems, setResumeSummaryData, addSummarySelectedItems
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import { aiWindowButtons, summaryBotData } from '@/lib/content-lib';
-import { sanitizeInput } from '@/lib/commonScripts';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { cookieHandler } from '@/lib/cookies';
 
 import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
@@ -104,24 +104,28 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
                 tempArray = [];
             }
 
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(
+                    {
+                        query: {
+                            position: position,
+                            details: detailsForSummary,
+                        },
+                        variant: 'generateSummary'
+                    }),
+            };
 
-            let genertateSummaryReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(
-                        {
-                            query: {
-                                position: position,
-                                details: detailsForSummary,
-                            },
-                            variant: 'generateSummary'
-                        }),
-                });
+            const res = await getDataFromFunctionsEndpoint('generateData', options);
 
-            const genertatedSummary = await genertateSummaryReply.json();
+            if (!res) {
+                throw new Error('no server responce');
+            }
+
+            const genertatedSummary = await res.json();
 
             if (genertatedSummary?.status == 'Success') {
                 const data = genertatedSummary.content;

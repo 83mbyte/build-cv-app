@@ -10,7 +10,7 @@ import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
 import { cookieHandler } from '@/lib/cookies';
 import { aiWindowButtons, experienceBotData } from '@/lib/content-lib';
-import { sanitizeInput } from '@/lib/commonScripts';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { LuSparkles, LuSquare, LuSquareCheck } from "react-icons/lu";
 
 
@@ -51,16 +51,19 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
                 }
             }
 
-            let genertateExpReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ query: position, variant: 'generateExp' }),
-                });
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ query: position, variant: 'generateExp' }),
+            };
+            const res = await getDataFromFunctionsEndpoint('generateData', options);
+            if (!res) {
+                throw new Error('No server response');
+            }
 
-            const generatedExp = await genertateExpReply.json();
+            const generatedExp = await res.json();
             if (generatedExp?.status == 'Success') {
                 const data = generatedExp.content.split('|');
                 dispatch(setExperienceGeneratedItems({ currentId, value: data }));

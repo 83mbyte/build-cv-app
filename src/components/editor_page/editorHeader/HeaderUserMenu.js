@@ -12,6 +12,7 @@ import { authAPI } from '@/lib/authAPI';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { editorHeaderData } from '@/lib/content-lib';
+import { getDataFromFunctionsEndpoint } from '@/lib/commonScripts';
 
 const HeaderUserMenu = () => {
     const initFocusRef = useRef(null);
@@ -130,13 +131,18 @@ const SubscriptionBlock = () => {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/manageSubscriptionPortal`, {
+
+            const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ customerId: customerId, accessToken }), // user customerId from DB
-            });
+            };
+            const res = await getDataFromFunctionsEndpoint('manageSubscriptionPortal', options);
+            if (!res) {
+                throw new Error('No server response');
+            }
 
-            const data = await response.json();
+            const data = await res.json();
             if (data.success) {
                 const { url } = data;
                 setIsLoading(false);

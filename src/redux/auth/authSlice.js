@@ -1,4 +1,5 @@
 
+import { getDataFromFunctionsEndpoint } from "@/lib/commonScripts";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const authSlice = createSlice({
@@ -147,11 +148,13 @@ export const { setShowAuthModal, setAuthFormFieldError, setAuthUserData, setAuth
 
 export const getSubscriptionDetailsThunk = createAsyncThunk('getSubscriptionDetailsThunk', async ({ userId, accessToken }) => {
     try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/getSubscriptionDetails`, {
+
+        const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, accessToken }),
-        });
+        };
+        let resp = await getDataFromFunctionsEndpoint('getSubscriptionDetails', options);
 
 
         if (resp) {

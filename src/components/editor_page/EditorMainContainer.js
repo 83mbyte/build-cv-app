@@ -8,6 +8,7 @@ import { Toaster, toaster } from "@/components/ui/toaster";
 
 
 import { editorMainContainerData } from '@/lib/content-lib';
+import { getDataFromFunctionsEndpoint } from '@/lib/commonScripts';
 
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from '@/__firebase/__firebaseConf';
@@ -66,17 +67,19 @@ const EditorMainContainer = () => {
 
       resumeFileName = fileUrl.match(fileRegex)[0];
 
-      let response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/streamPDFtoClient`, {
+      const options = {
         method: "POST",
         body: JSON.stringify({ fileName: resumeFileName, userId: userLogged.userId, accessToken: userLogged.accessToken }),
         headers: {
           "Content-Type": "application/json",
         },
-      });
+      }
+      let response = await getDataFromFunctionsEndpoint('streamPDFtoClient', options);
 
       if (!response || !response.ok) {
         throw new Error(editorMainContainerData.errors.downloadError ?? 'lorem ipsum');
       }
+      console.log('trying to create BLOB....')
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -97,15 +100,21 @@ const EditorMainContainer = () => {
       if ((endSubscriptionTime < currentTime || status == 'canceled' || status == 'unpaid')) {
         throw new Error(editorMainContainerData.errors.subscriptionEnd ?? 'Lorem ipsum')
       }
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createPDFfromTemplate`, {
+
+      const options = {
         method: "POST",
         body: JSON.stringify({ htmlString, userId: userLogged.userId, accessToken: userLogged.accessToken }), // use id and token of registered users
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      const data = await response.json();
+      };
+      const res = await getDataFromFunctionsEndpoint('createPDFfromTemplate', options);
 
+      if (!res) {
+        throw new Error('No server response');
+      }
+
+      const data = await res.json();
       if (data.status == 'Success') {
         if (data.url) {
           const isDownloadReady = await getStreamData(data.url);

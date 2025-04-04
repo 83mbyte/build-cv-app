@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/select";
 
 import { motion } from 'motion/react';
+import Link from 'next/link';
 
-import FooterContainer from '../footerCopyright/FooterContainer';
 import { useRef, useState } from 'react';
 import { authData, contactUsData } from '@/lib/content-lib';
-import { sanitizeInput } from '@/lib/commonScripts';
-import Link from 'next/link';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
+import FooterContainer from '../footerCopyright/FooterContainer';
 
 const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
 
@@ -129,11 +129,12 @@ const ContactForm = () => {
         try {
             if (!emailError && email && (message.length > 0 && charsCount <= 800)) {
 
-                let resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/contactForm`, {
+                const options = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ reason, id: generateTimeId(), name, email, message }),
-                });
+                };
+                const resp = await getDataFromFunctionsEndpoint('contactForm', options);
 
                 if (resp) {
                     let data = await resp.json();
@@ -146,6 +147,8 @@ const ContactForm = () => {
                         emailRef.current.value = '';
                         nameRef.current.value = '';
                     }
+                } else {
+                    throw new Error('No server response');
                 }
 
             } else {

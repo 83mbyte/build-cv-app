@@ -1,4 +1,4 @@
-import { sanitizeInput } from '@/lib/commonScripts';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { Card, Input, Textarea, Field, Stack, Button, Alert, CloseButton } from '@chakra-ui/react';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react';
@@ -34,16 +34,22 @@ const AddBlogItemArea = ({ userLogged }) => {
         const text = sanitizeInput(textRef.current.value);
         if (userLogged && title.length > 0 && text.length > 0) {
             try {
-                let resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/blogPublish`, {
+
+                const options = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ title, text, accessToken: userLogged.accessToken }),
-                });
+                };
+                const resp = await getDataFromFunctionsEndpoint('blogPublish', options);
                 if (resp) {
+
                     let data = await resp.json();
                     if (!data.success) {
                         throw new Error(data.error)
                     }
+
+                } else {
+                    throw new Error('No server response');
                 }
                 setIsLoading(false)
             } catch (error) {

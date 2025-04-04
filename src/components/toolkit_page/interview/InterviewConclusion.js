@@ -6,7 +6,7 @@ import { interviewConclusionUpdate, interviewMessagesClear, setCurrentStep, setI
 
 import DetailsChart from './interviewCharts/DetailsChart';
 import { toolkitData } from '@/lib/content-lib';
-
+import { getDataFromFunctionsEndpoint } from '@/lib/commonScripts';
 
 
 const InterviewConclusion = ({ stepDescription, ref }) => {
@@ -28,7 +28,7 @@ const InterviewConclusion = ({ stepDescription, ref }) => {
                 dispatch(setInterviewStatus('loading'));
                 const messagesToAnalyze = messagesInState.slice(1, messagesInState.length - 1);
 
-                let res = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`, {
+                const options = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(
@@ -40,7 +40,8 @@ const InterviewConclusion = ({ stepDescription, ref }) => {
                             },
                             variant: 'interview'
                         }),
-                })
+                };
+                const res = await getDataFromFunctionsEndpoint('generateData', options);
                 if (res) {
                     let result = await res.json();
 

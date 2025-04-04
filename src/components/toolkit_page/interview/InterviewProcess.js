@@ -6,7 +6,7 @@ import { VStack, Box, Button, Textarea, List, Separator, Text, Heading } from '@
 import { useDispatch, useSelector } from 'react-redux';
 import { interviewMessagesUpdate, setCurrentStep, setInterviewStatus } from '@/redux/interview/interviewSlice';
 
-import { sanitizeInput } from '@/lib/commonScripts';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { BsRobot } from "react-icons/bs";
 
 const InterviewProcess = ({ stepDescription, ref }) => {
@@ -36,8 +36,7 @@ const InterviewProcess = ({ stepDescription, ref }) => {
             messagesArray = [...messagesInState, { role: 'user', content: userData }];
             inputRef.current.value = '';
 
-
-            let res = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`, {
+            const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(
@@ -47,7 +46,8 @@ const InterviewProcess = ({ stepDescription, ref }) => {
                         },
                         variant: 'interview'
                     }),
-            });
+            };
+            const res = await getDataFromFunctionsEndpoint('generateData', options);
 
             if (res) {
                 let result = await res.json();
@@ -64,7 +64,6 @@ const InterviewProcess = ({ stepDescription, ref }) => {
             } else {
                 throw new Error('No server response')
             }
-
 
         } catch (error) {
             toaster.create({

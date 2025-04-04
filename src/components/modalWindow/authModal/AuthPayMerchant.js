@@ -12,6 +12,7 @@ import { setAuthStatus, setSubscriptionSignTempData } from '@/redux/auth/authSli
 
 import { authData } from '@/lib/content-lib';
 import { authAPI } from '@/lib/authAPI';
+import { getDataFromFunctionsEndpoint } from '@/lib/commonScripts';
 import FallbackSpinner from '@/components/editor_page/FallbackSpinner';
 
 import { LuShoppingBag } from "react-icons/lu";
@@ -25,24 +26,43 @@ const AuthPayMerchant = ({ changeFormHandler, closeWindow }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        const createSetupIntent = async () => {
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                };
+                const res = await getDataFromFunctionsEndpoint('createSetupIntent', options);
+
+                if (res) {
+
+                    const data = await res.json();
+                    if (data.clientSecret) {
+                        console.log('clientSecret received!!!')
+                        dispatch(
+                            setSubscriptionSignTempData({
+                                key: 'clientSecret',
+                                value: data.clientSecret ?? null,
+                            })
+                        );
+                    } else {
+                        throw new Error('no client secret received')
+                    }
+
+                } else {
+                    throw new Error('no server response');
+                }
+
+            } catch (error) {
+                console.error(error.message ?? 'error while create_setup_intent')
+            }
+        }
+
         if (showModal.show == true && showModal.type === 'merchant' && !clientSecret) {
 
-            fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createSetupIntent`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-            })
-                .then((res) => res.json())
-                .then((data) => {
-
-                    dispatch(
-                        setSubscriptionSignTempData({
-                            key: 'clientSecret',
-                            value: data.clientSecret ?? null,
-                        })
-                    );
-                })
-                .catch((err) => console.error('Error fetching clientSecret:', err));
+            createSetupIntent();
         }
+
     }, [showModal.type, showModal.show, clientSecret, dispatch]);
 
     useEffect(() => {
@@ -126,40 +146,45 @@ const PaymentForm = ({ clientSecret, changeFormHandler, closeWindow }) => {
         } else {
             // SetupIntent confirmed,  push data to server to create a subscription
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/createSubscriptionIntent`, {
+
+                const options = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         paymentMethodId: setupIntent.payment_method,
                         email, password, firstName, lastName
                     }),
-                });
-                const result = await response.json();
+                };
+                const res = await getDataFromFunctionsEndpoint('createSubscriptionIntent', options);
 
-                if (result.success == true && result.subscription.status == 'active') {
-                    toaster.create({
-                        type: 'success',
-                        title: 'Success',
-                        description: authData?.merchant.toasts.success ?? 'Lorem ipsum',
-                        duration: 4000,
-                    });
-                    let loginResult = await authAPI.login(email, password);
+                if (res) {
+                    const result = await response.json();
 
-                    if (loginResult && loginResult.status != 'Success') {
-                        throw new Error(resp.message);
-                    } else {
+                    if (result.success == true && result.subscription.status == 'active') {
+                        toaster.create({
+                            type: 'success',
+                            title: 'Success',
+                            description: authData?.merchant.toasts.success ?? 'Lorem ipsum',
+                            duration: 4000,
+                        });
+                        let loginResult = await authAPI.login(email, password);
 
-                        if (loginResult.payload) {
-
-
-                            closeWindow();
+                        if (loginResult && loginResult.status != 'Success') {
+                            throw new Error(resp.message);
                         } else {
-                            throw new Error(authData.merchant.errors.unableToLogin ?? 'Lorem ipsum')
-                        }
-                    }
 
+                            if (loginResult.payload) {
+                                closeWindow();
+                            } else {
+                                throw new Error(authData.merchant.errors.unableToLogin ?? 'Lorem ipsum')
+                            }
+                        }
+
+                    } else {
+                        throw new Error(result.error)
+                    }
                 } else {
-                    throw new Error(result.error)
+                    throw new Error('No server response');
                 }
             } catch (err) {
                 setError(err.message ?? authData?.merchant.errors.default);

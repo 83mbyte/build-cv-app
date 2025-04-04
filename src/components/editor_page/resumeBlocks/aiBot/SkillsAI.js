@@ -9,7 +9,7 @@ import { setSkillsGeneratedItems, addSkillsSelectedItems, removeSkillsSelectedIt
 import { setResumeHeaderData } from '@/redux/resume/headerBlockSlice';
 import { setShowModal } from '@/redux/settings/editorSettingsSlice';
 
-import { sanitizeInput } from '@/lib/commonScripts';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { aiWindowButtons, skillsBotData } from '@/lib/content-lib';
 import { cookieHandler } from '@/lib/cookies';
 
@@ -49,17 +49,18 @@ const SkillsAI = ({ blockName }) => {
                 }
             }
 
-
-            let genertateSkillsReply = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ query: position, variant: 'generateSkills' }),
-                });
-
-            const genertatedSkills = await genertateSkillsReply.json();
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ query: position, variant: 'generateSkills' }),
+            };
+            const res = await getDataFromFunctionsEndpoint('generateData', options);
+            if (!res) {
+                throw new Error('No server response')
+            }
+            const genertatedSkills = await res.json();
 
             if (genertatedSkills?.status == 'Success') {
                 const data = genertatedSkills.content.split('|');

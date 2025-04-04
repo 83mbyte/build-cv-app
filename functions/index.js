@@ -59,7 +59,6 @@ const requestToGPT = async ({ aiKey, query, variant = 'professional' }) => {
 
     if (!assistReply.success) {
         return { message: assistReply?.message ?? 'Internal Server Error.', status: 'Error', code: 500 };
-
     }
 
     return { content: assistReply.content[0].message.content, status: 'Success', code: 200, systemPrompt: assistReply.systemPrompt }
@@ -73,7 +72,6 @@ exports.generateData = onRequest({
     secrets: ['AIKEY']
 },
     async (req, resp) => {
-
 
         if (req.method !== 'POST') {
             return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
@@ -186,7 +184,6 @@ exports.createPDFfromTemplate = onRequest(
                 resp.status(500).json({ status: 'Error', message: error.message ? error.message : 'Error while createHTMLfromString ...' });
             }
 
-
             const credentialsServicePDF = {
                 id: process.env.PDF_SERVICES_CLIENT_ID,
                 secret: process.env.PDF_SERVICES_CLIENT_SECRET
@@ -205,13 +202,9 @@ exports.createPDFfromTemplate = onRequest(
     });
 
 
-
-
-
 exports.blogPublish = onRequest({
     //dev
     // cors: true,
-
     cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
 },
     async (req, resp) => {
@@ -250,7 +243,8 @@ exports.blogPublish = onRequest({
     })
 
 exports.contactForm = onRequest({
-    cors: true,
+    // cors: true,
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`]
 },
     async (req, resp) => {
         if (req.method !== 'POST') {
@@ -280,6 +274,50 @@ exports.contactForm = onRequest({
     }
 )
 
+exports.getSubscriptionDetails = onRequest(
+    {
+        // cors: true,
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`]
+    },
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request' });
+        }
+        const { userId, accessToken } = req.body;
+
+        const isTokenVerified = await verifyToken(accessToken);
+        if (!isTokenVerified || isTokenVerified.status == false) {
+            return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+        }
+        try {
+
+            const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS_NEW}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
+            let data = await dbCustomerIdRef.once('value').then((snapshot) => {
+                return snapshot.val()
+            });
+
+            const dbsubscriptionIdRef = db.ref(`${process.env.APP_DB_SUBSCRIPTIONS_NEW}${data.subscriptionId}`);
+            let data2 = await dbsubscriptionIdRef.once('value').then((snapshot) => {
+                return snapshot.val()
+            })
+
+            const result = {
+                ...data,
+                cancelAtPeriodEnd: data2.cancelAtPeriodEnd,
+                currentPeriodEnd: data2.currentPeriodEnd,
+                status: data2.status,
+                currentTime: Date.now()
+            };
+
+            return resp.status(200).json(result); // return subscription details {customerId, subscriptionId,cancelAtPeriodEnd,currentPeriodEnd,status} 
+
+
+        } catch (error) {
+            return resp.status(500).end(error.message)
+            // return resp.status(500).end('Internal Server Error')
+        }
+    }
+)
 
 
 // ------- STRIPE   ------
@@ -349,7 +387,8 @@ exports.createSubscriptionIntent = onRequest({
     }
 )
 exports.manageSubscriptionPortal = onRequest({
-    cors: true,
+    // cors: true,
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`]
 },
     async (req, resp) => {
         if (req.method !== 'POST') {
@@ -362,9 +401,9 @@ exports.manageSubscriptionPortal = onRequest({
         }
         try {
             const stripeKey = STRIPE_SECRET.value();
-            let result = await stripeAPI.createSubscriptionPortalSession(stripeKey, customerId, process.env.SUBSCRIPTION_PORTAL_RETURN_URL);
+            let result = await stripeAPI.createSubscriptionPortalSession(stripeKey, customerId, `https://${process.env.SUBSCRIPTION_PORTAL_RETURN_URL}`);
             if (result && result.success) {
-                resp.status(200).json(result)
+                resp.status(200).json(result);
             } else {
                 throw new Error(result.error);
             }
@@ -559,79 +598,11 @@ const isEmailAlreadyExists = (email) => {
             return false
         });
 }
+
+
 // ============================
 // -----    STRIPE end --------
 
-
-// exports.createUserOnSignup = functionsV1auth.user().onCreate((user) => {
-
-//     let dbUsers = db.ref(process.env.APP_DB_USERS_NEW);
-//     let userRef = dbUsers.child(user.uid);
-//     userRef.set({
-//         userProfile: {
-//             id: user.uid,
-//             email: user.email,
-//             subscription: {
-//                 subscription: null,
-//                 customer: null,
-//             }
-//         },
-//         resume: {
-//             editorSetting: {
-//                 themeColor: 'blue',
-//                 layout: 0,
-//             },
-//             fontSettings: {
-//                 currentFont: null,
-//                 fontSize: null,
-//             },
-//             resumeHeader: {
-//                 fullName: null,
-//                 position: null,
-//                 profileImage: null,
-//             },
-//             resumeContact: {
-//                 phone: null,
-//                 email: null,
-//                 location: null,
-//                 web: null,
-//             },
-//             resumeSummary: {
-//                 isVisible: true,
-//                 summaryHeading: null,
-//                 summaryText: null,
-//             },
-//             resumeEducation: {
-//                 isVisible: true,
-//                 educationHeading: null,
-//                 items: [],
-//             },
-//             resumeExperience: {
-//                 expHeading: null,
-//                 isVisible: true,
-//                 items: [],
-//             },
-//             resumeSkills: {
-//                 isVisible: true,
-//                 skillsHeading: null,
-//                 items: [],
-//             },
-//             resumeLanguages: {
-//                 isVisible: false,
-//                 languagesHeading: null,
-//                 items: [],
-//             }
-
-
-//         },
-
-//     }).then(() => {
-//         return true
-//     }).catch((error) => {
-//         console.log(`ERROR while user ${user.uid} create: `, error.message);
-//         return false
-//     });
-// });
 
 // AUTH users DELETE
 exports.deleteUser = functionsV1auth.user().onDelete((user) => {
@@ -652,49 +623,7 @@ exports.deleteUser = functionsV1auth.user().onDelete((user) => {
 
 
 
-exports.getSubscriptionDetails = onRequest(
-    {
-        cors: true,
-    },
-    async (req, resp) => {
-        if (req.method !== 'POST') {
-            return resp.status(400).json({ error: 'Bad request' });
-        }
-        const { userId, accessToken } = req.body;
 
-        const isTokenVerified = await verifyToken(accessToken);
-        if (!isTokenVerified || isTokenVerified.status == false) {
-            return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
-        }
-        try {
-
-            const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS_NEW}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
-            let data = await dbCustomerIdRef.once('value').then((snapshot) => {
-                return snapshot.val()
-            });
-
-            const dbsubscriptionIdRef = db.ref(`${process.env.APP_DB_SUBSCRIPTIONS_NEW}${data.subscriptionId}`);
-            let data2 = await dbsubscriptionIdRef.once('value').then((snapshot) => {
-                return snapshot.val()
-            })
-
-            const result = {
-                ...data,
-                cancelAtPeriodEnd: data2.cancelAtPeriodEnd,
-                currentPeriodEnd: data2.currentPeriodEnd,
-                status: data2.status,
-                currentTime: Date.now()
-            };
-
-            return resp.status(200).json(result); // return subscription details {customerId, subscriptionId,cancelAtPeriodEnd,currentPeriodEnd,status} 
-
-
-        } catch (error) {
-            return resp.status(500).end(error.message)
-            // return resp.status(500).end('Internal Server Error')
-        }
-    }
-)
 
 // exports.setCustomClaims = onRequest({
 //     cors: true,

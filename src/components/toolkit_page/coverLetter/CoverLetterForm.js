@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { setCoverLetterFields, setCoverLetterText, setIsLoadingCoverLetter } from '@/redux/coverLetter/coverLetterSlice';
 
-import { sanitizeInput } from '@/lib/commonScripts';
+import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { LuSparkles, } from "react-icons/lu";
 import { toaster } from '@/components/ui/toaster';
 import { toolkitData } from '@/lib/content-lib';
@@ -69,7 +69,8 @@ const CoverLetterForm = ({ placeholders, isButtonDisabled }) => {
             if (!positionValue || positionValue == '') {
                 throw new Error('Please fill the required fields');
             }
-            let res = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/generateData`, {
+
+            const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(
@@ -83,7 +84,8 @@ const CoverLetterForm = ({ placeholders, isButtonDisabled }) => {
                         },
                         variant: 'generateCoverLetter'
                     }),
-            })
+            };
+            const res = await getDataFromFunctionsEndpoint('generateData', options);
             if (res) {
                 let result = await res.json()
 
@@ -94,6 +96,8 @@ const CoverLetterForm = ({ placeholders, isButtonDisabled }) => {
                 } else {
                     throw new Error(result.message)
                 }
+            } else {
+                throw new Error('No server response');
             }
 
         } catch (error) {
