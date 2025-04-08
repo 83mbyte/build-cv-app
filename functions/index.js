@@ -291,7 +291,7 @@ exports.getSubscriptionDetails = onRequest(
         }
         try {
 
-            const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS_NEW}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
+            const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
             let data = await dbCustomerIdRef.once('value').then((snapshot) => {
                 return snapshot.val()
             });
@@ -484,12 +484,25 @@ exports.subscriptionWebhook = onRequest(
 
 const registerUser = async (email, password, firstName, lastName,) => {
 
+    let fullName = '';
+    if (firstName && lastName) {
+        fullName = firstName + ' ' + lastName;
+    }
+
+    if (firstName && !lastName) {
+        fullName = firstName;
+    }
+
+    if (!firstName && lastName) {
+        fullName = lastName;
+    }
+
     return getAuth()
         .createUser({
             email: email,
             emailVerified: false,
             password: password,
-            displayName: firstName + ' ' + lastName,
+            displayName: fullName,
             disabled: false,
         })
         .then((userRecord) => {
@@ -505,7 +518,7 @@ const registerUser = async (email, password, firstName, lastName,) => {
 
 const createDBforNewUser = (userId, userEmail, subscriptionId, customerId) => {
 
-    const dbUsers = db.ref(process.env.APP_DB_USERS_NEW);
+    const dbUsers = db.ref(process.env.APP_DB_USERS);
     const userRef = dbUsers.child(userId);
 
     userRef.set({
@@ -609,7 +622,30 @@ exports.deleteUser = functionsV1auth.user().onDelete((user) => {
 
     // DELETE a user data (all data) in database while delete user
 
-    let dbUsers = db.ref(`${process.env.APP_DB_USERS}/`);
+
+
+    // delete subscription of user
+    const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS}${user.uid}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
+    dbCustomerIdRef.once('value')
+        .then(
+            (snapshot) => {
+                return snapshot.val()
+            }
+        ).then((data) => {
+            const dbsubscriptionIdRef = db.ref(`${process.env.APP_DB_SUBSCRIPTIONS_NEW}${data.subscriptionId}`);
+            return dbsubscriptionIdRef
+        }).then((dbsubscriptionIdRef) => {
+
+            // clear subscription data 
+            dbsubscriptionIdRef.set(null)
+
+        }).catch((error) => {
+            console.log(`ERROR while user ${user.uid} delete: `, error.message);
+            return false
+        });
+
+    //delete user data
+    let dbUsers = db.ref(`${process.env.APP_DB_USERS}`);
     let userRef = dbUsers.child(user.uid);
     userRef.set(null)
         .then(() => {
