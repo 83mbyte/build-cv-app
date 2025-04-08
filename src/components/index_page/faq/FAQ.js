@@ -7,12 +7,13 @@ import { indexData } from '@/lib/content-lib';
 import { LuChevronDown } from "react-icons/lu";
 import SectionContainer from '../SectionContainer';
 
-const faqData = [
-    { q: indexData?.faq?.one?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.one?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
-    { q: indexData?.faq?.two?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.two?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
-    { q: indexData?.faq?.three?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.three?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
-    { q: indexData?.faq?.four?.q || 'Lamet consectetur adipisicing elit. Assumenda, quorem?', a: indexData?.faq?.four?.a || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!` },
-];
+
+const faqData = Object.keys(indexData.faq.data).map((key) => {
+    return {
+        q: indexData.faq.data[key].q ?? 'Lamet consectetur adipisicing elit. Assumenda, quorem?',
+        a: indexData.faq.data[key].a ?? 'Lamet consectetur adipisicing elit. Assumenda, quorem?'
+    }
+});
 
 const FAQ = () => {
     const [active, setActive] = useState([])
@@ -25,7 +26,7 @@ const FAQ = () => {
                 // viewport={{ once: true }}
                 >
                     <Heading as='h2' textAlign={'center'} bg='' size={['xl', '3xl']} mx={'auto'} >
-                        Frequently Asked Questions
+                        {indexData?.faq?.topheading ?? 'Frequently Asked Questions'}
                     </Heading>
                 </motion.div>
 
