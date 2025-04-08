@@ -7,14 +7,22 @@ import { LuHourglass, LuPencilRuler, LuTrophy, LuSmile, LuBotMessageSquare } fro
 import { indexData } from '@/lib/content-lib';
 import SectionContainer from '../SectionContainer';
 
-const data = [
-    { heading: indexData?.features?.one?.heading || `Lorem, ipsum dolor sit amet consectetur adipisicing elit.`, text: indexData?.features?.one?.text || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eum magnam sapiente repudiandae id vitae rerum iure!`, icon: <LuTrophy /> },
-    { heading: indexData?.features?.three?.heading || `Eum magnam sapiente`, text: indexData?.features?.three?.text || `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, architecto placeat.`, icon: <LuBotMessageSquare /> },
-    { heading: indexData?.features?.two?.heading || 'Lorem ipsum dolor sit amet', text: indexData?.features?.two?.text || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint quam labore unde ut, omnis laudantium.`, icon: <LuPencilRuler /> },
-    { heading: indexData?.features?.four?.heading || 'Lorem ipsum dolor sit amet', text: indexData?.features?.four?.text || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint quam labore unde ut, omnis laudantium.`, icon: <LuPencilRuler /> },
-    { heading: indexData?.features?.five?.heading || 'Lorem ipsum dolor sit amet', text: indexData?.features?.five?.text || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint quam labore unde ut, omnis laudantium.`, icon: <LuSmile /> },
-    { heading: indexData?.features?.six?.heading || 'Lorem ipsum dolor sit amet', text: indexData?.features?.six?.text || `Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint quam labore unde ut, omnis laudantium.`, icon: <LuHourglass /> },
-];
+
+const featureIcons = {
+    one: <LuTrophy />,
+    two: <LuBotMessageSquare />,
+    three: <LuPencilRuler />,
+    four: <LuSmile />,
+    five: <LuHourglass />
+}
+
+const data = Object.keys(indexData.features.data).map((key) => {
+    return {
+        heading: indexData.features.data[key].heading ?? `Eum magnam sapiente`,
+        text: indexData.features.data[key].text ?? 'Lorem ipsum dolor sit amet',
+        icon: featureIcons[key]
+    }
+})
 
 const Features = () => {
     return (
