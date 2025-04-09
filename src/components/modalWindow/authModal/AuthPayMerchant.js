@@ -38,7 +38,7 @@ const AuthPayMerchant = ({ changeFormHandler, closeWindow }) => {
 
                     const data = await res.json();
                     if (data.clientSecret) {
-                        console.log('clientSecret received!!!')
+
                         dispatch(
                             setSubscriptionSignTempData({
                                 key: 'clientSecret',
@@ -78,7 +78,7 @@ const AuthPayMerchant = ({ changeFormHandler, closeWindow }) => {
 
             <VStack w='full' gap={3} maxH={'80vh'} p={1}>
                 <Box>
-                    <Heading as='h3' size='lg'><Highlight query={'$10/month'} styles={{ px: "0.5", color: "teal" }}>{authData.merchant.heading ?? 'Lorem ipsum'}</Highlight></Heading>
+                    <Heading as='h3' size='lg'><Highlight query={process.env.NEXT_PUBLIC_APP_PRICE} styles={{ px: "0.5", color: "teal" }}>{authData.merchant.heading ?? 'Lorem ipsum'}</Highlight></Heading>
                     <Text fontSize={'xs'} textAlign={'right'}>{authData.merchant.textCancel ?? 'Lorem ipsum'}</Text>
                 </Box>
 
@@ -158,7 +158,7 @@ const PaymentForm = ({ clientSecret, changeFormHandler, closeWindow }) => {
                 const res = await getDataFromFunctionsEndpoint('createSubscriptionIntent', options);
 
                 if (res) {
-                    const result = await response.json();
+                    const result = await res.json();
 
                     if (result.success == true && result.subscription.status == 'active') {
                         toaster.create({
@@ -170,7 +170,7 @@ const PaymentForm = ({ clientSecret, changeFormHandler, closeWindow }) => {
                         let loginResult = await authAPI.login(email, password);
 
                         if (loginResult && loginResult.status != 'Success') {
-                            throw new Error(resp.message);
+                            throw new Error(loginResult.message);
                         } else {
 
                             if (loginResult.payload) {

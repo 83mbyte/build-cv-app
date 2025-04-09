@@ -13,6 +13,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { editorHeaderData } from '@/lib/content-lib';
 import { getDataFromFunctionsEndpoint } from '@/lib/commonScripts';
+import FallbackSpinner from '../FallbackSpinner';
 
 const HeaderUserMenu = () => {
     const initFocusRef = useRef(null);
@@ -164,39 +165,41 @@ const SubscriptionBlock = () => {
     return (
         <>
             {
-                status &&
-                <Box w='full' display={'flex'} color={'gray.500'} flexDirection={'column'} p={1} borderRadius={'lg'} alignItems={'center'} gap={2} justifyContent={'center'} borderBottom={'1px solid #e4e4e7'} borderTop={'1px solid #e4e4e7'} bg='gray.50'>
-                    <Heading as='h4' size='sm'>{editorHeaderData.userMenu.currentSubscription ?? 'Current Subscription'}</Heading>
-                    {
-                        status == 'pending_cancellation' &&
-                        <Box>
-                            <Alert.Root status="info" title="you can still use the service" size="sm" alignItems={'center'}>
-                                <Alert.Indicator />
-                                <Alert.Description>
-                                    <Box>
-                                        {editorHeaderData.userMenu.alertInfo[0] ?? 'lorem upsum'}
-                                    </Box><Box>{paidUntil} {editorHeaderData.userMenu.alertInfo[1] ?? 'lorem upsum'}</Box>
-                                </Alert.Description>
-                            </Alert.Root>
-                        </Box>
-                    }
-                    <HStack bg='' w='full' px={1}>
-                        <Box fontWeight={'bold'}>{editorHeaderData.userMenu.status ?? 'Status:'}</Box>
-                        < Box color={status == 'active' ? 'teal' : 'red'}>{status}</Box>
-                    </HStack>
-                    {
-                        status == 'active' &&
-                        <HStack w='full' px={1}>
-                            <Box fontWeight={'bold'}>{editorHeaderData.userMenu.paidUntil ?? 'Paid until:'}</Box>
-                            <Box >{paidUntil}</Box>
+                !status
+                    ? <FallbackSpinner />
+                    :
+                    <Box w='full' display={'flex'} color={'gray.500'} flexDirection={'column'} p={1} borderRadius={'lg'} alignItems={'center'} gap={2} justifyContent={'center'} borderBottom={'1px solid #e4e4e7'} borderTop={'1px solid #e4e4e7'} bg='gray.50'>
+                        <Heading as='h4' size='sm'>{editorHeaderData.userMenu.currentSubscription ?? 'Current Subscription'}</Heading>
+                        {
+                            status == 'pending_cancellation' &&
+                            <Box>
+                                <Alert.Root status="info" title="you can still use the service" size="sm" alignItems={'center'}>
+                                    <Alert.Indicator />
+                                    <Alert.Description>
+                                        <Box>
+                                            {editorHeaderData.userMenu.alertInfo[0] ?? 'lorem upsum'}
+                                        </Box><Box>{paidUntil} {editorHeaderData.userMenu.alertInfo[1] ?? 'lorem upsum'}</Box>
+                                    </Alert.Description>
+                                </Alert.Root>
+                            </Box>
+                        }
+                        <HStack bg='' w='full' px={1}>
+                            <Box fontWeight={'bold'}>{editorHeaderData.userMenu.status ?? 'Status:'}</Box>
+                            < Box color={status == 'active' ? 'teal' : 'red'}>{status}</Box>
                         </HStack>
-                    }
+                        {
+                            status == 'active' &&
+                            <HStack w='full' px={1}>
+                                <Box fontWeight={'bold'}>{editorHeaderData.userMenu.paidUntil ?? 'Paid until:'}</Box>
+                                <Box >{paidUntil}</Box>
+                            </HStack>
+                        }
 
-                    <Button size={['2xs', 'xs']} w='full' variant={'solid'} colorPalette={'teal'} _hover={{ opacity: 0.5 }} onClick={handleManageSubscription} loading={isLoading} disabled={!customerId}>
-                        {editorHeaderData.userMenu.manageSubscription ?? 'Manage Subscription'}
-                    </Button>
+                        <Button size={['2xs', 'xs']} w='full' variant={'solid'} colorPalette={'teal'} _hover={{ opacity: 0.5 }} onClick={handleManageSubscription} loading={isLoading} disabled={!customerId}>
+                            {editorHeaderData.userMenu.manageSubscription ?? 'Manage Subscription'}
+                        </Button>
 
-                </Box>
+                    </Box>
             }
         </>
     )
