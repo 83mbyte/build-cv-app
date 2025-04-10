@@ -17,7 +17,7 @@ const PublishBlogArticle = () => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
 
             if (user && user.uid && user.accessToken) {
-                console.log('user.uid', user.uid)
+
                 auth.currentUser.getIdTokenResult(user.accessToken)
                     .then((idTokenResult) => {
                         setUserLogged({

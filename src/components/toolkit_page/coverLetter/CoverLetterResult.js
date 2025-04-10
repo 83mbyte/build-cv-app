@@ -11,9 +11,10 @@ import { useRef } from 'react';
 import { toolkitData } from '@/lib/content-lib';
 
 const CoverLetterResult = ({ data }) => {
+
     const dispatch = useDispatch();
     const tempRef = useRef(null);
-    const clipboard = useClipboard({ value: null });
+    const clipboard = useClipboard(null);
 
     const onChangeHandler = (name, value) => {
         dispatch(setCoverLetterText({ value: value }));
@@ -22,7 +23,10 @@ const CoverLetterResult = ({ data }) => {
     const copyToClipboardHandler = () => {
         if (tempRef.current) {
             clipboard.setValue(tempRef.current.childNodes[0].childNodes[0].childNodes[0].innerText);
-            clipboard.copy();
+            if (clipboard.value && clipboard.value.length > 1) {
+                clipboard.copy();
+                clipboard.setValue(null)
+            }
         }
     }
 

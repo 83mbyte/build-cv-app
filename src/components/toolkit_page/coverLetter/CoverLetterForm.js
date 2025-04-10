@@ -16,6 +16,7 @@ import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts
 import { LuSparkles, } from "react-icons/lu";
 import { toaster } from '@/components/ui/toaster';
 import { toolkitData } from '@/lib/content-lib';
+import { cookieHandler } from '@/lib/cookies';
 
 const experienceLevels = createListCollection({
     items: [
@@ -46,6 +47,8 @@ const CoverLetterForm = ({ placeholders, isButtonDisabled }) => {
     const skillsRef = useRef(null);
 
     const dispatch = useDispatch();
+    const userLogged = useSelector(state => state.auth.data);
+    const accessToken = userLogged?.accessToken ?? null;
     const positionValue = useSelector(state => state.coverLetter.position);
     const companyNameValue = useSelector(state => state.coverLetter.companyName);
     const skillsValue = useSelector(state => state.coverLetter.skills);
@@ -68,6 +71,14 @@ const CoverLetterForm = ({ placeholders, isButtonDisabled }) => {
         try {
             if (!positionValue || positionValue == '') {
                 throw new Error('Please fill the required fields');
+            }
+
+            if (!accessToken) {
+                // as free user use
+                let value = await cookieHandler('coverletter');
+                if (value > 2) {
+                    throw new Error('You reached the allowed requests daily limit.');
+                }
             }
 
             const options = {
