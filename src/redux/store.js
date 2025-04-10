@@ -13,19 +13,38 @@ import coverLetterSliceReducer from './coverLetter/coverLetterSlice';
 import interviewSliceReducer from './interview/interviewSlice';
 
 
-export default configureStore({
-    reducer: {
-        auth: authSliceReducer,
-        editorSettings: editorSettingsSliceReducer,
-        fontSettings: fontSettingsSliceReducer,
-        resumeHeader: headerBlockSliceReducer,
-        resumeContact: contactBlockSliceReducer,
-        resumeSummary: summaryBlockSliceReducer,
-        resumeEducation: educationBlockSliceReducer,
-        resumeExperience: experienceBlockSliceReducer,
-        resumeSkills: skillsBlockSliceReducer,
-        resumeLanguages: languagesBlockSliceReducer,
-        coverLetter: coverLetterSliceReducer,
-        interview: interviewSliceReducer
-    },
-})
+// export default configureStore({
+//     reducer: {
+//         auth: authSliceReducer,
+//         editorSettings: editorSettingsSliceReducer,
+//         fontSettings: fontSettingsSliceReducer,
+//         resumeHeader: headerBlockSliceReducer,
+//         resumeContact: contactBlockSliceReducer,
+//         resumeSummary: summaryBlockSliceReducer,
+//         resumeEducation: educationBlockSliceReducer,
+//         resumeExperience: experienceBlockSliceReducer,
+//         resumeSkills: skillsBlockSliceReducer,
+//         resumeLanguages: languagesBlockSliceReducer,
+//         coverLetter: coverLetterSliceReducer,
+//         interview: interviewSliceReducer
+//     },
+// })
+
+export const makeStore = () => {
+    return configureStore({
+        reducer: {
+            auth: authSliceReducer,
+            editorSettings: editorSettingsSliceReducer,
+            fontSettings: fontSettingsSliceReducer,
+            resumeHeader: headerBlockSliceReducer,
+            resumeContact: contactBlockSliceReducer,
+            resumeSummary: summaryBlockSliceReducer,
+            resumeEducation: educationBlockSliceReducer,
+            resumeExperience: experienceBlockSliceReducer,
+            resumeSkills: skillsBlockSliceReducer,
+            resumeLanguages: languagesBlockSliceReducer,
+            coverLetter: coverLetterSliceReducer,
+            interview: interviewSliceReducer
+        }
+    })
+}
