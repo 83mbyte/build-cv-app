@@ -21,6 +21,7 @@ const HeaderUserMenu = () => {
     const dispatch = useDispatch();
 
     const role = useSelector(state => state.auth.data.role);
+    const subscription = useSelector(state => state.auth.data.subscription);
 
     const signOutHandler = async () => {
         const response = await authAPI.signOut();
@@ -67,8 +68,8 @@ const HeaderUserMenu = () => {
                             <UserNameBlock />
 
                             {/* show subscription block */}
-                            <SubscriptionBlock />
-
+                            {subscription &&
+                                <SubscriptionBlock />}
 
                             {
                                 // for admin use
