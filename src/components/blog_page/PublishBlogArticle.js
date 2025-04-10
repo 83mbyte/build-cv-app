@@ -1,16 +1,47 @@
+import { app } from '@/__firebase/__firebaseConf';
 import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import { Card, Input, Textarea, Field, Stack, Button, Alert, CloseButton } from '@chakra-ui/react';
+import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import Link from 'next/link';
-import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
+
+const auth = getAuth(app);
 
 const PublishBlogArticle = () => {
-    const userLogged = useSelector(state => state.auth.data);
+
+    const [isLoadingUserData, setIsLoadingUserData] = useState(true);
+    const [userLogged, setUserLogged] = useState(null);
+
+    useEffect(() => {
+        // manage userLogged state
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+            if (user && user.uid && user.accessToken) {
+                console.log('user.uid', user.uid)
+                auth.currentUser.getIdTokenResult(user.accessToken)
+                    .then((idTokenResult) => {
+                        setUserLogged({
+                            userId: user.uid,
+                            accessToken: user.accessToken,
+                            email: user.email,
+                            role: idTokenResult?.claims.admin ? 'admin' : 'user',
+                        });
+                    })
+            } else {
+
+                setUserLogged(null)
+            }
+
+            setIsLoadingUserData(false);
+        })
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <>
             {
-                !userLogged
+                isLoadingUserData || !userLogged
                     ? <div style={{ paddingTop: '50px' }}>please <Link href='/login'>login</Link></div>
                     : userLogged.role === 'admin' && <AddBlogItemArea userLogged={userLogged} />
             }
