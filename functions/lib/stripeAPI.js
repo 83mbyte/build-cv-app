@@ -27,11 +27,13 @@ module.exports = {
         switch (event.type) {
             case 'customer.subscription.created':
                 const newSubscription = event.data.object;
+                const periodEnd = new Date(newSubscription.current_period_end * 1000).toString();
+
                 const data = {
                     subscriptionId: newSubscription.id,
                     customerId: newSubscription.customer,
                     status: newSubscription.status,
-                    currentPeriodEnd: new Date(newSubscription.current_period_end * 1000),
+                    currentPeriodEnd: periodEnd,
                     cancelAtPeriodEnd: newSubscription.cancel_at_period_end,
                     canceledAt: null,
                     cancelAt: null,
@@ -47,24 +49,24 @@ module.exports = {
                 const canceledAt = updatedSubscription.canceled_at;
                 const cancelAt = updatedSubscription.cancel_at;
 
-                const previousAttributes = updatedSubscription.previous_attributes || {};
-                if (
-                    Object.keys(previousAttributes).length === 1 &&
-                    previousAttributes.cancellation_details &&
-                    !previousAttributes.cancel_at_period_end &&
-                    !previousAttributes.canceled_at &&
-                    !previousAttributes.cancel_at
-                ) {
-                    console.log(`Subscription ${subscriptionId} feedback updated, no status change`);
-                    break; // don nothing. there is no reason to update DB because only feedbacks data changed by user
-                }
+                // const previousAttributes = updatedSubscription.previous_attributes || {};
+                // if (
+                //     Object.keys(previousAttributes).length === 1 &&
+                //     previousAttributes.cancellation_details &&
+                //     !previousAttributes.cancel_at_period_end &&
+                //     !previousAttributes.canceled_at &&
+                //     !previousAttributes.cancel_at
+                // ) {
+                //     console.log(`Subscription ${subscriptionId} feedback updated, no status change`);
+                //     break; // don nothing. there is no reason to update DB because only feedbacks data changed by user
+                // }
 
                 if (status === 'canceled') {
                     // Immediate cancelation
                     const data = {
                         subscriptionId,
                         status: 'canceled',
-                        canceledAt: canceledAt ? new Date(canceledAt * 1000) : new Date(),
+                        canceledAt: canceledAt ? new Date(canceledAt * 1000).toString() : new Date().toString(),
                         cancelAt: null,
                         currentPeriodEnd: null,
                     };
@@ -78,9 +80,9 @@ module.exports = {
                     const data = {
                         subscriptionId,
                         status: 'pending_cancellation', // or 'active' with some prefix or flag 
-                        canceledAt: new Date(canceledAt * 1000),
-                        cancelAt: cancelAt ? new Date(cancelAt * 1000) : null,
-                        currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000),
+                        canceledAt: new Date(canceledAt * 1000).toString(),
+                        cancelAt: cancelAt ? new Date(cancelAt * 1000).toString() : null,
+                        currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000).toString(),
                     }
                     console.log(`Subscription ${subscriptionId} scheduled for cancellation`);
                     return ({ success: true, message: 'Subscription scheduled for cancellation', data });
@@ -93,37 +95,54 @@ module.exports = {
                         status: 'active',
                         canceledAt: null,
                         cancelAt: null,
-                        currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000),
+                        currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000).toString(),
                     };
                     console.log(`Subscription ${subscriptionId} active or resumed`);
                     return ({ success: true, message: 'Subscription active or resumed', data })
                     break;
                 }
-                breal;
+
             case 'invoice.paid':
                 const invoice = event.data.object;
                 const subscriptionIdFromInvoice = invoice.subscription;
+                const currentPeriodEndAsNumber = invoice.lines.data[0].period.end;
 
-                if (subscriptionIdFromInvoice) {
-                    const subscription = await stripe.subscriptions.retrieve(subscriptionIdFromInvoice);
-                    const data = {
-                        subscriptionId: subscriptionIdFromInvoice,
-                        status: subscription.status,
-                        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-                    };
-                    console.log(`Subscription ${subscriptionIdFromInvoice} renewed with invoice ${invoice.id}`);
-                    return ({ sucess: true, message: `Subscription renewed with invoice.`, data })
-                }
+                const dataToReturn = {
+                    subscriptionId: subscriptionIdFromInvoice,
+                    status: 'active', // We assume that the subscription is active after successful payment.
+                    currentPeriodEnd: new Date(currentPeriodEndAsNumber * 1000).toString(),
+                };
+                console.log(`Subscription ${subscriptionIdFromInvoice} renewed with invoice ${invoice.id}`);
+                return ({ success: true, message: `Subscription renewed with invoice.`, data: dataToReturn })
                 break;
+
+
+            // case 'invoice.paid':
+            //     // variant with stripe.subscriptions.retrieve
+            //     const invoice = event.data.object;
+            //     const subscriptionIdFromInvoice = invoice.subscription;
+
+            //     if (subscriptionIdFromInvoice) {
+            //         const subscription = await stripe.subscriptions.retrieve(subscriptionIdFromInvoice); 
+            //         const data = {
+            //             subscriptionId: subscriptionIdFromInvoice,
+            //             status: subscription.status,
+            //             currentPeriodEnd: new Date(subscription.items.data[0].current_period_end * 1000).toString(), 
+            //         };
+            //         console.log(`Subscription ${subscriptionIdFromInvoice} renewed with invoice ${invoice.id}`);
+            //         return ({ sucess: true, message: `Subscription renewed with invoice.`, data })
+            //     }
+            //     break;
             case 'invoice.payment_failed':
                 const failedInvoice = event.data.object;
                 const failedSubscriptionId = failedInvoice.subscription;
                 if (failedSubscriptionId) {
                     const subscription = await stripe.subscriptions.retrieve(failedSubscriptionId);
+                    const periodEnd = new Date(subscription.items.data[0].current_period_end * 1000).toString();
                     const data = {
                         subscriptionId: failedSubscriptionId,
                         status: subscription.status, //can be as 'past_due', 'unpaid', 'canceled'
-                        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+                        currentPeriodEnd: periodEnd,
                     };
                     console.log(`Payment failed for subscription ${failedSubscriptionId}, invoice ${failedInvoice.id}`);
                     return ({ success: true, message: `Payment failed for subscription, invoice.`, data })
