@@ -7,7 +7,7 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-require("firebase-functions/logger/compat");
+require("firebase-functions/logger/compat");  //to show logs in goglecloudconsole
 
 const admin = require("firebase-admin");
 const { getAuth } = require("firebase-admin/auth");
