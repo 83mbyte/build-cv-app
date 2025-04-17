@@ -7,7 +7,7 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-
+require("firebase-functions/logger/compat");
 
 const admin = require("firebase-admin");
 const { getAuth } = require("firebase-admin/auth");
@@ -24,7 +24,7 @@ const { generatePDFfromHTML } = require("./lib/adobeAPI");
 const stripeAPI = require("./lib/stripeAPI");
 const gptAPI = require('./lib/gptAPI');
 
-const STRIPE_WHSEC = defineSecret('STRIPE_WHSEC');
+const STRIPE_WHSECRET = defineSecret('STRIPE_WHSECRET');
 // const PDF_PRICE_ID = process.env.PDF_PRICE_ID;
 const STRIPE_SECRET = defineSecret('STRIPE_SECRET');
 const SUBSCRIPTION_PRICE_ID = process.env.SUBSCRIPTION_PRICE_ID;
@@ -373,14 +373,14 @@ exports.createSubscriptionIntent = onRequest({
                     resp.status(200).json({ success: true, subscription: { status: 'incomplete' } });
 
                 } else {
-                    throw new Error()
+                    throw new Error(result.error)
                 }
 
 
                 // resp.status(200).json(result);
 
             } catch (error) {
-                console.log('error subscription: ', error.message)
+                // console.log('error subscription: ', error)
                 resp.status(200).json({ success: false, error: error.message ?? 'Unable to create a subscription - lack of necessary information' })
             }
         }
@@ -388,7 +388,8 @@ exports.createSubscriptionIntent = onRequest({
 )
 exports.manageSubscriptionPortal = onRequest({
     // cors: true,
-    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`]
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+    secrets: ['STRIPE_SECRET']
 },
     async (req, resp) => {
         if (req.method !== 'POST') {
@@ -425,7 +426,7 @@ exports.subscriptionWebhook = onRequest(
         // cors: true,
         // PROD
         cors: [/stripe\.com$/],
-        secrets: ['STRIPE_WHSEC', 'STRIPE_SECRET']
+        secrets: ['STRIPE_WHSECRET', 'STRIPE_SECRET']
     },
     async (req, resp) => {
 
@@ -434,15 +435,21 @@ exports.subscriptionWebhook = onRequest(
         }
 
         try {
+            // TODO
+            // TODO
+            // TODO   remove console.log() when debugging end
+            // TODO   remove console.log() when debugging end
+            // TODO
+
             const payloadBody = req.rawBody;
             const sig = req.headers['stripe-signature'];
-            const endpointSecret = STRIPE_WHSEC.value();
+            const endpointSecret = STRIPE_WHSECRET.value();
             const stripeKey = STRIPE_SECRET.value();
 
             const dbSubscription = db.ref(process.env.APP_DB_SUBSCRIPTIONS_NEW);
 
             let respWebhook = await stripeAPI.webhookEventCheck(stripeKey, endpointSecret, sig, payloadBody);
-
+            console.log('respWebhook::: ', respWebhook)
             if (respWebhook && respWebhook.status == 'Default_Return') {
                 return resp.status(200).end();
             }
@@ -453,32 +460,44 @@ exports.subscriptionWebhook = onRequest(
 
                 if (respWebhook.message == 'Subscription created') {
                     // create subscription 
+                    console.log('Subscription created')
+
                     updateSubscriptionData(dbSubscription, respWebhook.data);
 
                 } else if (respWebhook.message == 'Subscription canceled immediately') {
                     // immediately canceled subscription
+                    console.log('Subscription canceled immediately')
+
                     updateSubscriptionData(dbSubscription, respWebhook.data);
 
                 } else if (respWebhook.message == 'Subscription scheduled for cancellation') {
                     // Subscription scheduled for cancellation
+                    console.log('Subscription scheduled for cancellation')
+
                     updateSubscriptionData(dbSubscription, respWebhook.data);
 
                 } else if (respWebhook.message == 'Subscription active or resumed') {
                     // Subscription activated or resumed
+                    console.log('Subscription active or resumed')
+
                     updateSubscriptionData(dbSubscription, respWebhook.data);
 
                 } else if (respWebhook.message == 'Subscription renewed with invoice.' || respWebhook.message == 'Payment failed for subscription, invoice.') {
                     // paid of failed invoice
+                    console.log('Subscription renewed with invoice. || Payment failed for subscription, invoice.')
                     updateSubscriptionData(dbSubscription, respWebhook.data);
                 }
 
-                return resp.status(200).end();
+                return resp.status(200).end(`data updated from ${respWebhook ? JSON.stringify(respWebhook) : 'missed data..'}`);
             }
         } catch (error) {
+            // console.log('error', error)
             console.log('error', error.message)
+            let errorJSON = JSON.stringify(error)
+            resp.status(200).end(`end while catch error: ${errorJSON}`);
         }
 
-        return resp.status(200).end();
+        return resp.status(200).end('default end');
     }
 )
 
@@ -607,7 +626,7 @@ const isEmailAlreadyExists = (email) => {
             return true
         })
         .catch((error) => {
-            console.log('Error fetching user data:', error);
+            // console.log('Error fetching user data:', error);
             return false
         });
 }
@@ -618,43 +637,61 @@ const isEmailAlreadyExists = (email) => {
 
 
 // AUTH users DELETE
-exports.deleteUser = functionsV1auth.user().onDelete((user) => {
-
+exports.deleteUser = functionsV1auth.user().onDelete(async (user) => {
     // DELETE a user data (all data) in database while delete user
 
+    const folder = `users/${user.uid}`;
+    const bucket = admin.storage().bucket();
 
+    async function deleteUserStorageFolder() {
+        // console.log(`Folder ${folder} delete initiated`);
+        await bucket.deleteFiles({ prefix: folder });
+        // console.log(`Folder ${folder}  deleted`);
+        return true
+    }
 
-    // delete subscription of user
-    const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS}${user.uid}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
-    dbCustomerIdRef.once('value')
-        .then(
-            (snapshot) => {
-                return snapshot.val()
-            }
-        ).then((data) => {
-            const dbsubscriptionIdRef = db.ref(`${process.env.APP_DB_SUBSCRIPTIONS_NEW}${data.subscriptionId}`);
-            return dbsubscriptionIdRef
-        }).then((dbsubscriptionIdRef) => {
+    async function deleteUserData() {
+        const getSubscriptionId = (userId) => {
+            const dbCustomerIdRef = db.ref(`${process.env.APP_DB_USERS}${userId}${process.env.APP_DB_PATH_TO_CUSTOMER_ID}`);
+            return dbCustomerIdRef.once('value')
+                .then((snapshot) => {
+                    return snapshot.val()
+                }).then((data) => {
+                    return data.subscriptionId;
+                }).catch((error) => {
+                    console.log(`ERROR while user ${userId} subscription data delete: `, error.message);
+                    return null
+                })
+        }
 
-            // clear subscription data 
-            dbsubscriptionIdRef.set(null)
+        const subscriptionId = await getSubscriptionId(user.uid);
 
-        }).catch((error) => {
-            console.log(`ERROR while user ${user.uid} delete: `, error.message);
-            return false
-        });
+        if (subscriptionId) {
+            // delete user subscription data 
+            const dbSubscriptions = db.ref(process.env.APP_DB_SUBSCRIPTIONS_NEW);
+            const dbsubscriptionIdRef = dbSubscriptions.child(subscriptionId);
+            dbsubscriptionIdRef.set(null);
 
-    //delete user data
-    let dbUsers = db.ref(`${process.env.APP_DB_USERS}`);
-    let userRef = dbUsers.child(user.uid);
-    userRef.set(null)
-        .then(() => {
-            return true;
-        })
-        .catch((error) => {
-            console.log(`ERROR while user ${user.uid} delete: `, error.message);
-            return false
-        });
+            //delete user profile data
+            const dbUsers = db.ref(`${process.env.APP_DB_USERS}`);
+            const userRef = dbUsers.child(user.uid);
+            userRef.set(null);
+
+            return true
+        } else {
+            throw new Error('no subscription id found');
+        }
+    }
+
+    await deleteUserStorageFolder().catch((err) => {
+        console.error(`Error occurred while deleting the folder: ${folder}`, err);
+        return false;
+    });
+
+    await deleteUserData().catch((error) => {
+        console.log(`Error occurred  while user ${user.uid} delete: `, error.message);
+        return false;
+    });
 })
 
 
