@@ -12,9 +12,7 @@ export default async function Post_Page({ params }) {
     const { slug } = await params;
 
 
-    const data = fetch(`${process.env.NEXT_PUBLIC_APP_DATABASE_BLOG_URL}/${slug}.json`, {
-        cache: 'force-cache',
-    })
+    const data = fetch(`${process.env.NEXT_PUBLIC_APP_DATABASE_BLOG_URL}/${slug}.json`, )
         .then((resp) => resp.json())
         .then((data) => data)
         .catch((error) => {

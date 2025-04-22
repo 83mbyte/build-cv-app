@@ -3,9 +3,8 @@ import { Suspense } from "react";
 
 export default async function Blog_Page() {
 
-    const data = fetch(`${process.env.NEXT_PUBLIC_APP_DATABASE_BLOG_URL}.json`, {
-        // cache: 'force-cache',
-        // next: { revalidate: 3600 }
+    const data = fetch(`${process.env.NEXT_PUBLIC_APP_DATABASE_BLOG_URL}.json`, { 
+    //    next: { revalidate: 3600 }
     })
         .then((resp) => resp.json())
         .then((data) => data)
