@@ -1,8 +1,9 @@
-import { Text, VStack, Heading, Box, Image } from '@chakra-ui/react';
-import { motion } from "motion/react";
-import imgSrc from '../../../../public/interview.png';
+import { Text, VStack, Heading, Box, Image, Button } from '@chakra-ui/react';
+import Link from 'next/link';
+import { motion } from "motion/react"; 
 import { indexData } from '@/lib/content-lib';
 import SectionContainer from '../SectionContainer';
+import { LuSparkles } from "react-icons/lu";
 
 
 const Interview = () => {
@@ -27,6 +28,9 @@ const Interview = () => {
                         indexData?.interview?.descr || `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Amet cum eligendi iure ipsum officiis. Earum exercitationem commodi culpa, temporibus blanditiis adipisci optio, ad architecto vero quidem animi dignissimos debitis voluptas!`
                     }
                 </Text>
+                <Link href='/toolkit/interview'>
+                    <Button variant={'surface'} colorPalette={'teal'} size={['xs', 'sm']} ><LuSparkles />Start Interview</Button>
+                </Link>
             </VStack>
 
             {/* Image for the Interview element section */}
