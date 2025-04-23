@@ -26,181 +26,174 @@ const AuthModal = lazy(() => import('../modalWindow/authModal/AuthModal'));
 const auth = getAuth(app);
 
 const EditorMainContainer = () => {
-  const [isLoadingUserData, setIsLoadingUserData] = useState(true);
-  const resumeAreaRef = useRef(null);
+    const [isLoadingUserData, setIsLoadingUserData] = useState(true);
+    const resumeAreaRef = useRef(null);
 
-  const modalBlockName = useSelector(state => state.editorSettings.showModal.blockName);
+    const modalBlockName = useSelector((state) => state.editorSettings.showModal.blockName);
 
-  const userLogged = useSelector(state => state.auth.data);
+    const userLogged = useSelector((state) => state.auth.data);
 
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  let selectedBot;
-  let modalTitle = 'Ai-powered assistant';
+    let selectedBot;
+    let modalTitle = 'Ai-powered assistant';
 
-  switch (modalBlockName) {
-    case 'resumeSummary':
-      selectedBot = <Suspense fallback={<FallbackSpinner />}>
-        <SummaryAI blockName={modalBlockName} />
-      </Suspense>
-      break;
-    case 'resumeSkills':
-      selectedBot = <Suspense fallback={<FallbackSpinner />}><SkillsAI /></Suspense>
-      break;
-    case 'resumeExperience':
-      selectedBot = <Suspense fallback={<FallbackSpinner />}><ExperienceAI /></Suspense>
-      break;
+    switch (modalBlockName) {
+        case 'resumeSummary':
+            selectedBot = (
+                <Suspense fallback={<FallbackSpinner />}>
+                    <SummaryAI blockName={modalBlockName} />
+                </Suspense>
+            );
+            break;
+        case 'resumeSkills':
+            selectedBot = (
+                <Suspense fallback={<FallbackSpinner />}>
+                    <SkillsAI />
+                </Suspense>
+            );
+            break;
+        case 'resumeExperience':
+            selectedBot = (
+                <Suspense fallback={<FallbackSpinner />}>
+                    <ExperienceAI />
+                </Suspense>
+            );
+            break;
 
-    default:
-      break;
-  }
-
-
-  const downloadFilePDF = async () => {
-
-    const htmlString = `<!DOCTYPE html><html lang="en"><body>${resumeAreaRef.current.innerHTML}</body></html>`;
-
-    const getStreamData = async (fileUrl) => {
-
-      let resumeFileName;
-      const fileRegex = /([resume]{6}\_(\d)+\.[pdf]{3})/g;
-
-      resumeFileName = fileUrl.match(fileRegex)[0];
-
-      const options = {
-        method: "POST",
-        body: JSON.stringify({ fileName: resumeFileName, userId: userLogged.userId, accessToken: userLogged.accessToken }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-      let response = await getDataFromFunctionsEndpoint('streamPDFtoClient', options);
-
-      if (!response || !response.ok) {
-        throw new Error(editorMainContainerData.errors.downloadError ?? 'lorem ipsum');
-      }
-      console.log('trying to create BLOB....')
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = resumeFileName; // file to download 
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      return true
+        default:
+            break;
     }
 
-    try {
+    const downloadFilePDF = async () => {
+        const htmlString = `<!DOCTYPE html><html lang="en"><body>${resumeAreaRef.current.innerHTML}</body></html>`;
 
-      const { currentPeriodEnd, currentTime, status } = userLogged.subscription;
-      let endSubscriptionTime = new Date(currentPeriodEnd).getTime();
+        const getStreamData = async (fileUrl) => {
+            let resumeFileName;
+            const fileRegex = /([resume]{6}\_(\d)+\.[pdf]{3})/g;
 
-      if ((endSubscriptionTime < currentTime || status == 'canceled' || status == 'unpaid')) {
-        throw new Error(editorMainContainerData.errors.subscriptionEnd ?? 'Lorem ipsum')
-      }
+            resumeFileName = fileUrl.match(fileRegex)[0];
 
-      const options = {
-        method: "POST",
-        body: JSON.stringify({ htmlString, userId: userLogged.userId, accessToken: userLogged.accessToken }), // use id and token of registered users
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const res = await getDataFromFunctionsEndpoint('createPDFfromTemplate', options);
+            const options = {
+                method: 'POST',
+                body: JSON.stringify({ fileName: resumeFileName, userId: userLogged.userId, accessToken: userLogged.accessToken }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            let response = await getDataFromFunctionsEndpoint('streamPDFtoClient', options);
 
-      if (!res) {
-        throw new Error('No server response');
-      }
+            if (!response || !response.ok) {
+                throw new Error(editorMainContainerData.errors.downloadError ?? 'lorem ipsum');
+            }
+            console.log('trying to create BLOB....');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = resumeFileName; // file to download
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            return true;
+        };
 
-      const data = await res.json();
-      if (data.status == 'Success') {
-        if (data.url) {
-          const isDownloadReady = await getStreamData(data.url);
-          if (isDownloadReady) {
+        try {
+            const { currentPeriodEnd, currentTime, status } = userLogged.subscription;
+            let endSubscriptionTime = new Date(currentPeriodEnd).getTime();
+
+            if (endSubscriptionTime < currentTime || status == 'canceled' || status == 'unpaid') {
+                throw new Error(editorMainContainerData.errors.subscriptionEnd ?? 'Lorem ipsum');
+            }
+
+            const options = {
+                method: 'POST',
+                body: JSON.stringify({ htmlString, userId: userLogged.userId, accessToken: userLogged.accessToken }), // use id and token of registered users
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            const res = await getDataFromFunctionsEndpoint('createPDFfromTemplate', options);
+
+            if (!res) {
+                throw new Error('No server response');
+            }
+
+            const data = await res.json();
+            if (data.status == 'Success') {
+                if (data.url) {
+                    const isDownloadReady = await getStreamData(data.url);
+                    if (isDownloadReady) {
+                        toaster.create({
+                            title: editorMainContainerData.toasts.success.title ?? 'Lorem ipsum',
+                            description: editorMainContainerData.toasts.success.description ?? 'Lorem ipsum',
+                            type: 'success',
+                            duration: 3000,
+                        });
+                    }
+                } else {
+                    throw new Error(editorMainContainerData.errors.pathOnServer ?? 'Lorem ipsum');
+                }
+            } else {
+                throw new Error(data?.message ? data.message : editorMainContainerData.errors.generatingPDF ?? 'Lorem ipsum');
+            }
+        } catch (error) {
+            // console.error(editorMainContainerData.errors.defaultDownloadError ?? 'Lorem ipsum', error);
             toaster.create({
-              title: editorMainContainerData.toasts.success.title ?? 'Lorem ipsum',
-              description: editorMainContainerData.toasts.success.description ?? 'Lorem ipsum',
-              type: 'success',
-              duration: 3000
-            })
-          }
-
-        } else {
-          throw new Error(editorMainContainerData.errors.pathOnServer ?? 'Lorem ipsum')
+                title: editorMainContainerData.toasts.error.title,
+                description: error?.message ? error.message : editorMainContainerData.errors.defaultDownloadError ?? 'Lorem ipsum',
+                type: 'error',
+                duration: 5000,
+            });
+        } finally {
+            return true;
         }
-      }
-      else {
-        throw new Error(data?.message ? data.message : editorMainContainerData.errors.generatingPDF ?? 'Lorem ipsum')
-      }
-    } catch (error) {
-      // console.error(editorMainContainerData.errors.defaultDownloadError ?? 'Lorem ipsum', error);
-      toaster.create({
-        title: editorMainContainerData.toasts.error.title,
-        description: error?.message ? error.message : editorMainContainerData.errors.defaultDownloadError ?? 'Lorem ipsum',
-        type: 'error',
-        duration: 5000
-      })
-    }
-    finally {
-      return true
-    }
-  }
+    };
 
+    useEffect(() => {
+        // manage userLogged state
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user && user.uid && user.accessToken) {
+                auth.currentUser.getIdTokenResult(user.accessToken).then((idTokenResult) => {
+                    dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, role: idTokenResult?.claims.admin ? 'admin' : 'user', fullName: user.displayName, subscription: {} }));
+                    dispatch(getSubscriptionDetailsThunk({ userId: user.uid, accessToken: user.accessToken }));
+                });
+            } else {
+                dispatch(setAuthUserData(null));
+            }
 
-  useEffect(() => {
-    // manage userLogged state
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsLoadingUserData(false);
+        });
 
-      if (user && user.uid && user.accessToken) {
+        return () => unsubscribe();
+    }, []);
 
-        auth.currentUser.getIdTokenResult(user.accessToken).then((idTokenResult) => {
+    return (
+        <>
+            {isLoadingUserData ? (
+                <FallbackSpinner margin='xl' />
+            ) : (
+                <>
+                    <HeaderContainer clickGetPDF={downloadFilePDF} />
+                    <Suspense fallback={<FallbackSpinner />}>
+                        <WhiteSheetContainer ref={resumeAreaRef} />
+                    </Suspense>
+                </>
+            )}
 
-          dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, role: idTokenResult?.claims.admin ? 'admin' : 'user', fullName: user.displayName, subscription: {} }));
-          dispatch(getSubscriptionDetailsThunk({ userId: user.uid, accessToken: user.accessToken, }))
-        })
+            {/* modal window of assistant */}
+            <ModalWindowBot title={modalTitle} size='lg'>
+                {selectedBot}
+            </ModalWindowBot>
 
-
-      } else {
-        dispatch(setAuthUserData(null));
-      }
-
-      setIsLoadingUserData(false);
-    })
-
-    return () => unsubscribe();
-  }, []);
-
-
-
-  return (
-    <>
-      {
-        isLoadingUserData
-          ? <FallbackSpinner margin='xl' />
-          : <>
-            <HeaderContainer clickGetPDF={downloadFilePDF} />
-            <Suspense fallback={<FallbackSpinner />} >
-              <WhiteSheetContainer ref={resumeAreaRef} />
+            {/* auth modal window */}
+            <Suspense fallback={<FallbackSpinner />}>
+                <AuthModal />
             </Suspense>
-          </>
-      }
-
-
-      {/* modal window of assistant */}
-      <ModalWindowBot title={modalTitle} size='lg'>
-        {selectedBot}
-      </ModalWindowBot>
-
-      {/* auth modal window */}
-      <Suspense fallback={<FallbackSpinner />}>
-        <AuthModal />
-      </Suspense>
-      <Toaster />
-    </>
-  );
+            <Toaster />
+        </>
+    );
 };
-
 
 export default EditorMainContainer;
