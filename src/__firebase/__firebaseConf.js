@@ -1,5 +1,6 @@
-import { getAnalytics } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
+import { getAnalytics } from 'firebase/analytics';
+import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,18 +13,22 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-// Initialize Analytics
-if (typeof window !== "undefined") {
-    //  AppCheck must be enabled to use the commented code below..
-    //
-    // if (process.env.NODE_ENV !== "development") {
-    // const appCheck = initializeAppCheck(app, {
-    //     provider: new ReCaptchaEnterpriseProvider(process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK),
-    //     isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
-    // });
-    // }
+// Initialize Analytics and AppCheck
+let appCheck;
+if (typeof window !== 'undefined') {
+
+    if (process.env.NODE_ENV === 'development') {
+        self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK;
+        // self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    }
+    appCheck = initializeAppCheck(app, {
+        provider: new ReCaptchaEnterpriseProvider(process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK),
+        isTokenAutoRefreshEnabled: true, // Set to true to allow auto-refresh.
+    });
 
     const analytics = getAnalytics(app);
 }
+
+export { appCheck, app };
