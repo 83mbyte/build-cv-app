@@ -56,4 +56,4 @@ next-env.d.ts
 # custom
 src/lib/content-lib.js
 ui-debug.log
-
+.vscode
