@@ -57,3 +57,5 @@ next-env.d.ts
 src/lib/content-lib.js
 ui-debug.log
 .vscode
+src/app/sitemap.xml
+src/app/robots.txt
