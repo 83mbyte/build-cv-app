@@ -81,7 +81,8 @@ exports.generateData = onRequest(
                 return resp.status(401).json({ error: 'Unauthorized: No token', code: 401, status: 'Error' });
             }
             try {
-                const claims = await getAppCheck().verifyToken(appCheckToken, { consume: !isEmulator });
+                // const claims = await getAppCheck().verifyToken(appCheckToken, { consume: !isEmulator });
+                const claims = await getAppCheck().verifyToken(appCheckToken);
                 // console.log('valid token')
             } catch (error) {
                 if (isEmulator) {
@@ -436,11 +437,6 @@ exports.subscriptionWebhook = onRequest(
         }
 
         try {
-            // TODO
-            // TODO
-            // TODO   remove console.log() when debugging end
-            // TODO   remove console.log() when debugging end
-            // TODO
 
             const payloadBody = req.rawBody;
             const sig = req.headers['stripe-signature'];
@@ -450,7 +446,7 @@ exports.subscriptionWebhook = onRequest(
             const dbSubscription = db.ref(process.env.APP_DB_SUBSCRIPTIONS_NEW);
 
             let respWebhook = await stripeAPI.webhookEventCheck(stripeKey, endpointSecret, sig, payloadBody);
-            console.log('respWebhook::: ', respWebhook);
+
             if (respWebhook && respWebhook.status == 'Default_Return') {
                 return resp.status(200).end();
             }
@@ -459,35 +455,35 @@ exports.subscriptionWebhook = onRequest(
             } else {
                 if (respWebhook.message == 'Subscription created') {
                     // create subscription
-                    console.log('Subscription created');
+                    // console.log('Subscription created');
 
                     updateSubscriptionData(dbSubscription, respWebhook.data);
                 } else if (respWebhook.message == 'Subscription canceled immediately') {
                     // immediately canceled subscription
-                    console.log('Subscription canceled immediately');
+                    // console.log('Subscription canceled immediately');
 
                     updateSubscriptionData(dbSubscription, respWebhook.data);
                 } else if (respWebhook.message == 'Subscription scheduled for cancellation') {
                     // Subscription scheduled for cancellation
-                    console.log('Subscription scheduled for cancellation');
+                    // console.log('Subscription scheduled for cancellation');
 
                     updateSubscriptionData(dbSubscription, respWebhook.data);
                 } else if (respWebhook.message == 'Subscription active or resumed') {
                     // Subscription activated or resumed
-                    console.log('Subscription active or resumed');
+                    // console.log('Subscription active or resumed');
 
                     updateSubscriptionData(dbSubscription, respWebhook.data);
                 } else if (respWebhook.message == 'Subscription renewed with invoice.' || respWebhook.message == 'Payment failed for subscription, invoice.') {
                     // paid of failed invoice
-                    console.log('Subscription renewed with invoice. || Payment failed for subscription, invoice.');
+                    // console.log('Subscription renewed with invoice. || Payment failed for subscription, invoice.');
                     updateSubscriptionData(dbSubscription, respWebhook.data);
                 }
 
-                return resp.status(200).end(`data updated from ${respWebhook ? JSON.stringify(respWebhook) : 'missed data..'}`);
+                return resp.status(200).end(`${respWebhook ? JSON.stringify(respWebhook) : 'missed data..'}`);
             }
         } catch (error) {
             // console.log('error', error)
-            console.log('error', error.message);
+            // console.log('error', error.message);
             let errorJSON = JSON.stringify(error);
             resp.status(200).end(`end while catch error: ${errorJSON}`);
         }
