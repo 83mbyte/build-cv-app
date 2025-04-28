@@ -70,7 +70,7 @@ module.exports = {
                         cancelAt: null,
                         currentPeriodEnd: null,
                     };
-                    console.log(`Subscription ${subscriptionId} canceled immediately`);
+                    // console.log(`Subscription ${subscriptionId} canceled immediately`);
 
                     return ({ success: true, message: 'Subscription canceled immediately', data });
                 }
@@ -84,7 +84,7 @@ module.exports = {
                         cancelAt: cancelAt ? new Date(cancelAt * 1000).toString() : null,
                         currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000).toString(),
                     }
-                    console.log(`Subscription ${subscriptionId} scheduled for cancellation`);
+                    // console.log(`Subscription ${subscriptionId} scheduled for cancellation`);
                     return ({ success: true, message: 'Subscription scheduled for cancellation', data });
                     break;
                 } else if (!cancelAtPeriodEnd && !canceledAt) {
@@ -97,7 +97,7 @@ module.exports = {
                         cancelAt: null,
                         currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000).toString(),
                     };
-                    console.log(`Subscription ${subscriptionId} active or resumed`);
+                    // console.log(`Subscription ${subscriptionId} active or resumed`);
                     return ({ success: true, message: 'Subscription active or resumed', data })
                     break;
                 }
@@ -112,7 +112,7 @@ module.exports = {
                     status: 'active', // We assume that the subscription is active after successful payment.
                     currentPeriodEnd: new Date(currentPeriodEndAsNumber * 1000).toString(),
                 };
-                console.log(`Subscription ${subscriptionIdFromInvoice} renewed with invoice ${invoice.id}`);
+                // console.log(`Subscription ${subscriptionIdFromInvoice} renewed with invoice ${invoice.id}`);
                 return ({ success: true, message: `Subscription renewed with invoice.`, data: dataToReturn })
                 break;
 
@@ -144,14 +144,14 @@ module.exports = {
                         status: subscription.status, //can be as 'past_due', 'unpaid', 'canceled'
                         currentPeriodEnd: periodEnd,
                     };
-                    console.log(`Payment failed for subscription ${failedSubscriptionId}, invoice ${failedInvoice.id}`);
+                    // console.log(`Payment failed for subscription ${failedSubscriptionId}, invoice ${failedInvoice.id}`);
                     return ({ success: true, message: `Payment failed for subscription, invoice.`, data })
                 }
                 break;
 
 
             default:
-                console.log(`Unhandled event: ${event.type}`);
+                // console.log(`Unhandled event: ${event.type}`);
                 return ({ status: 'Default_Return', message: 'default return..' })
         }
 
