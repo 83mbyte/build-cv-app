@@ -24,10 +24,20 @@ const HeaderContainer = ({ clickGetPDF }) => {
                     flexDir={{ base: 'column', sm: 'column', md: 'row', lg: 'row' }}
 
                     alignItems={'center'}>
-                    <Box>
+                    <Box w='full' display={'flex'} flexDirection={'row'} justifyContent={['space-around', 'space-around', 'space-between']} columnGap={[0, '4', '5']} alignItems={'center'}>
                         <Text fontSize={['sm', 'lg']}><Link href={'/'}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Link></Text>
+
+                        {/* user profile button */}
+                        {
+                            userLogged &&
+                            <Box>
+                                <Suspense fallback={<FallbackSpinner size='sm' margin='xs' />}>
+                                    <HeaderUserMenu />
+                                </Suspense>
+                            </Box>
+                        }
                     </Box>
-                    <Box display={'flex'} backgroundColor={''} flex={1} justifyContent={'flex-end'} flexDirection={'row'} columnGap={[0, '4', 5]} alignItems={'center'}>
+                    <Box display={'flex'} backgroundColor={''} flex={1} justifyContent={'flex-end'} flexDirection={'row'} columnGap={[0, '4', '5']} alignItems={'center'}>
                         {/* fonts menu */}
                         <HeaderFontsMenu />
 
@@ -40,16 +50,8 @@ const HeaderContainer = ({ clickGetPDF }) => {
                         {/* Download button */}
                         <HeaderDownloadButton clickGetPDF={clickGetPDF} userLogged={userLogged} />
 
-                        {/* user profile button */}
-                        {
-                            userLogged &&
-                            <Box><Suspense fallback={<FallbackSpinner size='sm' margin='xs' />}>
-                                <HeaderUserMenu />
-                            </Suspense>
-                            </Box>
-                        }
-
                     </Box>
+
                 </Stack>
             </Box >
         </Box >
