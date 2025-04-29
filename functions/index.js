@@ -375,9 +375,17 @@ exports.createSubscriptionIntent = onRequest(
                     if (newUserId) {
                         await createDBforNewUser(newUserId, email, result.subscription.id, result.subscription.customer);
                     }
-                    resp.status(200).json({ success: true, subscription: { status: 'active' } });
+                    resp.status(200).json({
+                        success: true,
+                        subscription: {
+                            status: 'active',
+                            id: result.subscription.id,
+                            amount: (result.subscription.items.data[0].plan.amount) / 100 || null
+                        }
+                    });
+
                 } else if (result.success == true && result.subscription.status == 'incomplete') {
-                    resp.status(200).json({ success: true, subscription: { status: 'incomplete' } });
+                    resp.status(200).json({ success: true, subscription: { status: 'incomplete', id: result.subscription.id } });
                 } else {
                     throw new Error(result.error);
                 }

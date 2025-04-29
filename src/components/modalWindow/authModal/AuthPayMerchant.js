@@ -167,6 +167,17 @@ const PaymentForm = ({ clientSecret, changeFormHandler, closeWindow }) => {
                             description: authData?.merchant.toasts.success ?? 'Lorem ipsum',
                             duration: 4000,
                         });
+                        //  Google Ads
+                        //  Google Ads conversion success code
+                        if (typeof window.gtag === 'function') {
+                            window.gtag('event', 'conversion', {
+                                'send_to': process.env.NEXT_PUBLIC_ADS_CONVERSION,
+                                'transaction_id': result.subscription.id || '', // subscription id
+                                'value': result.subscription.amount || process.env.SUBSCRIPTION_PRICE_USD, // subscription price
+                                'currency': 'USD', // currency
+                            });
+                        }
+                        //  Google Ads tag end 
                         let loginResult = await authAPI.login(email, password);
 
                         if (loginResult && loginResult.status != 'Success') {

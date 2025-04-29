@@ -35,10 +35,11 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning={true}>
       <body>
         {children}
+        {
+          (process.env.NODE_ENV !== "development" && process.env.NEXT_PUBLIC_GOOGLE_GTM) && <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_GTM} />
+        }
       </body>
-      {
-        process.env.NODE_ENV !== "development" && <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_GTM} />
-      }
+
     </html>
 
   );
