@@ -3,6 +3,8 @@ import "./globals.css";
 import '@stripe/stripe-js';
 import { GoogleTagManager } from "@next/third-parties/google";
 import { indexData } from "@/lib/content-lib";
+import CookieConsentBanner from "@/components/consentBanner/CookieConsentBanner";
+import Script from "next/script";
 
 
 const APP_TITLE = process.env.NEXT_PUBLIC_APP_NAME;
@@ -33,8 +35,27 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
+      <head>
+        <Script id="consent-mode" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('consent', 'default', {
+              'ad_storage': 'denied',
+              'analytics_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied',
+              'wait_for_update': 500
+            });
+            dataLayer.push({'gtm.start': new Date().getTime(), 'event': 'gtm.js'});
+          `}
+        </Script>
+      </head>
       <body>
+
         {children}
+        {/* Consest banner */}
+        <CookieConsentBanner />
         {
           (process.env.NODE_ENV !== "development" && process.env.NEXT_PUBLIC_GOOGLE_GTM) && <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_GTM} />
         }
