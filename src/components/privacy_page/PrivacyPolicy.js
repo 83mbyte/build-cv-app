@@ -45,8 +45,8 @@ const PrivacyPolicy = () => {
             <ul>
                 <li><strong>Service Providers</strong>:
                     <ul>
-                        <li><strong>Stripe</strong>: To process payments securely. Stripe's Privacy Policy applies to their data processing (<Link href="https://stripe.com/privacy" target="_blank">https://stripe.com/privacy</Link>).</li>
-                        <li><strong>Google</strong>: For analytics (Google Analytics) and advertising (Google Ads, Google Tag Manager). Google's Privacy Policy applies (<Link href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</Link>).</li>
+                        <li><strong>Stripe</strong>: To process payments securely. Stripe&#39;s Privacy Policy applies to their data processing (<Link href="https://stripe.com/privacy" target="_blank">https://stripe.com/privacy</Link>).</li>
+                        <li><strong>Google</strong>: For analytics (Google Analytics) and advertising (Google Ads, Google Tag Manager). Google&#39;s Privacy Policy applies (<Link href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</Link>).</li>
                     </ul>
                 </li>
                 <li><strong>Legal Requirements</strong>: If required by law, we may disclose your information to comply with legal processes or protect our rights.</li>
@@ -59,12 +59,12 @@ const PrivacyPolicy = () => {
                 <li>Decline non-essential cookies.</li>
                 <li>Customize your preferences for analytics, advertising, and personalized ads.</li>
             </ul>
-            <p>You can change your cookie preferences at any time by [revisiting the consent banner or contacting us]. We use Google's Consent Mode to ensure that data collection respects your preferences. By default, we disable cookies for analytics and advertising until you provide consent.</p>
+            <p>You can change your cookie preferences at any time by [revisiting the consent banner or contacting us]. We use Google&#39;s Consent Mode to ensure that data collection respects your preferences. By default, we disable cookies for analytics and advertising until you provide consent.</p>
 
             <h2>5. Data Storage and Security</h2>
             <ul>
                 <li><strong>Storage</strong>: Personal information (e.g., email, name) is stored securely on our servers. Payment data is processed and stored by Stripe. Analytics and advertising data may be stored by Google.</li>
-                <li><strong>Retention</strong>: We retain your personal information for as long as your account is active or as needed to provide services. Analytics data is retained according to Google's policies.</li>
+                <li><strong>Retention</strong>: We retain your personal information for as long as your account is active or as needed to provide services. Analytics data is retained according to Google&#39;s policies.</li>
                 <li><strong>Security</strong>: We use industry-standard measures (e.g., encryption, secure servers) to protect your data. However, no method of transmission over the internet is 100% secure.</li>
             </ul>
 
@@ -85,11 +85,11 @@ const PrivacyPolicy = () => {
             <h2>8. Third-Party Links</h2>
             <p>Our website may contain links to third-party sites (e.g., Stripe, Google). We are not responsible for the privacy practices of these sites. Please review their privacy policies.</p>
 
-            <h2>9. Children's Privacy</h2>
+            <h2>9. Children&#39;s Privacy</h2>
             <p>Our services are not intended for individuals under 16. We do not knowingly collect personal information from children. If you believe we have collected such information, contact us to have it removed.</p>
 
             <h2>10. Changes to This Privacy Policy</h2>
-            <p>We may update this Privacy Policy to reflect changes in our practices or legal requirements. We will notify you of significant changes by posting the updated policy on our website with a new "Last Updated" date.</p>
+            <p>We may update this Privacy Policy to reflect changes in our practices or legal requirements. We will notify you of significant changes by posting the updated policy on our website with a new &#34;Last Updated&#34; date.</p>
 
             <h2>11. Contact Us</h2>
             <p>If you have questions or concerns about this Privacy Policy, please contact us at:</p>
