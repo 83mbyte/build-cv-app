@@ -1,14 +1,14 @@
 import { Suspense, lazy } from 'react';
-import { Box, Stack, Text, } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 
+import HeaderLogoLink from '@/components/index_page/headerLogo/HeaderLogoLink';
 import HeaderFontsMenu from './HeaderFontsMenu';
 import HeaderThemeMenu from './HeaderThemeMenu';
 import HeaderLayoutMenu from './HeaderLayoutMenu';
 import HeaderDownloadButton from './HeaderDownloadButton';
 
 import FallbackSpinner from '../FallbackSpinner';
-import Link from 'next/link';
 const HeaderUserMenu = lazy(() => import('./HeaderUserMenu'));
 
 const HeaderContainer = ({ clickGetPDF }) => {
@@ -25,7 +25,7 @@ const HeaderContainer = ({ clickGetPDF }) => {
 
                     alignItems={'center'}>
                     <Box w='full' display={'flex'} flexDirection={'row'} justifyContent={['space-around', 'space-around', 'space-between']} columnGap={[0, '4', '5']} alignItems={'center'}>
-                        <Text fontSize={['sm', 'lg']}><Link href={'/'}>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Link></Text>
+                        <HeaderLogoLink />
 
                         {/* user profile button */}
                         {

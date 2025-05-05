@@ -55,7 +55,7 @@ const HeaderUserMenu = () => {
             dispatch(setIsHeaderMenuOpen({ menu: 'userMenu', value: e.open }))
         }}>
             <PopoverTrigger asChild bg='' marginRight={[0, '4']}>
-                <Icon size={['md', 'lg']} _hover={{ opacity: 0.5, cursor: 'pointer' }} color='white' animation={'ping'} animationIterationCount={1} animationDirection={'reverse'}>
+                <Icon size={['sm', 'lg']} _hover={{ opacity: 0.5, cursor: 'pointer' }} color='white' animation={'ping'} animationIterationCount={1} animationDirection={'reverse'} bg='' mt={'-1'}>
                     <LuCircleUserRound />
                 </Icon>
             </PopoverTrigger>
