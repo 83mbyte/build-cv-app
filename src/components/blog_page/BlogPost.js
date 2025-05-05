@@ -33,7 +33,7 @@ const BlogPost = ({ post }) => {
                 height="200px"
                 fit='cover' /> */}
 
-                    <Card.Body gap='2'>
+                    <Card.Body gap='2' px={[2, 6]}>
                         <Avatar.Root size='2xl' shape='rounded'>
                             <Avatar.Image src={`https://picsum.photos/id/${imageId}/100?blur`} />
                             <Avatar.Fallback name='Nue Camp' />
@@ -45,7 +45,7 @@ const BlogPost = ({ post }) => {
 
                         {data.text &&
                             data.text.split(reg).map((text, ind) => {
-                                return <Card.Description key={ind}> {text}</Card.Description>;
+                                return <Card.Description key={ind} fontSize={['sm', 'md']} >{text}</Card.Description>;
                             })}
                     </Card.Body>
 

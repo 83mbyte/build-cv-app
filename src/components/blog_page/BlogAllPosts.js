@@ -37,7 +37,7 @@ const BlogCard = ({ data, index }) => {
                 height="200px"
                 fit='cover' /> */}
 
-            <Card.Body gap='2'>
+            <Card.Body gap='2' px={[2, 6]}>
                 <Avatar.Root size='2xl' shape='rounded'>
                     <Avatar.Image src={`https://picsum.photos/id/${randomImageId}/100?blur`} />
                     <Avatar.Fallback name={`${randomImageId}_image`} />
@@ -45,7 +45,7 @@ const BlogCard = ({ data, index }) => {
                 <Card.Title mt='2' textAlign={'center'} fontSize={['xl', '3xl']} my={3}>
                     <Link href={{ pathname: `/blog/post/${data.slug}`, query: { imageId: randomImageId } }}>{data.title}</Link>
                 </Card.Title>
-                <Text lineClamp={'3'}>{data.text}</Text>
+                <Text lineClamp={'3'} fontSize={['sm', 'md']}>{data.text}</Text>
             </Card.Body>
             <Card.Footer justifyContent='space-between'>
                 <Box fontSize={['xs', 'sm']}>{new Date(data.id).toDateString()}</Box>
