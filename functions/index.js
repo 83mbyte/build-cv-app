@@ -229,7 +229,7 @@ exports.blogPublish = onRequest(
             }
 
             // create and save data of the blog article to db
-            const slugAsId = slugify(title, { lower: true });
+            const slugAsId = slugify(title, { lower: true, remove: /[*+~.()'"!:@]/g });
             const id = Date.now();
             const dbBlog = db.ref(`${process.env.APP_DB_BLOG}${slugAsId}`);
             dbBlog.set(
