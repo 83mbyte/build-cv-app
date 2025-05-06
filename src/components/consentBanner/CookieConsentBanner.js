@@ -156,9 +156,9 @@ const CookieConsentBanner = () => {
                                         // <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: 0.3 } }} key={'mainTab'}>
                                         <>
                                             <p>
-                                                {consentBannerData.mainText || 'We use cookies and similar technologies to enhance your experience, analyze site performance, and provide personalized ads. You can manage your preferences or accept all cookies to continue.'}
+                                                {consentBannerData.mainText || 'We use cookies and similar technologies to enhance your experience, analyze site performance, and provide personalized ads. You can manage your preferences or accept all cookies to continue. Visit our '}
                                                 <Link href="/privacy-policy" target='_blank'>
-                                                    {consentBannerData.learnMore || `Learn more`}
+                                                    {consentBannerData.learnMore || `privacy policy page`}
                                                 </Link >
                                             </p>
                                             <div className={styles.buttons}>
