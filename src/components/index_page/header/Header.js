@@ -4,7 +4,13 @@ import HeaderNavygation from './HeaderNavygation';
 import HeaderText from './HeaderText';
 import HeaderButtonToEditor from './HeaderButtonToEditor';
 import { Image, Box } from '@chakra-ui/react';
+import NextImage from 'next/image';
 import { motion } from 'motion/react';
+
+import welcomeImg from '@/components/assets/images/welcome.webp'
+import template0 from '@/components/assets/images/template0.webp'
+import template1 from '@/components/assets/images/template1.webp'
+import template2 from '@/components/assets/images/template2.webp'
 
 const Header = () => {
 
@@ -20,9 +26,15 @@ const Header = () => {
                     h={['125px', '250px']}
                     mb={['-40px', '-30px']}
                     fit={'contain'}
-                    src={`./${process.env.NEXT_PUBLIC_APP_INDEX_TOP_IMG}`}
-                    alt='header section img'
-                />
+                    w='auto'
+                    asChild
+                >
+                    <NextImage
+                        priority={true}
+                        src={welcomeImg}
+                        alt='header section img'
+                    />
+                </Image>
             </motion.div>
             <AnimateResumeImages />
         </SectionContainer >
@@ -34,9 +46,9 @@ export default Header;
 
 const AnimateResumeImages = () => {
     const imgArr = [
-        { left: '80px', deg: '-15deg', delay: 0.1, src: './template0.webp' },
-        { left: '125px', deg: '0deg', delay: 0.15, src: './template1.webp' },
-        { left: '1270px', deg: '15deg', delay: 0.2, src: './template2.webp' },
+        { left: '80px', deg: '-15deg', delay: 0.1, src: template0 },
+        { left: '125px', deg: '0deg', delay: 0.15, src: template1 },
+        { left: '1270px', deg: '15deg', delay: 0.2, src: template2 },
     ];
     return (
         <Box
@@ -56,16 +68,20 @@ const AnimateResumeImages = () => {
                                 viewport={{ once: true }}
                                 initial={{ opacity: 0, }} whileInView={{ opacity: 1, transform: `rotate(${image.deg})`, transition: { transform: { type: 'spring', delay: image.delay, mass: 2, stiffness: 100, } } }}
                             >
-                                <Image
-                                    h={['190px', '469px']}
-                                    mb={['-5', '-100']}
-                                    fit={'contain'}
-                                    src={image.src}
-                                    alt={`resume${index}`}
+                                <Image asChild
                                     border={'1px solid #dedede'}
                                     borderRadius={'lg'}
-
-                                />
+                                    height={['190px', '469px']}
+                                    mb={['-5', '-100']}
+                                    fit={'contain'}
+                                    w='auto'
+                                >
+                                    <NextImage
+                                        src={image.src}
+                                        alt={`resume${index}`}
+                                        priority={index == 2 ? true : false}
+                                    />
+                                </Image>
                             </motion.div>
                         )
                     })

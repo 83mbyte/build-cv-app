@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { Text, VStack, Heading, Image, Button } from '@chakra-ui/react';
 import { motion } from "motion/react";
+import NextImage from 'next/image';
 
 import { indexData } from '@/lib/content-lib';
 import SectionContainer from '../SectionContainer';
 import { LuSparkles } from "react-icons/lu";
+import coverImg from '@/components/assets/images/WelcomeCoverImg.webp';
 
 const CoverLetter = () => {
     return (
@@ -34,13 +36,17 @@ const CoverLetter = () => {
                 </Link>
             </VStack>
 
-            <Image
+            <Image asChild
                 h={['125px', '250px']}
+                w='auto'
                 mb={['-5', '-10']}
                 fit={'contain'}
-                src={`./${process.env.NEXT_PUBLIC_APP_COVER_IMG}`}
-                alt='interview section img'
-            />
+            >
+                <NextImage
+                    src={coverImg}
+                    alt='cover-letter section img'
+                />
+            </Image>
         </SectionContainer>
     );
 };

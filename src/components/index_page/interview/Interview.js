@@ -1,10 +1,12 @@
 import { Text, VStack, Heading, Box, Image, Button } from '@chakra-ui/react';
+import NextImage from 'next/image';
 import Link from 'next/link';
-import { motion } from "motion/react"; 
+import { motion } from "motion/react";
+
 import { indexData } from '@/lib/content-lib';
 import SectionContainer from '../SectionContainer';
 import { LuSparkles } from "react-icons/lu";
-
+import interviewImg from '@/components/assets/images/interview.webp';
 
 const Interview = () => {
     return (
@@ -35,13 +37,17 @@ const Interview = () => {
 
             {/* Image for the Interview element section */}
 
-            <Image
+            <Image asChild
                 h={['125px', '250px']}
+                w='auto'
                 mb={['-5', '-10']}
                 fit={'contain'}
-                src={`./${process.env.NEXT_PUBLIC_APP_INTERVIEW_IMG}`}
-                alt='interview section img'
-            />
+            >
+                <NextImage
+                    alt='interview section img'
+                    src={interviewImg}
+                />
+            </Image>
 
         </SectionContainer>
     );
