@@ -42,9 +42,9 @@ const Interview = () => {
                 w='auto'
                 mb={['-5', '-10']}
                 fit={'contain'}
+                alt='interview section img'
             >
                 <NextImage
-                    alt='interview section img'
                     src={interviewImg}
                 />
             </Image>

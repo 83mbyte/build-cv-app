@@ -27,12 +27,12 @@ const Header = () => {
                     mb={['-40px', '-30px']}
                     fit={'contain'}
                     w='auto'
+                    alt='header section img'
                     asChild
                 >
                     <NextImage
                         priority={true}
                         src={welcomeImg}
-                        alt='header section img'
                     />
                 </Image>
             </motion.div>
@@ -75,10 +75,10 @@ const AnimateResumeImages = () => {
                                     mb={['-5', '-100']}
                                     fit={'contain'}
                                     w='auto'
+                                    alt={`resume${index}`}
                                 >
                                     <NextImage
                                         src={image.src}
-                                        alt={`resume${index}`}
                                         priority={index == 2 ? true : false}
                                     />
                                 </Image>

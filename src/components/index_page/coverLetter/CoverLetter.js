@@ -41,10 +41,11 @@ const CoverLetter = () => {
                 w='auto'
                 mb={['-5', '-10']}
                 fit={'contain'}
+                alt='cover-letter section img'
             >
                 <NextImage
                     src={coverImg}
-                    alt='cover-letter section img'
+
                 />
             </Image>
         </SectionContainer>
