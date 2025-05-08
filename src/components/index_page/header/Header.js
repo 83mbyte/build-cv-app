@@ -34,9 +34,9 @@ export default Header;
 
 const AnimateResumeImages = () => {
     const imgArr = [
-        { left: '80px', deg: '-15deg', delay: 0.1, src: './template0.png' },
-        { left: '125px', deg: '0deg', delay: 0.15, src: './template1.png' },
-        { left: '1270px', deg: '15deg', delay: 0.2, src: './template2.png' },
+        { left: '80px', deg: '-15deg', delay: 0.1, src: './template0.webp' },
+        { left: '125px', deg: '0deg', delay: 0.15, src: './template1.webp' },
+        { left: '1270px', deg: '15deg', delay: 0.2, src: './template2.webp' },
     ];
     return (
         <Box

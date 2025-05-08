@@ -1,9 +1,8 @@
 const { PROMPTS } = require("./promptsByRoles");  // custom prompts to use with GPT-model
 
 const GPT_MODELS = {
-    default: 'gpt-4o-mini',
-    gpt_4: 'gpt-4-turbo',
-    gpt_4o: 'gpt-4o',
+    default: 'gpt-4.1-nano',
+    gpt_4_1: 'gpt-4.1',
     gpt_4o_mini: 'gpt-4o-mini',
     audio: 'gpt-4o-audio-preview',
 
