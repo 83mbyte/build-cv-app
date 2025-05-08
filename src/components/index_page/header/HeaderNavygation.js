@@ -5,11 +5,11 @@ import { indexData } from '@/lib/content-lib';
 
 const HeaderNavygation = () => {
     return (
-        <Stack direction={['column', 'row']} w='full' justifyContent={'space-between'} gap={[0, 1]} marginTop={0} alignItems={'center'}>
+        <Stack direction={['column', 'row']} w='full' justifyContent={'space-between'} gap={[8, 1]} marginTop={0} alignItems={'center'}>
             <Box bg='' fontWeight={'bold'}>{process.env.NEXT_PUBLIC_APP_NAME}</Box>
-            <HStack gap={1} bg=''>
+            <HStack gap={2} bg=''>
                 <Link href='/blog' prefetch={true}>
-                    <Button variant={'plain'} size={['2xs', 'sm']} paddingX={'2'} justifyContent={'center'} gap={1}
+                    <Button variant={'plain'} size={'sm'} paddingX={'2'} justifyContent={'center'} gap={1}
                         _hover={{ opacity: 0.75 }}
                         aria-label='news button'
                     >
@@ -19,7 +19,7 @@ const HeaderNavygation = () => {
                 <Separator orientation="vertical" size='sm' height={'4'} />
 
                 <Link href='/login' prefetch={true}>
-                    <Button variant={'plain'} size={['2xs', 'sm']} paddingX={'2'} justifyContent={'center'} gap={1}
+                    <Button variant={'plain'} size={'sm'} paddingX={'2'} justifyContent={'center'} gap={1}
                         _hover={{ opacity: 0.75 }}
                         aria-label='signin button'
                     > Login <LuLogIn />

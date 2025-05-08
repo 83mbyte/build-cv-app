@@ -17,7 +17,7 @@ const Interview = () => {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.75 }}
                     whileInView={{ opacity: 1, scale: 1, transition: { duration: 0.8, delay: 0.2 } }}
-                // viewport={{ once: true }}
+                    viewport={{ once: true }}
                 >
                     <Heading as='h2' textAlign={'center'} bg='' size={['xl', '3xl']} mx={'auto'} >
                         {

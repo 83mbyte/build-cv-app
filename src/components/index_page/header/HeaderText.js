@@ -10,7 +10,8 @@ const HeaderText = () => {
             <Text textAlign={'center'} fontSize={['sm', 'md']} >{indexData?.top?.topheading || `Lorem, ipsum dolor.`}</Text>
             <motion.div
                 initial={{ opacity: 0, translateY: -100 }}
-                whileInView={{ opacity: 1, translateY: 0, transition: { duration: 0.8 } }}
+                whileInView={{ opacity: 1, translateY: 0, transition: { duration: 0.8 }, }}
+                viewport={{ once: true }}
             >
                 <Heading as='h1' size={['3xl', '4xl']} textAlign={'center'} bg='' maxWidth={'xl'}>
                     {indexData?.top?.heading[0] || `Lorem ipsum dolor sit`} <Highlight query={indexData?.top?.highlight || 'lorem'} styles={{ px: '0.5', pt: '0', pb: '0.5', bg: 'rgba(250,250,137,0.8)', }}>{indexData?.top?.highlight || 'lorem'}</Highlight> {indexData?.top?.heading[1] || ` psum dolor sit amet.`}

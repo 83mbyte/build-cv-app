@@ -79,7 +79,7 @@ const AnimateResumeImages = () => {
                                 >
                                     <NextImage
                                         src={image.src}
-                                        priority={index == 2 ? true : false}
+                                        priority={true}
                                     />
                                 </Image>
                             </motion.div>
