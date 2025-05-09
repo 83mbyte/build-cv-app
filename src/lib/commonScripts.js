@@ -31,11 +31,12 @@ export const formatText = (stringToFormat, type = 'null') => {
 
 export const getDataFromFunctionsEndpoint = async (endPoint, options) => {
     // const token = (await getLimitedUseToken(appCheck)).token;
-    const token = (await getToken(appCheck)).token;
-    const optionsEnhanced = { ...options, headers: { ...options.headers, 'X-Firebase-AppCheck': token } };
 
     let resp = null;
     try {
+        const token = (await getToken(appCheck)).token;
+        const optionsEnhanced = { ...options, headers: { ...options.headers, 'X-Firebase-AppCheck': token } };
+
         if (process.env.NODE_ENV == 'development') {
             resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/${endPoint}`, optionsEnhanced);
         } else {
