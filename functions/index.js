@@ -634,6 +634,101 @@ const isEmailAlreadyExists = (email) => {
         });
 };
 
+// CONTROL-CENTER
+exports.controlCenterActions = onRequest(
+    {
+        cors: true,
+        // cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+        // secrets: ['STRIPE_SECRET'],
+    },
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request' });
+        }
+
+        // Token verify
+        const isEmulator = process.env.FUNCTIONS_EMULATOR === 'true';
+
+        const appCheckToken = req.header('X-Firebase-AppCheck');
+
+        if (!appCheckToken) {
+            return resp.status(401).json({ error: 'Unauthorized: No token', code: 401, status: 'Error' });
+        }
+        try {
+            // const claims = await getAppCheck().verifyToken(appCheckToken, { consume: !isEmulator });
+            const claims = await getAppCheck().verifyToken(appCheckToken);
+            // console.log('valid token')
+        } catch (error) {
+            if (isEmulator) {
+                console.error('Error while token validation:', error);
+            }
+            return resp.status(401).json({ error: 'Unauthorized: Invalid token', code: 401, status: 'Error' });
+        }
+
+        // If token is valid..
+
+        //  TODO   defined functions  to work with control center
+        //  TODO   defined functions  to work with control center
+        if (req.body) {
+            let { accessToken, variant } = req.body;
+
+            let result;
+            switch (variant) {
+                case 'getUsersList':
+
+                    let usersArray = [];
+                    result = await getAuth().listUsers()
+                        .then((listUsersResult) => {
+
+                            listUsersResult.users
+                                .forEach((userRecord) => {
+                                    const dataToShow = {
+                                        email: userRecord.email,
+                                        creationTime: userRecord.metadata.creationTime
+                                    }
+                                    usersArray.push(dataToShow);
+                                })
+                            return usersArray;
+                        })
+                        .then((usersArray) => {
+                            return { status: 'Success', success: true, data: usersArray };
+                        })
+                        .catch((error) => {
+                            console.log('Error listing users:', error);
+                            return { status: 'Error', success: false, error: error.message };
+                        });
+
+                    // return resp.status(200).json({ status: 'Success', success: true, data: result })
+                    break;
+                default:
+                    break
+
+            }
+
+            // const isTokenVerified = await verifyToken(accessToken);
+            // if (!isTokenVerified || isTokenVerified.status == false) {
+            //     return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+            // }
+
+
+
+
+            // return resp.status(200).json({ message: 'finished test' })
+            if (result.status !== 'Success') {
+                //  unsuccess
+                return resp.status(500).json(result);
+            } else {
+                // if OK
+                return resp.status(200).json(result);
+            }
+        } else {
+            return resp.status(400).json({ message: 'Bad request.', status: 'Error', code: 400, success: false });
+        }
+
+    }
+)
+// CONTROL-CENTER END
+
 // ============================
 // -----    STRIPE end --------
 
