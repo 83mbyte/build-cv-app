@@ -33,6 +33,7 @@ const Header = () => {
                     <NextImage
                         priority={true}
                         src={welcomeImg}
+                        fetchPriority='high'
                     />
                 </Image>
             </motion.div>
@@ -80,6 +81,8 @@ const AnimateResumeImages = () => {
                                     <NextImage
                                         src={image.src}
                                         priority={true}
+                                        loading='eager'
+                                        fetchPriority='high'
                                     />
                                 </Image>
                             </motion.div>
