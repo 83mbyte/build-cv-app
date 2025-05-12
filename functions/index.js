@@ -700,6 +700,25 @@ exports.controlCenterActions = onRequest(
 
                     // return resp.status(200).json({ status: 'Success', success: true, data: result })
                     break;
+                case 'getContactAllData':
+                    try {
+
+                        const dbContactRef = db.ref(process.env.APP_DB_CONTACT);
+
+                        const snapshot = await dbContactRef.once('value');
+                        if (!snapshot.exists()) {
+                            throw new Error('No data found for the specified date');
+                        }
+
+                        const data = snapshot.val();
+
+                        result = { status: 'Success', success: true, data: data };
+
+                    } catch (error) {
+                        result = { success: false, status: 'Error', error: error.message }
+                    }
+                    break;
+
                 default:
                     break
 
@@ -711,14 +730,13 @@ exports.controlCenterActions = onRequest(
             // }
 
 
-
-
             // return resp.status(200).json({ message: 'finished test' })
             if (result.status !== 'Success') {
                 //  unsuccess
                 return resp.status(500).json(result);
             } else {
                 // if OK
+                console.log('Success result')
                 return resp.status(200).json(result);
             }
         } else {

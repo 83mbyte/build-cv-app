@@ -14,13 +14,15 @@ import {
     IconButton,
     ButtonGroup,
     VStack,
+    Accordion,
+
 } from '@chakra-ui/react';
 
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 
-import { LuChevronsRight, LuArrowDown01, LuArrowDown10, LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { LuChevronsRight, LuArrowDown01, LuArrowDown10, LuChevronLeft, LuChevronRight, LuMessageCircle, LuUsers } from "react-icons/lu";
 import { Tooltip } from '../ui/tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -49,10 +51,20 @@ const showWindowsAnimation = {
 const auth = getAuth(app);
 
 const ControlCenterContainer = () => {
+    // check auth state
     const [isLoadingUserData, setIsLoadingUserData] = useState(true);
+    // show propre window state
     const [show, setShow] = useState({ type: null, status: false });
+    // user state
     const [usersArray, setUsersArray] = useState([]);
     const [sortAsc, setSortAsc] = useState(true);
+
+    // contact form state
+    const [contactAllData, setContactAllData] = useState(null);
+
+
+
+    // userLogged data
     const userLogged = useSelector((state) => state.auth.data);
 
     const dispatch = useDispatch();
@@ -105,6 +117,39 @@ const ControlCenterContainer = () => {
         setSortAsc(prev => !prev)
     }
 
+    const getContactAllData = async () => {
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ variant: 'getContactAllData' }),
+        };
+
+        // commented in DEV
+        // commented in DEV
+        const respond = await getDataFromFunctionsEndpoint('controlCenterActions', options);
+
+        if (respond) {
+            let res = await respond.json();
+            if (!res || res.status !== 'Success') {
+                console.log('error while getting contact form data')
+                //  TODO put something like alert
+                //  TODO put something like alert
+                //  TODO put something like alert 
+            } else if (res && res.status == 'Success') {
+                // console.log('DATA: ', res.data)
+                // const modifiedArray = res.data.map(item => {
+                //     return { ...item, creationTime: Date.parse(item.creationTime) }
+                // });
+
+                setContactAllData(res.data)
+            }
+        } else {
+            console.log('no response from server')
+        }
+    }
+
     useEffect(() => {
         // manage userLogged state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -135,7 +180,7 @@ const ControlCenterContainer = () => {
                             <VStack bg='' w='full' maxWidth={'5xl'} marginInline={['2', '4']}>
                                 <AnimatePresence mode='wait'>
                                     {
-                                        (show.type == 'one' && show.status == true) &&
+                                        (show.type == 'users' && show.status == true) &&
                                         <motion.div variants={showWindowsAnimation} initial='hidden' animate='show' exit='exit' key={'window_1'} style={{ width: '100%' }}>
 
                                             <CardContainer>
@@ -153,9 +198,60 @@ const ControlCenterContainer = () => {
                                         </motion.div>
                                     }
                                     {
-                                        (show.type == 'two' && show.status == true) &&
-                                        <motion.div>
-                                            2
+                                        (show.type == 'contact' && show.status == true) &&
+                                        <motion.div variants={showWindowsAnimation} initial='hidden' animate='show' exit='exit' key={'window_2'} style={{ width: '100%' }}>
+                                            <CardContainer>
+
+                                                <Accordion.Root variant={'plain'} collapsible bg='' gap={10}>
+                                                    {contactAllData &&
+                                                        Object.keys(contactAllData).map((folder, index) => {
+                                                            return (
+
+                                                                <Accordion.Item key={index} value={folder}>
+                                                                    <Accordion.ItemTrigger>
+                                                                        <Text flex="1">{folder}</Text>
+                                                                        <Accordion.ItemIndicator />
+                                                                    </Accordion.ItemTrigger>
+                                                                    <Accordion.ItemContent>
+                                                                        <Accordion.ItemBody>
+
+                                                                            {/* --- */}
+                                                                            <Accordion.Root variant={'subtle'} collapsible bg='' pl={4} size={'sm'}>
+                                                                                {
+                                                                                    Object.keys(contactAllData[folder]).map((item, itemIndex) => {
+                                                                                        return (
+
+                                                                                            <Accordion.Item key={itemIndex} value={item}>
+                                                                                                <Accordion.ItemTrigger>
+                                                                                                    <Text flex="1" fontSize={'xs'}>{item}</Text>
+                                                                                                    <Accordion.ItemIndicator />
+                                                                                                </Accordion.ItemTrigger>
+                                                                                                <Accordion.ItemContent>
+                                                                                                    <Accordion.ItemBody>
+                                                                                                        <Text fontSize={'xs'}>
+                                                                                                            {contactAllData[folder][item].message}
+                                                                                                        </Text>
+                                                                                                    </Accordion.ItemBody>
+                                                                                                </Accordion.ItemContent>
+                                                                                            </Accordion.Item>
+
+                                                                                        )
+                                                                                    })
+
+                                                                                }
+                                                                            </Accordion.Root>
+                                                                            {/* ---- */}
+                                                                        </Accordion.ItemBody>
+                                                                    </Accordion.ItemContent>
+                                                                </Accordion.Item>
+                                                            )
+                                                        })
+                                                    }
+                                                </Accordion.Root>
+                                                <Box>
+                                                    <Button size={'sm'} colorPalette={'teal'} onClick={getContactAllData}>Get contacts ALL data</Button>
+                                                </Box>
+                                            </CardContainer>
                                         </motion.div>
                                     }
                                     {
@@ -174,6 +270,57 @@ const ControlCenterContainer = () => {
 };
 
 export default ControlCenterContainer;
+
+const AllDataAccordion = () => {
+    return (
+        <Accordion.Root variant={'plain'} collapsible bg='' gap={10}>
+            {contactAllData &&
+                Object.keys(contactAllData).map((folder, index) => {
+                    return (
+
+                        <Accordion.Item key={index} value={folder}>
+                            <Accordion.ItemTrigger>
+                                <Text flex="1">{folder}</Text>
+                                <Accordion.ItemIndicator />
+                            </Accordion.ItemTrigger>
+                            <Accordion.ItemContent>
+                                <Accordion.ItemBody>
+
+                                    <Accordion.Root variant={'subtle'} collapsible bg='' pl={4} size={'sm'}>
+                                        {
+                                            Object.keys(contactAllData[folder]).map((item, itemIndex) => {
+                                                return (
+
+                                                    <Accordion.Item key={itemIndex} value={item}>
+                                                        <Accordion.ItemTrigger>
+                                                            <Text flex="1" fontSize={'xs'}>{item}</Text>
+                                                            <Accordion.ItemIndicator />
+                                                        </Accordion.ItemTrigger>
+                                                        <Accordion.ItemContent>
+                                                            <Accordion.ItemBody>
+                                                                <Text fontSize={'xs'}>
+                                                                    {contactAllData[folder][item].message}
+                                                                </Text>
+                                                            </Accordion.ItemBody>
+                                                        </Accordion.ItemContent>
+                                                    </Accordion.Item>
+
+                                                )
+                                            })
+
+                                        }
+                                    </Accordion.Root>
+
+                                </Accordion.ItemBody>
+                            </Accordion.ItemContent>
+                        </Accordion.Item>
+
+                    )
+                })
+            }
+        </Accordion.Root>
+    )
+}
 
 const CardContainer = ({ children }) => {
     return (
@@ -309,15 +456,17 @@ const NavigationContainer = ({ setShow }) => {
     const navButtons = [
         {
             title: 'Users',
+            icon: <LuUsers />,
             actionCallback: () => setShow(prev => {
-                return { type: 'one', status: !prev.status }
+                return { type: 'users', status: !prev.status }
             })
         },
         {
-            title: 'Nav #2 ',
+            title: 'ContactForm Data',
+            icon: <LuMessageCircle />,
             actionCallback: () => setShow(prev => {
                 return {
-                    type: 'two', status: !prev.status
+                    type: 'contact', status: !prev.status
                 }
             })
         },
@@ -330,7 +479,9 @@ const NavigationContainer = ({ setShow }) => {
             {
                 navButtons.map((item, index) => {
                     return (
-                        <Button colorPalette={'teal'} size={'xs'} key={index} onClick={() => item.actionCallback()}>{item.title}</Button>
+                        <Button colorPalette={'teal'} size={'xs'} key={index} onClick={() => item.actionCallback()}>
+                            {item.icon}
+                            {item.title}</Button>
                     )
                 })
             }
