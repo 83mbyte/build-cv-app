@@ -1,20 +1,13 @@
 'use client'
-import { getDataFromFunctionsEndpoint } from '@/lib/commonScripts';
 import {
     Box, Button,
-    Card,
     CloseButton,
     Drawer,
     HStack,
     Portal,
     Stack,
     Text,
-    Table,
-    Pagination,
-    IconButton,
-    ButtonGroup,
-    VStack,
-    Accordion,
+    StackSeparator,
 
 } from '@chakra-ui/react';
 
@@ -22,13 +15,14 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 
-import { LuChevronsRight, LuArrowDown01, LuArrowDown10, LuChevronLeft, LuChevronRight, LuMessageCircle, LuUsers } from "react-icons/lu";
-import { Tooltip } from '../ui/tooltip';
+import { LuChevronsRight, LuMessageCircle, LuUsers } from "react-icons/lu";
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from '@/__firebase/__firebaseConf';
 import { setAuthUserData } from '@/redux/auth/authSlice';
 import FallbackSpinner from '../editor_page/FallbackSpinner';
+import MotionUsersBlock from './UsersBlock';
+import MotionContactBlock from './ContactBlock';
 
 const showWindowsAnimation = {
     hidden: {
@@ -39,12 +33,12 @@ const showWindowsAnimation = {
         scale: 1,
         opacity: 1,
         transition: {
-            duration: 1
+            duration: 0.5
         }
     },
     exit: {
         scale: 0.9,
-        opacity: 0
+        opacity: 0,
     }
 }
 
@@ -53,102 +47,24 @@ const auth = getAuth(app);
 const ControlCenterContainer = () => {
     // check auth state
     const [isLoadingUserData, setIsLoadingUserData] = useState(true);
-    // show propre window state
-    const [show, setShow] = useState({ type: null, status: false });
-    // user state
-    const [usersArray, setUsersArray] = useState([]);
-    const [sortAsc, setSortAsc] = useState(true);
+    // show content block state
+    const [showBlock, setShowBlock] = useState(
+        {
+            users: null,
+            contact: null
+        }
+    );
+    //  user state
+    const [usersArray, setUsersArray] = useState(null);
 
     // contact form state
     const [contactAllData, setContactAllData] = useState(null);
 
-
-
     // userLogged data
     const userLogged = useSelector((state) => state.auth.data);
-
     const dispatch = useDispatch();
 
-    const getUsers = async () => {
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ variant: 'getUsersList' }),
-        };
 
-
-        const respond = await getDataFromFunctionsEndpoint('controlCenterActions', options);
-
-        if (respond) {
-            let res = await respond.json();
-            if (!res || res.status !== 'Success') {
-                console.log('error while getting users list')
-                //  TODO put something like alert
-                //  TODO put something like alert
-                //  TODO put something like alert 
-            } else if (res && res.status == 'Success') {
-                const modifiedArray = res.data.map(item => {
-                    return { ...item, creationTime: Date.parse(item.creationTime) }
-                });
-
-                setUsersArray(modifiedArray)
-            }
-        } else {
-            console.log('no response from server')
-        }
-
-    }
-
-    const sortByDate = () => {
-
-        const sortArray = usersArray;
-        sortArray.sort((a, b) => {
-            if (sortAsc === true) {
-                return (a.creationTime - b.creationTime)
-            }
-            else {
-                return (b.creationTime - a.creationTime)
-            }
-        });
-
-        setUsersArray(sortArray);
-        setSortAsc(prev => !prev)
-    }
-
-    const getContactAllData = async () => {
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ variant: 'getContactAllData' }),
-        };
-
-        // commented in DEV
-        // commented in DEV
-        const respond = await getDataFromFunctionsEndpoint('controlCenterActions', options);
-
-        if (respond) {
-            let res = await respond.json();
-            if (!res || res.status !== 'Success') {
-                console.log('error while getting contact form data')
-                //  TODO put something like alert
-                //  TODO put something like alert
-                //  TODO put something like alert 
-            } else if (res && res.status == 'Success') {
-                // console.log('DATA: ', res.data)
-                // const modifiedArray = res.data.map(item => {
-                //     return { ...item, creationTime: Date.parse(item.creationTime) }
-                // });
-
-                setContactAllData(res.data)
-            }
-        } else {
-            console.log('no response from server')
-        }
-    }
 
     useEffect(() => {
         // manage userLogged state
@@ -168,241 +84,59 @@ const ControlCenterContainer = () => {
     }, []);
 
     return (
-        <Box bg='' position={'relative'} minHeight={'100vh'} padding={0}>
+
+
+        <>
             {
                 (isLoadingUserData || !userLogged || userLogged.role !== 'admin')
                     ? <Box h='99vh' bg='' display={'flex'}><FallbackSpinner /></Box>
-                    : <>
-                        <Box zIndex={1000} position={'fixed'}>
-                            <DrawerComponent placement={'bottom'} setShow={setShow} />
+
+                    : <motion.div initial={{ y: 1000 }} animate={{ y: 0, }} transition={{ type: 'tween' }}>
+                        <Box zIndex={1000} bg='' position={'fixed'} w='full' h='auto'>
+                            <DrawerComponent placement={'start'} setShowBlock={setShowBlock} />
                         </Box>
-                        <Box position={'relative'} top={11} bg='' justifyContent={'center'} display={'flex'}>
-                            <VStack bg='' w='full' maxWidth={'5xl'} marginInline={['2', '4']}>
-                                <AnimatePresence mode='wait'>
-                                    {
-                                        (show.type == 'users' && show.status == true) &&
-                                        <motion.div variants={showWindowsAnimation} initial='hidden' animate='show' exit='exit' key={'window_1'} style={{ width: '100%' }}>
+                        <Box bg='' minHeight={'100%'} w={'full'} display={'flex'} alignItems={'center'} flexDir={'column'}>
+                            <Box
+                                border={'1px dashed white'}
+                                padding={3}
+                                paddingLeft={{ base: '10', md: '3' }}
+                                w={['full', '2xl', '3xl', '4xl']}
+                                display={'flex'}
+                                bg='white'
+                                minHeight={'100vh'}
+                            >
 
-                                            <CardContainer>
+                                <motion.div style={{ width: '100%', rowGap: '10px', display: 'flex', flexDirection: 'column' }} layout='position'>
 
-                                                {
-                                                    (usersArray && usersArray.length > 0) &&
-                                                    <TableUsers usersArray={usersArray} sortAsc={sortAsc} sortByDate={sortByDate} />
-                                                }
+                                    <AnimatePresence>
+                                        {
+                                            (showBlock.users == true) &&
+                                            <MotionUsersBlock variants={showWindowsAnimation} initial='hidden' animate='show' exit='exit' usersArray={usersArray} setUsersArray={setUsersArray} key={'usersBlock'} layout />
+                                        }
+                                        {
+                                            showBlock.contact == true &&
+                                            <MotionContactBlock variants={showWindowsAnimation} initial='hidden' animate='show' exit='exit' key={'contactBlock'} contactAllData={contactAllData} setContactAllData={setContactAllData} layout />
+                                        }
+                                    </AnimatePresence>
 
-                                                <Box>
-                                                    <Button size={'sm'} colorPalette={'teal'} onClick={getUsers}>get users</Button>
-                                                </Box>
-                                            </CardContainer>
+                                </motion.div>
 
-                                        </motion.div>
-                                    }
-                                    {
-                                        (show.type == 'contact' && show.status == true) &&
-                                        <motion.div variants={showWindowsAnimation} initial='hidden' animate='show' exit='exit' key={'window_2'} style={{ width: '100%' }}>
-                                            <CardContainer>
-
-                                                <Accordion.Root variant={'plain'} collapsible bg='' gap={10}>
-                                                    {contactAllData &&
-                                                        Object.keys(contactAllData).map((folder, index) => {
-                                                            return (
-
-                                                                <Accordion.Item key={index} value={folder}>
-                                                                    <Accordion.ItemTrigger>
-                                                                        <Text flex="1">{folder}</Text>
-                                                                        <Accordion.ItemIndicator />
-                                                                    </Accordion.ItemTrigger>
-                                                                    <Accordion.ItemContent>
-                                                                        <Accordion.ItemBody>
-
-                                                                            {/* --- */}
-                                                                            <Accordion.Root variant={'subtle'} collapsible bg='' pl={4} size={'sm'}>
-                                                                                {
-                                                                                    Object.keys(contactAllData[folder]).map((item, itemIndex) => {
-                                                                                        return (
-
-                                                                                            <Accordion.Item key={itemIndex} value={item}>
-                                                                                                <Accordion.ItemTrigger>
-                                                                                                    <Text flex="1" fontSize={'xs'}>{item}</Text>
-                                                                                                    <Accordion.ItemIndicator />
-                                                                                                </Accordion.ItemTrigger>
-                                                                                                <Accordion.ItemContent>
-                                                                                                    <Accordion.ItemBody>
-                                                                                                        <Text fontSize={'xs'}>
-                                                                                                            {contactAllData[folder][item].message}
-                                                                                                        </Text>
-                                                                                                    </Accordion.ItemBody>
-                                                                                                </Accordion.ItemContent>
-                                                                                            </Accordion.Item>
-
-                                                                                        )
-                                                                                    })
-
-                                                                                }
-                                                                            </Accordion.Root>
-                                                                            {/* ---- */}
-                                                                        </Accordion.ItemBody>
-                                                                    </Accordion.ItemContent>
-                                                                </Accordion.Item>
-                                                            )
-                                                        })
-                                                    }
-                                                </Accordion.Root>
-                                                <Box>
-                                                    <Button size={'sm'} colorPalette={'teal'} onClick={getContactAllData}>Get contacts ALL data</Button>
-                                                </Box>
-                                            </CardContainer>
-                                        </motion.div>
-                                    }
-                                    {
-                                        (show.type == 'tree' && show.status == true) &&
-                                        <Box>3</Box>
-                                    }
-                                </AnimatePresence>
-
-                            </VStack>
+                            </Box>
                         </Box>
-                    </>
+                    </motion.div >
             }
-
-        </Box >
+        </>
     );
 };
 
 export default ControlCenterContainer;
 
-const AllDataAccordion = () => {
-    return (
-        <Accordion.Root variant={'plain'} collapsible bg='' gap={10}>
-            {contactAllData &&
-                Object.keys(contactAllData).map((folder, index) => {
-                    return (
 
-                        <Accordion.Item key={index} value={folder}>
-                            <Accordion.ItemTrigger>
-                                <Text flex="1">{folder}</Text>
-                                <Accordion.ItemIndicator />
-                            </Accordion.ItemTrigger>
-                            <Accordion.ItemContent>
-                                <Accordion.ItemBody>
 
-                                    <Accordion.Root variant={'subtle'} collapsible bg='' pl={4} size={'sm'}>
-                                        {
-                                            Object.keys(contactAllData[folder]).map((item, itemIndex) => {
-                                                return (
-
-                                                    <Accordion.Item key={itemIndex} value={item}>
-                                                        <Accordion.ItemTrigger>
-                                                            <Text flex="1" fontSize={'xs'}>{item}</Text>
-                                                            <Accordion.ItemIndicator />
-                                                        </Accordion.ItemTrigger>
-                                                        <Accordion.ItemContent>
-                                                            <Accordion.ItemBody>
-                                                                <Text fontSize={'xs'}>
-                                                                    {contactAllData[folder][item].message}
-                                                                </Text>
-                                                            </Accordion.ItemBody>
-                                                        </Accordion.ItemContent>
-                                                    </Accordion.Item>
-
-                                                )
-                                            })
-
-                                        }
-                                    </Accordion.Root>
-
-                                </Accordion.ItemBody>
-                            </Accordion.ItemContent>
-                        </Accordion.Item>
-
-                    )
-                })
-            }
-        </Accordion.Root>
-    )
-}
-
-const CardContainer = ({ children }) => {
-    return (
-        <Card.Root w={'full'} my={0} p={3} mx={0}>
-            <Card.Body p={[1, 6]}>
-                <VStack bg=''>
-                    {children}
-                </VStack>
-            </Card.Body>
-        </Card.Root>
-    )
-}
-
-const TableUsers = ({ sortAsc, usersArray, sortByDate }) => {
-
-    return (
-        <>
-            <Table.Root key={'xs'} size={'md'} showColumnBorder variant={'outline'} w='full' maxW={'lg'}>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.ColumnHeader>Email</Table.ColumnHeader>
-
-                        <Table.ColumnHeader textAlign="end">
-                            <Tooltip showArrow content="Click to sort by date" openDelay={300} positioning={{ placement: 'bottom' }} >
-                                <Button variant={'ghost'} onClick={sortByDate} size='sm'>Registered on:
-                                    {
-                                        sortAsc == true
-                                            ? <LuArrowDown10 />
-                                            : <LuArrowDown01 />
-                                    }
-                                </Button>
-                            </Tooltip>
-                        </Table.ColumnHeader>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {
-                        usersArray.map((user, index) => {
-
-                            return (
-                                <Table.Row key={index} >
-                                    <Table.Cell>{user.email}</Table.Cell>
-                                    <Table.Cell textAlign="end">
-                                        {new Date(user.creationTime).toLocaleDateString()}
-
-                                    </Table.Cell>
-                                </Table.Row>
-                            )
-                        })}
-                </Table.Body>
-            </Table.Root>
-            <Pagination.Root count={usersArray.length} pageSize={10} page={1}>
-                <ButtonGroup variant="ghost" size="sm" wrap="wrap">
-                    <Pagination.PrevTrigger asChild>
-                        <IconButton>
-                            <LuChevronLeft />
-                        </IconButton>
-                    </Pagination.PrevTrigger>
-
-                    <Pagination.Items
-                        render={(page) => (
-                            <IconButton variant={{ base: "ghost", _selected: "outline" }}>
-                                {page.value}
-                            </IconButton>
-                        )}
-                    />
-
-                    <Pagination.NextTrigger asChild>
-                        <IconButton>
-                            <LuChevronRight />
-                        </IconButton>
-                    </Pagination.NextTrigger>
-                </ButtonGroup>
-            </Pagination.Root>
-        </>
-    )
-}
-
-const DrawerComponent = ({ placement = 'bottom', setShow }) => {
+const DrawerComponent = ({ placement = 'bottom', setShowBlock }) => {
     const userLogged = useSelector((state) => state.auth.data);
     return (
-        <Drawer.Root key={placement} placement={placement} >
+        <Drawer.Root key={placement} placement={placement} preventScroll={false} size='xs'>
             <HStack marginY={1} marginX={2}>
                 <motion.div initial={{ x: 0 }} animate={{ x: -99, transition: { delay: 0.4, type: 'tween' } }} whileHover={{ x: 0, }}
                     whileTap={{ x: 0, }}
@@ -421,6 +155,7 @@ const DrawerComponent = ({ placement = 'bottom', setShow }) => {
                 <Drawer.Positioner >
                     <Drawer.Content
                         margin={2}
+                        marginTop={'12'}
                         rounded={'l3'}
                     >
                         <Drawer.Header>
@@ -428,10 +163,10 @@ const DrawerComponent = ({ placement = 'bottom', setShow }) => {
                                 {userLogged && <Text fontSize={'sm'} fontWeight={'normal'}> {userLogged.email} - {userLogged.role}</Text>}
                             </Drawer.Title>
                         </Drawer.Header>
-                        <Drawer.Body justifyContent={'center'} display={'flex'} >
+                        <Drawer.Body alignItems={'center'} display={'flex'} flexDirection={'column'} bg=''>
 
                             {
-                                userLogged && <NavigationContainer setShow={setShow} />
+                                userLogged && <NavigationContainer setShowBlock={setShowBlock} />
                             }
 
                         </Drawer.Body>
@@ -442,7 +177,7 @@ const DrawerComponent = ({ placement = 'bottom', setShow }) => {
                                 <Button>Save</Button>
                             </Drawer.Footer> */}
                         <Drawer.CloseTrigger asChild>
-                            <CloseButton size="sm" />
+                            <CloseButton size="sm" colorPalette={'teal'} />
                         </Drawer.CloseTrigger>
                     </Drawer.Content>
                 </Drawer.Positioner>
@@ -451,23 +186,21 @@ const DrawerComponent = ({ placement = 'bottom', setShow }) => {
     )
 }
 
-const NavigationContainer = ({ setShow }) => {
+const NavigationContainer = ({ setShowBlock }) => {
 
     const navButtons = [
         {
             title: 'Users',
             icon: <LuUsers />,
-            actionCallback: () => setShow(prev => {
-                return { type: 'users', status: !prev.status }
+            actionCallback: () => setShowBlock(prev => {
+                return { ...prev, users: !prev.users }
             })
         },
         {
-            title: 'ContactForm Data',
+            title: 'ContactForm Messages',
             icon: <LuMessageCircle />,
-            actionCallback: () => setShow(prev => {
-                return {
-                    type: 'contact', status: !prev.status
-                }
+            actionCallback: () => setShowBlock(prev => {
+                return { ...prev, contact: !prev.contact }
             })
         },
 
@@ -475,7 +208,7 @@ const NavigationContainer = ({ setShow }) => {
     return (
 
 
-        <Stack flexDirection={['column', 'row']} gap={[3, 6]} wrap={'wrap'}>
+        <Stack flexDirection={['column']} gap={[3, 6]} wrap={'wrap'} separator={<StackSeparator />} w='full' bg=''  >
             {
                 navButtons.map((item, index) => {
                     return (
@@ -485,7 +218,6 @@ const NavigationContainer = ({ setShow }) => {
                     )
                 })
             }
-        </Stack>
+        </Stack >
     )
 }
-
