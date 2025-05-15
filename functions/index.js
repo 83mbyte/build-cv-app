@@ -811,35 +811,54 @@ exports.deleteUser = functionsV1auth.user().onDelete(async (user) => {
     });
 });
 
-// exports.setCustomClaims = onRequest({
-//     cors: true,
+exports.setCustomClaims = onRequest({
+    // cors: true,
+    cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
 
-// },
-//     async (req, resp) => {
-// //use to change user role
-//         if (req.method !== 'POST') {
-//             return resp.status(400).send('Bad request\r\n');
-//         }
+},
+    async (req, resp) => {
+        //use to change user role
+        if (req.method !== 'POST') {
+            return resp.status(400).send('Bad request\r\n');
+        }
 
-//         try {
-//             const { email } = req.body;
-//             if (email !== process.env.APP_ADMIN_EMAIL_DEV) {
-//                 throw new Error('incorrect user\r\n')
-//             }
+        const appCheckToken = req.header('X-Firebase-AppCheck');
+        if (!appCheckToken) {
+            return resp.status(401).json({ error: 'Unauthorized: No token', code: 401, status: 'Error' });
+        }
+        try {
 
-//             getAuth().setCustomUserClaims(process.env.APP_ADMIN_USER_ID, { admin: true })
-//                 .then(() => {
-//                     // The new custom claims will propagate to the user's ID token the
-//                     // next time a new one is issued.
-//                     return resp.status(200).send('Success\r\n')
-//                 });
+            const claims = await getAppCheck().verifyToken(appCheckToken);
+            // console.log('valid token')
+        } catch (error) {
+            if (isEmulator) {
+                console.error('Error while token validation:', error);
+            }
+            return resp.status(401).json({ error: 'Unauthorized: Invalid token', code: 401, status: 'Error', success: false });
+        }
 
-//         } catch (error) {
+        if (req.body) {
 
-//             return resp.status(500).send(error.message ?? 'Unable to create csutom claims\r\n');
-//         }
+            try {
+                const { email } = req.body;
+                if (email !== process.env.APP_ADMIN_EMAIL) {
+                    throw new Error('incorrect user\r\n')
+                }
 
-//     })
+                getAuth().setCustomUserClaims(process.env.APP_ADMIN_USER_ID, { admin: true })
+                    .then(() => {
+                        // The new custom claims will propagate to the user's ID token the
+                        // next time a new one is issued.
+
+                        return resp.status(200).json({ status: 'Success', success: true, message: 'Done' })
+                    });
+
+            } catch (error) {
+                return resp.status(401).json({ error: 'Unable to create custom claims', code: 401, status: 'Error', success: false });
+            }
+        }
+
+    })
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started

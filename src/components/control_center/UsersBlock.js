@@ -7,9 +7,10 @@ import {
     IconButton,
     ButtonGroup,
     Heading,
+    Separator,
 } from '@chakra-ui/react';
 
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState, Suspense } from 'react';
 import { motion } from 'motion/react';
 
 import { Tooltip } from '../ui/tooltip';
@@ -17,6 +18,17 @@ import { toaster } from '../ui/toaster';
 
 import { LuArrowDown01, LuArrowDown10, LuChevronLeft, LuChevronRight, LuRefreshCw } from "react-icons/lu";
 import CardWrapper from './CardWrapper';
+import FallbackSpinner from '../editor_page/FallbackSpinner';
+
+const EmailClaimsBlock = lazy(() => {
+    try {
+        return import('./EmailClaimsBlock')
+    } catch (error) {
+        // return empty..
+        return import('./EmailEmptyBlock')
+    }
+}
+)
 
 const UsersBlock = ({ ref, usersArray, setUsersArray }) => {
     const [showTable, setShowTable] = useState(false);
@@ -80,32 +92,44 @@ const UsersBlock = ({ ref, usersArray, setUsersArray }) => {
         <CardWrapper ref={ref} >
             {
                 (usersArray && usersArray.length > 0) &&
-                <Stack flexDirection={['column', 'row']} w='full'>
-                    <Stack flexDirection={['row', 'column']}   >
-                        <Box bg=''>
-                            <Box bg='gray.100' w={'150px'} height={'150px'} display={'flex'} justifyContent={'center'} alignItems={'center'} rounded={'l3'}>
-                                <Heading>Total Users: {usersArray.length}</Heading>
+                <>
 
+                    <Stack flexDirection={['column', 'row']} w='full'>
+                        <Stack flexDirection={['row', 'column']}   >
+                            <Box bg=''>
+                                <Box bg='gray.100' w={'150px'} height={'150px'} display={'flex'} justifyContent={'center'} alignItems={'center'} rounded={'l3'}>
+                                    <Heading>Total Users: {usersArray.length}</Heading>
+
+                                </Box>
                             </Box>
-                        </Box>
-                        <Box bg='' display={'flex'} justifyContent={'center'} alignItems={'center'} w='full'>
-                            <Tooltip showArrow content="Refresh Users" openDelay={300} positioning={{ placement: 'bottom' }} >
-                                <IconButton colorPalette={'teal'} onClick={getUsers} variant={'solid'}>
-                                    <LuRefreshCw />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
+                            <Box bg='' display={'flex'} justifyContent={'center'} alignItems={'center'} w='full'>
+                                <Tooltip showArrow content="Refresh Users" openDelay={300} positioning={{ placement: 'bottom' }} >
+                                    <IconButton colorPalette={'teal'} onClick={getUsers} variant={'solid'}>
+                                        <LuRefreshCw />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        </Stack>
+
+                        {
+                            showTable == false
+                                ? <Button variant={'ghost'} size='sm' colorPalette={'teal'} onClick={() => setShowTable(true)}>show users</Button>
+
+                                : <Box bg='' display={'flex'} flexDirection={'column'} w='full'>
+                                    <TableUsers usersArray={usersArray} sortAsc={sortAsc} sortByDate={sortByDate} />
+                                </Box>
+                        }
                     </Stack>
+                    <Separator w='full' my={'4'} />
 
-                    {
-                        showTable == false
-                            ? <Button variant={'ghost'} size='sm' colorPalette={'teal'} onClick={() => setShowTable(true)}>show users</Button>
+                    <Box bg='' w='full'>
+                        <Suspense fallback={<FallbackSpinner />} >
+                            <EmailClaimsBlock />
+                        </Suspense>
 
-                            : <Box bg='' display={'flex'} flexDirection={'column'} w='full'>
-                                <TableUsers usersArray={usersArray} sortAsc={sortAsc} sortByDate={sortByDate} />
-                            </Box>
-                    }
-                </Stack>
+                    </Box>
+                </>
+
             }
         </CardWrapper >
     )
