@@ -19,7 +19,7 @@ import { fontSizeNames } from '@/lib/defaults';
 
 
 
-const frameworks = createListCollection({
+const fontsCollection = createListCollection({
     items: [
         { label: 'Default', value: 'body' },
         { label: "Inconsolata", value: "inconsolata" },
@@ -75,7 +75,7 @@ const HeaderFontsMenu = () => {
                         <Box w='full'>
                             <Text fontSize={'xs'}>Fonts:</Text>
 
-                            <SelectRoot size={'xs'} collection={frameworks} positioning={{ sameWidth: true, placement: "bottom" }}
+                            <SelectRoot size={'xs'} collection={fontsCollection} positioning={{ sameWidth: true, placement: "bottom" }}
                                 id='customSelect'
                                 defaultValue={['body']}
                                 onValueChange={(e) => {
@@ -86,7 +86,7 @@ const HeaderFontsMenu = () => {
                                     <SelectValueText placeholder="Default" />
                                 </SelectTrigger>
                                 <SelectContent portalled={false} width="full"  >
-                                    {frameworks.items.map((item) => (
+                                    {fontsCollection.items.map((item) => (
                                         <SelectItem item={item} key={item.value} _hover={{ opacity: 0.5 }} cursor={'pointer'}>
                                             {item.label}
                                         </SelectItem>

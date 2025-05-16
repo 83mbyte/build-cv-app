@@ -1,7 +1,7 @@
 'use client'
 
 import { ProviderUI } from '@/app/providers';
-import { Flex, VStack, Heading, Button, Card, Field, Input, Textarea, createListCollection, Alert, CloseButton } from '@chakra-ui/react';
+import { Flex, VStack, Heading, Button, Card, Field, Input, Textarea, createListCollection, Alert, CloseButton, HStack, } from '@chakra-ui/react';
 import {
     SelectContent,
     SelectItem,
@@ -12,11 +12,12 @@ import {
 
 import { motion } from 'motion/react';
 import Link from 'next/link';
-
+import Image from "next/image";
 import { useRef, useState } from 'react';
 import { authData, contactUsData } from '@/lib/content-lib';
 import { getDataFromFunctionsEndpoint, sanitizeInput } from '@/lib/commonScripts';
 import FooterContainer from '../footerCopyright/FooterContainer';
+import { Tooltip } from '../ui/tooltip';
 
 const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
 
@@ -24,7 +25,18 @@ const ContactUsContainer = () => {
     return (
         <ProviderUI>
             <VStack bg='' w={'full'} justifyContent={'space-between'} minHeight={'100vh'} p={1} >
-                <Heading as='h1' color={'teal'} my={5}><Link href='/'>{process.env.NEXT_PUBLIC_APP_NAME_FULL}</Link></Heading>
+
+                <HStack bg='' pt={6}>
+                    <Tooltip showArrow content="Return to Index page" openDelay={300} positioning={{ placement: 'bottom' }}>
+                        <Link href='/' style={{ color: 'white', textDecoration: 'none', }}>
+                            <Image src='/android-chrome-192x192.png' width={32} height={32} alt={`${process.env.NEXT_PUBLIC_APP_NAME_FULL} logo`}
+                                style={{ borderRadius: '50%' }}
+                            />
+                        </Link>
+                    </Tooltip>
+                    <Heading as='h1' color={'teal'} my={5}> {process.env.NEXT_PUBLIC_APP_NAME_FULL}</Heading>
+                </HStack>
+
                 <motion.div
                     style={{ width: '100%' }}
                     initial={{ opacity: 0, scale: 0.75 }}

@@ -6,7 +6,7 @@ const languagesItemDefault = { id: 'init_languages', value: 'Enter language' };
 export const languagesBlockSlice = createSlice({
     name: 'resumeLanguages',
     initialState: {
-        isVisible: false,
+        isVisible: true,
         languagesHeading: null,
         items: [languagesItemDefault]
     },
