@@ -819,7 +819,7 @@ exports.setCustomClaims = onRequest({
     async (req, resp) => {
         //use to change user role
         if (req.method !== 'POST') {
-            return resp.status(400).send('Bad request\r\n');
+            return resp.status(400).json({ error: 'Bad request' });
         }
 
         const appCheckToken = req.header('X-Firebase-AppCheck');
