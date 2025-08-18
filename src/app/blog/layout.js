@@ -6,6 +6,9 @@ export const metadata = {
     title: `${process.env.NEXT_PUBLIC_APP_NAME} - Blog`,
     description: `${process.env.NEXT_PUBLIC_APP_NAME} - ${blogData.pageDescription ?? 'Lorem ipsum '}`,
     // manifest: './icons/site.webmanifest',
+    alternates: {
+        canonical: './',
+    }
 }
 
 
