@@ -11,6 +11,9 @@ import languagesBlockSliceReducer from './resume/languagesBlockSlice';
 import authSliceReducer from './auth/authSlice';
 import coverLetterSliceReducer from './coverLetter/coverLetterSlice';
 import interviewSliceReducer from './interview/interviewSlice';
+import persistenceMiddleware from './middleware/persistenceMiddleware';
+import persistenceSliceReducer from './persistence/persistenceSlice';
+
 
 
 // export default configureStore({
@@ -44,7 +47,12 @@ export const makeStore = () => {
             resumeSkills: skillsBlockSliceReducer,
             resumeLanguages: languagesBlockSliceReducer,
             coverLetter: coverLetterSliceReducer,
-            interview: interviewSliceReducer
-        }
+            interview: interviewSliceReducer,
+            persistence: persistenceSliceReducer
+
+        },
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().concat(persistenceMiddleware),
+
     })
 }
