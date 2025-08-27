@@ -1,11 +1,11 @@
-
-import { useRef, lazy, Suspense, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useRef, lazy, Suspense, useEffect, useState, useCallback, useMemo } from 'react';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { getSubscriptionDetailsThunk, setAuthUserData } from '@/redux/auth/authSlice';
+import { setIsSaving, setLastSaved, setSaveError, getResumeDataThunk } from '@/redux/persistence/persistenceSlice';
 
 import { Toaster, toaster } from "@/components/ui/toaster";
 
-
+import { useDebouncedSave } from '@/hooks/useDebouncedSave';
 
 import { editorMainContainerData } from '@/lib/content-lib';
 import { getDataFromFunctionsEndpoint } from '@/lib/commonScripts';
@@ -16,6 +16,8 @@ import { app } from '@/__firebase/__firebaseConf';
 import HeaderContainer from './editorHeader/HeaderContainer';
 import ModalWindowBot from '../modalWindow/ModalWindowBot';
 import FallbackSpinner from './FallbackSpinner';
+import SaveStatusIndicator from './editorHeader/SaveStatusIndicator';
+
 
 const WhiteSheetContainer = lazy(() => import('./whiteSheet/WhiteSheetContainer'));
 const SummaryAI = lazy(() => import('./resumeBlocks/aiBot/SummaryAI'));
@@ -28,12 +30,55 @@ const auth = getAuth(app);
 const EditorMainContainer = () => {
     const [isLoadingUserData, setIsLoadingUserData] = useState(true);
     const resumeAreaRef = useRef(null);
+    const dispatch = useDispatch();
 
+    // --- Persistence Logic ---
     const modalBlockName = useSelector((state) => state.editorSettings.showModal.blockName);
-
+    const { hasUnsavedChanges } = useSelector((state) => state.persistence);
     const userLogged = useSelector((state) => state.auth.data);
 
-    const dispatch = useDispatch();
+    // 1. Select all the slices of the resume from the Redux store.
+    // We use shallowEqual to prevent re-renders if the top-level objects haven't changed.
+    const {
+        editorSettings,
+        fontSettings,
+        resumeHeader,
+        resumeContact,
+        resumeSummary,
+        resumeEducation,
+        resumeExperience,
+        resumeSkills,
+        resumeLanguages,
+    } = useSelector((state) => ({
+        editorSettings: state.editorSettings,
+        fontSettings: state.fontSettings,
+        resumeHeader: state.resumeHeader,
+        resumeContact: state.resumeContact,
+        resumeSummary: state.resumeSummary,
+        resumeEducation: state.resumeEducation,
+        resumeExperience: state.resumeExperience,
+        resumeSkills: state.resumeSkills,
+        resumeLanguages: state.resumeLanguages,
+    }), shallowEqual);
+
+    // 2. Create the data object for saving, memoizing it to prevent re-creation on every render.
+    // This object will only be recreated if one of its dependencies (the slices) changes.
+    const resumeDataToSave = useMemo(() => ({
+        editorSettings: { // Only save relevant settings
+            layout: editorSettings.layout,
+            themeColor: editorSettings.themeColor,
+        },
+        fontSettings,
+        resumeHeader,
+        resumeContact,
+        resumeSummary,
+        resumeEducation,
+        resumeExperience,
+        resumeSkills,
+        resumeLanguages,
+    }), [editorSettings, fontSettings, resumeHeader, resumeContact, resumeSummary, resumeEducation, resumeExperience, resumeSkills, resumeLanguages]);
+
+    // --- End of Persistence Logic ---
 
     let selectedBot;
     let modalTitle = 'Ai-powered assistant';
@@ -151,6 +196,47 @@ const EditorMainContainer = () => {
         }
     };
 
+    // 3. Define the save handler function.
+    const handleSave = useCallback(async () => {
+        if (!hasUnsavedChanges || !userLogged) {
+            return;
+        }
+
+        dispatch(setIsSaving(true));
+
+        const options = {
+            method: 'POST',
+            body: JSON.stringify({
+                userId: userLogged.userId,
+                accessToken: userLogged.accessToken,
+                resumeData: resumeDataToSave,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+        try {
+            const res = await getDataFromFunctionsEndpoint('saveResumeData', options);
+            if (!res || !res.ok) {
+                const errorData = await res?.json();
+                throw new Error(errorData?.message || 'Failed to save data.');
+            }
+            dispatch(setLastSaved(new Date().toISOString()));
+        } catch (error) {
+            dispatch(setSaveError(error.message));
+            // Optionally, show a toast on save error
+            toaster.create({
+                type: 'error',
+                title: editorMainContainerData.toasts.error.title,
+                description: editorMainContainerData.errors.onSaveError || 'Failed to save data.'
+            })
+        }
+    }, [dispatch, hasUnsavedChanges, userLogged, resumeDataToSave]);
+
+    // 4. Use the debounced save hook. It will trigger `handleSave` 2 seconds after `resumeDataToSave` changes.
+    useDebouncedSave(handleSave, 4000, resumeDataToSave);
+
     useEffect(() => {
         // manage userLogged state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -158,6 +244,7 @@ const EditorMainContainer = () => {
                 auth.currentUser.getIdTokenResult(user.accessToken).then((idTokenResult) => {
                     dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, role: idTokenResult?.claims.admin ? 'admin' : 'user', fullName: user.displayName, subscription: {} }));
                     dispatch(getSubscriptionDetailsThunk({ userId: user.uid, accessToken: user.accessToken }));
+                    dispatch(getResumeDataThunk({ userId: user.uid, accessToken: user.accessToken }));
                 });
             } else {
                 dispatch(setAuthUserData(null));
@@ -167,7 +254,7 @@ const EditorMainContainer = () => {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [dispatch]);
 
     return (
         <>
@@ -176,6 +263,9 @@ const EditorMainContainer = () => {
             ) : (
                 <>
                     <HeaderContainer clickGetPDF={downloadFilePDF} />
+                    <Suspense>
+                        <SaveStatusIndicator />
+                    </Suspense>
                     <Suspense fallback={<FallbackSpinner />}>
                         <WhiteSheetContainer ref={resumeAreaRef} />
                     </Suspense>

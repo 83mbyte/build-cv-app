@@ -286,6 +286,80 @@ exports.contactForm = onRequest(
     }
 );
 
+exports.getResumeData = onRequest(
+    {
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+    },
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
+
+        const { userId, accessToken } = req.body;
+
+        if (!userId || !accessToken) {
+            return resp.status(400).json({ error: 'Bad request: Missing required fields.', code: 400, status: 'Error' });
+        }
+
+        const isTokenVerified = await verifyToken(accessToken);
+        if (!isTokenVerified || isTokenVerified.status == false) {
+            return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+        }
+
+        if (isTokenVerified.uid !== userId) {
+            return resp.status(403).json({ status: 'Error', message: 'Forbidden: Token does not match user ID.' });
+        }
+
+        try {
+            const dbResumeRef = db.ref(`${process.env.APP_DB_USERS}${userId}/resume`);
+            const snapshot = await dbResumeRef.once('value');
+            const resumeData = snapshot.val();
+
+            return resp.status(200).json({ status: 'Success', data: resumeData });
+        } catch (error) {
+            console.error('Error fetching resume data:', error);
+            return resp.status(500).json({ status: 'Error', message: error.message || 'Internal Server Error' });
+        }
+    }
+);
+
+exports.saveResumeData = onRequest(
+    {
+        cors: [`https://${process.env.APP_DOMAIN_MAIN}`, `https://${process.env.APP_DOMAIN_SECOND}`, `https://${process.env.APP_DOMAIN_CUSTOM}`],
+    },
+    async (req, resp) => {
+        if (req.method !== 'POST') {
+            return resp.status(400).json({ error: 'Bad request.', code: 400, status: 'Error' });
+        }
+
+        const { userId, accessToken, resumeData } = req.body;
+
+        if (!userId || !accessToken || !resumeData) {
+            return resp.status(400).json({ error: 'Bad request: Missing required fields.', code: 400, status: 'Error' });
+        }
+
+        const isTokenVerified = await verifyToken(accessToken);
+        if (!isTokenVerified || isTokenVerified.status == false) {
+            return resp.status(401).json({ status: 'Error', message: isTokenVerified.message });
+        }
+
+        // Ensure the token's UID matches the userId from the body
+        if (isTokenVerified.uid !== userId) {
+            return resp.status(403).json({ status: 'Error', message: 'Forbidden: Token does not match user ID.' });
+        }
+
+        try {
+
+            const dbResumeRef = db.ref(`${process.env.APP_DB_USERS}${userId}/resume`);
+            await dbResumeRef.update(resumeData);
+            return resp.status(200).json({ status: 'Success', message: 'Resume data saved successfully.' });
+        } catch (error) {
+            console.error('Error saving resume data:', error);
+            return resp.status(500).json({ status: 'Error', message: error.message || 'Internal Server Error' });
+        }
+    }
+);
+
 exports.getSubscriptionDetails = onRequest(
     {
         // cors: true,
@@ -548,7 +622,7 @@ const createDBforNewUser = (userId, userEmail, subscriptionId, customerId) => {
                 },
             },
             resume: {
-                editorSetting: {
+                editorSettings: {
                     themeColor: 'blue',
                     layout: 0,
                 },
