@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 export const summaryBlockSlice = createSlice({
     name: 'resumeSummary',
     initialState: {
@@ -80,6 +80,13 @@ export const summaryBlockSlice = createSlice({
                 }
             }
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.resumeSummary) {
+                return { ...state, ...action.payload.resumeSummary };
+            }
+        });
     }
 })
 

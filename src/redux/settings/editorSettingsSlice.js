@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 export const editorSettingsSlice = createSlice({
     name: 'editorSettings',
     initialState: {
@@ -102,6 +102,13 @@ export const editorSettingsSlice = createSlice({
         },
 
 
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.editorSettings) {
+                return { ...state, ...action.payload.editorSettings };
+            }
+        })
     }
 });
 

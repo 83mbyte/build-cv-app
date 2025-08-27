@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { uid } from 'uid/single';
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 
 const skillsItemDefault = { id: 'init_skills', value: '' };
 
@@ -145,6 +146,13 @@ export const skillsBlockSlice = createSlice({
                 }
             }
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.resumeSkills) {
+                return { ...state, ...action.payload.resumeSkills };
+            }
+        });
     }
 })
 

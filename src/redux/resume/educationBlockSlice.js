@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { uid } from 'uid/single';
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 
 const educationItem = {
     id: 'init_education',
@@ -64,6 +65,13 @@ export const educationBlockSlice = createSlice({
                 }
             }
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.resumeEducation) {
+                return { ...state, ...action.payload.resumeEducation };
+            }
+        });
     }
 })
 

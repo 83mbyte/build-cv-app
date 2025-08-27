@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 export const headerBlockSlice = createSlice({
     name: 'resumeHeader',
     initialState: {
@@ -15,6 +15,13 @@ export const headerBlockSlice = createSlice({
                 [action.payload.name]: action.payload.value
             }
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.resumeHeader) {
+                return { ...state, ...action.payload.resumeHeader };
+            }
+        });
     }
 })
 

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { uid } from 'uid/single';
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 
 const languagesItemDefault = { id: 'init_languages', value: 'Enter language' };
 
@@ -57,6 +58,13 @@ export const languagesBlockSlice = createSlice({
                 items: updatedItems.length > 0 ? updatedItems : [{ ...languagesItemDefault, id: uid(8) }]
             }
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.resumeLanguages) {
+                return { ...state, ...action.payload.resumeLanguages };
+            }
+        });
     }
 })
 

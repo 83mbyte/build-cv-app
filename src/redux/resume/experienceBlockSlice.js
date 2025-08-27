@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { uid } from 'uid/single';
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 
 
 const experienceItemDefault = {
@@ -160,6 +161,13 @@ export const experienceBlockSlice = createSlice({
                 }
             }
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.resumeExperience) {
+                return { ...state, ...action.payload.resumeExperience };
+            }
+        });
     }
 })
 

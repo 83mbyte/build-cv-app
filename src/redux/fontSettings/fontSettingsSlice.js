@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 
 const fontSizesArray = {
     // arrays of fonts size of Small,Medium,Large fonts
@@ -93,6 +93,13 @@ export const fontSettingsSlice = createSlice({
                 }
             }
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.fontSettings) {
+                return { ...state, ...action.payload.fontSettings };
+            }
+        });
     }
 })
 

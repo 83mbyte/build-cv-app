@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getResumeDataThunk } from "../persistence/persistenceSlice";
 
 export const contactBlockSlice = createSlice({
     name: 'resumeContact',
@@ -16,6 +17,13 @@ export const contactBlockSlice = createSlice({
                 [action.payload.name]: action.payload.value
             }
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getResumeDataThunk.fulfilled, (state, action) => {
+            if (action.payload && action.payload.resumeContact) {
+                return { ...state, ...action.payload.resumeContact };
+            }
+        });
     }
 })
 
