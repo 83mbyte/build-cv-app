@@ -39,6 +39,9 @@ const verifyToken = async (userToken) => {
         .auth(app)
         .verifyIdToken(userToken)
         .then((decodedToken) => {
+            if (decodedToken.firebase.sign_in_provider === 'anonymous') {
+                return { status: false, uid: null, message: 'Anonymous users are not permitted for this action.' };
+            }
             const uid = decodedToken.uid;
             const email = decodedToken.email;
 

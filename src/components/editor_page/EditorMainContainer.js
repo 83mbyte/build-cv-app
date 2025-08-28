@@ -240,7 +240,8 @@ const EditorMainContainer = () => {
     useEffect(() => {
         // manage userLogged state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user && user.uid && user.accessToken) {
+            // Only proceed if the user exists and is NOT anonymous
+            if (user && !user.isAnonymous && user.uid && user.accessToken) {
                 auth.currentUser.getIdTokenResult(user.accessToken).then((idTokenResult) => {
                     dispatch(setAuthUserData({ userId: user.uid, accessToken: user.accessToken, email: user.email, role: idTokenResult?.claims.admin ? 'admin' : 'user', fullName: user.displayName, subscription: {} }));
                     dispatch(getSubscriptionDetailsThunk({ userId: user.uid, accessToken: user.accessToken }));
