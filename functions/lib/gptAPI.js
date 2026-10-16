@@ -1,11 +1,10 @@
 const { PROMPTS } = require("./promptsByRoles");  // custom prompts to use with GPT-model
 
 const GPT_MODELS = {
-    default: 'gpt-4.1-nano',
-    gpt_4_1: 'gpt-4.1',
-    gpt_4o_mini: 'gpt-4o-mini',
-    audio: 'gpt-4o-audio-preview',
-
+    default: 'gpt-6-luna',
+    luna: 'gpt-6-luna',
+    gpt_oss_20b: 'gpt-oss-20b',
+    audio: 'gpt-audio-1.5'
 };
 
 async function createCompletions(openai, data, variant = null,) {
@@ -56,10 +55,11 @@ async function createCompletions(openai, data, variant = null,) {
             temperature,
             presence_penalty: presence_p,
             frequency_penalty: frequency_p,
-            max_completion_tokens: 2048,
+            max_completion_tokens: 10240,
+            reasoning_effort: model.includes('gpt-6') ? 'low' : null,
             n: n_param,
             messages: messagesArray,
-            modalities: model == GPT_MODELS.audio ? ['text', 'audio'] : ['text'],
+            //modalities: model == GPT_MODELS.audio ? ['text', 'audio'] : ['text'],
             response_format: data.jsonFormat ? { type: 'json_object' } : { type: 'text' },
         });
 
