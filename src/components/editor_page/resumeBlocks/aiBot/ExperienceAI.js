@@ -214,9 +214,7 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
             <VStack gap={2} w='full' marginTop={2}>
                 {
                     (!generatedItems || !generatedItems[currentId])
-                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={() => clickToGenerate(currentId)} disabled={(!position || position.length < 3)}> <LuSparkles />{aiWindowButtons.generate ?? 'lorem ipsum'}</Button>
-
-
+                        ? <Button size='xs' w={'full'} colorPalette={themeColor} onClick={() => clickToGenerate(currentId)} disabled={(!position || position.length < 3)} loading={status == 'loading'}><LuSparkles />{aiWindowButtons.generate ?? 'lorem ipsum'}</Button>
                         :
                         <>
                             <Button size='xs' w={'full'}
