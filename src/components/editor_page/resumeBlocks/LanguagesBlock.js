@@ -1,3 +1,4 @@
+import { useResumeTranslation } from '@/lib/resumeTranslations';
 import { Box, Stack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -12,6 +13,7 @@ import BlockControlContainer from '../blockControl/BlockControlContainer';
 
 
 const LanguagesBlock = ({ editableFields, layoutNumber }) => {
+    const { t } = useResumeTranslation();
     const blockName = 'resumeLanguages';
 
     const fontSize = useSelector(state => state.fontSettings.fontSize);
@@ -34,7 +36,7 @@ const LanguagesBlock = ({ editableFields, layoutNumber }) => {
                 variant={'h2'}
                 size={fontSize.h2}
                 fontWeight={'600'}
-                defaultValue={'Languages'}
+                defaultValue={t('languages')}
                 name={'languagesHeading'}
                 value={languagesHeading}
                 isEditable={editableFields}
@@ -142,7 +144,7 @@ const LanguagesItemsWrapper = ({ editableFields, layoutNumber, children }) => {
 }
 
 const LanguagesItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
-
+    const { t } = useResumeTranslation();
     let suffForIds = '';
     if (editableFields == false) {
         suffForIds = '_notAnimate';
@@ -171,9 +173,9 @@ const LanguagesItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
                     variant={'p'}
                     size={fontSize.p}
                     fontWeight={'400'}
-                    defaultValue={'Enter skill'}
+                    defaultValue={t('languagePlaceholder')}
                     name={null}
-                    value={item.value}
+                    value={item.value === 'Enter language' ? '' : item.value}
                     isEditable={editableFields}
                     onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
                 />
@@ -200,9 +202,9 @@ const LanguagesItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
                     variant={'p'}
                     size={fontSize.p}
                     fontWeight={'400'}
-                    defaultValue={'Enter skill'}
+                    defaultValue={t('languagePlaceholder')}
                     name={null}
-                    value={item.value}
+                    value={item.value === 'Enter language' ? '' : item.value}
                     isEditable={editableFields}
                     onChangeCallback={(name, value) => onChangeHandler(item.id, value)}
                 />

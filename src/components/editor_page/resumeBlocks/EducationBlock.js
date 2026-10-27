@@ -1,3 +1,4 @@
+import { useResumeTranslation } from '@/lib/resumeTranslations';
 import { VStack, Box, Stack, HStack, Icon } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -25,6 +26,8 @@ const EducationBlock = ({ editableFields }) => {
 
     const dispatch = useDispatch();
 
+    const { t } = useResumeTranslation();
+
     const onChangeHeadingHandler = (name, value,) => {
         dispatch(setResumeEducationHeading({ name, value }));
     }
@@ -36,7 +39,7 @@ const EducationBlock = ({ editableFields }) => {
                 variant={'h2'}
                 size={fontSize.h2}
                 fontWeight={'600'}
-                defaultValue={'Education'}
+                defaultValue={t('education')}
                 name={'educationHeading'}
                 value={educationHeading}
                 isEditable={editableFields}
@@ -151,7 +154,7 @@ const EducationItemsWrapper = ({ editableFields, children }) => {
 
 const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, ref }) => {
     const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
-
+    const { t } = useResumeTranslation();
     const onChangeHandler = (id, name, value,) => {
         dispatch(setEducationItemData({ id, name, value }));
     }
@@ -189,7 +192,7 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
                             variant={'h3'}
                             size={fontSize.h3}
                             fontWeight={'600'}
-                            defaultValue={'School/College/Univercity'}
+                            defaultValue={t('school')}
                             name={'institution'}
                             value={data.institution}
                             isEditable={editableFields}
@@ -201,7 +204,7 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
                                     variant={'h4'}
                                     size={fontSize.h3}
                                     fontWeight={'600'}
-                                    defaultValue={'Degree'}
+                                    defaultValue={t('degree')}
                                     name={'degree'}
                                     value={data.degree}
                                     isEditable={editableFields}
@@ -213,7 +216,7 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
                                     variant={'p'}
                                     size={fontSize.p}
                                     fontWeight={'400'}
-                                    defaultValue={'From - Until'}
+                                    defaultValue={t('dateRange')}
                                     name={'period'}
                                     value={data.period}
                                     isEditable={editableFields}
@@ -261,7 +264,7 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
                             variant={'h3'}
                             size={fontSize.h3}
                             fontWeight={'600'}
-                            defaultValue={'School/College/Univercity'}
+                            defaultValue={t('school')}
                             name={'institution'}
                             value={data.institution}
                             isEditable={editableFields}
@@ -275,7 +278,7 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
                                     variant={'h4'}
                                     size={fontSize.h3}
                                     fontWeight={'600'}
-                                    defaultValue={'Degree'}
+                                    defaultValue={t('degree')}
                                     name={'degree'}
                                     value={data.degree}
                                     isEditable={editableFields}
@@ -288,7 +291,7 @@ const EducationItem = ({ fontSize, themeColor, data, dispatch, editableFields, r
                                     variant={'p'}
                                     size={fontSize.p}
                                     fontWeight={'400'}
-                                    defaultValue={'From - Until'}
+                                    defaultValue={t('dateRange')}
                                     name={'period'}
                                     value={data.period}
                                     isEditable={editableFields}

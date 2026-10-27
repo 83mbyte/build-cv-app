@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { uid } from 'uid/single';
 import { getResumeDataThunk } from "../persistence/persistenceSlice";
 
-const languagesItemDefault = { id: 'init_languages', value: 'Enter language' };
+const languagesItemDefault = { id: 'init_languages', value: '' };
 
 export const languagesBlockSlice = createSlice({
     name: 'resumeLanguages',

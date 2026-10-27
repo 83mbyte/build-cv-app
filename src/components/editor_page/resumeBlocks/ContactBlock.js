@@ -1,3 +1,4 @@
+import { useResumeTranslation } from '@/lib/resumeTranslations';
 import { HStack, Icon, Stack } from '@chakra-ui/react';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -37,6 +38,7 @@ const itemDetails = {
 }
 
 const ContactBlock = ({ editableFields, layoutNumber }) => {
+    const { t } = useResumeTranslation();
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const contactData = useSelector(state => state.resumeContact);
     const themeColor = useSelector(state => state.editorSettings.themeColor);
@@ -51,7 +53,7 @@ const ContactBlock = ({ editableFields, layoutNumber }) => {
         <ContactBlockWrapper editableFields={editableFields} layoutNumber={layoutNumber} themeColor={themeColor}>
 
             {/* location */}
-            <ContactItem type='text' icon={itemDetails['location'].icon} name={itemDetails['location'].name} defaultValue={itemDetails['location'].defaultValue} value={contactData['location']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
+            <ContactItem type='text' icon={itemDetails['location'].icon} name={itemDetails['location'].name} defaultValue={t('cityCountry')} value={contactData['location']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />
 
             {/* phone */}
             <ContactItem type='text' icon={itemDetails['phone'].icon} name={itemDetails['phone'].name} defaultValue={itemDetails['phone'].defaultValue} value={contactData['phone']} editableFields={editableFields} themeColor={themeColor} fontSize={fontSize} onChangeHandler={onChangeHandler} />

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsHeaderMenuOpen, setShowOverlay, } from '@/redux/settings/editorSettingsSlice';
+import { setIsHeaderMenuOpen, setShowOverlay, setResumeLanguage } from '@/redux/settings/editorSettingsSlice';
 import { setFontSize, setCurrentFont } from '@/redux/fontSettings/fontSettingsSlice';
 
 import { LuChevronDown, LuALargeSmall } from "react-icons/lu";
@@ -31,12 +31,29 @@ const fontsCollection = createListCollection({
     ],
 })
 
+const languageCollection = createListCollection({
+    items: [
+        { label: 'English', value: 'en' },
+        { label: 'Spanish', value: 'es' },
+        { label: 'French', value: 'fr' },
+        { label: 'German', value: 'de' },
+        { label: 'Italian', value: 'it' },
+        { label: 'Portuguese', value: 'pt' },
+        { label: "Bulgarian", value: "bg" },
+        { label: 'Russian', value: 'ru' },
+        { label: 'Chinese', value: 'zh' },
+        { label: 'Japanese', value: 'ja' },
+        { label: 'Korean', value: 'ko' },
+    ],
+})
+
 
 const HeaderFontsMenu = () => {
     const dispatch = useDispatch();
     const themeColor = useSelector(state => state.editorSettings.themeColor);
     const isMenuOpen = useSelector(state => state.editorSettings.isHeaderMenuOpen.fontsMenu);
     const fontSize = useSelector(state => state.fontSettings.fontSize);
+    const resumeLanguage = useSelector(state => state.editorSettings.resumeLanguage || 'en');
 
     const changeFontSize = (fontSize) => {
         if (fontSize) {
@@ -47,6 +64,12 @@ const HeaderFontsMenu = () => {
     const changeFont = (fontName) => {
         if (fontName) {
             dispatch(setCurrentFont(fontName))
+        }
+    }
+
+    const changeLanguage = (language) => {
+        if (language) {
+            dispatch(setResumeLanguage(language));
         }
     }
 
@@ -125,6 +148,31 @@ const HeaderFontsMenu = () => {
                                 </HStack>
 
                             </Box>
+                        </Box>
+
+                        {/* Language */}
+                        <Box w='full'>
+                            <Text fontSize={'xs'}>Resume Language:</Text>
+
+
+                            <SelectRoot size={'xs'} collection={languageCollection} positioning={{ sameWidth: true, placement: "bottom" }}
+                                id='customSelectLanguage'
+                                value={[resumeLanguage]}
+                                onValueChange={(e) => {
+                                    changeLanguage(e.value[0]);
+                                }}
+                            >
+                                <SelectTrigger >
+                                    <SelectValueText placeholder="Default" />
+                                </SelectTrigger>
+                                <SelectContent portalled={false} width="full"  >
+                                    {languageCollection.items.map((item) => (
+                                        <SelectItem item={item} key={item.value} _hover={{ opacity: 0.5 }} cursor={'pointer'}>
+                                            {item.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </SelectRoot>
                         </Box>
                     </VStack>
                 </PopoverBody>

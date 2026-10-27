@@ -1,3 +1,4 @@
+import { useResumeTranslation } from '@/lib/resumeTranslations';
 import { Box, Button, Stack } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -13,6 +14,7 @@ import BlockControlContainer from '../blockControl/BlockControlContainer';
 import { LuSparkles } from "react-icons/lu";
 
 const SkillsBlock = ({ editableFields, layoutNumber }) => {
+    const { t } = useResumeTranslation();
     const blockName = 'resumeSkills';
 
     const fontSize = useSelector(state => state.fontSettings.fontSize);
@@ -33,7 +35,7 @@ const SkillsBlock = ({ editableFields, layoutNumber }) => {
                 variant={'h2'}
                 size={fontSize.h2}
                 fontWeight={'600'}
-                defaultValue={'Skills'}
+                defaultValue={t('skills')}
                 name={'skillsHeading'}
                 value={skillsHeading}
                 isEditable={editableFields}
@@ -160,6 +162,7 @@ const SkillsItemsWrapper = ({ editableFields, layoutNumber, children }) => {
 }
 
 const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
+    const { t } = useResumeTranslation();
     let suffForIds = '';
     if (editableFields == false) {
         suffForIds = '_notAnimate';
@@ -186,7 +189,7 @@ const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
                     variant={'p'}
                     size={fontSize.p}
                     fontWeight={'400'}
-                    defaultValue={'Enter skill'}
+                    defaultValue={t('skillPlaceholder')}
                     name={null}
                     value={item.value}
                     isEditable={editableFields}
@@ -214,7 +217,7 @@ const SkillsItem = ({ item, editableFields, fontSize, dispatch, ref }) => {
                     variant={'p'}
                     size={fontSize.p}
                     fontWeight={'400'}
-                    defaultValue={'Enter skill'}
+                    defaultValue={t('skillPlaceholder')}
                     name={null}
                     value={item.value}
                     isEditable={editableFields}

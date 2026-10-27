@@ -1,3 +1,4 @@
+import { useResumeTranslation } from '@/lib/resumeTranslations';
 
 import { VStack, Button } from '@chakra-ui/react';
 
@@ -82,7 +83,7 @@ const SummaryFields = ({ editableFields, dispatch }) => {
     const fontSize = useSelector(state => state.fontSettings.fontSize);
     const summaryHeading = useSelector(state => state.resumeSummary.summaryHeading);
     const summaryText = useSelector(state => state.resumeSummary.summaryText);
-
+    const { t } = useResumeTranslation();
 
     const onChangeHandler = (name, value,) => {
         dispatch(setResumeSummaryData({ name, value }));
@@ -93,7 +94,7 @@ const SummaryFields = ({ editableFields, dispatch }) => {
                 variant={'h2'}
                 size={fontSize.h2}
                 fontWeight={'600'}
-                defaultValue={'About Me'}
+                defaultValue={t('summary')}
                 name={'summaryHeading'}
                 value={summaryHeading}
                 isEditable={editableFields}
@@ -107,7 +108,7 @@ const SummaryFields = ({ editableFields, dispatch }) => {
                     allowEnter={true}
                     size={fontSize.p}
                     fontWeight={'400'}
-                    defaultValue={'Provide your professional summary'}
+                    defaultValue={t('summaryDesc')}
                     name={'summaryText'}
                     value={summaryText}
                     isEditable={editableFields}

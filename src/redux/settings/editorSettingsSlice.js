@@ -4,6 +4,7 @@ export const editorSettingsSlice = createSlice({
     name: 'editorSettings',
     initialState: {
         themeColor: 'blue',
+        resumeLanguage: 'en',
         layout: 0,
         showOverlay: false,
         isHeaderMenuOpen: {
@@ -30,6 +31,12 @@ export const editorSettingsSlice = createSlice({
 
     },
     reducers: {
+        setResumeLanguage: (state, action) => {
+            return {
+                ...state,
+                resumeLanguage: action.payload
+            }
+        },
         setThemeColor: (state, action) => {
             return {
                 ...state,
@@ -112,5 +119,5 @@ export const editorSettingsSlice = createSlice({
     }
 });
 
-export const { setThemeColor, setShowOverlay, setLayout, setIsHeaderMenuOpen, setShowAddRemoveButtons, setShowBlockControl, setShowModal, } = editorSettingsSlice.actions;
+export const { setResumeLanguage, setThemeColor, setShowOverlay, setLayout, setIsHeaderMenuOpen, setShowAddRemoveButtons, setShowBlockControl, setShowModal, } = editorSettingsSlice.actions;
 export default editorSettingsSlice.reducer;

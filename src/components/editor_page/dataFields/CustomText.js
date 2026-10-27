@@ -71,11 +71,14 @@ const CustomText = ({
     }
 
     useEffect(() => {
-
-        if (fieldRef && isEditable && value) {
-            fieldRef.current.innerHTML = value
+        if (fieldRef.current && isEditable) {
+            if (value) {
+                fieldRef.current.innerHTML = value;
+            } else if (defaultValue) {
+                fieldRef.current.innerText = defaultValue;
+            }
         }
-    }, [value]);
+    }, [value, defaultValue, isEditable]);
 
     isEditable
         // return as editable

@@ -67,6 +67,7 @@ const EditorMainContainer = () => {
         editorSettings: { // Only save relevant settings
             layout: editorSettings.layout,
             themeColor: editorSettings.themeColor,
+            resumeLanguage: editorSettings.resumeLanguage,
         },
         fontSettings,
         resumeHeader,

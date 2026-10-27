@@ -1,3 +1,4 @@
+import { useResumeTranslation } from '@/lib/resumeTranslations';
 
 import { VStack, Box, Stack, HStack, IconButton, Icon } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -24,6 +25,8 @@ const ExperienceBlock = ({ editableFields }) => {
     const expHeading = useSelector(state => state.resumeExperience.expHeading);
     const expData = useSelector(state => state.resumeExperience.items);
 
+    const { t } = useResumeTranslation();
+
     const dispatch = useDispatch();
 
     const onChangeHeadingHandler = (name, value,) => {
@@ -38,7 +41,7 @@ const ExperienceBlock = ({ editableFields }) => {
                 variant={'h2'}
                 size={fontSize.h2}
                 fontWeight={'600'}
-                defaultValue={'Experience'}
+                defaultValue={t('experience')}
                 name={'expHeading'}
                 value={expHeading}
                 isEditable={editableFields}
@@ -148,6 +151,7 @@ const ExperienceItemsWrapper = ({ editableFields, children }) => {
 
 const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, ref }) => {
     const show = useSelector(state => state.editorSettings.showAddRemoveButtons);
+    const { t } = useResumeTranslation();
 
     let suffForIds = '';
     if (editableFields == false) {
@@ -184,7 +188,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                             variant={'h3'}
                             size={fontSize.h3}
                             fontWeight={'600'}
-                            defaultValue={'Employer'}
+                            defaultValue={t('employer')}
                             name={'employer'}
                             value={data.employer}
                             isEditable={editableFields}
@@ -196,7 +200,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                                     variant={'h4'}
                                     size={fontSize.h3}
                                     fontWeight={'600'}
-                                    defaultValue={'Position'}
+                                    defaultValue={t('position')}
                                     name={'position'}
                                     value={data.position}
                                     isEditable={editableFields}
@@ -208,7 +212,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                                     variant={'p'}
                                     size={fontSize.p}
                                     fontWeight={'400'}
-                                    defaultValue={'From - Until'}
+                                    defaultValue={t('dateRange')}
                                     name={'period'}
                                     value={data.period}
                                     isEditable={editableFields}
@@ -222,7 +226,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                             size={fontSize.p}
                             fontWeight={'400'}
                             allowEnter={true}
-                            defaultValue={'Provide your work experience description'}
+                            defaultValue={t('experienceDesc')}
                             name={'description'}
                             value={data.description}
                             isEditable={editableFields}
@@ -279,7 +283,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                             variant={'h3'}
                             size={fontSize.h3}
                             fontWeight={'600'}
-                            defaultValue={'Employer'}
+                            defaultValue={t('employer')}
                             name={'employer'}
                             value={data.employer}
                             isEditable={editableFields}
@@ -292,7 +296,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                                     variant={'h4'}
                                     size={fontSize.h3}
                                     fontWeight={'600'}
-                                    defaultValue={'Position'}
+                                    defaultValue={t('position')}
                                     name={'position'}
                                     value={data.position}
                                     isEditable={editableFields}
@@ -304,7 +308,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                                     variant={'p'}
                                     size={fontSize.p}
                                     fontWeight={'400'}
-                                    defaultValue={'From - Until'}
+                                    defaultValue={t('dateRange')}
                                     name={'period'}
                                     value={data.period}
                                     isEditable={editableFields}
@@ -318,7 +322,7 @@ const ExperienceItem = ({ fontSize, themeColor, data, dispatch, editableFields, 
                             size={fontSize.p}
                             fontWeight={'400'}
                             allowEnter={true}
-                            defaultValue={'Provide your work experience description'}
+                            defaultValue={t('experienceDesc')}
                             name={'description'}
                             value={data.description}
                             isEditable={editableFields}

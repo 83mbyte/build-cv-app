@@ -1,3 +1,4 @@
+import { useResumeTranslation } from '@/lib/resumeTranslations';
 
 import { Box, VStack, Image, HStack, Button } from '@chakra-ui/react';
 import { motion } from 'motion/react';
@@ -14,7 +15,7 @@ import { LuSquareUserRound } from "react-icons/lu";
 
 const HeaderBlock = ({ editableFields }) => {
 
-
+    const { t } = useResumeTranslation();
     const fullName = useSelector(state => state.resumeHeader.fullName);
     const position = useSelector(state => state.resumeHeader.position);
     const profileImage = useSelector(state => state.resumeHeader.profileImage);
@@ -39,7 +40,7 @@ const HeaderBlock = ({ editableFields }) => {
                             variant={'h1'}
                             size={fontSize.h1}
                             fontWeight={'600'}
-                            defaultValue={'Full Name '}
+                            defaultValue={t('fullName')}
                             name='fullName'
                             value={fullName}
                             isEditable={editableFields}
@@ -50,7 +51,7 @@ const HeaderBlock = ({ editableFields }) => {
                             variant={'h2'}
                             size={fontSize.h2}
                             fontWeight={'600'}
-                            defaultValue={'Your position'}
+                            defaultValue={t('position')}
                             name='position'
                             value={position}
                             isEditable={editableFields}
@@ -78,7 +79,7 @@ const HeaderBlock = ({ editableFields }) => {
                                 variant={'h1'}
                                 size={fontSize.h1}
                                 fontWeight={'600'}
-                                defaultValue={'Full Name '}
+                                defaultValue={t('fullName')}
                                 name='fullName'
                                 value={fullName}
                                 isEditable={editableFields}
@@ -92,7 +93,7 @@ const HeaderBlock = ({ editableFields }) => {
                                 variant={'h2'}
                                 size={fontSize.h2}
                                 fontWeight={'600'}
-                                defaultValue={'Your position'}
+                                defaultValue={t('position')}
                                 name='position'
                                 value={position}
                                 isEditable={editableFields}
