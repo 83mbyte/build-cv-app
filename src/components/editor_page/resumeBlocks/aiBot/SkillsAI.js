@@ -29,6 +29,9 @@ const SkillsAI = ({ blockName }) => {
     const selectedItems = useSelector(state => state.resumeSkills.assistant.selectedItems);
     const status = useSelector(state => state.resumeSkills.assistant.status);
 
+    const resumeLanguage = useSelector(state => state.editorSettings.resumeLanguage || 'en');
+
+
 
     const onChangeHandler = (value) => {
         const cleanValue = sanitizeInput(value);
@@ -54,7 +57,10 @@ const SkillsAI = ({ blockName }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ query: position, variant: 'generateSkills' }),
+                body: JSON.stringify({
+                    query: { position: position, language: resumeLanguage }, variant: 'generateSkills'
+                }),
+                // body: JSON.stringify({ query: position, variant: 'generateSkills' }),
             };
             const res = await getDataFromFunctionsEndpoint('generateData', options);
             if (!res) {

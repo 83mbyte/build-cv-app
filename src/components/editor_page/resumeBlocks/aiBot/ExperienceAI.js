@@ -26,6 +26,9 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
 
     const status = useSelector(state => state.resumeExperience.assistant.status);
 
+    const resumeLanguage = useSelector(state => state.editorSettings.resumeLanguage || 'en');
+
+
     const dispatch = useDispatch();
 
     const positionField = useRef(null);
@@ -56,7 +59,11 @@ const ExperienceAI = ({ fieldName = 'description' }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ query: position, variant: 'generateExp' }),
+                body: JSON.stringify({
+                    query: { position: position, language: resumeLanguage },
+                    variant: 'generateExp'
+                }),
+                // body: JSON.stringify({ query: position, variant: 'generateExp' }),
             };
             const res = await getDataFromFunctionsEndpoint('generateData', options);
             if (!res) {

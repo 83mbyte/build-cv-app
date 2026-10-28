@@ -16,7 +16,7 @@ export const resumeTranslations = {
         experienceDesc: 'Provide your work experience description',
         summaryDesc: 'Provide your professional summary',
         skillPlaceholder: 'Enter skill',
-        languagePlaceholder: 'Enter language213',
+        languagePlaceholder: 'Enter language',
         cityCountry: 'city/country'
     },
     es: {

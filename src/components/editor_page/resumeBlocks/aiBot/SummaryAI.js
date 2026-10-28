@@ -26,6 +26,8 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
     const generatedItems = useSelector(state => state.resumeSummary.assistant.generatedItems);
     const selectedItems = useSelector(state => state.resumeSummary.assistant.selectedItems);
     const status = useSelector(state => state.resumeSummary.assistant.status);
+    const resumeLanguage = useSelector(state => state.editorSettings.resumeLanguage || 'en');
+
 
 
     const skills = useSelector(state => state.resumeSkills.items);
@@ -114,6 +116,7 @@ const SummaryAI = ({ fieldName = 'summaryText', blockName }) => {
                         query: {
                             position: position,
                             details: detailsForSummary,
+                            language: resumeLanguage,
                         },
                         variant: 'generateSummary'
                     }),
