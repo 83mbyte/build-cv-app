@@ -112,7 +112,29 @@ const EditorMainContainer = () => {
     }
 
     const downloadFilePDF = async () => {
-        const htmlString = `<!DOCTYPE html><html lang="en"><body>${resumeAreaRef.current.innerHTML}</body></html>`;
+        const lang = editorSettings?.resumeLanguage || 'en';
+        const htmlString = `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&family=Mali:wght@300;400;500;600&family=Platypi:wght@300;400;500;600&family=Recursive:wght@300;400;500;600&family=Spectral:wght@300;400;500;600&family=Ysabeau:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    </style>
+</head>
+<body>${resumeAreaRef.current.innerHTML}</body>
+</html>`;
 
         const getStreamData = async (fileUrl) => {
             let resumeFileName;

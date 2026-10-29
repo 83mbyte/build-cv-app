@@ -188,7 +188,7 @@ exports.createPDFfromTemplate = onRequest(
             let fileUrl;
             try {
                 await fileHTML.save(htmlString, {
-                    contentType: 'text/html',
+                    contentType: 'text/html; charset=utf-8',
                 });
                 fileURL = await getDownloadURL(fileHTML);
             } catch (error) {
